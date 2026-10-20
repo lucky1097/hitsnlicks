@@ -1,5 +1,5 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
-import { NPCS, POIS, TRAFFIC, POLICE_LOOP, WALKERS, SPAWN, LABELS, REAPER_ROADS, TURF } from './data.js?v=202610201759';
+import { NPCS, POIS, TRAFFIC, POLICE_LOOP, WALKERS, SPAWN, LABELS, REAPER_ROADS, TURF } from './data.js?v=202610201803';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -300,8 +300,16 @@ export function createWorld(parent, hooks) {
 
     dropPill(x, y) {
       const kind = ['red', 'blue', 'green'][Math.floor(Math.random() * 3)];
-      const a = Math.random() * Math.PI * 2;
-      const tx = x + Math.cos(a) * 9, ty = y + Math.sin(a) * 9;
+      // land only where the player can walk: try a few directions, otherwise it stays at the person's feet
+      const blocked = (px, py) => px < 6 || py < 6 || px > this.W - 6 || py > this.H - 6 ||
+        this.solidRects.some(([sx, sy, w, h]) => px > sx - 6 && px < sx + w + 6 && py > sy - 6 && py < sy + h + 6);
+      const a0 = Math.random() * Math.PI * 2;
+      let tx = x, ty = y;
+      for (let i = 0; i < 8; i++) {
+        const a = a0 + (i * Math.PI) / 4;
+        const cx = x + Math.cos(a) * 9, cy = y + Math.sin(a) * 9;
+        if (!blocked(cx, cy)) { tx = cx; ty = cy; break; }
+      }
       const glow = this.add.circle(tx, ty, 6, { red: 0xd42a22, blue: 0x2f6fe0, green: 0x3ccf4e }[kind], 0.25).setDepth(6.5);
       const s = this.add.image(x, y, 'pill_' + kind).setDepth(7);
       this.tweens.add({ targets: s, x: tx, duration: 380 });
