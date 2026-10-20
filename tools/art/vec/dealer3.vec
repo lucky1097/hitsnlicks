@@ -1,0 +1,245 @@
+# Dealer bust v3: close to the boss artworks. Three-quarter view, head tilted down, warm key light from the left,
+# cold rim light on the profile, deep shadow under the cap brim, cross-hatching, sketchy ink, splatter background.
+# Parts stay separate for the character creator (bg / body / collar / neck / ear / head / beard / nose / mouth /
+# cigarette / hair / cap / shades).
+size 300 340 2
+# ---------------------------------------------------------------- background
+fill 0e0d0c | M0 0 L300 0 L300 340 L0 340 Z
+glow 3a2c1c 0.55 120 120 170 150
+fill 1c1a18 0.9 | M-20 60 C60 30 160 26 330 -10 L330 40 C220 50 110 70 -20 120 Z
+fill 050505 0.85 | M-20 250 C70 220 190 214 330 170 L330 230 C200 260 100 280 -20 320 Z
+stroke 2c2925 9 0.45 | M10 40 C60 26 110 30 160 14
+stroke 2c2925 5 0.4 | M226 300 C254 284 276 262 300 236
+stroke 4a1612 7 0.45 | M246 18 C262 40 270 66 268 96
+stroke 4a1612 3 0.35 | M262 22 C276 46 284 74 282 104
+# splatter
+ellipse c9a24a 0.85 254 112 3.6 3.6
+ellipse c9a24a 0.6 266 128 1.8 1.8
+ellipse c9a24a 0.7 240 132 1.4 1.4
+stroke c9a24a 1.8 0.75 | M254 115 L254 140
+ellipse c9a24a 0.8 254 141 1.6 1.8
+ellipse 8a1e16 0.8 34 198 3 3
+stroke 8a1e16 1.6 0.7 | M34 201 L34 222
+ellipse 8a1e16 0.7 44 186 1.4 1.4
+ellipse c9a24a 0.5 26 90 2 2
+ellipse c9a24a 0.45 284 196 1.6 1.6
+ellipse e9e4d8 0.25 60 60 1.4 1.4
+ellipse e9e4d8 0.2 236 236 1.8 1.8
+# ---------------------------------------------------------------- body: white half-zip in three-quarter view
+set BODY M8 340 C14 292 48 262 98 250 C114 246 128 252 140 262 L190 262 C200 252 214 248 230 252 C266 262 290 296 294 340 Z
+fill e4dfd4 | $BODY
+clip | $BODY
+fill c3bcae | M8 340 C14 300 38 274 72 258 C56 280 46 310 44 340 Z
+fill 9b9384 | M8 340 C14 312 26 292 46 276 C38 294 34 318 34 340 Z
+fill b5ad9f | M190 262 C214 254 246 258 270 276 C288 296 294 320 294 340 L186 340 C192 316 192 290 190 262 Z
+fill 878071 0.9 | M232 262 C258 276 280 300 294 340 L250 340 C250 312 244 286 232 262 Z
+fill ffffff 0.45 | M100 258 C116 268 126 284 132 304 C120 288 108 276 94 268 Z
+# folds
+stroke 7a7366 1.8 0.9 | M70 340 C74 312 86 290 104 276
+stroke 7a7366 1.4 0.8 | M100 340 C104 322 114 306 128 296
+stroke 7a7366 1.8 0.9 | M232 340 C228 310 222 290 210 276
+stroke 7a7366 1.2 0.8 | M206 340 C204 320 198 306 188 298
+stroke 5c564b 1 0.6 | M244 300 C252 306 258 316 262 330
+# sleeve stripes with gold piping
+stroke 0a0908 5 | M22 312 C40 292 62 278 90 270
+stroke c9a24a 1.2 0.85 | M24 307 C42 289 62 276 88 267
+stroke 0a0908 5 | M282 312 C266 292 246 280 222 274
+stroke c9a24a 1.2 0.85 | M280 307 C264 289 246 277 224 271
+# cross-hatching on the shadow side of the top
+push rotate 250 300 40
+ribs 2a2620 0.22 0.9 180 320 4.5 200 360 250 0
+pop
+unclip
+stroke 0a0807 2.8 | $BODY
+# ---------------------------------------------------------------- neck
+set NECK M132 210 C130 234 126 252 118 270 L198 270 C190 252 186 238 186 224 C172 232 152 228 132 210 Z
+grad 6e4532 3e2519 70 | $NECK
+clip | $NECK
+fill 1a0e09 0.7 | M132 210 C150 226 172 232 186 224 L188 246 C170 250 146 246 128 236 Z
+push rotate 160 240 35
+ribs 120a06 0.3 0.9 100 220 3.5 200 290 160 0
+pop
+stroke 2a160e 1.4 0.6 | M142 236 C148 248 150 258 150 270
+stroke 9a6a4c 1.2 0.4 | M174 238 C176 250 176 260 174 270
+unclip
+stroke 0a0807 2.4 | M132 210 C130 234 126 252 118 270
+stroke 0a0807 2.4 | M186 224 C186 238 190 252 198 270
+# collar (stands up, near flap big, far flap small)
+set COLN M118 270 C108 254 108 236 116 222 C128 234 140 244 154 252 L162 306 Z
+set COLF M200 268 C206 254 206 240 200 228 C192 238 182 246 170 254 L162 306 Z
+fill efebe3 | $COLN
+fill cfc8ba | $COLF
+fill a39b8c | M116 222 C128 234 140 244 154 252 L150 258 C136 250 124 240 114 230 Z
+fill 857e70 | M200 228 C192 238 182 246 170 254 L174 260 C186 252 196 242 202 234 Z
+stroke 9b9384 1.2 0.8 | M122 252 C126 262 136 276 150 292
+stroke 0a0807 2.6 | $COLN
+stroke 0a0807 2.6 | $COLF
+# zip
+stroke 26262a 4.2 | M162 274 L166 340
+stroke a0a0a8 1 | M160.4 274 L164.4 340
+stroke 151517 1 | M158 282 L166 281.5
+stroke 151517 1 | M158.5 292 L166.5 291.5
+stroke 151517 1 | M159 302 L167 301.5
+stroke 151517 1 | M159.5 312 L167.5 311.5
+stroke 151517 1 | M160 322 L168 321.5
+stroke 151517 1 | M160.5 332 L168.5 331.5
+fill cfcfd6 | M156 266 L167 266 L166 286 L158 286 Z
+fill 44444c | M158.5 270 L164.5 270 L164 282 L159 282 Z
+stroke 0a0807 1.4 | M156 266 L167 266 L166 286 L158 286 Z
+# ---------------------------------------------------------------- head: three-quarter, profile on the right
+set HEAD M96 120 C92 140 94 160 104 176 C108 186 112 190 116 186 C120 198 128 212 140 222 C152 230 170 232 186 228 C196 225 203 220 206 212 C208 206 205 202 207 198 C209 196 210 194 208 191 C206 188 209 186 209 183 C210 179 206 177 207 175 C211 174 216 172 216 168 C216 163 210 156 206 150 C205 144 205 138 203 132 C201 124 198 118 196 112 Z
+grad 9a6648 5e3a28 20 | $HEAD
+clip | $HEAD
+# planes: lit cheek facing the key light, shadowed front plane, jaw underside
+glow c48c66 0.55 160 170 34 30
+fill 6a4230 0.8 | M186 112 C196 130 204 150 208 168 C210 186 206 206 196 222 C190 226 184 228 178 228 C192 210 198 190 196 170 C194 146 190 128 186 112 Z
+fill 2e1b12 0.85 | M116 182 C120 198 128 212 140 222 C152 230 170 232 186 228 C170 226 156 222 144 212 C132 202 124 192 116 182 Z
+fill 2e1b12 0.6 | M190 176 C196 180 204 182 209 183 C206 186 200 188 192 186 Z
+# cheekbone and nose highlights (warm), stubble zone
+fill d39a72 0.55 | M150 156 C160 150 176 152 184 160 C176 168 164 172 152 170 C148 166 148 160 150 156 Z
+fill e0aa82 0.5 | M203 150 C207 156 211 162 213 167 C209 166 206 160 203 154 Z
+fill 1a0f0a 0.32 | M134 196 C146 214 168 224 190 222 C200 216 206 206 207 198 C200 210 186 216 168 214 C152 210 140 204 134 196 Z
+fill 1a0f0a 0.28 | M190 186 C196 186 204 186 209 183 C206 190 198 192 190 190 Z
+# deep shadow under the brim across the eyes and upper cheek
+fill 0a0605 0.86 | M110 112 L216 112 L216 150 C196 156 160 160 112 158 Z
+fill 0a0605 0.45 | M112 156 C150 162 190 158 216 148 L216 166 C190 172 150 174 114 170 Z
+# cross-hatching in the shadows
+push rotate 160 170 -35
+ribs 120a06 0.32 0.9 100 230 3.8 110 176 160 0
+pop
+push rotate 160 170 35
+ribs 120a06 0.24 0.9 100 230 4.4 110 160 160 0
+pop
+push rotate 160 215 -25
+ribs 120a06 0.25 0.8 120 220 4 200 236 160 0
+pop
+# ember light on the chin and jaw
+glow ff8a3a 0.35 212 214 26 22
+unclip
+# cold rim light along the profile, ink outline (doubled for a sketchy line)
+stroke 9fc0d2 2 0.75 | M203 132 C205 140 205 146 206 150 C210 156 216 163 216 168
+stroke 9fc0d2 1.6 0.6 | M207 198 C205 202 208 206 206 212 C203 220 196 225 186 228
+stroke 0a0807 2.8 | $HEAD
+stroke 0a0807 1 0.5 | M98 126 C93 146 96 166 106 180 C116 196 128 210 141 221
+# ---------------------------------------------------------------- ear (near side)
+set EAR M128 148 C116 144 110 156 111 168 C112 182 120 190 132 188 C136 176 136 160 128 148 Z
+grad 9a6648 5a3726 20 | $EAR
+stroke 3a2216 1.8 0.9 | M126 156 C119 158 117 168 121 177 C124 172 125 164 126 156
+stroke 3a2216 1.2 0.7 | M124 182 C127 184 130 184 132 182
+fill c48c66 0.5 | M115 160 C114 166 115 174 118 180 C116 172 116 166 117 160 Z
+stroke 0a0807 2.4 | $EAR
+# ---------------------------------------------------------------- nose details, mouth, beard
+stroke 1a0f0a 1.6 0.9 | M198 164 C196 169 198 174 203 175
+fill 140b07 0.95 | M201 171 C204 169 207 170 208 172 C206 174 203 174 201 171 Z
+stroke 1a0f0a 1.3 0.7 | M194 158 C192 162 192 166 194 168
+# mouth: slight sneer, lips parted around the cigarette
+fill 5a2c1e | M186 189 C192 187 200 187 208 189 C204 191 196 193 188 192 Z
+fill 2a1209 | M186 191 C194 192 202 191 208 189 C200 190 192 190 186 191 Z
+fill 7a3c2a | M188 193 C196 195 204 194 207 193 C204 198 196 199 189 197 Z
+fill d49a78 0.6 | M193 195.5 C197 196.5 202 196 205 195 C202 197 197 197.5 193 195.5 Z
+stroke 0a0807 1.8 | M184 191 C192 192 200 191 208 189
+stroke 0a0807 1.2 0.8 | M184 191 C182 189 181 186 182 184
+# chin and jaw stubble: tiny strokes
+stroke 120a06 0.8 0.55 | M176 210 L177 213
+stroke 120a06 0.8 0.55 | M182 212 L183 215
+stroke 120a06 0.8 0.55 | M188 210 L189 213
+stroke 120a06 0.8 0.55 | M194 207 L195 210
+stroke 120a06 0.8 0.55 | M170 214 L171 217
+stroke 120a06 0.8 0.55 | M164 212 L165 215
+stroke 120a06 0.8 0.55 | M158 208 L159 211
+stroke 120a06 0.8 0.55 | M150 204 L151 207
+stroke 120a06 0.8 0.55 | M144 198 L145 201
+stroke 120a06 0.8 0.55 | M198 200 L199 203
+stroke 120a06 0.8 0.55 | M186 202 L187 205
+stroke 120a06 0.8 0.55 | M178 205 L179 208
+stroke 120a06 0.8 0.5 | M194 184 L195 186
+stroke 120a06 0.8 0.5 | M200 184 L201 186
+stroke 120a06 0.8 0.5 | M188 185 L189 187
+# ---------------------------------------------------------------- cigarette from the corner of the mouth, pointing down
+push rotate 206 191 32
+fill f3eee3 | M206 189 L246 189 L246 194.5 L206 194.5 Z
+fill b9b1a1 0.85 | M206 193 L246 193 L246 194.5 L206 194.5 Z
+fill c8996a | M206 189 L216 189 L216 194.5 L206 194.5 Z
+stroke 7e5e3c 0.8 | M209 189 L209 194.5
+stroke 7e5e3c 0.8 | M212.5 189 L212.5 194.5
+fill 2a1a12 | M244 189 L248 189 L248 194.5 L244 194.5 Z
+fill 6a6a6a 0.8 | M241 189 L244 189 L244 194.5 L241 194.5 Z
+stroke 0a0807 1.4 | M206 189 L248 189 L248 194.5 L206 194.5 Z
+pop
+glow ff6a1a 0.7 240 216 6 6
+ellipse ffd27a 1 240 216 2.6 2.4
+ellipse ff8a2a 0.95 241.6 217.4 1.6 1.4
+# smoke curling up past the brim
+stroke d8d2c4 2 0.32 | M242 210 C250 200 240 190 248 178 C254 168 246 156 254 144 C260 134 254 122 262 110
+stroke d8d2c4 1.2 0.24 | M244 208 C256 196 250 186 258 174 C266 162 260 150 270 138
+stroke d8d2c4 0.8 0.2 | M238 210 C232 198 240 188 234 176
+# ---------------------------------------------------------------- hair: short, at the temple and the back of the head under the cap
+# skin-fade haircut on the back of the head: dark on top, fading down towards the nape
+fill 0c0908 0.92 | M96 120 C93 132 93 144 96 154 C104 150 112 146 120 140 C122 132 124 124 126 118 Z
+fill 0c0908 0.55 | M96 154 C98 162 101 170 105 176 C108 168 110 160 112 150 C106 152 100 154 96 154 Z
+fill 0c0908 0.9 | M126 118 C122 128 120 136 120 142 C124 140 128 132 132 118 Z
+stroke 2a2422 0.8 0.7 | M100 124 L99 146
+stroke 2a2422 0.8 0.7 | M106 122 L105 144
+stroke 2a2422 0.8 0.7 | M112 122 L111 140
+# ---------------------------------------------------------------- cap: newsboy in three-quarter, houndstooth, panels, button, brim to the right
+set CAP M86 124 C82 96 94 70 122 60 C146 52 180 54 200 64 C216 72 226 88 228 104 C214 112 190 116 160 116 C130 116 104 120 86 124 Z
+grad 626a66 262b29 105 | $CAP
+clip | $CAP
+push rotate 160 90 45
+ribs 121514 0.55 1.3 30 290 3.4 0 190 160 0
+pop
+push rotate 160 90 -45
+ribs 9aa49f 0.3 1.1 30 290 3.4 0 190 160 0
+pop
+# volume: lit left dome, dark right side and the band at the back
+glow c9cfcb 0.25 130 76 40 22
+fill 000000 0.45 | M180 116 C202 114 220 110 228 104 C228 90 220 76 206 66 C212 82 210 100 196 110 Z
+fill 000000 0.35 | M86 124 C86 112 90 102 98 94 C96 104 96 114 98 122 Z
+fill 000000 0.3 | M86 124 C104 120 130 116 160 116 L160 110 C130 110 104 114 86 118 Z
+unclip
+# panel seams and stitching
+stroke 0c0e0d 1.8 0.9 | M160 54 C154 68 150 86 150 116
+stroke 0c0e0d 1.5 0.75 | M124 60 C116 74 112 92 112 118
+stroke 0c0e0d 1.5 0.75 | M196 62 C204 76 208 92 208 112
+stroke a8b2ad 0.8 0.5 | M162 56 C156 70 152 88 152 115
+# button
+ellipse 080a09 1 160 56 7 3.8
+ellipse 525a56 1 159.6 55.4 5.2 2.6
+ellipse c9cfcb 0.5 157.6 54.6 1.6 0.8
+# warm rim on the lit dome
+stroke e8c873 1.6 0.55 | M92 110 C92 92 102 76 120 66
+stroke 0a0807 2.8 | $CAP
+# brim projecting forward-right, stitched, dark underside
+set BRIM M150 110 C176 110 204 108 224 102 C234 104 240 112 238 120 C228 128 206 132 180 132 C162 132 150 128 146 120 Z
+fill 3c4440 | $BRIM
+fill 080a09 0.95 | M146 120 C150 128 162 132 180 132 C206 132 228 128 238 120 C238 128 230 136 206 140 C180 142 160 138 148 128 Z
+stroke 8a948f 0.9 0.7 | M154 114 C178 114 206 112 226 106
+stroke 8a948f 0.9 0.5 | M154 118 C178 118 208 116 230 110
+stroke 0a0807 2.8 | M146 120 C150 128 162 132 180 132 C206 132 228 128 238 120 C238 128 230 136 206 140 C180 142 160 138 148 128 Z
+stroke 0a0807 2.8 | $BRIM
+# ---------------------------------------------------------------- shades: thick gold oval frames in three-quarter, reflective lenses
+set LENSN M144 148 C144 139 152 134 164 134 C176 134 184 140 184 148 C184 157 176 162 164 162 C152 162 144 157 144 148 Z
+set LENSF M196 146 C196 140 199 136 204 136 C209 136 211 140 211 147 C211 154 208 159 203 159 C199 159 196 153 196 146 Z
+grad 22323a 040506 110 | $LENSN
+grad 22323a 040506 110 | $LENSF
+fill a8c4d2 0.4 | M148 143 C150 137 157 135 164 135 C157 138 152 142 150 148 Z
+stroke ffffff 1.4 0.6 | M166 156 L176 142
+stroke ffffff 0.8 0.4 | M171 157 L179 146
+fill e8c873 0.25 | M150 152 C156 158 166 160 174 158 C166 158 158 156 152 152 Z
+stroke ffffff 1 0.45 | M203 154 L207 142
+# frames: ink, gold, highlight
+stroke 0a0807 5 | $LENSN
+stroke 0a0807 4 | $LENSF
+stroke b8892c 3 | $LENSN
+stroke a77a22 2.4 | $LENSF
+stroke f6dc8e 1.1 0.95 | M146 143 C148 137 156 135 164 135
+stroke f6dc8e 0.9 0.8 | M197 141 C198 138 201 137 204 137
+# bridge over the nose and the temple arm back to the ear
+stroke 0a0807 3.8 | M184 145 C188 141 192 141 196 143
+stroke c9a24a 2 | M184 145 C188 141.5 192 141.5 196 143
+stroke 0a0807 4 | M144 146 L130 150 L122 153
+stroke c9a24a 2.4 | M144 146 L130 150 L123 153
+stroke f6dc8e 0.8 0.8 | M142 145 L131 148.5
+fill e8c873 | M139 142.5 L146 141.5 L147 148 L140 149 Z
+stroke 0a0807 1.2 | M139 142.5 L146 141.5 L147 148 L140 149 Z
+noise 0.06 11

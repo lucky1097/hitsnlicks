@@ -11,8 +11,8 @@
 //   ladder(n) -> [{ id, name, points }]
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261020194200';
-import { GIVERS, SHOPS } from './data.js?v=20261020194200';
+import { SimServer } from './server.js?v=20261020224942';
+import { GIVERS, SHOPS } from './data.js?v=20261020224942';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -22,6 +22,7 @@ const ACTIONS = {
   sync: () => ({ ok: true }),
   arena: (s) => { s.state.pvp.opponents = null; return { ok: true }; }, // new opponents
   newGame: (s, [name, cls]) => s.newGame(name, cls),
+  setLook: (s, [look]) => s.setLook(look),
   spendPoint: (s, [stat]) => s.spendPoint(stat),
   buyStat: (s, [stat]) => s.buyStat(stat),
   equip: (s, [id]) => s.equip(id),

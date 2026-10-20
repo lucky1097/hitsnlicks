@@ -5,3 +5,5 @@ supabase/functions/game/game/
 supabase/.temp/
 .claude/
 *.log
+# source art (PSD, Procreate, big originals) stays on this PC only
+zdroj_art/

@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261020194200';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261020194200';
-import { makeFighter, simulate } from './combat.js?v=20261020194200';
-import { GangMixin } from './gangs.js?v=20261020194200';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261020224942';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261020224942';
+import { makeFighter, simulate } from './combat.js?v=20261020224942';
+import { GangMixin } from './gangs.js?v=20261020224942';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -334,6 +334,20 @@ export class SimServer {
 
   // ---------------------------------------------------------------- stats
   statCost(stat) { return F.statCost(this.p.bought[stat]); }
+
+  // character creator: the picked layer of each part (file ids from js/looks.js; null = nothing in an optional part)
+  setLook(look) {
+    if (!look || typeof look !== 'object' || Array.isArray(look)) return fail('Neplatný vzhľad.');
+    const out = {};
+    for (const [k, v] of Object.entries(look).slice(0, 16)) {
+      if (!/^[a-z_]{1,16}$/.test(k)) continue;
+      if (v === null) out[k] = null;
+      else if (typeof v === 'string' && /^[\w-]{1,48}$/.test(v)) out[k] = v;
+    }
+    this.p.look = out;
+    this.save();
+    return ok();
+  }
 
   spendPoint(stat) {
     if (!STATS.includes(stat)) return fail('Neznámy stat.');

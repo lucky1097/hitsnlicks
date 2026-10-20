@@ -9,6 +9,9 @@ $root = Split-Path -Parent $PSScriptRoot
 $enc = New-Object Text.UTF8Encoding($false)
 $v = Get-Date -Format 'yyyyMMddHHmmss'
 
+# the character layers in assets/postava -> js/looks.js
+& (Join-Path $PSScriptRoot 'looks.ps1')
+
 foreach ($f in Get-ChildItem (Join-Path $root 'js') -Filter *.js) {
   $t = [IO.File]::ReadAllText($f.FullName, $enc)
   $n = [regex]::Replace($t, "(from\s+'\./[\w-]+\.js)(\?v=\d+)?'", "`$1?v=$v'")

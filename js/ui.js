@@ -1,6 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020194200';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020194200';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020224942';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020224942';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261020224942';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -462,6 +463,26 @@ export class UI {
         if (this.check(r)) { this.toast('+' + r.bars + ' zlatých tehličiek (testovacia kúpa).'); this.render(); }
       },
       // gangs
+      // character creator
+      async 'open-look'() { this.sel.look = null; this.open('look', null, true); },
+      async 'look-step'(a) {
+        const [id, dir] = a.split(':');
+        const part = LOOK_PARTS.find((x) => x.id === id);
+        const opts = (part.optional ? [null] : []).concat(part.items.map((i) => i.id));
+        const cur = opts.indexOf(this.lookPick(this.sel.look, part));
+        this.sel.look = { ...this.sel.look, [id]: opts[(cur + Number(dir) + opts.length) % opts.length] };
+        this.render();
+      },
+      async 'look-random'() {
+        const look = {};
+        for (const part of LOOK_PARTS) {
+          const opts = (part.optional ? [null] : []).concat(part.items.map((i) => i.id));
+          look[part.id] = opts[Math.floor(Math.random() * opts.length)];
+        }
+        this.sel.look = look;
+        this.render();
+      },
+      async 'look-save'() { if (this.check(await this.s.setLook(this.sel.look))) { this.toast('Vzhľad uložený.'); this.back(); } },
       async 'gang-color'(a) { this.sel.gangName = $('#gang-name').value; this.sel.gangTag = $('#gang-tag').value; this.sel.gangColor = a; this.render(); },
       async 'gang-create'() {
         const r = await this.s.createGang($('#gang-name').value, $('#gang-tag').value, this.sel.gangColor || 'gold');
@@ -576,7 +597,7 @@ export class UI {
       html: this.hdr('Postava', 'Úroveň <span class="gold">' + p.level + '</span> · ' + CLASSES[p.cls].name) +
         '<div class="body"><div class="char">' +
         '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
-        '<div class="portrait"><img src="' + art('maska') + '" alt="Tvoja postava"><div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">Pešiak · Mesto 1</span></div></div>' +
+        '<div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="Tvoja postava">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">Vzhľad</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">Pešiak · Mesto 1</span></div></div>' +
         '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
         '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:15px;color:#9b968b" class="num"><span>Skúsenosti</span><span style="color:#e9e4d8">' + fmt(v.xp) + ' / ' + fmt(v.xpNext) + '</span></div><div class="bar" style="height:8px;margin-top:4px"><i style="width:' + Math.min(100, (v.xp / v.xpNext) * 100) + '%"></i></div></div>' +
         '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">Životy ' + fmt(this.s.maxHp()) + ' · úder ' + Math.round(hb * 0.85) + '–' + Math.round(hb * 1.15) + ' · krit ' + pct(F.crit(ts.stastie, p.level)) + ' · brnenie ' + pct(F.reduction(ts.armor, p.level, p.cls)) + ' (max ' + pct(c.armorCap) + ')' + special + '</p>' +
@@ -780,6 +801,43 @@ export class UI {
   }
 
   // ---------------------------------------------------------------- gangs
+  // ---------------------------------------------------------------- character look (layers from js/looks.js)
+  // the chosen item id of a part; parts never picked get their first option (optional parts: nothing)
+  lookPick(look, part) {
+    const v = look ? look[part.id] : undefined;
+    if (v === null && part.optional) return null;
+    if (part.items.some((i) => i.id === v)) return v;
+    return part.optional ? null : part.items[0].id;
+  }
+
+  lookHtml(look, cls = '') {
+    const srcs = LOOK_BASE ? [LOOK_BASE] : [];
+    for (const part of LOOK_PARTS) {
+      const id = this.lookPick(look, part);
+      const it = id && part.items.find((i) => i.id === id);
+      if (it) srcs.push(it.src);
+    }
+    return '<div class="look ' + cls + '">' + srcs.map((s) => '<img src="' + s + '" alt="">').join('') + '</div>';
+  }
+
+  scr_look() {
+    const p = this.s.p;
+    if (!this.sel.look) this.sel.look = { ...(p.look || {}) };
+    const look = this.sel.look;
+    let h = this.lookHtml(look, 'big');
+    for (const part of LOOK_PARTS) {
+      const id = this.lookPick(look, part);
+      const opts = (part.optional ? [null] : []).concat(part.items.map((i) => i.id));
+      const it = id && part.items.find((i) => i.id === id);
+      h += '<div class="lookrow"><button class="btn small" data-act="look-step" data-arg="' + part.id + ':-1" aria-label="Predchádzajúce">‹</button>' +
+        '<span class="mid"><span class="sc">' + part.name + '</span><b>' + (it ? esc(it.name) : 'nič') + '</b><small class="num">' + (opts.indexOf(id) + 1) + ' / ' + opts.length + '</small></span>' +
+        '<button class="btn small" data-act="look-step" data-arg="' + part.id + ':1" aria-label="Ďalšie">›</button></div>';
+    }
+    h += '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn wide" data-act="look-random">Náhodne</button><button class="btn gold wide" data-act="look-save">Uložiť</button></div>';
+    h += '<p class="note">Ďalšie časti (pleť, ústa, brada, čiapky…) sa tu objavia, keď pribudnú ich vrstvy.</p>';
+    return { html: this.hdr('Vzhľad') + '<div class="body">' + h + '</div>' };
+  }
+
   tagBox(o) {
     return o ? '<span class="gtag" style="border-color:' + o.color + ';color:' + o.color + '">' + esc(o.tag) + '</span>' : '<span class="gtag free">—</span>';
   }
