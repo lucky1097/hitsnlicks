@@ -1,9 +1,9 @@
 // Gangs (guilds like in Shakes & Fidget) and Gang Wars: turf objects on the map give the whole gang
 // a bonus while it holds them. Rival gangs are computer-run until a real server brings real players.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=202610201856';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=202610201856';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=202610201856';
+import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=202610201915';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=202610201915';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=202610201915';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -21,6 +21,12 @@ export const GangMixin = {
       const now = Date.now();
       t = this.state.turf = { objects: {}, nextRaidAt: now + this.gameMs(CONFIG.gangRaidEveryMin) };
       TURF.forEach((o) => { t.objects[o.id] = { owner: o.start, strength: 1, at: now, defenders: [], seed: seed(), retryAt: 0, safeUntil: 0 }; });
+    }
+    // the map changed (new or removed objects): saves follow the current list
+    const ids = new Set(TURF.map((o) => o.id));
+    if (Object.keys(t.objects).some((id) => !ids.has(id)) || TURF.some((o) => !t.objects[o.id])) {
+      for (const id of Object.keys(t.objects)) if (!ids.has(id)) delete t.objects[id];
+      TURF.forEach((o) => { if (!t.objects[o.id]) t.objects[o.id] = { owner: o.start, strength: 1, at: Date.now(), defenders: [], seed: seed(), retryAt: 0, safeUntil: 0 }; });
     }
     return t;
   },

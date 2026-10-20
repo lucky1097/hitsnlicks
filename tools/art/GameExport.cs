@@ -11,21 +11,9 @@ public static class GameExport
         Directory.CreateDirectory(outDir);
         var cast = World.Cast();
         World.Actors = false;
-        World.Solids = new List<int[]>();
-        int px, py;
-        var map = World.Map(cast, out px, out py);
-        map.Save(Path.Combine(outDir, "map_base.png"));
-
-        var sb = new StringBuilder();
-        sb.Append("{\"w\":896,\"h\":640,\"solids\":[");
-        for (int i = 0; i < World.Solids.Count; i++)
-        {
-            var s = World.Solids[i];
-            if (i > 0) sb.Append(',');
-            sb.Append('[').Append(s[0]).Append(',').Append(s[1]).Append(',').Append(s[2]).Append(',').Append(s[3]).Append(']');
-        }
-        sb.Append("]}");
-        File.WriteAllText(Path.Combine(outDir, "map.json"), sb.ToString());
+        // the city (Mesto 1): map_base.png + city.json, see City.cs
+        City.Layout();
+        string city = City.Export(outDir, false);
 
         foreach (var kv in cast)
         {
@@ -53,6 +41,6 @@ public static class GameExport
         bubG.Save(Path.Combine(outDir, "bubble_gold.png"));
 
         World.Actors = true;
-        return "solids " + World.Solids.Count;
+        return city;
     }
 }

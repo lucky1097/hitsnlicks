@@ -1,5 +1,7 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
-import { NPCS, POIS, TRAFFIC, POLICE_LOOP, WALKERS, SPAWN, LABELS, REAPER_ROADS, TURF } from './data.js?v=202610201856';
+// The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
+// a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=202610201915';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -7,6 +9,7 @@ const SPEED = 62; // map px per second
 const MAX_ZOOM = 4;
 const deg = (r) => (r * 180) / Math.PI;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 // hooks: { input:{x,y,fire}, labelLayer:HTMLElement, paused():bool, heatStars():number, readyGiver():string|null,
 //          weapon():{attack,cooldown,auto}|null, onCrime('shot'|'hitGun'|'hitMelee'), onPill('red'|'blue'|'green'), onPoi(poi|null), onAction(), onPolice() }
@@ -16,7 +19,7 @@ export function createWorld(parent, hooks) {
 
     preload() {
       this.load.image('map', 'assets/world/map_base.png');
-      this.load.json('mapdata', 'assets/world/map.json');
+      this.load.json('city', 'assets/world/city.json');
       PEOPLE.forEach((n) => this.load.image('p_' + n, 'assets/world/p_' + n + '.png'));
       CARS.forEach((n) => this.load.image('car_' + n, 'assets/world/car_' + n + '.png'));
       this.load.image('bubble', 'assets/world/bubble.png');
@@ -24,20 +27,25 @@ export function createWorld(parent, hooks) {
     }
 
     create() {
-      const md = this.cache.json.get('mapdata');
-      this.W = md.w;
-      this.H = md.h;
+      const city = this.cache.json.get('city');
+      this.city = city;
+      this.W = city.w;
+      this.H = city.h;
       this.add.image(0, 0, 'map').setOrigin(0, 0).setDepth(0);
-      this.physics.world.setBounds(0, 0, md.w, md.h);
+      this.physics.world.setBounds(0, 0, city.w, city.h);
+      this.buildGrid(city);
+      this.buildGraph(city);
 
-      this.solids = this.physics.add.staticGroup();
-      md.solids.forEach(([x, y, w, h]) => {
-        const z = this.add.zone(x + w / 2, y + h / 2, w, h);
-        this.physics.add.existing(z, true);
-        this.solids.add(z);
-      });
+      // things placed at a building's door (at: id) or on its roof (roof: id)
+      const mark = (id, roof) => { const m = city.marks[id]; return m ? (roof ? { x: m[2], y: m[3] } : { x: m[0], y: m[1] }) : null; };
+      const place = (o) => {
+        const p = o.at ? mark(o.at) : o.roof ? mark(o.roof, true) : null;
+        if (p) { o.x = p.x; o.y = p.y; }
+      };
+      NPCS.forEach(place); POIS.forEach(place); LABELS.forEach(place);
 
       // static NPCs
+      this.solids = this.physics.add.staticGroup();
       NPCS.forEach((n) => {
         this.add.image(n.x, n.y, n.sprite).setAngle(n.angle).setDepth(5);
         const z = this.add.zone(n.x, n.y, 8, 8);
@@ -55,49 +63,37 @@ export function createWorld(parent, hooks) {
       this.player.body.setCircle(4, 4, 4);
       this.player.setCollideWorldBounds(true);
       this.physics.add.collider(this.player, this.solids);
+      this.physics.add.collider(this.player, this.colLayer);
       this.walkT = 0;
       this.face = { x: 0, y: 1 };
 
       // street attacks: slash arcs, bullets, muzzle flashes
-      this.solidRects = md.solids;
       this.fx = this.add.graphics().setDepth(12);
       this.bullets = [];
       this.attackCd = 0;
 
-      // pedestrians
-      this.walkers = WALKERS.map((w) => {
-        const s = this.add.image(w.a[0], w.a[1], w.sprite).setDepth(6);
-        return { ...w, s, t: Math.random(), dir: 1, flipT: 0, down: 0 };
+      // pedestrians on the sidewalks, cars and police in the right-hand lane
+      this.walkers = [];
+      for (let i = 0; i < WALKER_COUNT; i++) {
+        const a = this.spawnAgent(this.gnodes, 'n', 11 + Math.random() * 5);
+        a.s = this.add.image(0, 0, WALKER_SPRITES[i % WALKER_SPRITES.length]).setDepth(6);
+        a.side = Math.random() < 0.5 ? 1 : -1; a.flipT = 0; a.down = 0;
+        this.walkers.push(a);
+      }
+      this.cars = TRAFFIC_CARS.map((sprite) => {
+        const a = this.spawnAgent(this.carNodes, 'cn', 30 + Math.random() * 14);
+        a.s = this.add.image(0, 0, sprite).setDepth(8);
+        return a;
       });
+      this.policeCars = [];
+      for (let i = 0; i < POLICE_CARS; i++) {
+        const a = this.spawnAgent(this.carNodes, 'cn', 34);
+        a.s = this.add.image(0, 0, 'car_police').setDepth(8);
+        a.light = this.add.graphics().setDepth(9);
+        this.policeCars.push(a);
+      }
 
-      // traffic
-      this.cars = TRAFFIC.map((c) => {
-        const s = this.add.image(c.from[0], c.from[1], c.sprite).setDepth(8);
-        const len = Math.hypot(c.to[0] - c.from[0], c.to[1] - c.from[1]);
-        s.setAngle(deg(Math.atan2(c.to[1] - c.from[1], c.to[0] - c.from[0])) + 90);
-        return { ...c, s, len, t: c.delay != null ? c.delay : Math.random() };
-      });
-
-      // police patrol around the park
-      this.loopLen = 0;
-      this.loopSegs = POLICE_LOOP.map((p, i) => {
-        const q = POLICE_LOOP[(i + 1) % POLICE_LOOP.length];
-        const len = Math.hypot(q[0] - p[0], q[1] - p[1]);
-        const seg = { p, q, len, start: this.loopLen };
-        this.loopLen += len;
-        return seg;
-      });
-      this.police = this.add.image(POLICE_LOOP[0][0], POLICE_LOOP[0][1], 'car_police').setDepth(8);
-      this.policeD = 0;
-      this.policeLight = this.add.graphics().setDepth(9);
-
-      // Ripper: a thief running along the street lanes (graph of road nodes)
-      const nodes = new Map();
-      const node = (x, y) => { const k = x + ',' + y; if (!nodes.has(k)) nodes.set(k, { x, y, n: [] }); return nodes.get(k); };
-      const link = (pts) => { for (let i = 0; i + 1 < pts.length; i++) { pts[i].n.push(pts[i + 1]); pts[i + 1].n.push(pts[i]); } };
-      REAPER_ROADS.hy.forEach((y) => link(REAPER_ROADS.hx.map((x) => node(x, y))));
-      REAPER_ROADS.vx.forEach((x) => link(REAPER_ROADS.vy.map((y) => node(x, y))));
-      this.roadNodes = [...nodes.values()];
+      // Ripper: a thief running along the streets
       this.rp = { s: this.add.image(0, 0, 'p_zlodej').setDepth(9).setVisible(false), on: false, down: 0, to: null, prev: null, walkT: 0 };
 
       // lucky runner: a fast nameless figure with a sparkling aura, once an hour
@@ -133,11 +129,13 @@ export function createWorld(parent, hooks) {
 
       // gang turf: owner graffiti on the roof + a label in the owner's colour
       this.turf = TURF.map((d) => {
+        const m = city.marks[d.id];
+        const gx = m[2], gy = m[3] + 16;
         const g = this.add.graphics().setDepth(1);
-        const t = this.add.text(d.g[0], d.g[1] + 9, '', { fontFamily: 'Georgia, serif', fontStyle: 'bold italic', fontSize: '9px', color: '#fff' }).setOrigin(0.5).setDepth(1).setResolution(4).setAlpha(0.9);
-        const label = this.makeLabel({ text: d.name, kind: 'free', x: d.l[0], y: d.l[1] });
+        const t = this.add.text(gx, gy + 9, '', { fontFamily: 'Georgia, serif', fontStyle: 'bold italic', fontSize: '9px', color: '#fff' }).setOrigin(0.5).setDepth(1).setResolution(4).setAlpha(0.9);
+        const label = this.makeLabel({ text: d.name, kind: 'free', x: m[2], y: m[3] - 26 });
         this.labels.push(label);
-        return { d, g, t, label, sig: null };
+        return { d, gx, gy, g, t, label, sig: null };
       });
       this.turfT = 0;
 
@@ -149,6 +147,84 @@ export function createWorld(parent, hooks) {
       this.currentPoi = null;
     }
 
+    // ---------------------------------------------------------------- city data
+    // collision: a grid of CELL px cells (1 = wall, water, tree...) turned into an invisible tile layer
+    buildGrid(city) {
+      const cell = city.cell, gw = city.w / cell, gh = city.h / cell;
+      const bin = atob(city.grid);
+      const grid = new Uint8Array(gw * gh);
+      for (let i = 0; i < gw * gh; i++) grid[i] = (bin.charCodeAt(i >> 3) >> (i & 7)) & 1;
+      this.grid = grid; this.gw = gw; this.gh = gh; this.cell = cell;
+      const data = [];
+      for (let y = 0; y < gh; y++) data.push(Array.from(grid.subarray(y * gw, (y + 1) * gw)));
+      const tg = this.make.graphics({ x: 0, y: 0 }, false);
+      tg.fillStyle(0xffffff, 1).fillRect(0, 0, cell * 2, cell);
+      tg.generateTexture('coltiles', cell * 2, cell);
+      tg.destroy();
+      const map = this.make.tilemap({ data, tileWidth: cell, tileHeight: cell });
+      const ts = map.addTilesetImage('coltiles', 'coltiles', cell, cell, 0, 0);
+      this.colLayer = map.createLayer(0, ts, 0, 0).setVisible(false);
+      map.setCollision(1);
+    }
+
+    solidAt(x, y) {
+      const cx = Math.floor(x / this.cell), cy = Math.floor(y / this.cell);
+      if (cx < 0 || cy < 0 || cx >= this.gw || cy >= this.gh) return true;
+      return this.grid[cy * this.gw + cx] === 1;
+    }
+
+    // street graph: n = every neighbour (walkers, Ripper, runner), cn = neighbours by car
+    buildGraph(city) {
+      this.gnodes = city.nodes.map(([x, y, hw]) => ({ x, y, hw, n: [], cn: [] }));
+      for (const [a, b, car] of city.edges) {
+        const A = this.gnodes[a], B = this.gnodes[b];
+        A.n.push(B); B.n.push(A);
+        if (car) { A.cn.push(B); B.cn.push(A); }
+      }
+      this.carNodes = this.gnodes.filter((n) => n.cn.length);
+    }
+
+    nearestNode(x, y, list = this.gnodes) {
+      let best = list[0], bd = 1e18;
+      for (const n of list) { const d = (n.x - x) ** 2 + (n.y - y) ** 2; if (d < bd) { bd = d; best = n; } }
+      return best;
+    }
+
+    spawnAgent(list, key, speed) {
+      const from = pick(list);
+      return { key, from, to: pick(from[key]), prev: null, t: Math.random(), speed };
+    }
+
+    // move along the graph; at a node pick a next street (no U-turn unless it is a dead end)
+    stepAgent(a, dt) {
+      const A = a.from, B = a.to;
+      const len = Math.hypot(B.x - A.x, B.y - A.y) || 1;
+      a.t += (a.speed * dt) / len;
+      let guard = 0;
+      while (a.t >= 1 && guard++ < 4) {
+        a.t -= 1;
+        let options = a.to[a.key].filter((n) => n !== a.from);
+        if (!options.length) options = a.to[a.key];
+        a.prev = a.from; a.from = a.to; a.to = pick(options);
+      }
+    }
+
+    // where an agent is: on the edge, pushed sideways (cars: right-hand lane, walkers: their sidewalk)
+    agentPos(a, offset) {
+      const A = a.from, B = a.to;
+      const dx = B.x - A.x, dy = B.y - A.y, len = Math.hypot(dx, dy) || 1;
+      const rx = -dy / len, ry = dx / len;
+      return { x: A.x + dx * a.t + rx * offset, y: A.y + dy * a.t + ry * offset, dx: dx / len, dy: dy / len };
+    }
+
+    laneOffset(a) { return Math.min(a.from.hw, a.to.hw) * 0.5; }
+
+    walkOffset(a) {
+      const car = a.from.cn.includes(a.to);
+      return car ? a.side * (Math.min(a.from.hw, a.to.hw) + 7) : a.side * 4;
+    }
+
+    // ---------------------------------------------------------------- labels, zoom, input
     makeLabel(l) {
       const el = document.createElement('div');
       el.className = 'wl wl-' + l.kind;
@@ -186,13 +262,14 @@ export function createWorld(parent, hooks) {
     // dir: +1 zoom in, -1 zoom out, 0 back to default
     zoomStep(dir) {
       const fit = this.fitZoom();
-      const levels = [fit, 1, 1.5, 2, 3, MAX_ZOOM].filter((z) => z >= fit - 1e-6).sort((a, b) => a - b);
+      const levels = [fit, 0.5, 1, 1.5, 2, 3, MAX_ZOOM].filter((z) => z >= fit - 1e-6).sort((a, b) => a - b);
       if (dir === 0) { this.zoomTarget = this.defaultZoom(); return; }
       const cur = this.zoomTarget;
       if (dir > 0) this.zoomTarget = levels.find((z) => z > cur + 0.01) || levels[levels.length - 1];
       else this.zoomTarget = [...levels].reverse().find((z) => z < cur - 0.01) || levels[0];
     }
 
+    // ---------------------------------------------------------------- fighting on the street
     attack(w) {
       const px = this.player.x, py = this.player.y, f = this.face;
       const a = Math.atan2(f.y, f.x);
@@ -301,8 +378,7 @@ export function createWorld(parent, hooks) {
     dropPill(x, y) {
       const kind = ['red', 'blue', 'green'][Math.floor(Math.random() * 3)];
       // land only where the player can walk: try a few directions, otherwise it stays at the person's feet
-      const blocked = (px, py) => px < 6 || py < 6 || px > this.W - 6 || py > this.H - 6 ||
-        this.solidRects.some(([sx, sy, w, h]) => px > sx - 6 && px < sx + w + 6 && py > sy - 6 && py < sy + h + 6);
+      const blocked = (px, py) => [[0, 0], [-6, 0], [6, 0], [0, -6], [0, 6]].some(([ox, oy]) => this.solidAt(px + ox, py + oy));
       const a0 = Math.random() * Math.PI * 2;
       let tx = x, ty = y;
       for (let i = 0; i < 8; i++) {
@@ -360,7 +436,7 @@ export function createWorld(parent, hooks) {
         if (!o) continue;
         // a wavy spray-paint tag, like the ones on the map art
         const c = Phaser.Display.Color.HexStringToColor(o.color).color;
-        const [cx, cy] = tf.d.g, w = tf.d.kind === 'corner' ? 30 : 44;
+        const cx = tf.gx, cy = tf.gy, w = tf.d.kind === 'corner' ? 30 : 44;
         let ph = 0;
         for (const ch of o.id) ph += ch.charCodeAt(0);
         tf.g.lineStyle(2, c, 0.85).beginPath();
@@ -375,33 +451,40 @@ export function createWorld(parent, hooks) {
       }
     }
 
-    // closest point on a street lane, and the lane's direction there
-    nearestRoad(x, y) {
-      const R = REAPER_ROADS;
-      let best = null;
-      const consider = (qx, qy, a0, a1, horiz) => {
-        const d = Math.hypot(qx - x, qy - y);
-        if (!best || d < best.d) best = { x: qx, y: qy, d, a0, a1, horiz };
-      };
-      const hx0 = Math.min(...R.hx), hx1 = Math.max(...R.hx), vy0 = Math.min(...R.vy), vy1 = Math.max(...R.vy);
-      R.hy.forEach((ry) => consider(clamp(x, hx0, hx1), ry, hx0, hx1, true));
-      R.vx.forEach((rx) => consider(rx, clamp(y, vy0, vy1), vy0, vy1, false));
-      return best;
+    // ---------------------------------------------------------------- ambulance
+    // a few streets away along the graph, so it arrives driving instead of appearing next to the body
+    routeFrom(start, steps, avoid) {
+      const path = [start];
+      let prev = avoid || null, cur = start;
+      for (let i = 0; i < steps; i++) {
+        let options = cur.cn.filter((n) => n !== prev && !path.includes(n));
+        if (!options.length) break;
+        const next = pick(options);
+        path.push(next); prev = cur; cur = next;
+      }
+      return path;
+    }
+
+    // node path -> points in the right-hand lane
+    lanePoints(path) {
+      const pts = [];
+      for (let i = 0; i < path.length; i++) {
+        const a = path[Math.max(0, i - 1)], b = path[Math.min(path.length - 1, i + (i === 0 ? 1 : 0))];
+        const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+        const off = path[i].hw * 0.5;
+        pts.push({ x: path[i].x - (dy / len) * off, y: path[i].y + (dx / len) * off });
+      }
+      return pts;
     }
 
     callAmbulance(wk) {
-      const r = this.nearestRoad(wk.s.x, wk.s.y);
-      const along = r.horiz ? r.x : r.y;
-      // come from the longer side of the lane, ~170 px out
-      const dir = along - r.a0 > r.a1 - along ? -1 : 1; // -1: drive towards the lane start
-      const start = clamp(along - dir * 170, r.a0, r.a1);
-      const end = clamp(along + dir * 220, r.a0, r.a1);
-      const pt = (v) => (r.horiz ? { x: v, y: r.y } : { x: r.x, y: v });
-      const from = pt(start), stop = pt(along), out = pt(end);
-      const angle = deg(Math.atan2(r.horiz ? 0 : dir, r.horiz ? dir : 0)) + 90;
-      const car = this.add.image(from.x, from.y, 'car_ambulance').setDepth(8).setAngle(angle);
+      const stopNode = this.nearestNode(wk.s.x, wk.s.y, this.carNodes);
+      const approach = this.routeFrom(stopNode, 6).reverse(); // ends at stopNode
+      const leave = this.routeFrom(stopNode, 6, approach[approach.length - 2]);
+      const inPts = this.lanePoints(approach), outPts = this.lanePoints(leave).slice(1);
+      const car = this.add.image(inPts[0].x, inPts[0].y, 'car_ambulance').setDepth(8);
       const light = this.add.graphics().setDepth(9);
-      this.ambulances.push({ wk, car, light, phase: 'drive', from, stop, out, medics: [], t: 0 });
+      this.ambulances.push({ wk, car, light, phase: 'drive', route: inPts, out: outPts, medics: [], t: 0 });
     }
 
     updateAmbulances(dt, time) {
@@ -410,6 +493,14 @@ export function createWorld(parent, hooks) {
         if (d <= step) { o.x = tx; o.y = ty; return true; }
         o.x += (dx / d) * step; o.y += (dy / d) * step;
         return false;
+      };
+      // follow a list of points; true when the last one is reached
+      const drive = (c, pts) => {
+        if (!pts.length) return true;
+        const p = pts[0];
+        if (Math.hypot(p.x - c.x, p.y - c.y) > 0.5) c.setAngle(deg(Math.atan2(p.y - c.y, p.x - c.x)) + 90);
+        if (move(c, p.x, p.y, 75)) pts.shift();
+        return !pts.length;
       };
       const walk = (m, tx, ty) => {
         const s = m.s;
@@ -426,7 +517,7 @@ export function createWorld(parent, hooks) {
         const on = Math.floor(time / 180) % 2 === 0;
         a.light.clear().fillStyle(on ? 0xe0352b : 0x2f6fe0, 0.22).fillCircle(c.x, c.y, 14);
         if (a.phase === 'drive') {
-          if (move(c, a.stop.x, a.stop.y, 75)) {
+          if (drive(c, a.route)) {
             a.phase = 'out';
             a.medics = [-1, 1].map((side) => {
               const s = this.add.image(c.x + side * 6, c.y + side * 3, 'p_lekarka').setDepth(9);
@@ -452,7 +543,7 @@ export function createWorld(parent, hooks) {
           const done = a.medics.map((m) => walk(m, m.home.x, m.home.y)).every(Boolean);
           if (done) { a.medics.forEach((m) => m.s.destroy()); a.medics = []; a.phase = 'leave'; }
         } else if (a.phase === 'leave') {
-          if (move(c, a.out.x, a.out.y, 75)) {
+          if (drive(c, a.out)) {
             this.tweens.add({ targets: c, alpha: 0, duration: 400, onComplete: () => c.destroy() });
             a.light.destroy();
             return false;
@@ -462,13 +553,39 @@ export function createWorld(parent, hooks) {
       });
     }
 
+    // ---------------------------------------------------------------- Ripper and the lucky runner
+    // run from node to node; when the player is close, take the street that leads away from him
+    runStep(r, dt, speed, fleeDist) {
+      const px = this.player.x, py = this.player.y;
+      const dx = r.to.x - r.s.x, dy = r.to.y - r.s.y, d = Math.hypot(dx, dy);
+      const step = speed * dt;
+      if (d <= step) {
+        r.s.setPosition(r.to.x, r.to.y);
+        let options = r.to.n.filter((n) => n !== r.prev);
+        if (!options.length) options = r.to.n;
+        const near = Math.hypot(r.s.x - px, r.s.y - py) < fleeDist;
+        const next = near
+          ? options.reduce((a, b) => (Math.hypot(b.x - px, b.y - py) > Math.hypot(a.x - px, a.y - py) ? b : a))
+          : pick(options);
+        r.prev = r.to;
+        r.to = next;
+      } else {
+        r.s.x += (dx / d) * step;
+        r.s.y += (dy / d) * step;
+        r.s.setAngle(deg(Math.atan2(dy, dx)) - 90);
+        r.walkT += dt * (speed / 7);
+        r.s.setFlipX(Math.floor(r.walkT) % 2 === 1);
+      }
+    }
+
     updateRipper(dt, paused) {
       const st = hooks.reaper();
       const rp = this.rp;
       if (st && st.active && !rp.on) {
+        const wex = NPCS.find((n) => n.id === 'wexler');
         rp.on = true; rp.down = 0; rp.prev = null;
-        rp.s.setPosition(530, 300).setVisible(true).clearTint();
-        rp.to = this.roadNodes.reduce((a, b) => (Math.hypot(b.x - 530, b.y - 300) < Math.hypot(a.x - 530, a.y - 300) ? b : a));
+        rp.s.setPosition(wex.x, wex.y + 10).setVisible(true).clearTint();
+        rp.to = this.nearestNode(wex.x, wex.y);
       }
       if ((!st || !st.active) && rp.on) { rp.on = false; rp.s.setVisible(false); }
       if (!rp.on) return;
@@ -481,59 +598,22 @@ export function createWorld(parent, hooks) {
         } else if (rp.down <= 0) rp.s.clearTint();
         return;
       }
-      const dx = rp.to.x - rp.s.x, dy = rp.to.y - rp.s.y, d = Math.hypot(dx, dy);
-      const step = 56 * dt;
-      if (d <= step) {
-        rp.s.setPosition(rp.to.x, rp.to.y);
-        let options = rp.to.n.filter((n) => n !== rp.prev);
-        if (!options.length) options = rp.to.n;
-        const near = Math.hypot(rp.s.x - px, rp.s.y - py) < 90;
-        const next = near
-          ? options.reduce((a, b) => (Math.hypot(b.x - px, b.y - py) > Math.hypot(a.x - px, a.y - py) ? b : a))
-          : options[Math.floor(Math.random() * options.length)];
-        rp.prev = rp.to;
-        rp.to = next;
-      } else {
-        rp.s.x += (dx / d) * step;
-        rp.s.y += (dy / d) * step;
-        rp.s.setAngle(deg(Math.atan2(dy, dx)) - 90);
-        rp.walkT += dt * 9;
-        rp.s.setFlipX(Math.floor(rp.walkT) % 2 === 1);
-      }
+      this.runStep(rp, dt, 56, 90);
     }
 
-    // runs the street lanes faster than you can walk, turns away when you get close; leaves sparkles
+    // runs the streets faster than you can walk, turns away when you get close; leaves sparkles
     updateRunner(dt) {
       const st = hooks.runner();
       const rn = this.rn;
       if (st && st.active && !rn.on) {
-        const n = this.roadNodes[Math.floor(Math.random() * this.roadNodes.length)];
-        rn.on = true; rn.prev = null; rn.to = n.n[0];
+        const n = pick(this.gnodes);
+        rn.on = true; rn.prev = null; rn.to = pick(n.n);
         rn.s.setPosition(n.x, n.y).setVisible(true);
         rn.aura.setVisible(true);
       }
       if ((!st || !st.active) && rn.on) { rn.on = false; rn.s.setVisible(false); rn.aura.setVisible(false); }
       if (!rn.on) return;
-      const px = this.player.x, py = this.player.y;
-      const dx = rn.to.x - rn.s.x, dy = rn.to.y - rn.s.y, d = Math.hypot(dx, dy);
-      const step = 80 * dt;
-      if (d <= step) {
-        rn.s.setPosition(rn.to.x, rn.to.y);
-        let options = rn.to.n.filter((n) => n !== rn.prev);
-        if (!options.length) options = rn.to.n;
-        const near = Math.hypot(rn.s.x - px, rn.s.y - py) < 110;
-        const next = near
-          ? options.reduce((a, b) => (Math.hypot(b.x - px, b.y - py) > Math.hypot(a.x - px, a.y - py) ? b : a))
-          : options[Math.floor(Math.random() * options.length)];
-        rn.prev = rn.to;
-        rn.to = next;
-      } else {
-        rn.s.x += (dx / d) * step;
-        rn.s.y += (dy / d) * step;
-        rn.s.setAngle(deg(Math.atan2(dy, dx)) - 90);
-        rn.walkT += dt * 12;
-        rn.s.setFlipX(Math.floor(rn.walkT) % 2 === 1);
-      }
+      this.runStep(rn, dt, 80, 110);
       rn.aura.setPosition(rn.s.x, rn.s.y);
       rn.sparkT -= dt;
       if (rn.sparkT <= 0) {
@@ -551,7 +631,7 @@ export function createWorld(parent, hooks) {
           b.x += (b.vx * dt) / steps;
           b.y += (b.vy * dt) / steps;
           if (b.x < 0 || b.y < 0 || b.x > this.W || b.y > this.H) return false;
-          if (this.solidRects.some(([x, y, w, h]) => b.x >= x && b.x <= x + w && b.y >= y && b.y <= y + h)) {
+          if (this.solidAt(b.x, b.y)) {
             const s = this.add.circle(b.x, b.y, 2, 0xffd28a, 1).setDepth(13);
             this.tweens.add({ targets: s, alpha: 0, scale: 2, duration: 120, onComplete: () => s.destroy() });
             return false;
@@ -601,7 +681,9 @@ export function createWorld(parent, hooks) {
         const wy = src.y + (l.dy || 0);
         let sx = (wx - this.camX) * z + sw / 2;
         const sy = (wy - this.camY) * z + sh / 2;
-        const inZoom = (!l.minZoom || z >= l.minZoom) && (!l.maxZoom || z < l.maxZoom);
+        // the whole city at once: only district names (and you), everything else would pile up
+        const far = z < 0.55 && l.kind !== 'district' && !l.follow;
+        const inZoom = !far && (!l.minZoom || z >= l.minZoom) && (!l.maxZoom || z < l.maxZoom);
         const show = inZoom && (!l.reaper || this.rp.on) && sx > -80 && sx < sw + 80 && sy > -30 && sy < sh + 30;
         if (show !== l.shown) { l.el.hidden = !show; l.shown = show; }
         if (show) {
@@ -662,42 +744,31 @@ export function createWorld(parent, hooks) {
       }
       if (best !== this.currentPoi) { this.currentPoi = best; hooks.onPoi(best); }
 
-      // --- pedestrians
+      // --- pedestrians on the sidewalks
       for (const w of this.walkers) {
         if (w.down > 0) {
           w.down -= dt;
           if (w.down <= 0) w.s.clearTint();
           continue;
         }
-        const len = Math.hypot(w.b[0] - w.a[0], w.b[1] - w.a[1]);
-        w.t += (w.dir * w.speed * dt) / len;
-        if (w.t >= 1) { w.t = 1; w.dir = -1; }
-        if (w.t <= 0) { w.t = 0; w.dir = 1; }
-        const x = w.a[0] + (w.b[0] - w.a[0]) * w.t, y = w.a[1] + (w.b[1] - w.a[1]) * w.t;
-        w.s.setPosition(x, y);
-        w.s.setAngle(deg(Math.atan2((w.b[1] - w.a[1]) * w.dir, (w.b[0] - w.a[0]) * w.dir)) - 90);
+        this.stepAgent(w, dt);
+        const p = this.agentPos(w, this.walkOffset(w));
+        w.s.setPosition(p.x, p.y).setAngle(deg(Math.atan2(p.dy, p.dx)) - 90);
         w.flipT += dt * 5;
         w.s.setFlipX(Math.floor(w.flipT) % 2 === 1);
       }
 
-      // --- traffic
-      for (const c of this.cars) {
-        c.t += (c.speed * dt) / c.len;
-        if (c.t > 1) c.t -= 1;
-        c.s.setPosition(c.from[0] + (c.to[0] - c.from[0]) * c.t, c.from[1] + (c.to[1] - c.from[1]) * c.t);
-      }
-
-      // --- police car loop
-      this.policeD = (this.policeD + 34 * dt) % this.loopLen;
-      const seg = this.loopSegs.find((s) => this.policeD >= s.start && this.policeD < s.start + s.len) || this.loopSegs[0];
-      const f = (this.policeD - seg.start) / seg.len;
-      const cx = seg.p[0] + (seg.q[0] - seg.p[0]) * f, cy = seg.p[1] + (seg.q[1] - seg.p[1]) * f;
-      this.police.setPosition(cx, cy).setAngle(deg(Math.atan2(seg.q[1] - seg.p[1], seg.q[0] - seg.p[0])) + 90);
+      // --- traffic and police in the right-hand lane
       const stars = hooks.heatStars();
-      this.policeLight.clear();
-      if (stars >= 2) {
-        const on = Math.floor(time / 250) % 2 === 0;
-        this.policeLight.fillStyle(on ? 0xe0352b : 0x2f6fe0, 0.18).fillCircle(cx, cy, 16);
+      const lights = stars >= 2, on = Math.floor(time / 250) % 2 === 0;
+      for (const c of [...this.cars, ...this.policeCars]) {
+        this.stepAgent(c, dt);
+        const p = this.agentPos(c, this.laneOffset(c));
+        c.s.setPosition(p.x, p.y).setAngle(deg(Math.atan2(p.dy, p.dx)) + 90);
+        if (c.light) {
+          c.light.clear();
+          if (lights) c.light.fillStyle(on ? 0xe0352b : 0x2f6fe0, 0.18).fillCircle(p.x, p.y, 16);
+        }
       }
 
       // --- officer chase at high heat

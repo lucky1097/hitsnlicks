@@ -90,6 +90,7 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .wl-free { border-color: #6b675f; color: var(--muted); }
 .wl-arena { border-color: var(--gold); color: var(--gold-t); }
 .wl-place { border-color: rgba(233,228,216,.22); color: var(--bone2); }
+.wl-district { background: none; border: none; padding: 0; font-family: var(--black); font-size: 22px; color: rgba(233,228,216,.82); text-shadow: 0 2px 3px #000, 0 0 10px #000; }
 .wl-turf { font-size: 13px; }
 .wl-turf.mine { border-width: 2px; }
 .wl-turf.free { border-style: dashed; border-color: #6b675f; color: var(--muted); }
