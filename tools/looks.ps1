@@ -24,7 +24,7 @@ $parts = @(
   @{ id = 'ucesy';    name = 'Účes';       optional = $false },
   @{ id = 'na_hlave'; name = 'Na hlave';   optional = $true },
   @{ id = 'okuliare'; name = 'Okuliare';   optional = $true },
-  @{ id = 'doplnky';  name = 'Doplnky';    optional = $true }
+  @{ id = 'doplnky';  name = 'Extra';      optional = $true }
 )
 
 # ?v= from the file content, so a phone never shows an old cached layer
@@ -73,7 +73,10 @@ foreach ($p in $parts) {
     $id = $_.BaseName
     # "hair_01_buzz_fade" -> "buzz fade"
     $label = ($id -replace '^[a-z]+_\d+_', '' -replace '^\d+_', '' -replace '_', ' ')
-    $clip = if ($hatClip[$id]) { ", hairClip: [$($hatClip[$id])]" } else { '' }
+    $clip = ''
+    if ($id -match 'cap|snapback|beanie|hat') { $clip = ', hideHair: true' }        # covers the head: no hair under it
+    elseif ($id -match 'tattoo|chain') { $clip = ", under: 'brada'" }            # a long beard falls over it
+    elseif ($id -match 'earring') { $clip = ", under: 'ucesy'" }                 # dreads and twists cover it
     "    { id: '$id', name: '$label', src: '$(& $rel $_)'$clip },"
   }
   [void]$out.AppendLine("  { id: '$($p.id)', name: '$($p.name)', optional: $($p.optional.ToString().ToLower()), items: [")
