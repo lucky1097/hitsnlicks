@@ -31,6 +31,15 @@ export const ITEM_BASES = {
   // jacket and pants give armor (share of damage stopped, see F.reduction)
   jacket: { slot: 'bunda', name: 'Kožená bunda', art: 'it_jacket', stats: { armor: 3 }, desc: 'Stará dobrá koža. Zažila viac bitiek ako ty a ešte drží.' },
   pants: { slot: 'nohavice', name: 'Čierne rifle', art: 'it_pants', stats: { armor: 2 } },
+  // trousers: all common (blue background), sold in Oblečenie
+  jeans_blue: { slot: 'nohavice', name: 'Modré rifle', art: 'x_jeans_blue', stats: { armor: 2 }, rarity: 'bezny', desc: 'Obyčajné rifle. Presne v takých ťa svedok nevie popísať.' },
+  track_pants: { slot: 'nohavice', name: 'Šuštiaky', art: 'x_track_pants', stats: { armor: 2 }, rarity: 'bezny', desc: 'Šuchocú pri každom kroku. Na tiché vlámanie si vezmi niečo iné.' },
+  cargo_olive: { slot: 'nohavice', name: 'Olivové kapsáče', art: 'x_cargo_olive', stats: { armor: 2 }, rarity: 'bezny', desc: 'Bočné vrecká na všetko, čo nemáš mať pri sebe. Šnúrky dole proti prievanu aj psom.' },
+  carpenter_pants: { slot: 'nohavice', name: 'Robotnícke nohavice', art: 'x_carpenter_pants', stats: { armor: 2 }, rarity: 'bezny', desc: 'Dvojité kolená, lebo na kolenách sa tu často končí. Aj začína.' },
+  cargo_camo: { slot: 'nohavice', name: 'Maskáčové kapsáče', art: 'x_cargo_camo', stats: { armor: 2 }, rarity: 'bezny', desc: 'Maskáč v meste nemaskuje nič. Ale vyzerá, že vieš, čo robíš.' },
+  sweatpants: { slot: 'nohavice', name: 'Sivé tepláky', art: 'x_sweatpants', stats: { armor: 2 }, rarity: 'bezny', desc: 'Večierka o druhej ráno, výsluch o tretej. Pohodlné na oboje.' },
+  jeans_ripped: { slot: 'nohavice', name: 'Roztrhané čierne rifle', art: 'x_jeans_ripped', stats: { armor: 2 }, rarity: 'bezny', desc: 'Diery na kolenách nie sú z módy. Sú z plota pri Starom moste.' },
+  shorts_ball: { slot: 'nohavice', name: 'Basketbalové trenky', art: 'x_shorts_ball', stats: { armor: 2 }, rarity: 'bezny', desc: 'Fialovo-zlaté, dlhé po kolená. Na ihrisku za bytovkou sa v nich rozdávajú karty aj rany.' },
   sneaker: { slot: 'topanky', name: 'Tenisky', art: 'it_sneaker', stats: { obratnost: 0.6 } },
   chain: { slot: 'retiazka', name: 'Retiazka', art: 'it_chain', stats: { charizma: 0.6 } },
   ring: { slot: 'prsten', name: 'Prsteň', art: 'it_ring', stats: { stastie: 0.6 } },
@@ -48,6 +57,8 @@ export const ITEM_BASES = {
   jacket_compass: { slot: 'bunda', name: 'Bunda s kompasom', art: 'x_jacket_compass', stats: { armor: 3 }, rarity: 'epicky', desc: 'Odznak s kompasom na rukáve. Ukazuje jediný smer, ktorý poznáš: preč od polície.' },
   parka_fur: { slot: 'bunda', name: 'Parka s kožušinou', art: 'x_parka_fur', stats: { armor: 3 }, rarity: 'epicky', desc: 'Kapucňa s kožušinou a štyri vrecká. Nikto nevie, čo v nich nosíš, a tak to má byť.' },
   puffer_hood: { slot: 'bunda', name: 'Čierna páperovka s kapucňou', art: 'x_puffer_hood', stats: { armor: 3 }, rarity: 'epicky', desc: 'Čierna a lesklá ako mokrý asfalt o tretej ráno. Zima ťa v nej nedostane. Konkurencia možno.' },
+  biker_jacket: { slot: 'bunda', name: 'Motorkárska bunda', art: 'x_biker_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Šikmý zips, opasok a cvočky. Motorku nemáš, ale vyzeráš, že ťa niekde čaká.' },
+  denim_jacket: { slot: 'bunda', name: 'Rifľová bunda', art: 'x_denim_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Vyblednutá od slnka aj od policajných svetiel. Klasika, ktorá nikdy nepýta otázky.' },
   coat_camel: { slot: 'bunda', name: 'Kabát z ťavej vlny', art: 'x_coat_camel', stats: { armor: 3 }, rarity: 'legendarny', desc: 'Dvojradový kabát, aký nosia muži, ktorí sa nikomu nemusia predstavovať. Vypadne len z bossa.' },
   sneaker_black: { slot: 'topanky', name: 'Čierne tenisky', art: 'x_sneaker_black', stats: { obratnost: 0.6 }, rarity: 'bezny' },
   ring_ruby: { slot: 'prsten', name: 'Rubínový prsteň', art: 'x_ring_ruby', stats: { stastie: 0.6 }, rarity: 'epicky' },
@@ -57,7 +68,7 @@ export const ITEM_BASES = {
 
 export const SHOPS = {
   zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'glock', 'kalach', 'katana'], blurb: 'Nič nevidíš, nič nekupuješ.' },
-  oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
+  oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'biker_jacket', 'denim_jacket', 'jeans_blue', 'track_pants', 'cargo_olive', 'carpenter_pants', 'cargo_camo', 'sweatpants', 'jeans_ripped', 'shorts_ball', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
   sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby'], blurb: 'Zlato hovorí za teba.' },
 };
 

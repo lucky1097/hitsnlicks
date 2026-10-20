@@ -1,9 +1,9 @@
 // Gangs (guilds like in Shakes & Fidget) and Gang Wars: turf objects on the map give the whole gang
 // a bonus while it holds them. Rival gangs are computer-run until a real server brings real players.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261020230151';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261020230151';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261020230151';
+import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261020230641';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261020230641';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261020230641';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });

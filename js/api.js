@@ -11,8 +11,8 @@
 //   ladder(n) -> [{ id, name, points }]
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261020230151';
-import { GIVERS, SHOPS } from './data.js?v=20261020230151';
+import { SimServer } from './server.js?v=20261020230641';
+import { GIVERS, SHOPS } from './data.js?v=20261020230641';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
