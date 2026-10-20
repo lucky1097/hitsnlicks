@@ -11,8 +11,9 @@ $parts = @(
   @{ id = 'zaklad';   name = 'Telo';       optional = $false },
   @{ id = 'plet';     name = 'Pleť';       optional = $false },
   @{ id = 'nos';      name = 'Nos';        optional = $false },
-  @{ id = 'oci';      name = 'Oči';        optional = $false },
+  # brows under the eyes: the eye layer wins where both touch (no doubled lids)
   @{ id = 'obocie';   name = 'Obočie';     optional = $false },
+  @{ id = 'oci';      name = 'Oči';        optional = $false },
   @{ id = 'usta';     name = 'Ústa';       optional = $false },
   @{ id = 'brada';    name = 'Brada';      optional = $true },
   @{ id = 'ucesy';    name = 'Účes';       optional = $false },

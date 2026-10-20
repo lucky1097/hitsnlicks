@@ -1,5 +1,5 @@
 // Automatic stat-based combat. Pure functions: the real server would run exactly this.
-import { CONFIG, F } from './config.js?v=20261020224942';
+import { CONFIG, F } from './config.js?v=20261020225638';
 
 export function mulberry32(seed) {
   let a = seed >>> 0;
