@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261020225638';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261020225638';
-import { makeFighter, simulate } from './combat.js?v=20261020225638';
-import { GangMixin } from './gangs.js?v=20261020225638';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261020225651';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261020225651';
+import { makeFighter, simulate } from './combat.js?v=20261020225651';
+import { GangMixin } from './gangs.js?v=20261020225651';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
