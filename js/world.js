@@ -1,7 +1,7 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261020191602';
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261020194200';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -77,19 +77,19 @@ export function createWorld(parent, hooks) {
       // pedestrians on the sidewalks, cars and police in the right-hand lane
       this.walkers = [];
       for (let i = 0; i < WALKER_COUNT; i++) {
-        const a = this.spawnAgent(this.gnodes, 'n', 11 + Math.random() * 5);
+        const a = this.spawnAgent('walk', 11 + Math.random() * 5);
         a.s = this.add.image(0, 0, WALKER_SPRITES[i % WALKER_SPRITES.length]).setDepth(6);
-        a.side = Math.random() < 0.5 ? 1 : -1; a.flipT = 0; a.down = 0;
+        a.flipT = 0; a.down = 0;
         this.walkers.push(a);
       }
       this.cars = TRAFFIC_CARS.map((sprite) => {
-        const a = this.spawnAgent(this.carNodes, 'cn', 30 + Math.random() * 14);
+        const a = this.spawnAgent('car', 30 + Math.random() * 14);
         a.s = this.add.image(0, 0, sprite).setDepth(8);
         return a;
       });
       this.policeCars = [];
       for (let i = 0; i < POLICE_CARS; i++) {
-        const a = this.spawnAgent(this.carNodes, 'cn', 34);
+        const a = this.spawnAgent('car', 34);
         a.s = this.add.image(0, 0, 'car_police').setDepth(8);
         a.light = this.add.graphics().setDepth(9);
         this.policeCars.push(a);
@@ -175,15 +175,19 @@ export function createWorld(parent, hooks) {
       return this.grid[cy * this.gw + cx] === 1;
     }
 
-    // street graph: n = every neighbour (walkers, Ripper, runner), cn = neighbours by car
+    // street graph: nodes sit exactly on crossings (r = half the widest street there, 0 on a bend);
+    // links carry the street's half width and whether cars use it. n / cn = neighbours for walkers / cars.
     buildGraph(city) {
-      this.gnodes = city.nodes.map(([x, y, hw]) => ({ x, y, hw, n: [], cn: [] }));
-      for (const [a, b, car] of city.edges) {
+      this.sw = city.sw || 14;
+      this.gnodes = city.nodes.map(([x, y, r]) => ({ x, y, r, links: [], n: [], cn: [] }));
+      for (const [a, b, hw, car] of city.edges) {
         const A = this.gnodes[a], B = this.gnodes[b];
+        A.links.push({ node: B, hw, car: !!car }); B.links.push({ node: A, hw, car: !!car });
         A.n.push(B); B.n.push(A);
         if (car) { A.cn.push(B); B.cn.push(A); }
       }
       this.carNodes = this.gnodes.filter((n) => n.cn.length);
+      this.walkNodes = this.gnodes.filter((n) => n.n.length);
     }
 
     nearestNode(x, y, list = this.gnodes) {
@@ -192,38 +196,86 @@ export function createWorld(parent, hooks) {
       return best;
     }
 
-    spawnAgent(list, key, speed) {
-      const from = pick(list);
-      return { key, from, to: pick(from[key]), prev: null, t: Math.random(), speed };
+    // the straight piece an agent follows on one street: cars in the right-hand lane, walkers on their
+    // sidewalk; both stop short of a crossing, and the gap is bridged by a short "turn" piece
+    // (end of this street -> start of the next), so nobody ever jumps
+    edgeSeg(kind, side, A, link) {
+      const B = link.node;
+      let dx = B.x - A.x, dy = B.y - A.y;
+      const len = Math.hypot(dx, dy) || 1;
+      dx /= len; dy /= len;
+      const nx = -dy, ny = dx;
+      let off, cutA, cutB;
+      if (kind === 'car') {
+        off = link.hw * 0.5;
+        cutA = A.r; cutB = B.r;
+      } else {
+        off = link.car ? side * (link.hw + this.sw * 0.65) : side * 3; // the outer part of the sidewalk: trees and lamps stand at the curb
+        cutA = A.r > 0 ? A.r + (link.car ? this.sw * 0.65 : 0) : 0;
+        cutB = B.r > 0 ? B.r + (link.car ? this.sw * 0.65 : 0) : 0;
+      }
+      if (cutA + cutB > len * 0.9) { const k = (len * 0.9) / (cutA + cutB); cutA *= k; cutB *= k; }
+      return { x0: A.x + dx * cutA + nx * off, y0: A.y + dy * cutA + ny * off, x1: B.x - dx * cutB + nx * off, y1: B.y - dy * cutB + ny * off };
     }
 
-    // move along the graph; at a node pick a next street (no U-turn unless it is a dead end)
+    setSeg(a, s) { a.seg = s; a.seg.len = Math.hypot(s.x1 - s.x0, s.y1 - s.y0); }
+
+    // where the lines through two pieces cross (null when they are parallel)
+    lineCross(s, t) {
+      const rx = s.x1 - s.x0, ry = s.y1 - s.y0, qx = t.x1 - t.x0, qy = t.y1 - t.y0;
+      const den = rx * qy - ry * qx;
+      if (Math.abs(den) < 1e-6 * Math.hypot(rx, ry) * Math.hypot(qx, qy)) return null;
+      const u = ((t.x0 - s.x0) * qy - (t.y0 - s.y0) * qx) / den;
+      return { x: s.x0 + rx * u, y: s.y0 + ry * u };
+    }
+
+    linksFor(a, node) { return a.kind === 'car' ? node.links.filter((l) => l.car) : node.links; }
+
+    spawnAgent(kind, speed) {
+      const from = pick(kind === 'car' ? this.carNodes : this.walkNodes);
+      const a = { kind, speed, side: Math.random() < 0.5 ? 1 : -1, from, phase: 'edge', d: 0, hx: 0, hy: 1 };
+      a.link = pick(this.linksFor(a, from));
+      a.to = a.link.node;
+      this.setSeg(a, this.edgeSeg(kind, a.side, from, a.link));
+      a.d = Math.random() * a.seg.len;
+      return a;
+    }
+
+    // move along the pieces; at a crossing pick the next street (no U-turn unless it is a dead end)
     stepAgent(a, dt) {
-      const A = a.from, B = a.to;
-      const len = Math.hypot(B.x - A.x, B.y - A.y) || 1;
-      a.t += (a.speed * dt) / len;
+      a.d += a.speed * dt;
       let guard = 0;
-      while (a.t >= 1 && guard++ < 4) {
-        a.t -= 1;
-        let options = a.to[a.key].filter((n) => n !== a.from);
-        if (!options.length) options = a.to[a.key];
-        a.prev = a.from; a.from = a.to; a.to = pick(options);
+      while (a.d >= a.seg.len && guard++ < 6) {
+        a.d -= a.seg.len;
+        if (a.phase === 'edge') {
+          const B = a.to;
+          let options = this.linksFor(a, B).filter((l) => l.node !== a.from);
+          if (!options.length) options = this.linksFor(a, B);
+          const link = pick(options);
+          const next = this.edgeSeg(a.kind, a.side, B, link);
+          a.next = { from: B, link, seg: next };
+          // go round the real corner where the two lanes / sidewalks meet, not diagonally through a building
+          const c = this.lineCross(a.seg, next);
+          a.turnPts = c && Math.hypot(c.x - B.x, c.y - B.y) < B.r + 70 ? [c, { x: next.x0, y: next.y0 }] : [{ x: next.x0, y: next.y0 }];
+          const p = a.turnPts.shift();
+          this.setSeg(a, { x0: a.seg.x1, y0: a.seg.y1, x1: p.x, y1: p.y });
+          a.phase = 'turn';
+        } else if (a.turnPts.length) {
+          const p = a.turnPts.shift();
+          this.setSeg(a, { x0: a.seg.x1, y0: a.seg.y1, x1: p.x, y1: p.y });
+        } else {
+          a.from = a.next.from; a.link = a.next.link; a.to = a.link.node;
+          this.setSeg(a, a.next.seg);
+          a.phase = 'edge';
+        }
       }
     }
 
-    // where an agent is: on the edge, pushed sideways (cars: right-hand lane, walkers: their sidewalk)
-    agentPos(a, offset) {
-      const A = a.from, B = a.to;
-      const dx = B.x - A.x, dy = B.y - A.y, len = Math.hypot(dx, dy) || 1;
-      const rx = -dy / len, ry = dx / len;
-      return { x: A.x + dx * a.t + rx * offset, y: A.y + dy * a.t + ry * offset, dx: dx / len, dy: dy / len };
-    }
-
-    laneOffset(a) { return Math.min(a.from.hw, a.to.hw) * 0.5; }
-
-    walkOffset(a) {
-      const car = a.from.cn.includes(a.to);
-      return car ? a.side * (Math.min(a.from.hw, a.to.hw) + 7) : a.side * 4;
+    // position and heading on the current piece
+    agentPos(a) {
+      const s = a.seg, t = s.len > 0 ? Math.min(1, a.d / s.len) : 1;
+      if (s.len > 0.5) { a.hx = (s.x1 - s.x0) / s.len; a.hy = (s.y1 - s.y0) / s.len; }
+      return { x: s.x0 + (s.x1 - s.x0) * t, y: s.y0 + (s.y1 - s.y0) * t, dx: a.hx, dy: a.hy };
     }
 
     // ---------------------------------------------------------------- labels, zoom, input
@@ -467,14 +519,13 @@ export function createWorld(parent, hooks) {
       return path;
     }
 
-    // node path -> points in the right-hand lane
+    // node path -> points in the right-hand lane (the same pieces traffic uses)
     lanePoints(path) {
       const pts = [];
-      for (let i = 0; i < path.length; i++) {
-        const a = path[Math.max(0, i - 1)], b = path[Math.min(path.length - 1, i + (i === 0 ? 1 : 0))];
-        const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
-        const off = path[i].hw * 0.5;
-        pts.push({ x: path[i].x - (dy / len) * off, y: path[i].y + (dx / len) * off });
+      for (let i = 0; i + 1 < path.length; i++) {
+        const link = path[i].links.find((l) => l.node === path[i + 1]);
+        const s = this.edgeSeg('car', 1, path[i], link);
+        pts.push({ x: s.x0, y: s.y0 }, { x: s.x1, y: s.y1 });
       }
       return pts;
     }
@@ -483,7 +534,8 @@ export function createWorld(parent, hooks) {
       const stopNode = this.nearestNode(wk.s.x, wk.s.y, this.carNodes);
       const approach = this.routeFrom(stopNode, 6).reverse(); // ends at stopNode
       const leave = this.routeFrom(stopNode, 6, approach[approach.length - 2]);
-      const inPts = this.lanePoints(approach), outPts = this.lanePoints(leave).slice(1);
+      const inPts = this.lanePoints(approach), outPts = this.lanePoints(leave);
+      if (!inPts.length) inPts.push({ x: stopNode.x, y: stopNode.y });
       const car = this.add.image(inPts[0].x, inPts[0].y, 'car_ambulance').setDepth(8);
       const light = this.add.graphics().setDepth(9);
       this.ambulances.push({ wk, car, light, phase: 'drive', route: inPts, out: outPts, medics: [], t: 0 });
@@ -754,7 +806,7 @@ export function createWorld(parent, hooks) {
           continue;
         }
         this.stepAgent(w, dt);
-        const p = this.agentPos(w, this.walkOffset(w));
+        const p = this.agentPos(w);
         w.s.setPosition(p.x, p.y).setAngle(deg(Math.atan2(p.dy, p.dx)) - 90);
         w.flipT += dt * 5;
         w.s.setFlipX(Math.floor(w.flipT) % 2 === 1);
@@ -765,8 +817,12 @@ export function createWorld(parent, hooks) {
       const lights = stars >= 2, on = Math.floor(time / 250) % 2 === 0;
       for (const c of [...this.cars, ...this.policeCars]) {
         this.stepAgent(c, dt);
-        const p = this.agentPos(c, this.laneOffset(c));
-        c.s.setPosition(p.x, p.y).setAngle(deg(Math.atan2(p.dy, p.dx)) + 90);
+        const p = this.agentPos(c);
+        // steer smoothly through a turn instead of snapping to the new heading
+        const target = deg(Math.atan2(p.dy, p.dx)) + 90;
+        if (c.ang === undefined) c.ang = target;
+        c.ang += Phaser.Math.Angle.ShortestBetween(c.ang, target) * Math.min(1, dt * 9);
+        c.s.setPosition(p.x, p.y).setAngle(c.ang);
         if (c.light) {
           c.light.clear();
           if (lights) c.light.fillStyle(on ? 0xe0352b : 0x2f6fe0, 0.18).fillCircle(p.x, p.y, 16);
