@@ -129,7 +129,7 @@ export class UI {
 
   close() {
     this.stopFight();
-    this.name = null; this.arg = null; this.stack = [];
+    this.name = null; this.arg = null; this.stack = []; this.renderKey = null;
     this.el.screen.hidden = true;
     this.el.screen.innerHTML = '';
     this.el.hud.hidden = !this.s.hasSave();
@@ -141,8 +141,15 @@ export class UI {
     const fn = this['scr_' + this.name];
     if (!fn) { this.close(); return; }
     const out = fn.call(this, this.arg);
+    // re-rendering the same screen (e.g. after +1 on a stat) keeps the scroll position
+    const key = this.name + '|' + JSON.stringify(this.arg);
+    const oldBody = this.el.screen.querySelector('.body');
+    const keep = key === this.renderKey && oldBody ? oldBody.scrollTop : 0;
+    this.renderKey = key;
     this.el.screen.className = out.overlay ? 'overlay' : '';
     this.el.screen.innerHTML = out.html;
+    const newBody = this.el.screen.querySelector('.body');
+    if (keep && newBody) newBody.scrollTop = keep;
     this.el.screen.hidden = false;
     this.el.hud.hidden = !this.s.hasSave() || this.name === 'title';
     if (out.after) out.after();

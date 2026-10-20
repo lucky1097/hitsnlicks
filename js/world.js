@@ -121,6 +121,7 @@ export function createWorld(parent, hooks) {
       this.linear = null;
       this.input.addPointer(1);
       this.pinch = null;
+      this.bindPinch();
       this.input.on('wheel', (p, over, dx, dy) => {
         this.zoomTarget = clamp(this.zoomTarget * (dy > 0 ? 0.85 : 1.18), this.fitZoom(), MAX_ZOOM);
       });
@@ -155,6 +156,27 @@ export function createWorld(parent, hooks) {
       el.hidden = true;
       hooks.labelLayer.appendChild(el);
       return { ...l, el, shown: false };
+    }
+
+    // two fingers on the map: spread = closer, pinch = further, like zooming a photo.
+    // Read straight from the touch events, and the browser's own page zoom is blocked
+    // (iOS Safari ignores user-scalable=no and would otherwise zoom the whole page instead).
+    bindPinch() {
+      const el = this.game.canvas;
+      const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+      el.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) { this.pinch = { d: Math.max(10, dist(e.touches)), z: this.zoomTarget }; e.preventDefault(); }
+      }, { passive: false });
+      el.addEventListener('touchmove', (e) => {
+        if (e.touches.length !== 2 || !this.pinch) return;
+        e.preventDefault();
+        this.zoomTarget = clamp(this.pinch.z * (dist(e.touches) / this.pinch.d), this.fitZoom(), MAX_ZOOM);
+      }, { passive: false });
+      const end = (e) => { if (e.touches.length < 2) this.pinch = null; };
+      el.addEventListener('touchend', end);
+      el.addEventListener('touchcancel', end);
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach((n) => document.addEventListener(n, (e) => e.preventDefault(), { passive: false }));
+      document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
     }
 
     defaultZoom() { return clamp(Math.round(this.scale.width / 130), 2, MAX_ZOOM); }
@@ -539,15 +561,10 @@ export function createWorld(parent, hooks) {
     }
 
     updateCamera(dt) {
-      const p1 = this.input.pointer1, p2 = this.input.pointer2;
-      if (p1.isDown && p2.isDown) {
-        const d = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-        if (!this.pinch) this.pinch = { d, z: this.zoomTarget };
-        else this.zoomTarget = clamp(this.pinch.z * (d / Math.max(10, this.pinch.d)), this.fitZoom(), MAX_ZOOM);
-      } else this.pinch = null;
-
       this.zoomTarget = clamp(this.zoomTarget, this.fitZoom(), MAX_ZOOM);
-      this.zoom += (this.zoomTarget - this.zoom) * Math.min(1, dt * 10);
+      // while pinching the map follows the fingers directly, like a photo; buttons and the wheel ease in
+      if (this.pinch) this.zoom = this.zoomTarget;
+      else this.zoom += (this.zoomTarget - this.zoom) * Math.min(1, dt * 10);
       const z = this.zoom;
       const sw = this.scale.width, sh = this.scale.height;
       const vw = sw / z, vh = sh / z;

@@ -27,8 +27,8 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 
 #app { position: relative; width: 100%; max-width: 430px; height: 100vh; height: 100dvh; margin: 0 auto; overflow: hidden; background: var(--ink); user-select: none; -webkit-user-select: none; }
 @media (min-width: 600px) { #app { border-left: 1px solid #1c1b19; border-right: 1px solid #1c1b19; } }
-#game { position: absolute; inset: 0; }
-#game canvas { display: block; }
+#game { position: absolute; inset: 0; touch-action: none; }
+#game canvas { display: block; touch-action: none; }
 
 .px { image-rendering: pixelated; width: 24px; height: 24px; }
 .sc { font-variant-caps: all-small-caps; letter-spacing: 2px; }
