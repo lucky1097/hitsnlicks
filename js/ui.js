@@ -1,6 +1,6 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=202610201758';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=202610201758';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=202610201759';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=202610201759';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -144,7 +144,8 @@ export class UI {
     // re-rendering the same screen (e.g. after +1 on a stat) keeps the scroll position
     // (remembered while scrolling, and put back again on the next frame: iOS can lose it otherwise)
     const key = this.name + '|' + (typeof this.arg === 'object' && this.arg ? 'obj' : String(this.arg));
-    const keep = key === this.renderKey ? this.scrollMem || 0 : 0;
+    const oldBody = this.el.screen.querySelector('.body');
+    const keep = key === this.renderKey ? Math.max(this.scrollMem || 0, oldBody ? oldBody.scrollTop : 0) : 0;
     this.renderKey = key;
     this.scrollMem = keep;
     this.el.screen.className = out.overlay ? 'overlay' : '';
