@@ -7,7 +7,7 @@ param([Parameter(Mandatory = $true)][string]$Message)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $enc = New-Object Text.UTF8Encoding($false)
-$v = Get-Date -Format 'yyyyMMddHHmm'
+$v = Get-Date -Format 'yyyyMMddHHmmss'
 
 foreach ($f in Get-ChildItem (Join-Path $root 'js') -Filter *.js) {
   $t = [IO.File]::ReadAllText($f.FullName, $enc)
