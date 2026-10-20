@@ -1,0 +1,13 @@
+size 160 160 2
+ellipse 000000 0.3 80 132 50 6
+stroke 7a5814 13 | M28 98 C28 80 132 80 132 98
+stroke e0b444 13 | M132 98 C132 116 28 116 28 98
+stroke fff0b0 2 0.7 | M40 108 C60 116 100 116 120 108
+stroke 5a3e0c 1.2 0.8 | M28 98 C28 116 132 116 132 98
+grad f6d878 7a5612 90 | M50 62 L110 62 L117 86 L43 86 Z
+grad 4a4a52 040405 135 | M57 65 L103 65 L108 82 L52 82 Z
+fill ffffff 0.22 | M59 67 L79 67 L69 76 L56 76 Z
+ellipse ffffff 1 50 74 1.8 1.8
+ellipse ffffff 1 110 74 1.8 1.8
+stroke fff6d0 1.2 0.8 | M50 62 L110 62
+noise 0.025 10

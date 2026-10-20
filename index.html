@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#070707">
+<title>Hits &amp; Licks – prototyp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700;900&amp;family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <div id="game"></div>
+  <div id="labels" aria-hidden="true"></div>
+
+  <div id="hud" hidden>
+    <div class="hud-top">
+      <button class="avatar" data-act="open" data-arg="character" aria-label="Postava">
+        <img src="assets/art/maska.png" alt="">
+        <span class="lvl" id="hud-lvl">1</span>
+      </button>
+      <div class="hud-res">
+        <div class="hud-money">
+          <span class="res"><img class="px" src="assets/icons/i_cash.png" alt="Hotovosť"><b id="hud-cash">0</b></span>
+          <span class="res gold"><img class="px" src="assets/icons/i_bar.png" alt="Zlaté tehličky"><b id="hud-chains">0</b></span>
+        </div>
+        <div class="hud-xp"><div class="bar xp"><i id="hud-xpbar"></i></div><span id="hud-xptext">0 %</span></div>
+      </div>
+      <button class="icon-btn" data-act="open" data-arg="menu" aria-label="Menu">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><path d="M1 2h20M1 8h20M1 14h20" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+      </button>
+    </div>
+    <div class="hud-row">
+      <div class="hud-left">
+        <div class="heat" id="hud-heat" title="Heat: denný limit na misie">
+          <img class="px" src="assets/icons/i_heat.png" alt="">
+          <span class="sc">Heat</span>
+          <span class="hbar"><i id="hud-heatbar"></i></span><b class="num" id="hud-heatpct">0 %</b>
+        </div>
+        <div class="buffs" id="hud-buffs" hidden></div>
+      </div>
+      <button class="tracker" id="hud-tracker" data-act="tab" data-arg="missions" hidden>
+        <span class="sc" id="hud-trk-label">Aktívna misia</span>
+        <span class="trk-name" id="hud-trk-name"></span>
+        <span class="trk-time"><img class="px" src="assets/icons/i_clock.png" alt=""><b id="hud-trk-time"></b></span>
+      </button>
+    </div>
+    <div class="zoom">
+      <button data-act="zoom" data-arg="1" aria-label="Priblížiť">+</button>
+      <button data-act="zoom" data-arg="-1" aria-label="Oddialiť">−</button>
+    </div>
+    <div class="reaper-tag" id="hud-reaper" hidden></div>
+    <div class="poi-tag" id="poi-tag" hidden></div>
+    <div class="joystick" id="joystick"><div class="knob" id="knob"></div></div>
+    <button class="action" id="action" hidden>Hovoriť</button>
+    <button class="attack" id="attack" hidden aria-label="Útok zbraňou">Úder</button>
+    <nav class="tabs">
+      <button class="on" data-act="tab" data-arg="city">Mesto</button>
+      <button data-act="tab" data-arg="character">Postava</button>
+      <button data-act="tab" data-arg="missions">Misie</button>
+      <button data-act="tab" data-arg="arena">Aréna</button>
+      <button data-act="tab" data-arg="gang">Gang</button>
+    </nav>
+  </div>
+
+  <div id="screen" hidden></div>
+  <div id="modal" hidden></div>
+  <div id="toasts"></div>
+</div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

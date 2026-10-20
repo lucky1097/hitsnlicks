@@ -1,0 +1,5 @@
+project_id = "hitsnlicks"
+
+[functions.game]
+# the function checks the login token itself (and answers browser CORS preflights)
+verify_jwt = false
