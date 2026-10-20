@@ -1,5 +1,5 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
-import { NPCS, POIS, TRAFFIC, POLICE_LOOP, WALKERS, SPAWN, LABELS, REAPER_ROADS, TURF } from './data.js?v=202610201803';
+import { NPCS, POIS, TRAFFIC, POLICE_LOOP, WALKERS, SPAWN, LABELS, REAPER_ROADS, TURF } from './data.js?v=202610201856';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];

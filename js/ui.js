@@ -1,6 +1,6 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=202610201803';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=202610201803';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=202610201856';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=202610201856';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -717,7 +717,7 @@ export class UI {
     else if (b.art) scene = '<img class="bg" src="' + art('fightbg') + '" alt=""><img class="fb" src="' + art(b.art) + '" alt="' + b.name + '">';
     else scene = '<img class="bg" src="' + art('fightbg') + '" alt=""><img class="fb" src="' + art('kladivo') + '" alt="" style="filter:brightness(0) drop-shadow(0 0 1px #6b675f)">';
     let h = '<div class="stage">' + scene + '<div class="fade-t"></div><div class="fade-b"></div>' +
-      '<div class="title" style="align-items:flex-start;left:16px;top:60px"><span class="sc" style="font-size:14px;color:#b9b4a8">Boss ' + (info.index + 1) + ' / ' + info.total + '</span><span class="bl" style="font-size:46px;font-weight:900;color:#efe9dc;text-shadow:0 3px 0 #000">' + info.boss.name + '</span><span class="sc" style="font-size:14px;color:#e05a4f;text-shadow:0 1px 2px #000,0 0 8px #000,0 0 12px #000">' + info.boss.title + '</span></div></div>';
+      '<div class="title" style="align-items:flex-start;left:16px;' + (b.titleLow ? 'top:auto;bottom:14px' : 'top:60px') + '"><span class="sc" style="font-size:14px;color:#b9b4a8">Boss ' + (info.index + 1) + ' / ' + info.total + '</span><span class="bl" style="font-size:46px;font-weight:900;color:#efe9dc;text-shadow:0 3px 0 #000">' + info.boss.name + '</span><span class="sc" style="font-size:14px;color:#e05a4f;text-shadow:0 1px 2px #000,0 0 8px #000,0 0 12px #000">' + info.boss.title + '</span></div></div>';
     h += '<div class="body"><div class="hpgrid" style="padding:0">' +
       '<div><div class="top"><span class="bl">Ty</span><span class="num muted" style="font-size:14px">úr. ' + me.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(me.hp) + '<br>Úder ' + Math.round(F.hitOf(me)) + '</p></div>' +
       '<div><div class="top"><span class="bl">' + info.boss.name + '</span><span class="num muted" style="font-size:14px">úr. ' + f.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(f.hp) + '<br>Úder ' + Math.round(F.hitOf(f)) + '</p></div></div>';

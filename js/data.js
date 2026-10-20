@@ -116,6 +116,7 @@ export const BOSSES = [
   { name: 'Kazateľ', title: 'Káže, kým ostatní platia', art: 'photo_kazatel', wide: 'photo_kazatel_wide', focus: '55% 20%', profile: { sila: 0.9, odolnost: 1.0, obratnost: 1.0, charizma: 1.3, stastie: 0.8 } },
   { name: 'Kožuch', title: 'Úžerník z penthousu', art: 'photo_kozuch', wide: 'photo_kozuch_wide', focus: '40% 22%', profile: { sila: 1.3, odolnost: 1.4, obratnost: 0.6, charizma: 1.0, stastie: 0.7 } },
   { name: 'Žiletka', title: 'Rezák z cornera', art: 'photo_ziletka', wide: 'photo_ziletka', focus: '50% 38%', profile: { sila: 1.0, odolnost: 0.8, obratnost: 1.4, charizma: 0.6, stastie: 1.2 } },
+  { name: 'Šťastný Charlie', title: 'Kartár v župane', art: 'photo_charlie', wide: 'photo_charlie_wide', focus: '58% 0%', titleLow: true, profile: { sila: 0.7, odolnost: 1.0, obratnost: 0.9, charizma: 1.3, stastie: 1.6 } },
   { name: 'Lasica', title: 'Zlodej áut', profile: { sila: 0.8, odolnost: 0.9, obratnost: 1.5, charizma: 0.8, stastie: 1.0 } },
   { name: 'Doktor', title: 'Pašerák', profile: { sila: 0.9, odolnost: 1.0, obratnost: 1.0, charizma: 1.3, stastie: 0.8 } },
   { name: 'Bager', title: 'Kápo stavbárov', profile: { sila: 1.5, odolnost: 1.3, obratnost: 0.5, charizma: 0.7, stastie: 1.0 } },
