@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020225651';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020225651';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261020225651';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020230151';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020230151';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261020230151';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -364,9 +364,15 @@ export class UI {
     return Object.entries(b).map(([k, v]) => (k === 'dmg' ? 'Zbraň +' + v : k === 'armor' ? 'Brnenie +' + v : STAT_NAMES[k] + ' +' + v)).join(' · ');
   }
 
+  // flavour text of an item (ITEM_BASES desc)
+  descHtml(it) {
+    const d = ITEM_BASES[it.base] && ITEM_BASES[it.base].desc;
+    return d ? '<div class="desc">' + esc(d) + '</div>' : '';
+  }
+
   lootHtml(it) {
     const r = rar(it.rarity);
-    return '<div class="loot rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div><div style="font-size:18px">' + this.itemName(it) + '</div><div style="font-size:14px;color:' + r.color + '">' + r.name + ' · ' + this.bonusText(it) + '</div></div></div>';
+    return '<div class="loot rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div><div style="font-size:18px">' + this.itemName(it) + '</div><div style="font-size:14px;color:' + r.color + '">' + r.name + ' · ' + this.bonusText(it) + '</div>' + this.descHtml(it) + '</div></div>';
   }
 
   // ---------------------------------------------------------------- actions
@@ -618,7 +624,7 @@ export class UI {
       const r = rar(it.rarity);
       const on = p.equipment[it.slot] === it.id;
       h += '<div class="item rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div class="mid"><div class="t">' + this.itemName(it) + (on ? ' <span class="sc gold" style="font-size:13px">· nasadené</span>' : '') + '</div>' +
-        '<div class="s"><span style="color:' + r.color + '">' + r.name + '</span> · úr. ' + it.level + ' · ' + SLOTS.find((s) => s.id === it.slot).name + '</div><div class="s" style="color:#c9c4b8">' + this.bonusText(it) + '</div></div>' +
+        '<div class="s"><span style="color:' + r.color + '">' + r.name + '</span> · úr. ' + it.level + ' · ' + SLOTS.find((s) => s.id === it.slot).name + '</div><div class="s" style="color:#c9c4b8">' + this.bonusText(it) + '</div>' + this.descHtml(it) + '</div>' +
         '<div class="acts">' + (on ? '<button class="btn small" data-act="unequip" data-arg="' + it.slot + '">Zložiť</button>' : '<button class="btn small gold" data-act="equip" data-arg="' + it.id + '">Nasadiť</button>') +
         '<button class="btn small num" data-act="sell" data-arg="' + it.id + '">Predať ' + money(Math.round(it.price * 0.25 * (1 + 0.2 * it.upgrade))) + '</button></div></div>';
     }
@@ -683,7 +689,7 @@ export class UI {
     const row = (it) => {
       const r = rar(it.rarity);
       const cur = p.equipment[it.slot] && this.s.item(p.equipment[it.slot]);
-      return '<div class="item rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div class="mid"><div class="t">' + this.itemName(it) + '</div><div class="s"><span style="color:' + r.color + '">' + r.name + '</span> · úr. ' + it.level + '</div><div class="s" style="color:#c9c4b8">' + this.bonusText(it) + '</div>' + (cur ? '<div class="s">Teraz: ' + this.bonusText(cur) + '</div>' : '') + '</div>' +
+      return '<div class="item rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div class="mid"><div class="t">' + this.itemName(it) + '</div><div class="s"><span style="color:' + r.color + '">' + r.name + '</span> · úr. ' + it.level + '</div><div class="s" style="color:#c9c4b8">' + this.bonusText(it) + '</div>' + this.descHtml(it) + (cur ? '<div class="s">Teraz: ' + this.bonusText(cur) + '</div>' : '') + '</div>' +
         '<div class="acts"><button class="btn small gold num" data-act="buy-item" data-arg="' + it.id + '"' + (p.cash < it.price ? ' disabled' : '') + '>' + money(it.price) + '</button></div></div>';
     };
     let h = '';

@@ -23,6 +23,17 @@ export const LOOK_PARTS = [
     { id: 'eyes_08_wink', name: 'wink', src: 'assets/postava/oci/eyes_08_wink.png?v=e1feded3' },
     { id: 'eyes_09_black_eye', name: 'black eye', src: 'assets/postava/oci/eyes_09_black_eye.png?v=57a494c4' },
   ] },
+  { id: 'brada', name: 'Brada', optional: true, items: [
+    { id: 'beard_01_stubble', name: 'stubble', src: 'assets/postava/brada/beard_01_stubble.png?v=35d850e4' },
+    { id: 'beard_02_full_beard', name: 'full beard', src: 'assets/postava/brada/beard_02_full_beard.png?v=bbfabe13' },
+    { id: 'beard_03_goatee', name: 'goatee', src: 'assets/postava/brada/beard_03_goatee.png?v=b8dbae8c' },
+    { id: 'beard_04_chin_strap', name: 'chin strap', src: 'assets/postava/brada/beard_04_chin_strap.png?v=24f396c8' },
+    { id: 'beard_05_pencil_mustache', name: 'pencil mustache', src: 'assets/postava/brada/beard_05_pencil_mustache.png?v=dc434f9a' },
+    { id: 'beard_06_horseshoe_mustache', name: 'horseshoe mustache', src: 'assets/postava/brada/beard_06_horseshoe_mustache.png?v=bf4cd1ce' },
+    { id: 'beard_07_short_boxed', name: 'short boxed', src: 'assets/postava/brada/beard_07_short_boxed.png?v=c6bb6ab3' },
+    { id: 'beard_08_long_beard', name: 'long beard', src: 'assets/postava/brada/beard_08_long_beard.png?v=879042ea' },
+    { id: 'beard_09_patchy', name: 'patchy', src: 'assets/postava/brada/beard_09_patchy.png?v=312d28c2' },
+  ] },
   { id: 'ucesy', name: 'Účes', optional: false, items: [
     { id: 'hair_01_buzz_fade', name: 'buzz fade', src: 'assets/postava/ucesy/hair_01_buzz_fade.png?v=1943024a' },
     { id: 'hair_02_cornrows', name: 'cornrows', src: 'assets/postava/ucesy/hair_02_cornrows.png?v=5cada9a9' },

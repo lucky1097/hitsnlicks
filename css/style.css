@@ -348,3 +348,4 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .boss-list span.done { color: var(--muted); text-decoration: line-through; }
 .boss-list span.now { color: var(--red-l); border-color: rgba(208,71,61,.6); }
 .cls-art { display: block; width: 100%; height: 150px; object-fit: cover; margin: 0 0 8px; border: 1px solid var(--line2); }
+.desc { margin-top: 3px; font-size: 14px; font-style: italic; line-height: 1.3; color: #8f8a80; }

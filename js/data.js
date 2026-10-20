@@ -29,14 +29,26 @@ export const ITEM_BASES = {
   ak: { slot: 'zbran', name: 'Krátky kalach', art: 'w_ak', kind: 'dmg', mult: 1.3, rarity: 'legendarny', attack: 'gun', cooldown: 0.12, auto: true },
   pistol: { slot: 'zbran', name: 'Pištoľ', art: 'it_pistol', kind: 'dmg', mult: 1.1, legacy: true, attack: 'gun', cooldown: 0.3 },
   // jacket and pants give armor (share of damage stopped, see F.reduction)
-  jacket: { slot: 'bunda', name: 'Kožená bunda', art: 'it_jacket', stats: { armor: 3 } },
+  jacket: { slot: 'bunda', name: 'Kožená bunda', art: 'it_jacket', stats: { armor: 3 }, desc: 'Stará dobrá koža. Zažila viac bitiek ako ty a ešte drží.' },
   pants: { slot: 'nohavice', name: 'Čierne rifle', art: 'it_pants', stats: { armor: 2 } },
   sneaker: { slot: 'topanky', name: 'Tenisky', art: 'it_sneaker', stats: { obratnost: 0.6 } },
   chain: { slot: 'retiazka', name: 'Retiazka', art: 'it_chain', stats: { charizma: 0.6 } },
   ring: { slot: 'prsten', name: 'Prsteň', art: 'it_ring', stats: { stastie: 0.6 } },
   watch: { slot: 'hodinky', name: 'Hodinky', art: 'it_watch', stats: { charizma: 0.3, stastie: 0.3 } },
   // illustrated pieces with a fixed rarity (art background: blue = common, pink = epic, gold / purple = legendary)
-  jacket_puffer: { slot: 'bunda', name: 'Lesklá páperovka', art: 'x_jacket_puffer', stats: { armor: 3 }, rarity: 'epicky' },
+  jacket_puffer: { slot: 'bunda', name: 'Lesklá páperovka', art: 'x_jacket_puffer', stats: { armor: 3 }, rarity: 'epicky', desc: 'Lesk ako čerstvo navoskované auto. Na corneri ťa v nej spoznajú aj potme.' },
+  // jackets: blue background = common (shops), pink = epic (Black Market), gold = legendary (bosses)
+  puffer_red: { slot: 'bunda', name: 'Červená páperovka', art: 'x_puffer_red', stats: { armor: 3 }, rarity: 'bezny', desc: 'Teplá, lacná a vidno ju z druhého konca ulice. Na tiché akcie sa nehodí.' },
+  varsity_gold: { slot: 'bunda', name: 'Klubová bunda so zlatými rukávmi', art: 'x_varsity_gold', stats: { armor: 3 }, rarity: 'bezny', desc: 'Z bazáru. Tím, za ktorý kedysi hrala, už dávno neexistuje. Ty áno.' },
+  field_jacket: { slot: 'bunda', name: 'Poľná bunda', art: 'x_field_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Štyri vrecká a žiadne otázky. Vydrží dážď, blato aj policajný obušok.' },
+  varsity_red: { slot: 'bunda', name: 'Školská bunda s H', art: 'x_varsity_red', stats: { armor: 3 }, rarity: 'bezny', desc: 'H ako Hits. Alebo Hustler. Alebo Hlupák, záleží, kto sa pýta.' },
+  work_jacket: { slot: 'bunda', name: 'Robotnícka bunda', art: 'x_work_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Menčestrový golier a ošúchané lakte. Vyzeráš, že poctivo robíš. Nerobíš.' },
+  bomber_olive: { slot: 'bunda', name: 'Olivová bomberka', art: 'x_bomber_olive', stats: { armor: 3 }, rarity: 'bezny', desc: 'Oranžová podšívka svieti ako výstražné svetlo. Ideálna na rýchle odchody.' },
+  track_navy: { slot: 'bunda', name: 'Tepláková bunda', art: 'x_track_navy', stats: { armor: 3 }, rarity: 'bezny', desc: 'Tri pásiky, jeden zips a nulový rešpekt k dress codu.' },
+  jacket_compass: { slot: 'bunda', name: 'Bunda s kompasom', art: 'x_jacket_compass', stats: { armor: 3 }, rarity: 'epicky', desc: 'Odznak s kompasom na rukáve. Ukazuje jediný smer, ktorý poznáš: preč od polície.' },
+  parka_fur: { slot: 'bunda', name: 'Parka s kožušinou', art: 'x_parka_fur', stats: { armor: 3 }, rarity: 'epicky', desc: 'Kapucňa s kožušinou a štyri vrecká. Nikto nevie, čo v nich nosíš, a tak to má byť.' },
+  puffer_hood: { slot: 'bunda', name: 'Čierna páperovka s kapucňou', art: 'x_puffer_hood', stats: { armor: 3 }, rarity: 'epicky', desc: 'Čierna a lesklá ako mokrý asfalt o tretej ráno. Zima ťa v nej nedostane. Konkurencia možno.' },
+  coat_camel: { slot: 'bunda', name: 'Kabát z ťavej vlny', art: 'x_coat_camel', stats: { armor: 3 }, rarity: 'legendarny', desc: 'Dvojradový kabát, aký nosia muži, ktorí sa nikomu nemusia predstavovať. Vypadne len z bossa.' },
   sneaker_black: { slot: 'topanky', name: 'Čierne tenisky', art: 'x_sneaker_black', stats: { obratnost: 0.6 }, rarity: 'bezny' },
   ring_ruby: { slot: 'prsten', name: 'Rubínový prsteň', art: 'x_ring_ruby', stats: { stastie: 0.6 }, rarity: 'epicky' },
   watch_rose: { slot: 'hodinky', name: 'Hodinky z ružového zlata', art: 'x_watch_rose', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
@@ -45,7 +57,7 @@ export const ITEM_BASES = {
 
 export const SHOPS = {
   zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'glock', 'kalach', 'katana'], blurb: 'Nič nevidíš, nič nekupuješ.' },
-  oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'jacket_puffer'], blurb: 'Čierna nikdy nevyjde z módy.' },
+  oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
   sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby'], blurb: 'Zlato hovorí za teba.' },
 };
 
