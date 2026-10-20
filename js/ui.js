@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020230930';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020230930';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261020230930';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020231405';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020231405';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261020231405';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -817,13 +817,18 @@ export class UI {
   }
 
   lookHtml(look, cls = '') {
-    const srcs = LOOK_BASE ? [LOOK_BASE] : [];
+    const layers = LOOK_BASE ? [{ src: LOOK_BASE }] : [];
+    const picked = {};
     for (const part of LOOK_PARTS) {
       const id = this.lookPick(look, part);
       const it = id && part.items.find((i) => i.id === id);
-      if (it) srcs.push(it.src);
+      if (it) { picked[part.id] = it; layers.push({ src: it.src, part: part.id }); }
     }
-    return '<div class="look ' + cls + '">' + srcs.map((s) => '<img src="' + s + '" alt="">').join('') + '</div>';
+    // headwear hides the hair above its lower edge (profile from tools/looks.ps1)
+    const hat = picked.na_hlave;
+    const clip = hat && hat.hairClip
+      ? 'clip-path:polygon(' + hat.hairClip.map((y, i) => (i * 100 / (hat.hairClip.length - 1)).toFixed(2) + '% ' + y + '%').join(',') + ',100% 100%,0% 100%)' : '';
+    return '<div class="look ' + cls + '">' + layers.map((l) => '<img src="' + l.src + '" alt=""' + (l.part === 'ucesy' && clip ? ' style="' + clip + '"' : '') + '>').join('') + '</div>';
   }
 
   scr_look() {
