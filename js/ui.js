@@ -1,6 +1,6 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=202610201758';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=202610201758';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -142,14 +142,21 @@ export class UI {
     if (!fn) { this.close(); return; }
     const out = fn.call(this, this.arg);
     // re-rendering the same screen (e.g. after +1 on a stat) keeps the scroll position
-    const key = this.name + '|' + JSON.stringify(this.arg);
-    const oldBody = this.el.screen.querySelector('.body');
-    const keep = key === this.renderKey && oldBody ? oldBody.scrollTop : 0;
+    // (remembered while scrolling, and put back again on the next frame: iOS can lose it otherwise)
+    const key = this.name + '|' + (typeof this.arg === 'object' && this.arg ? 'obj' : String(this.arg));
+    const keep = key === this.renderKey ? this.scrollMem || 0 : 0;
     this.renderKey = key;
+    this.scrollMem = keep;
     this.el.screen.className = out.overlay ? 'overlay' : '';
     this.el.screen.innerHTML = out.html;
-    const newBody = this.el.screen.querySelector('.body');
-    if (keep && newBody) newBody.scrollTop = keep;
+    const body = this.el.screen.querySelector('.body');
+    if (body) {
+      body.addEventListener('scroll', () => { this.scrollMem = body.scrollTop; }, { passive: true });
+      if (keep) {
+        body.scrollTop = keep;
+        requestAnimationFrame(() => { if (body.isConnected && Math.abs(body.scrollTop - keep) > 1) body.scrollTop = keep; });
+      }
+    }
     this.el.screen.hidden = false;
     this.el.hud.hidden = !this.s.hasSave() || this.name === 'title';
     if (out.after) out.after();
