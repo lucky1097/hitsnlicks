@@ -18,8 +18,10 @@ export function createWorld(parent, hooks) {
     constructor() { super('city'); }
 
     preload() {
-      this.load.image('map', 'assets/world/map_base.png');
-      this.load.json('city', 'assets/world/city.json');
+      // the same ?v= stamp as this module, so a phone never mixes an old map picture with new map data
+      const v = new URL(import.meta.url).search;
+      this.load.image('map', 'assets/world/map_base.png' + v);
+      this.load.json('city', 'assets/world/city.json' + v);
       PEOPLE.forEach((n) => this.load.image('p_' + n, 'assets/world/p_' + n + '.png'));
       CARS.forEach((n) => this.load.image('car_' + n, 'assets/world/car_' + n + '.png'));
       this.load.image('bubble', 'assets/world/bubble.png');
