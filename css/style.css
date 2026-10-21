@@ -46,7 +46,12 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 #hud::after { content: ''; position: absolute; left: 0; bottom: 0; right: 0; height: 240px; background: linear-gradient(0deg, rgba(5,5,5,.9), rgba(5,5,5,.4) 55%, rgba(5,5,5,0)); pointer-events: none; }
 .hud-top { position: absolute; left: 12px; right: 12px; top: calc(12px + env(safe-area-inset-top)); display: flex; align-items: center; gap: 10px; z-index: 2; }
 .avatar { position: relative; width: 54px; height: 54px; flex: none; padding: 0; border-radius: 50%; border: 1px solid var(--gold); background: #1a1714; overflow: visible; cursor: pointer; }
-.avatar img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; object-position: 50% 18%; display: block; }
+.avatar .face { position: relative; display: block; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; }
+.avatar .face > img { width: 54px; height: 54px; object-fit: cover; object-position: 50% 18%; display: block; }
+.avatar .look.in-avatar { position: absolute; inset: 0; border-radius: 50%; }
+.avatar .look.in-avatar img { width: 170%; height: 170%; left: -35%; top: -12%; }
+.fcard .look.in-fcard { position: absolute; inset: 0; aspect-ratio: auto; background: none; }
+.fcard .look.in-fcard img { object-position: 50% 20%; }
 .avatar .lvl { position: absolute; right: -6px; bottom: -4px; min-width: 24px; height: 22px; padding: 0 4px; background: #0b0b0b; border: 1px solid var(--gold); color: var(--gold-l); font-size: 15px; line-height: 20px; text-align: center; }
 .hud-res { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .hud-money { display: flex; gap: 14px; font-size: 17px; }

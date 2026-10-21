@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261020232629';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261020232629';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261020232629';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021183449';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021183449';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021183449';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -182,6 +182,8 @@ export class UI {
     if (!this.s.hasSave()) return;
     const v = this.s.view();
     $('#hud-lvl').textContent = v.level;
+    const lookKey = LOOK_BASE ? JSON.stringify(this.s.p.look || {}) : '';
+    if (lookKey && lookKey !== this.hudLook) { this.hudLook = lookKey; $('#hud-face').innerHTML = this.lookHtml(this.s.p.look, 'in-avatar'); }
     $('#hud-cash').textContent = fmt(v.cash);
     $('#hud-chains').textContent = fmt(v.chains);
     const xp = v.xp / v.xpNext;
@@ -1040,7 +1042,7 @@ export class UI {
     const head = d.kind === 'boss' ? 'Boss fight' : d.kind === 'arena' ? 'Aréna' : MISSIONS[d.result.tpl].name;
     const h = '<div class="stage" id="stage"><img class="bg" src="' + art('fightbg') + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
       '<div class="title"><span class="bl">' + esc(d.title) + '</span><span class="sc" style="font-size:14px;color:#d0473d;text-shadow:0 1px 0 #000">' + esc(d.subtitle || '') + '</span></div>' +
-      '<figure class="fcard me" id="fa"><img src="' + art('maska') + '" alt="' + nameA + '"></figure>' +
+      '<figure class="fcard me" id="fa">' + (LOOK_BASE ? this.lookHtml(this.s.p.look, 'in-fcard') : '<img src="' + art('maska') + '" alt="' + nameA + '">') + '</figure>' +
       '<span class="vs">vs</span>' +
       '<figure class="fcard foe" id="fb"><img src="' + art(d.artB) + '" alt="' + nameB + '"' + (d.silhouette ? ' style="filter:brightness(.15)"' : d.focusB ? ' style="object-position:' + d.focusB + '"' : '') + '></figure></div>' +
       '<div class="hpgrid"><div><div class="top"><span class="bl">' + nameA + '</span><span class="num muted" id="hpa" style="font-size:14px"></span></div><div class="bar hp"><i id="hpba" style="width:100%"></i></div></div>' +

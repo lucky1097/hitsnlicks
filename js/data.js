@@ -65,6 +65,20 @@ export const ITEM_BASES = {
   denim_jacket: { slot: 'bunda', name: 'Rifľová bunda', art: 'x_denim_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Vyblednutá od slnka aj od policajných svetiel. Klasika, ktorá nikdy nepýta otázky.' },
   coat_camel: { slot: 'bunda', name: 'Kabát z ťavej vlny', art: 'x_coat_camel', stats: { armor: 3 }, rarity: 'legendarny', desc: 'Dvojradový kabát, aký nosia muži, ktorí sa nikomu nemusia predstavovať. Vypadne len z bossa.' },
   sneaker_black: { slot: 'topanky', name: 'Čierne tenisky', art: 'x_sneaker_black', stats: { obratnost: 0.6 }, rarity: 'bezny' },
+  // shoes: blue = common (Oblečenie), pink = epic (Black Market), gold = legendary (bosses)
+  shoe_derby: { slot: 'topanky', name: 'Čierne poltopánky', art: 'x_shoe_derby', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Na pohreb, na súd aj na stretnutie s Donom. Do troch týždňov stihneš všetky tri.' },
+  shoe_white_low: { slot: 'topanky', name: 'Biele tenisky', art: 'x_shoe_white_low', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Biele ako nevinnosť. Vydržia presne do prvej mláky pri večierke.' },
+  shoe_air: { slot: 'topanky', name: 'Vzduchové tenisky', art: 'x_shoe_air', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Vzduchové bubliny v podrážke. Utekáš v nich, ako keby ťa niekto niesol.' },
+  shoe_skate: { slot: 'topanky', name: 'Čierne skejtky', art: 'x_shoe_skate', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Hrubé šnúrky, plochá podrážka. Na skejt nevkročili, na plot pri parku každý deň.' },
+  shoe_combat: { slot: 'topanky', name: 'Bojové čižmy', art: 'x_shoe_combat', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Osem dierok na šnúrky a oceľová špička. Dvere sa nimi otvárajú aj bez kľúča.' },
+  shoe_canvas_high: { slot: 'topanky', name: 'Plátenné vysoké tenisky', art: 'x_shoe_canvas_high', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Klasika z každého koncertu a každej bitky po ňom.' },
+  shoe_slides: { slot: 'topanky', name: 'Šľapky s pásikmi', art: 'x_shoe_slides', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'S ponožkami, samozrejme. Ak musíš utekať, máš problém.' },
+  shoe_grey_runner: { slot: 'topanky', name: 'Sivé bežecké tenisky', art: 'x_shoe_grey_runner', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Nosia ich otcovia aj díleri. Polícia ich preto nevie od seba rozoznať.' },
+  shoe_work_boot: { slot: 'topanky', name: 'Pracovné čižmy', art: 'x_shoe_work_boot', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Žlté čižmy zo stavby. Na stavbe si nikdy nebol, ale všetci si to myslia.' },
+  shoe_hightop_red: { slot: 'topanky', name: 'Červeno-biele kotníkové tenisky', art: 'x_shoe_hightop_red', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Pár, za ktorý ľudia stoja v rade pred obchodom celú noc. Ty si v rade nestál.' },
+  shoe_chunky: { slot: 'topanky', name: 'Masívne módne tenisky', art: 'x_shoe_chunky', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Podrážka hrubá ako tehla. Vyzerajú ťažko, ale nakopnú lepšie ako čižmy.' },
+  shoe_loafer: { slot: 'topanky', name: 'Lakované mokasíny so zlatou prackou', art: 'x_shoe_loafer', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Zlatá pracka a lesk ako zrkadlo. V takých sa chodí len po kobercoch a po cudzích peniazoch.' },
+  shoe_gold: { slot: 'topanky', name: 'Zlaté tenisky s diamantmi', art: 'x_shoe_gold', stats: { obratnost: 0.6 }, rarity: 'legendarny', desc: 'Zlato po členky a diamanty v šnúrkach. Nikto nevie, kto ich vyrobil. Vypadnú len z bossa.' },
   ring_ruby: { slot: 'prsten', name: 'Rubínový prsteň', art: 'x_ring_ruby', stats: { stastie: 0.6 }, rarity: 'epicky' },
   watch_rose: { slot: 'hodinky', name: 'Hodinky z ružového zlata', art: 'x_watch_rose', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
   watch_green: { slot: 'hodinky', name: 'Zelený ciferník', art: 'x_watch_green', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
@@ -72,7 +86,7 @@ export const ITEM_BASES = {
 
 export const SHOPS = {
   zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'glock', 'kalach', 'katana'], blurb: 'Nič nevidíš, nič nekupuješ.' },
-  oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'biker_jacket', 'denim_jacket', 'jeans_blue', 'track_pants', 'cargo_olive', 'carpenter_pants', 'cargo_camo', 'sweatpants', 'jeans_ripped', 'shorts_ball', 'cargo_compass', 'track_monogram', 'jeans_biker', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
+  oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'shoe_derby', 'shoe_white_low', 'shoe_air', 'shoe_skate', 'shoe_combat', 'shoe_canvas_high', 'shoe_slides', 'shoe_grey_runner', 'shoe_work_boot', 'shoe_hightop_red', 'shoe_chunky', 'shoe_loafer', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'biker_jacket', 'denim_jacket', 'jeans_blue', 'track_pants', 'cargo_olive', 'carpenter_pants', 'cargo_camo', 'sweatpants', 'jeans_ripped', 'shorts_ball', 'cargo_compass', 'track_monogram', 'jeans_biker', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
   sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby'], blurb: 'Zlato hovorí za teba.' },
 };
 
