@@ -11,8 +11,8 @@
 //   ladder(n) -> [{ id, name, points }]
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261021201237';
-import { GIVERS, SHOPS } from './data.js?v=20261021201237';
+import { SimServer } from './server.js?v=20261021202031';
+import { GIVERS, SHOPS } from './data.js?v=20261021202031';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -30,6 +30,7 @@ const ACTIONS = {
   sellItem: (s, [id]) => s.sellItem(id),
   upgradeItem: (s, [id]) => s.upgradeItem(id),
   buyItem: (s, [shop, id]) => s.buyItem(shop, id),
+  rerollShop: (s, [shop]) => s.rerollShop(shop),
   startMission: (s, [giver, tpl]) => s.startMission(giver, tpl),
   skipMission: (s) => s.skipMission(),
   claimMission: (s) => s.claimMission(),

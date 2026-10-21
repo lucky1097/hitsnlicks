@@ -56,6 +56,12 @@ export const CONFIG = {
   skipChainPerMin: 1, // chains to finish a running mission, per remaining minute (min 1)
   offersRefreshMin: 20,
   shopRefreshMin: 30,
+  shopStock: 6,
+  shopRerollChains: 1, // new goods right away for one gold bar
+  // rolled item stats: one stat = itemPower(level, rarity mult) × share; common 1 stat, rare 2, epic 3,
+  // legendary = class main stat + odolnosť, each twice the epic value
+  itemStatCount: { bezny: 1, vzacny: 2, epicky: 3 },
+  itemStatShare: { bezny: 0.6, vzacny: 0.45, epicky: 0.4 },
 
   bossCooldownMin: 240,
   bossRetryChains: 10,

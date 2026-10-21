@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021201237';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021201237';
-import { makeFighter, simulate } from './combat.js?v=20261021201237';
-import { GangMixin } from './gangs.js?v=20261021201237';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021202031';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021202031';
+import { makeFighter, simulate } from './combat.js?v=20261021202031';
+import { GangMixin } from './gangs.js?v=20261021202031';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -80,9 +80,16 @@ export class SimServer {
   itemBonus(item) {
     const base = ITEM_BASES[item.base];
     const up = 1 + 0.1 * item.upgrade;
-    if (base.kind === 'dmg') return { dmg: Math.round(item.power * base.mult * up * CONFIG.weaponDmgMult) };
     const out = {};
-    for (const [s, share] of Object.entries(base.stats)) out[s] = Math.max(1, Math.round(item.power * share * up));
+    if (base.kind === 'dmg') out.dmg = Math.round(item.power * base.mult * up * CONFIG.weaponDmgMult);
+    if (item.stats) {
+      // rolled stats; clothing keeps its armor from the base
+      for (const [s, v] of Object.entries(item.stats)) out[s] = Math.max(1, Math.round(v * up));
+      if (base.stats && base.stats.armor) out.armor = Math.max(1, Math.round(item.power * base.stats.armor * up));
+    } else if (base.stats) {
+      // items made before rolled stats
+      for (const [s, share] of Object.entries(base.stats)) out[s] = Math.max(1, Math.round(item.power * share * up));
+    }
     return out;
   }
 
@@ -213,7 +220,20 @@ export class SimServer {
   makeItem(baseId, level, rarityId) {
     const base = ITEM_BASES[baseId];
     const r = RARITIES.find((x) => x.id === (base.rarity || rarityId));
-    return { id: 'i' + this.state.nextId++, base: baseId, slot: base.slot, rarity: r.id, level, upgrade: 0, power: F.itemPower(level, r.mult), price: F.itemPrice(level, r.mult) };
+    return { id: 'i' + this.state.nextId++, base: baseId, slot: base.slot, rarity: r.id, level, upgrade: 0, power: F.itemPower(level, r.mult), price: F.itemPrice(level, r.mult), stats: this.rollStats(level, r.id) };
+  }
+
+  // common: 1 random stat, rare 2, epic 3; legendary: class main stat + odolnosť at twice the epic value
+  rollStats(level, rarity) {
+    const one = (rid) => Math.max(1, Math.round(F.itemPower(level, RARITIES.find((x) => x.id === rid).mult) * CONFIG.itemStatShare[rid]));
+    if (rarity === 'legendarny') {
+      const v = one('epicky') * 2;
+      return { [F.mainStat(this.p.cls)]: v, odolnost: v };
+    }
+    const pool = [...STATS];
+    const out = {};
+    for (let i = 0; i < (CONFIG.itemStatCount[rarity] || 1); i++) out[pool.splice(Math.floor(Math.random() * pool.length), 1)[0]] = one(rarity);
+    return out;
   }
 
   // bases that can appear with the given rarity (fixed-rarity weapons only in their own tier)
@@ -287,12 +307,7 @@ export class SimServer {
     const s = SHOPS[shopId];
     let st = this.state.shops[shopId];
     const expired = !st || Date.now() - st.at > this.gameMs(CONFIG.shopRefreshMin) || st.level !== this.p.level;
-    if (expired) {
-      st = { at: Date.now(), level: this.p.level, list: [] };
-      for (let i = 0; i < 4; i++) { const it = this.randomItem(this.p.level, 'shop', s.bases); if (it) st.list.push(it); }
-      this.state.shops[shopId] = st;
-      this.save();
-    }
+    if (expired) st = this.restock(shopId);
     // Black Market stock is rolled once per opening and stays until it closes
     const bmOpen = this.blackMarketOpen();
     const bmKey = localParts().date;
@@ -316,6 +331,24 @@ export class SimServer {
       this.save();
     }
     return { ...s, id: shopId, list: st.list, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
+  }
+
+  // fresh common goods; keeps the Black Market stall as it is
+  restock(shopId) {
+    const old = this.state.shops[shopId] || {};
+    const st = { ...old, at: Date.now(), level: this.p.level, list: [] };
+    for (let i = 0; i < CONFIG.shopStock; i++) { const it = this.randomItem(this.p.level, 'shop', SHOPS[shopId].bases); if (it) st.list.push(it); }
+    this.state.shops[shopId] = st;
+    this.save();
+    return st;
+  }
+
+  rerollShop(shopId) {
+    if (!SHOPS[shopId]) return fail('Neznámy obchod.');
+    if (this.p.chains < CONFIG.shopRerollChains) return fail('Nemáš zlatú tehličku.');
+    this.p.chains -= CONFIG.shopRerollChains;
+    this.restock(shopId);
+    return ok();
   }
 
   buyItem(shopId, itemId) {

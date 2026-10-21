@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021201237';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021201237';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021201237';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021202031';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021202031';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021202031';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -435,6 +435,7 @@ export class UI {
         this.readyNotified = false;
         this.open('fight', { kind: 'mission', ...r, artB: r.b.portrait, title: r.b.name, subtitle: r.b.title, intro: r.story.hit }, true);
       },
+      async 'shop-reroll'(a) { if (this.check(await this.s.rerollShop(a))) { this.toast('Nový tovar je v obchode.'); this.render(); } },
       async 'buy-item'(a) {
         const r = await this.s.buyItem(this.arg, a);
         if (this.check(r)) { this.toast('Kúpené: ' + this.itemName(r.item) + '.'); this.render(); }
@@ -704,6 +705,7 @@ export class UI {
     h += sh.list.map(row).join('');
     if (!sh.list.length) h += '<p class="p">Všetko vypredané.</p>';
     if (!sh.bm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, každý kus má ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % šancu byť epický.</p>';
+    h += '<button class="btn wide" data-act="shop-reroll" data-arg="' + shopId + '"' + (p.chains < CONFIG.shopRerollChains ? ' disabled' : '') + '>Nový tovar hneď · ' + CONFIG.shopRerollChains + ' zlatá tehlička</button>';
     h += '<p class="note">Nový tovar o <span data-until="' + (Date.now() + sh.refreshIn) + '"></span> alebo po novej úrovni.</p>';
     return { html: this.hdr(sh.name, money(p.cash)) + '<div class="body">' + h + '</div>' };
   }
