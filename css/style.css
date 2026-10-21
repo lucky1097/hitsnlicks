@@ -236,6 +236,10 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .fcard.me { left: 16px; border-color: var(--gold); }
 .fcard.foe { right: 16px; border-color: rgba(208,71,61,.8); }
 .stage .fcard.hit { animation: hit .25s; }
+/* fight animation: the attacker's weapon, muzzle flash and bullet */
+.stage .wfx { position: absolute; z-index: 5; pointer-events: none; opacity: 0; filter: drop-shadow(0 6px 8px rgba(0,0,0,.65)); }
+.stage .mflash { position: absolute; z-index: 6; width: 30px; height: 30px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, #fff8d6 0, #ffc04a 40%, rgba(255,120,0,0) 70%); }
+.stage .bullet { position: absolute; z-index: 6; width: 12px; height: 3px; margin: -1.5px 0 0 -6px; border-radius: 2px; pointer-events: none; background: #ffe7a0; box-shadow: 0 0 6px #ffc655; }
 .stage .fcard.out { filter: grayscale(1) brightness(.45); transition: filter .4s; }
 
 /* character */

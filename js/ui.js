@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021204152';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021204152';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021204152';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021205317';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021205317';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021205317';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -15,6 +15,11 @@ const BACK = '<svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"
 const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'diler', dealer: 'photo_dlznik' };
 // where the face sits in each class artwork (CSS object-position)
 const BOT_FOCUS = { svalovec: '32% 7%' };
+// fight animation: weapon cut-outs live in assets/fx (tools/cutout.ps1); guns drawn pointing left get
+// flipped so the muzzle faces the foe; fighters without a known weapon carry their class's usual one
+const FX_MUZZLE_LEFT = new Set(['w_deagle', 'w_glock', 'w_gold1911', 'w_kalach', 'w_revolver', 'w_tommy_gold']);
+const CLASS_WEAPON = { svalovec: 'bat', zlodej: 'knife', dealer: 'glock' };
+const fxArt = (n) => 'assets/fx/' + n + '.png';
 // class artwork shown when picking a class (more classes as their art arrives)
 const CLASS_ART = { svalovec: 'photo_svalovec' };
 
@@ -1040,9 +1045,9 @@ export class UI {
   }
 
   playWar(d) {
-    this.war = { d, k: -1, i: 0, pause: 0 };
     const total = d.battle.duels.reduce((s, x) => s + (x.ev || []).length + 3, 0);
     const step = Math.max(90, Math.min(420, 25000 / Math.max(1, total)));
+    this.war = { d, k: -1, i: 0, pause: 0, step };
     if (!this.nextDuel()) { this.war.ended = true; this.finishWar(); return; }
     this.fightTimer = setInterval(() => this.warStep(), step);
   }
@@ -1054,7 +1059,9 @@ export class UI {
     const duel = w.d.battle.duels[w.k];
     if (!duel) return false;
     const A = w.d.A[duel.a], D = w.d.D[duel.d];
-    w.cur = { A, D, duel };
+    // you carry your own weapon, gang members and rivals the usual one of their class
+    w.cur = { A, D, duel, w: [duel.a === 0 ? this.myWeapon() : this.fighterWeapon(A), this.fighterWeapon(D)] };
+    this.preloadFx(w.cur.w);
     document.querySelectorAll('.wrow.on').forEach((e) => e.classList.remove('on'));
     const ra = $('#wa' + duel.a), rd = $('#wd' + duel.d);
     if (ra) ra.classList.add('on');
@@ -1116,22 +1123,13 @@ export class UI {
     }
     w.i += 1;
     const [att, dmg, crit, ha, hb] = ev;
-    this.warHp(ha, hb);
-    if (silent) return;
-    const target = $(att === 0 ? '#fb' : '#fa');
-    const stage = $('#stage');
-    if (target && stage) {
-      target.classList.remove('hit', 'out');
-      void target.offsetWidth;
-      if (dmg > 0) target.classList.add('hit');
-      const n = document.createElement('span');
-      n.className = 'dmg' + (crit ? ' crit' : '') + (dmg < 0 ? ' miss' : '');
-      n.textContent = dmg === -1 ? 'úhyb' : dmg === -2 ? 'blok' : dmg;
-      n.style.left = att === 0 ? '70%' : '14%';
-      n.style.top = '170px';
-      stage.appendChild(n);
-      setTimeout(() => n.remove(), 900);
-    }
+    if (silent) { this.warHp(ha, hb); return; }
+    const cur = w.cur;
+    this.weaponFx(att, cur.w[att], Math.min(w.step * 0.95, 460), () => {
+      if (this.war !== w || w.done || w.cur !== cur) return;
+      this.warHp(ha, hb);
+      this.hitMark(att, dmg === -1 ? 'úhyb' : dmg === -2 ? 'blok' : dmg, crit, dmg < 0);
+    });
   }
 
   finishWar(skip) {
@@ -1170,11 +1168,87 @@ export class UI {
   }
 
   playFight(d) {
-    this.fight = { d, i: 0 };
-    this.setHp(d.a.hp, d.b.hp);
     // long fights play faster so a playback never takes much more than ~12 s
     const step = Math.max(90, Math.min(480, 12000 / Math.max(1, d.fight.rounds.length)));
+    this.fight = { d, i: 0, step, w: [this.myWeapon(), this.fighterWeapon(d.b)] };
+    this.preloadFx(this.fight.w);
+    this.setHp(d.a.hp, d.b.hp);
     this.fightTimer = setInterval(() => this.fightStep(), step);
+  }
+
+  // ---------------------------------------------------------------- weapon animation
+  myWeapon() { const id = this.s.p.equipment.zbran; const it = id && this.s.item(id); return it ? it.base : null; }
+  fighterWeapon(f) { return (f && (f.wbase || CLASS_WEAPON[f.cls])) || null; }
+  preloadFx(bases) { bases.forEach((b) => { if (b && ITEM_BASES[b]) new Image().src = fxArt(ITEM_BASES[b].art); }); }
+
+  // one exchange: the attacker leans in and its weapon swings at (melee) or fires at (gun) the other card;
+  // onHit runs at the moment of impact
+  weaponFx(att, baseId, dur, onHit) {
+    const stage = $('#stage'), from = $(att === 0 ? '#fa' : '#fb'), to = $(att === 0 ? '#fb' : '#fa');
+    if (!stage || !from || !to) { onHit(); return; }
+    const dir = att === 0 ? 1 : -1;
+    from.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + 16 * dir + 'px)', offset: 0.5 }, { transform: 'translateX(0)' }], { duration: dur, easing: 'ease-out' });
+    const base = baseId && ITEM_BASES[baseId];
+    if (!base) { setTimeout(onHit, dur * 0.5); return; }
+    const sr = stage.getBoundingClientRect(), fr = from.getBoundingClientRect(), tr = to.getBoundingClientRect();
+    const size = Math.round(base.attack === 'gun' ? Math.min(130, fr.width * 0.9) : Math.min(110, fr.width * 0.75));
+    const img = document.createElement('img');
+    img.className = 'wfx';
+    img.src = fxArt(base.art);
+    img.alt = '';
+    img.style.width = img.style.height = size + 'px';
+    // a gun is held out past the card's edge toward the foe, a melee weapon starts on the edge
+    const out = base.attack === 'gun' ? 0.25 : 0.5;
+    const sx = dir > 0 ? fr.right - sr.left - size * out : fr.left - sr.left - size * (1 - out);
+    const sy = fr.top - sr.top + fr.height * (base.attack === 'gun' ? 0.55 : 0.42) - size / 2;
+    img.style.left = sx + 'px';
+    img.style.top = sy + 'px';
+    stage.appendChild(img);
+    setTimeout(() => img.remove(), dur + 60);
+    const tx = (dir > 0 ? tr.left + tr.width * 0.3 : tr.right - tr.width * 0.3) - sr.left;
+    const ty = tr.top - sr.top + tr.height * 0.42;
+    if (base.attack === 'gun') {
+      const flip = FX_MUZZLE_LEFT.has(base.art) === (dir > 0) ? ' scaleX(-1)' : '';
+      img.animate([
+        { transform: 'translateX(0) rotate(0deg)' + flip, opacity: 0 },
+        { transform: 'translateX(0) rotate(0deg)' + flip, opacity: 1, offset: 0.15 },
+        { transform: 'translateX(' + -10 * dir + 'px) rotate(' + -14 * dir + 'deg)' + flip, opacity: 1, offset: 0.4 },
+        { transform: 'translateX(0) rotate(0deg)' + flip, opacity: 1, offset: 0.75 },
+        { transform: 'translateX(0) rotate(0deg)' + flip, opacity: 0 },
+      ], { duration: dur, easing: 'ease-out' });
+      const mx = dir > 0 ? sx + size * 0.95 : sx + size * 0.05, my = sy + size * 0.36;
+      const shots = base.auto ? 3 : 1;
+      for (let k = 0; k < shots; k++) {
+        setTimeout(() => {
+          const fl = document.createElement('span');
+          fl.className = 'mflash';
+          fl.style.left = mx + 'px';
+          fl.style.top = my + 'px';
+          stage.appendChild(fl);
+          fl.animate([{ transform: 'translate(-50%,-50%) scale(.4)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(1.4)', opacity: 0 }], { duration: 120 });
+          setTimeout(() => fl.remove(), 130);
+          const b = document.createElement('span');
+          b.className = 'bullet';
+          b.style.left = mx + 'px';
+          b.style.top = my + 'px';
+          stage.appendChild(b);
+          b.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(' + (tx - mx) + 'px,' + (ty - my + (k - 1) * 8) + 'px)' }], { duration: Math.max(60, dur * 0.2), easing: 'linear' });
+          setTimeout(() => b.remove(), Math.max(60, dur * 0.2));
+        }, dur * (0.3 + k * 0.12));
+      }
+      setTimeout(onHit, dur * 0.5);
+    } else {
+      // melee: wind up, swing across into the foe, pull back
+      const dx = tx - sx - size / 2, dy = ty - sy - size / 2, m = dir > 0 ? '' : ' scaleX(-1)';
+      img.animate([
+        { transform: 'translate(0,0) rotate(' + -30 * dir + 'deg)' + m, opacity: 0 },
+        { transform: 'translate(' + dx * 0.3 + 'px,' + (dy - 40) + 'px) rotate(' + -75 * dir + 'deg)' + m, opacity: 1, offset: 0.3 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + 45 * dir + 'deg)' + m, opacity: 1, offset: 0.55 },
+        { transform: 'translate(' + dx * 0.85 + 'px,' + (dy + 6) + 'px) rotate(' + 35 * dir + 'deg)' + m, opacity: 1, offset: 0.75 },
+        { transform: 'translate(' + dx * 0.2 + 'px,0) rotate(0deg)' + m, opacity: 0 },
+      ], { duration: dur, easing: 'ease-in-out' });
+      setTimeout(onHit, dur * 0.55);
+    }
   }
 
   setHp(a, b) {
@@ -1198,7 +1272,6 @@ export class UI {
     const ev = f.d.fight.rounds[f.i];
     if (!ev) { this.finishFight(false); return; }
     f.i += 1;
-    this.setHp(ev.hp[0], ev.hp[1]);
     const log = $('#flog');
     if (log) {
       const li = document.createElement('li');
@@ -1206,21 +1279,30 @@ export class UI {
       li.innerHTML = '<span class="r">Kolo ' + ev.round + '</span><span>' + this.fightLine(ev, f.d) + '</span>';
       log.prepend(li);
     }
-    if (silent) return;
-    const target = $(ev.attacker === 0 ? '#fb' : '#fa');
+    if (silent) { this.setHp(ev.hp[0], ev.hp[1]); return; }
+    // the hit lands (life bar, shake, number) when the weapon reaches the other card
+    this.weaponFx(ev.attacker, f.w[ev.attacker], Math.min(f.step * 0.95, 460), () => {
+      if (this.fight !== f || f.done) return;
+      this.setHp(ev.hp[0], ev.hp[1]);
+      this.hitMark(ev.attacker, ev.dodge ? 'úhyb' : ev.block ? 'blok' : ev.dmg, ev.crit, ev.dodge || ev.block);
+    });
+  }
+
+  // shake the struck card and float the damage (or úhyb / blok) above it
+  hitMark(att, text, crit, miss) {
+    const target = $(att === 0 ? '#fb' : '#fa');
     const stage = $('#stage');
-    if (target && stage) {
-      target.classList.remove('hit');
-      void target.offsetWidth;
-      if (!ev.dodge && !ev.block) target.classList.add('hit');
-      const n = document.createElement('span');
-      n.className = 'dmg' + (ev.crit ? ' crit' : '') + (ev.dodge || ev.block ? ' miss' : '');
-      n.textContent = ev.dodge ? 'úhyb' : ev.block ? 'blok' : ev.dmg;
-      n.style.left = ev.attacker === 0 ? '70%' : '14%';
-      n.style.top = '170px';
-      stage.appendChild(n);
-      setTimeout(() => n.remove(), 900);
-    }
+    if (!target || !stage) return;
+    target.classList.remove('hit');
+    void target.offsetWidth;
+    if (!miss) target.classList.add('hit');
+    const n = document.createElement('span');
+    n.className = 'dmg' + (crit ? ' crit' : '') + (miss ? ' miss' : '');
+    n.textContent = text;
+    n.style.left = att === 0 ? '70%' : '14%';
+    n.style.top = '170px';
+    stage.appendChild(n);
+    setTimeout(() => n.remove(), 900);
   }
 
   stopFight() {

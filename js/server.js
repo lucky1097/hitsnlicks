@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021204152';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021204152';
-import { makeFighter, simulate } from './combat.js?v=20261021204152';
-import { GangMixin } from './gangs.js?v=20261021204152';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021205317';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021205317';
+import { makeFighter, simulate } from './combat.js?v=20261021205317';
+import { GangMixin } from './gangs.js?v=20261021205317';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -647,7 +647,9 @@ export class SimServer {
     const ts = this.totalStats(false);
     const stats = {};
     STATS.forEach((s) => { stats[s] = ts[s]; });
-    return { name: this.p.name, level: this.p.level, cls: this.p.cls, stats, weapon: this.weaponDmg(), armor: ts.armor };
+    const w = this.p.equipment.zbran && this.item(this.p.equipment.zbran);
+    // wbase: the worn weapon, so others see it swing or fire in the fight animation
+    return { name: this.p.name, level: this.p.level, cls: this.p.cls, stats, weapon: this.weaponDmg(), armor: ts.armor, wbase: w ? w.base : null };
   }
 
   // what other players see in the hall of fame: look, stats with gear, worn items (never cash or the inventory)
@@ -765,7 +767,7 @@ export class SimServer {
       v.used += 1;
     }
     const me = this.playerFighter();
-    const other = makeFighter(opp.name, opp.level, opp.stats, opp.weapon, { portrait: 'bot', cls: opp.cls, armor: opp.armor || 0 });
+    const other = makeFighter(opp.name, opp.level, opp.stats, opp.weapon, { portrait: 'bot', cls: opp.cls, armor: opp.armor || 0, wbase: opp.wbase || null });
     const fight = simulate(me, other, seed());
     const win = fight.winner === 0;
     const L = this.p.level;

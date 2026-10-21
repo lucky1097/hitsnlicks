@@ -11,6 +11,10 @@ $v = Get-Date -Format 'yyyyMMddHHmmss'
 
 # the character layers in assets/postava -> js/looks.js
 & (Join-Path $PSScriptRoot 'looks.ps1')
+# fight-animation cut-outs for weapon pictures that have none yet (a replaced picture: delete its assets\fx png)
+$root = Split-Path $PSScriptRoot -Parent
+$newFx = @(Get-ChildItem (Join-Path $root 'assets\art') -Filter 'w_*.jpg' | Where-Object { -not (Test-Path (Join-Path $root "assets\fx\$($_.BaseName).png")) } | ForEach-Object { $_.BaseName })
+if ($newFx.Count) { & (Join-Path $PSScriptRoot 'cutout.ps1') -Ids $newFx }
 
 foreach ($f in Get-ChildItem (Join-Path $root 'js') -Filter *.js) {
   $t = [IO.File]::ReadAllText($f.FullName, $enc)
