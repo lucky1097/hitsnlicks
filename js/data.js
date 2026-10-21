@@ -27,6 +27,15 @@ export const ITEM_BASES = {
   katana: { slot: 'zbran', name: 'Katana', art: 'w_katana', kind: 'dmg', mult: 1.15, rarity: 'epicky', attack: 'melee', cooldown: 0.4 },
   kalach: { slot: 'zbran', name: 'Kalach', art: 'w_kalach', kind: 'dmg', mult: 1.2, rarity: 'epicky', attack: 'gun', cooldown: 0.14, auto: true },
   ak: { slot: 'zbran', name: 'Krátky kalach', art: 'w_ak', kind: 'dmg', mult: 1.3, rarity: 'legendarny', attack: 'gun', cooldown: 0.12, auto: true },
+  crowbar: { slot: 'zbran', name: 'Hrdzavé páčidlo', art: 'w_crowbar', kind: 'dmg', mult: 1.0, rarity: 'bezny', attack: 'melee', cooldown: 0.5, desc: 'Otvorí dvere, kasu aj debatu. Tá hrdza nie je len hrdza.' },
+  hockey: { slot: 'zbran', name: 'Hokejka', art: 'w_hockey', kind: 'dmg', mult: 0.95, rarity: 'bezny', attack: 'melee', cooldown: 0.5, desc: 'Oblepená páskou ako na zápas. Puk na ulici nenájdeš, hlavy áno.' },
+  bottle: { slot: 'zbran', name: 'Rozbitá fľaša', art: 'w_bottle', kind: 'dmg', mult: 0.9, rarity: 'bezny', attack: 'melee', cooldown: 0.3, desc: 'Pred minútou ešte pivo. Teraz argument, ktorý nikto nechce počuť dvakrát.' },
+  bikechain: { slot: 'zbran', name: 'Reťaz z bicykla', art: 'w_bikechain', kind: 'dmg', mult: 0.95, rarity: 'bezny', attack: 'melee', cooldown: 0.4, desc: 'Rukoväť z izolačky, zvyšok hrdzavý. Bicykel ostal pred obchodom bez nej.' },
+  revolver: { slot: 'zbran', name: 'Starý revolver', art: 'w_revolver', kind: 'dmg', mult: 1.05, rarity: 'bezny', attack: 'gun', cooldown: 0.4, desc: 'Šesť nábojov a poškriabaná rukoväť. Kto ho mal pred tebou, radšej nezisťuj.' },
+  sawnoff: { slot: 'zbran', name: 'Upílená brokovnica', art: 'w_sawnoff', kind: 'dmg', mult: 1.25, rarity: 'epicky', attack: 'gun', cooldown: 0.6, desc: 'Hlavne skrátené pílkou v garáži. Mieriť netreba, stačí stáť blízko.' },
+  kalash_wood: { slot: 'zbran', name: 'Kalašnikov s drevenou pažbou', art: 'w_kalash_wood', kind: 'dmg', mult: 1.2, rarity: 'epicky', attack: 'gun', cooldown: 0.14, auto: true, desc: 'Drevo, oceľ a tridsať nábojov. Prežil tri vojny a teraz ešte tvoju štvrť.' },
+  deagle: { slot: 'zbran', name: 'Chrómová orlica', art: 'w_deagle', kind: 'dmg', mult: 1.25, rarity: 'epicky', attack: 'gun', cooldown: 0.35, desc: 'Ťažká, lesklá a hlasná. Po prvom výstrele ti zostane modrina na dlani, jemu horšie.' },
+  tommy_gold: { slot: 'zbran', name: 'Zlatý samopal s bubnom', art: 'w_tommy_gold', kind: 'dmg', mult: 1.35, rarity: 'legendarny', attack: 'gun', cooldown: 0.1, auto: true, desc: 'Gravírované zlato a bubon na sto nábojov. Zbraň starých bossov. Vypadne len z bossa.' },
   pistol: { slot: 'zbran', name: 'Pištoľ', art: 'it_pistol', kind: 'dmg', mult: 1.1, legacy: true, attack: 'gun', cooldown: 0.3 },
   // jacket and pants give armor (share of damage stopped, see F.reduction)
   jacket: { slot: 'bunda', name: 'Kožená bunda', art: 'it_jacket', stats: { armor: 3 }, desc: 'Stará dobrá koža. Zažila viac bitiek ako ty a ešte drží.' },
@@ -126,7 +135,7 @@ export const ITEM_BASES = {
 };
 
 export const SHOPS = {
-  zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'glock', 'kalach', 'katana'], blurb: 'Nič nevidíš, nič nekupuješ.' },
+  zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'crowbar', 'hockey', 'bottle', 'bikechain', 'revolver', 'glock', 'kalach', 'katana', 'sawnoff', 'kalash_wood', 'deagle'], blurb: 'Nič nevidíš, nič nekupuješ.' },
   oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'shoe_derby', 'shoe_white_low', 'shoe_air', 'shoe_skate', 'shoe_combat', 'shoe_canvas_high', 'shoe_slides', 'shoe_grey_runner', 'shoe_work_boot', 'shoe_hightop_red', 'shoe_chunky', 'shoe_loafer', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'biker_jacket', 'denim_jacket', 'jeans_blue', 'track_pants', 'cargo_olive', 'carpenter_pants', 'cargo_camo', 'sweatpants', 'jeans_ripped', 'shorts_ball', 'cargo_compass', 'track_monogram', 'jeans_biker', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
   sperky: { name: 'Šperky', bases: ['chain', 'neck_silver', 'neck_cross', 'neck_cuban', 'neck_tags', 'neck_tarnished', 'neck_rosary', 'neck_rope', 'neck_padlock', 'neck_pawn', 'neck_jesus', 'neck_tennis', 'neck_clover', 'ring', 'watch', 'ring_ruby', 'ring_silver', 'ring_black', 'ring_signet', 'ring_skull', 'ring_ruby_old', 'ring_chain', 'ring_opal', 'ring_college', 'ring_dollar', 'ring_nail', 'ring_nugget', 'ring_champion', 'watch_smart', 'watch_gold_chrono', 'watch_calc', 'watch_field', 'watch_diver', 'watch_gold_old', 'watch_plastic', 'watch_rugged', 'watch_digital', 'watch_daydate', 'watch_sub_green'], blurb: 'Zlato hovorí za teba.' },
 };
