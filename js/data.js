@@ -82,12 +82,25 @@ export const ITEM_BASES = {
   ring_ruby: { slot: 'prsten', name: 'Rubínový prsteň', art: 'x_ring_ruby', stats: { stastie: 0.6 }, rarity: 'epicky' },
   watch_rose: { slot: 'hodinky', name: 'Hodinky z ružového zlata', art: 'x_watch_rose', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
   watch_green: { slot: 'hodinky', name: 'Zelený ciferník', art: 'x_watch_green', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
+  // watches: blue = common (Šperky), pink = epic (Black Market), gold = legendary (bosses)
+  watch_smart: { slot: 'hodinky', name: 'Chytré hodinky', art: 'x_watch_smart', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Rátajú kroky, tep aj kalórie. Polícia by rada vedela, kde všade si dnes bol.' },
+  watch_gold_chrono: { slot: 'hodinky', name: 'Pozlátený chronograf', art: 'x_watch_gold_chrono', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Tri malé ciferníky a ani jeden neukazuje správny čas. Zlato sa zotrie do leta.' },
+  watch_calc: { slot: 'hodinky', name: 'Hodinky s kalkulačkou', art: 'x_watch_calc', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Účtovník gangu na zápästí. Podiel z lupu si vyrátaš skôr, ako sa ostatní spýtajú.' },
+  watch_field: { slot: 'hodinky', name: 'Vojenské hodinky', art: 'x_watch_field', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Látkový remienok, čísla čitateľné aj v tme pod mostom. Po starom otcovi, vraj.' },
+  watch_diver: { slot: 'hodinky', name: 'Potápačské hodinky', art: 'x_watch_diver', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Vydržia dvesto metrov pod vodou. Testoval ich jeden dlžník v prístave.' },
+  watch_gold_old: { slot: 'hodinky', name: 'Ošúchané zlaté hodinky', art: 'x_watch_gold_old', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Poškriabané sklo, rímske čísla. Zo záložne, a záložňa ich mala od niekoho, kto už nič nepotrebuje.' },
+  watch_plastic: { slot: 'hodinky', name: 'Plastové hodinky s hviezdičkami', art: 'x_watch_plastic', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Žiarivo žltý remienok a hviezdičky. Nikto ťa nebude brať vážne, a presne o to ide.' },
+  watch_rugged: { slot: 'hodinky', name: 'Odolné digitálky', art: 'x_watch_rugged', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Prežijú pád zo štvrtého poschodia. Ty asi nie.' },
+  watch_digital: { slot: 'hodinky', name: 'Čierne digitálky', art: 'x_watch_digital', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'bezny', desc: 'Lacné, presné, nezničiteľné. Majú ich všetci, takže svedkovia si ich nezapamätajú.' },
+  watch_daydate: { slot: 'hodinky', name: 'Zlaté hodinky s dňom a dátumom', art: 'x_watch_daydate', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'epicky', desc: 'Ukazujú aj deň v týždni, aby si vedel, kedy je splatný dlh. Celé zo zlata, aj náramok.' },
+  watch_sub_green: { slot: 'hodinky', name: 'Oceľový potápač so zeleným lunetom', art: 'x_watch_sub_green', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'epicky', desc: 'Zelený ako peniaze, ktoré stáli. Na prvé stretnutie s Donom sa nosia práve tieto.' },
+  watch_diamond: { slot: 'hodinky', name: 'Diamantové hodinky s odkrytým strojčekom', art: 'x_watch_diamond', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny', desc: 'Stovky diamantov a ozubené kolieska na očiach. Cena by kúpila celú ulicu. Vypadnú len z bossa.' },
 };
 
 export const SHOPS = {
   zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'glock', 'kalach', 'katana'], blurb: 'Nič nevidíš, nič nekupuješ.' },
   oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'shoe_derby', 'shoe_white_low', 'shoe_air', 'shoe_skate', 'shoe_combat', 'shoe_canvas_high', 'shoe_slides', 'shoe_grey_runner', 'shoe_work_boot', 'shoe_hightop_red', 'shoe_chunky', 'shoe_loafer', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'biker_jacket', 'denim_jacket', 'jeans_blue', 'track_pants', 'cargo_olive', 'carpenter_pants', 'cargo_camo', 'sweatpants', 'jeans_ripped', 'shorts_ball', 'cargo_compass', 'track_monogram', 'jeans_biker', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
-  sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby'], blurb: 'Zlato hovorí za teba.' },
+  sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby', 'watch_smart', 'watch_gold_chrono', 'watch_calc', 'watch_field', 'watch_diver', 'watch_gold_old', 'watch_plastic', 'watch_rugged', 'watch_digital', 'watch_daydate', 'watch_sub_green'], blurb: 'Zlato hovorí za teba.' },
 };
 
 // Every mission is a short story that ends with a fight against a weak NPC (see CONFIG.foe*).

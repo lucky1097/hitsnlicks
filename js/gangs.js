@@ -1,9 +1,9 @@
 // Gangs (guilds like in Shakes & Fidget) and Gang Wars: turf objects on the map give the whole gang
 // a bonus while it holds them. Rival gangs are computer-run until a real server brings real players.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261021183449';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261021183449';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261021183449';
+import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261021184010';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261021184010';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261021184010';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -99,7 +99,8 @@ export const GangMixin = {
     let i = 0, j = 0;
     while (i < As.length && j < Ds.length) {
       const fight = simulate({ ...As[i], hp: hpA[i] }, { ...Ds[j], hp: hpD[j] }, seed());
-      const d = { a: i, d: j, winner: fight.winner, rounds: fight.rounds.length, from: [hpA[i], hpD[j]] };
+      // ev: the duel's exchanges, so the client can replay it like a normal fight
+      const d = { a: i, d: j, winner: fight.winner, rounds: fight.rounds.length, from: [hpA[i], hpD[j]], ev: fight.rounds.map((e) => [e.attacker, e.dodge ? -1 : e.block ? -2 : e.dmg, e.crit ? 1 : 0, e.hp[0], e.hp[1]]) };
       hpA[i] = fight.winner === 0 ? fight.hp[0] : 0;
       hpD[j] = fight.winner === 1 ? fight.hp[1] : 0;
       d.to = [hpA[i], hpD[j]];

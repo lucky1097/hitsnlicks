@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021183449';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021183449';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021183449';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021184010';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021184010';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021184010';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -970,51 +970,120 @@ export class UI {
     return { html: this.hdr(v.kindInfo.name, g ? '<span class="gold">' + money(g.treasury) + '</span>' : '') + '<div class="body">' + h + '</div>' };
   }
 
-  // team fight: duels one after another, the winner keeps his remaining life
+  // team fight: duels one after another, the winner keeps his remaining life; each duel plays like a normal fight
   scr_war(d) {
     const col = (list, side) => list.map((f, i) => '<div class="wrow" id="w' + side + i + '"><div class="top"><span>' + esc(f.name) + '</span><span class="num muted" id="w' + side + 't' + i + '">' + fmt(f.hp) + '</span></div><div class="bar hp"><i id="w' + side + 'b' + i + '" style="width:100%"></i></div></div>').join('');
     const prev = d.result.prev;
-    const h = '<div class="body"><p class="story" style="margin:0 0 10px">Tvoj gang prišiel na ' + esc(d.turf.name) + '. ' + (prev ? esc(prev.name) + ' už čakajú.' : '') + '</p>' +
-      '<div class="war"><div><div class="sec sc" style="margin-top:0">Tvoj gang</div>' + col(d.A, 'a') + '</div><div><div class="sec sc" style="margin-top:0;color:' + (prev ? prev.color : '') + '">' + (prev ? esc(prev.name) : 'Obrana') + '</div>' + col(d.D, 'd') + '</div></div>' +
+    const h = '<div class="stage" id="stage"><img class="bg" src="' + art('fightbg') + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
+      '<div class="title"><span class="bl" id="wtitle">Duel 1</span><span class="sc" style="font-size:14px;color:#d0473d;text-shadow:0 1px 0 #000">' + esc(d.turf.name) + (prev ? ' · ' + esc(prev.name) : '') + '</span></div>' +
+      '<figure class="fcard me" id="fa"></figure><span class="vs">vs</span><figure class="fcard foe" id="fb"></figure></div>' +
+      '<div class="hpgrid"><div><div class="top"><span class="bl" id="wna"></span><span class="num muted" id="hpa" style="font-size:14px"></span></div><div class="bar hp"><i id="hpba" style="width:100%"></i></div></div>' +
+      '<div><div class="top"><span class="bl" id="wnb"></span><span class="num muted" id="hpb" style="font-size:14px"></span></div><div class="bar hp"><i id="hpbb" style="width:100%"></i></div></div></div>' +
+      '<div class="body tight" style="flex:1;overflow-y:auto"><div class="war"><div><div class="sec sc" style="margin-top:0">Tvoj gang</div>' + col(d.A, 'a') + '</div><div><div class="sec sc" style="margin-top:0;color:' + (prev ? prev.color : '') + '">' + (prev ? esc(prev.name) : 'Obrana') + '</div>' + col(d.D, 'd') + '</div></div>' +
       '<ol class="flog" id="wlog" style="margin-top:10px"></ol></div>' +
       '<div style="flex:none;padding:10px 14px calc(14px + env(safe-area-inset-bottom))"><button class="btn wide" data-act="war-skip" id="fskip">Preskočiť</button></div>';
     return { html: '<header class="hdr"><span style="width:12px"></span><h1 style="font-size:24px" class="sc">Gang Wars</h1></header>' + h, after: () => this.playWar(d) };
   }
 
-  playWar(d) {
-    this.war = { d, k: 0 };
-    this.fightTimer = setInterval(() => this.warStep(), 1100);
-    this.warStep();
+  // fight card of a gang fighter: you wear your own look, members and rivals their class art
+  warCard(f, me) {
+    if (me && LOOK_BASE) return this.lookHtml(this.s.p.look, 'in-fcard');
+    const focus = !me && BOT_FOCUS[f.cls];
+    return '<img src="' + art(me ? 'maska' : BOT_ART[f.cls] || 'maska') + '" alt="' + esc(f.name) + '"' + (focus ? ' style="object-position:' + focus + '"' : '') + '>';
   }
 
-  warStep() {
+  playWar(d) {
+    this.war = { d, k: -1, i: 0, pause: 0 };
+    const total = d.battle.duels.reduce((s, x) => s + (x.ev || []).length + 3, 0);
+    const step = Math.max(90, Math.min(420, 25000 / Math.max(1, total)));
+    if (!this.nextDuel()) { this.war.ended = true; this.finishWar(); return; }
+    this.fightTimer = setInterval(() => this.warStep(), step);
+  }
+
+  nextDuel(silent = false) {
     const w = this.war;
-    if (!w) return;
-    const duel = w.d.battle.duels[w.k];
-    if (!duel) { this.finishWar(); return; }
     w.k += 1;
+    w.i = 0;
+    const duel = w.d.battle.duels[w.k];
+    if (!duel) return false;
     const A = w.d.A[duel.a], D = w.d.D[duel.d];
+    w.cur = { A, D, duel };
     document.querySelectorAll('.wrow.on').forEach((e) => e.classList.remove('on'));
     const ra = $('#wa' + duel.a), rd = $('#wd' + duel.d);
     if (ra) ra.classList.add('on');
     if (rd) rd.classList.add('on');
-    const set = (side, i, hp, max) => {
-      const b = $('#w' + side + 'b' + i), t = $('#w' + side + 't' + i);
-      if (b) b.style.width = (hp / max) * 100 + '%';
+    if (!silent) {
+      $('#fa').classList.remove('out');
+      $('#fb').classList.remove('out');
+      $('#fa').innerHTML = this.warCard(A, duel.a === 0); // you always go first
+      $('#fb').innerHTML = this.warCard(D, false);
+      $('#wna').textContent = A.name;
+      $('#wnb').textContent = D.name;
+      $('#wtitle').textContent = 'Duel ' + (w.k + 1);
+    }
+    this.warHp(duel.from[0], duel.from[1]);
+    return true;
+  }
+
+  warHp(a, b) {
+    const { A, D, duel } = this.war.cur;
+    const row = (side, i, hp, max) => {
+      const bar = $('#w' + side + 'b' + i), t = $('#w' + side + 't' + i);
+      if (bar) bar.style.width = (hp / max) * 100 + '%';
       if (t) t.textContent = fmt(hp);
       if (hp <= 0) { const r = $('#w' + side + i); if (r) r.classList.add('out'); }
     };
-    set('a', duel.a, duel.to[0], A.hp);
-    set('d', duel.d, duel.to[1], D.hp);
-    const log = $('#wlog');
-    if (log) {
-      const li = document.createElement('li');
-      const win = duel.winner === 0;
-      const me = duel.a === 0; // you always go first
-      const line = win ? (me ? '<span class="gold">Vyhral si</span> nad ' + esc(D.name) : '<span class="gold">' + esc(A.name) + '</span> vyhral nad ' + esc(D.name))
-        : (me ? '<span class="red">' + esc(D.name) + '</span> ťa porazil' : '<span class="red">' + esc(D.name) + '</span> vyhral nad ' + esc(A.name));
-      li.innerHTML = '<span class="r">Duel ' + w.k + '</span><span>' + line + '</span>';
-      log.prepend(li);
+    row('a', duel.a, a, A.hp);
+    row('d', duel.d, b, D.hp);
+    $('#hpa').textContent = fmt(a) + ' / ' + fmt(A.hp);
+    $('#hpb').textContent = fmt(b) + ' / ' + fmt(D.hp);
+    $('#hpba').style.width = (a / A.hp) * 100 + '%';
+    $('#hpbb').style.width = (b / D.hp) * 100 + '%';
+  }
+
+  warStep(silent = false) {
+    const w = this.war;
+    if (!w || !w.cur || w.ended) return;
+    if (w.pause > 0) {
+      w.pause -= 1;
+      if (!w.pause && !this.nextDuel(silent)) { w.ended = true; if (!silent) this.finishWar(); }
+      return;
+    }
+    const { A, D, duel } = w.cur;
+    const ev = (duel.ev || [])[w.i];
+    if (!ev) {
+      this.warHp(duel.to[0], duel.to[1]);
+      const log = $('#wlog');
+      if (log) {
+        const li = document.createElement('li');
+        const win = duel.winner === 0;
+        const me = duel.a === 0;
+        const line = win ? (me ? '<span class="gold">Vyhral si</span> nad ' + esc(D.name) : '<span class="gold">' + esc(A.name) + '</span> vyhral nad ' + esc(D.name))
+          : (me ? '<span class="red">' + esc(D.name) + '</span> ťa porazil' : '<span class="red">' + esc(D.name) + '</span> vyhral nad ' + esc(A.name));
+        li.innerHTML = '<span class="r">Duel ' + (w.k + 1) + '</span><span>' + line + '</span>';
+        log.prepend(li);
+      }
+      if (!silent) { const loser = $(duel.winner === 0 ? '#fb' : '#fa'); if (loser) loser.classList.add('out'); }
+      w.pause = silent ? 1 : 4;
+      return;
+    }
+    w.i += 1;
+    const [att, dmg, crit, ha, hb] = ev;
+    this.warHp(ha, hb);
+    if (silent) return;
+    const target = $(att === 0 ? '#fb' : '#fa');
+    const stage = $('#stage');
+    if (target && stage) {
+      target.classList.remove('hit', 'out');
+      void target.offsetWidth;
+      if (dmg > 0) target.classList.add('hit');
+      const n = document.createElement('span');
+      n.className = 'dmg' + (crit ? ' crit' : '') + (dmg < 0 ? ' miss' : '');
+      n.textContent = dmg === -1 ? 'úhyb' : dmg === -2 ? 'blok' : dmg;
+      n.style.left = att === 0 ? '70%' : '14%';
+      n.style.top = '170px';
+      stage.appendChild(n);
+      setTimeout(() => n.remove(), 900);
     }
   }
 
@@ -1022,7 +1091,7 @@ export class UI {
     const w = this.war;
     if (!w || w.done) return;
     this.stopFight();
-    if (skip) while (w.k < w.d.battle.duels.length) this.warStep();
+    if (skip) while (!w.ended) this.warStep(true);
     w.done = true;
     const sk = $('#fskip');
     if (sk) sk.remove();

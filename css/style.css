@@ -226,6 +226,7 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .fcard.me { left: 16px; border-color: var(--gold); }
 .fcard.foe { right: 16px; border-color: rgba(208,71,61,.8); }
 .stage .fcard.hit { animation: hit .25s; }
+.stage .fcard.out { filter: grayscale(1) brightness(.45); transition: filter .4s; }
 
 /* character */
 .char { display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; gap: 10px; }
