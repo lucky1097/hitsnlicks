@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021205317';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021205317';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021205317';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021210030';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021210030';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021210030';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -18,6 +18,9 @@ const BOT_FOCUS = { svalovec: '32% 7%' };
 // fight animation: weapon cut-outs live in assets/fx (tools/cutout.ps1); guns drawn pointing left get
 // flipped so the muzzle faces the foe; fighters without a known weapon carry their class's usual one
 const FX_MUZZLE_LEFT = new Set(['w_deagle', 'w_glock', 'w_gold1911', 'w_kalach', 'w_revolver', 'w_tommy_gold']);
+// melee pictures are drawn diagonally; the swing expects the handle down-left and the striking end up-right
+// (bat, katana, crowbar, bike chain), these have the handle up-right and are turned round first
+const FX_TIP_DOWN_LEFT = new Set(['w_knife', 'w_machete', 'w_hockey', 'w_bottle']);
 const CLASS_WEAPON = { svalovec: 'bat', zlodej: 'knife', dealer: 'glock' };
 const fxArt = (n) => 'assets/fx/' + n + '.png';
 // class artwork shown when picking a class (more classes as their art arrives)
@@ -1239,7 +1242,9 @@ export class UI {
       setTimeout(onHit, dur * 0.5);
     } else {
       // melee: wind up, swing across into the foe, pull back
-      const dx = tx - sx - size / 2, dy = ty - sy - size / 2, m = dir > 0 ? '' : ' scaleX(-1)';
+      // m (applied first): striking end up-right, mirrored for the foe so it points at you
+      const dx = tx - sx - size / 2, dy = ty - sy - size / 2;
+      const m = (FX_TIP_DOWN_LEFT.has(base.art) ? ' rotate(180deg)' : '') + (dir > 0 ? '' : ' scaleX(-1)');
       img.animate([
         { transform: 'translate(0,0) rotate(' + -30 * dir + 'deg)' + m, opacity: 0 },
         { transform: 'translate(' + dx * 0.3 + 'px,' + (dy - 40) + 'px) rotate(' + -75 * dir + 'deg)' + m, opacity: 1, offset: 0.3 },
