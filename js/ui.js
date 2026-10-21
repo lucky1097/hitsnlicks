@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021201027';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021201027';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021201027';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021201237';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021201237';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021201237';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -534,7 +534,8 @@ export class UI {
   // ---------------------------------------------------------------- screens
   scr_title() {
     const has = this.s.hasSave();
-    let inner = '<h1 class="logo">Hits <span>&amp;</span> Licks</h1><p class="tag">Od pešiaka po bossa mesta</p>';
+    // the poster carries the logo, so the title shows only the tagline under it
+    let inner = '<h1 class="logo sr">Hits &amp; Licks</h1><p class="tag">Od pešiaka po bossa mesta</p>';
     if (this.s.online && !this.s.loggedIn()) {
       const mode = this.sel.authMode || 'in';
       inner += '<div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" value="' + esc(this.sel.authEmail || '') + '"></div>';
@@ -558,7 +559,7 @@ export class UI {
       if (has) inner += '<button class="btn wide" style="margin-top:8px" data-act="cancel-new">Späť</button>';
     }
     return {
-      html: '<div class="title-scr"><div class="glow"></div><img class="key" src="' + art('maska') + '" alt="Hráč v bielej kukle"><div class="fade"></div><div class="inner">' + inner + '</div></div>',
+      html: '<div class="title-scr"><div class="poster"><img src="' + art('photo_title') + '" alt="Hits &amp; Licks: traja chlapi z gangu v nočnej ulici"></div><div class="inner">' + inner + '</div></div>',
     };
   }
 

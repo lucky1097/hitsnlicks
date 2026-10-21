@@ -307,6 +307,13 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .title-scr .key { position: absolute; left: 50%; top: 40px; width: 300px; height: 340px; transform: translateX(-50%); }
 .title-scr .fade { position: absolute; left: 0; right: 0; top: 300px; height: 150px; background: linear-gradient(180deg, rgba(6,6,6,0), #060606 85%); }
 .title-scr .inner { position: relative; padding: 350px 40px 30px; display: flex; flex-direction: column; align-items: stretch; }
+/* title poster (logo included): the form sits in its dark lower part, which fades into the page black */
+.title-scr .poster { position: absolute; left: 0; right: 0; top: 0; }
+.title-scr .poster img { display: block; width: 100%; height: auto; }
+.title-scr .poster::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 17%; background: linear-gradient(180deg, rgba(6,6,6,0), #060606 90%); }
+.title-scr .poster ~ .inner { padding-top: 144%; }
+.title-scr .poster ~ .inner .tag { margin-top: 0; }
+.logo.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .logo { margin: 0; text-align: center; font-family: var(--black); font-weight: 900; font-size: 70px; line-height: .95; color: #efe9dc; text-shadow: 0 3px 0 #000, 0 0 24px rgba(0,0,0,.95); }
 .logo span { color: var(--gold); }
 .tag { margin: 2px 0 16px; text-align: center; font-size: 17px; font-style: italic; color: #8a857a; }
