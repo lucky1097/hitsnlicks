@@ -90,6 +90,10 @@ export const ITEM_BASES = {
   ring_opal: { slot: 'prsten', name: 'Prsteň s opálom', art: 'x_ring_opal', stats: { stastie: 0.6 }, rarity: 'bezny', desc: 'Kameň mení farbu podľa nálady. Tvoja je väčšinou zlá.' },
   ring_college: { slot: 'prsten', name: 'Absolventský prsteň', art: 'x_ring_college', stats: { stastie: 0.6 }, rarity: 'bezny', desc: 'Modrý kameň a orol. Na vysokej si nebol, ale prsteň máš z obchodu so zálohou.' },
   ring_dollar: { slot: 'prsten', name: 'Prsteň so znakom dolára', art: 'x_ring_dollar', stats: { stastie: 0.6 }, rarity: 'bezny', desc: 'Zlatý dolár vysypaný kamienkami. Nenápadnosť nie je tvoja silná stránka.' },
+  ring_nail: { slot: 'prsten', name: 'Zlatý prsteň v tvare klinca', art: 'x_ring_nail', stats: { stastie: 0.6 }, rarity: 'epicky', desc: 'Zlatý klinec omotaný okolo prsta, s radom diamantov na hlavičke. Pripomienka, že každý raz príde na rad.' },
+  ring_nugget: { slot: 'prsten', name: 'Prsteň zo zlatého nugetu', art: 'x_ring_nugget', stats: { stastie: 0.6 }, rarity: 'epicky', desc: 'Kus surového zlata, ako ho vytiahli zo zeme. Pri podaní ruky to každý pocíti.' },
+  ring_champion: { slot: 'prsten', name: 'Šampiónsky prsteň', art: 'x_ring_champion', stats: { stastie: 0.6 }, rarity: 'epicky', desc: 'Diamanty v kruhoch, erb a pohár na boku. Vyhral si ho v lige, o ktorej nikto nesmie vedieť.' },
+  ring_emerald_cut: { slot: 'prsten', name: 'Platinový prsteň s obrovským diamantom', art: 'x_ring_emerald_cut', stats: { stastie: 0.6 }, rarity: 'legendarny', desc: 'Diamant veľký ako kocka cukru a okolo neho ďalšie desiatky. Svieti aj v tme. Vypadne len z bossa.' },
   watch_rose: { slot: 'hodinky', name: 'Hodinky z ružového zlata', art: 'x_watch_rose', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
   watch_green: { slot: 'hodinky', name: 'Zelený ciferník', art: 'x_watch_green', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny' },
   // watches: blue = common (Šperky), pink = epic (Black Market), gold = legendary (bosses)
@@ -110,7 +114,7 @@ export const ITEM_BASES = {
 export const SHOPS = {
   zbrane: { name: 'Zbrane', bases: ['bat', 'knuckles', 'knife', 'machete', 'glock', 'kalach', 'katana'], blurb: 'Nič nevidíš, nič nekupuješ.' },
   oblecenie: { name: 'Oblečenie', bases: ['jacket', 'pants', 'sneaker', 'sneaker_black', 'shoe_derby', 'shoe_white_low', 'shoe_air', 'shoe_skate', 'shoe_combat', 'shoe_canvas_high', 'shoe_slides', 'shoe_grey_runner', 'shoe_work_boot', 'shoe_hightop_red', 'shoe_chunky', 'shoe_loafer', 'jacket_puffer', 'puffer_red', 'varsity_gold', 'field_jacket', 'varsity_red', 'work_jacket', 'bomber_olive', 'track_navy', 'biker_jacket', 'denim_jacket', 'jeans_blue', 'track_pants', 'cargo_olive', 'carpenter_pants', 'cargo_camo', 'sweatpants', 'jeans_ripped', 'shorts_ball', 'cargo_compass', 'track_monogram', 'jeans_biker', 'jacket_compass', 'parka_fur', 'puffer_hood'], blurb: 'Čierna nikdy nevyjde z módy.' },
-  sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby', 'ring_silver', 'ring_black', 'ring_signet', 'ring_skull', 'ring_ruby_old', 'ring_chain', 'ring_opal', 'ring_college', 'ring_dollar', 'watch_smart', 'watch_gold_chrono', 'watch_calc', 'watch_field', 'watch_diver', 'watch_gold_old', 'watch_plastic', 'watch_rugged', 'watch_digital', 'watch_daydate', 'watch_sub_green'], blurb: 'Zlato hovorí za teba.' },
+  sperky: { name: 'Šperky', bases: ['chain', 'ring', 'watch', 'ring_ruby', 'ring_silver', 'ring_black', 'ring_signet', 'ring_skull', 'ring_ruby_old', 'ring_chain', 'ring_opal', 'ring_college', 'ring_dollar', 'ring_nail', 'ring_nugget', 'ring_champion', 'watch_smart', 'watch_gold_chrono', 'watch_calc', 'watch_field', 'watch_diver', 'watch_gold_old', 'watch_plastic', 'watch_rugged', 'watch_digital', 'watch_daydate', 'watch_sub_green'], blurb: 'Zlato hovorí za teba.' },
 };
 
 // Every mission is a short story that ends with a fight against a weak NPC (see CONFIG.foe*).
