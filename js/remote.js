@@ -1,10 +1,10 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261021203858';
-import { NET } from './net.js?v=20261021203858';
-import { CONFIG } from './config.js?v=20261021203858';
-import { SHOPS } from './data.js?v=20261021203858';
+import { SimServer } from './server.js?v=20261021204152';
+import { NET } from './net.js?v=20261021204152';
+import { CONFIG } from './config.js?v=20261021204152';
+import { SHOPS } from './data.js?v=20261021204152';
 
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
@@ -29,7 +29,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261021203858');
+    const { handle, memoryDb } = await import('./api.js?v=20261021204152');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };
@@ -105,6 +105,9 @@ export class RemoteServer extends SimServer {
 
   async deleteCharacter() { return this.call('deleteCharacter'); }
   async refreshArena() { return this.call('arena'); }
+  // hall of fame reads other players from the database; the answers carry no state, so the mirror stays as it is
+  async hallOfFame() { return this.call('hallOfFame'); }
+  async playerProfile(id) { return this.call('playerProfile', id); }
 
   // keep the mirror fresh (offers expire, rivals move, timers tick on the server)
   maybeSync(everyMs = 30000) {

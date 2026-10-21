@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021203858';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021203858';
-import { makeFighter, simulate } from './combat.js?v=20261021203858';
-import { GangMixin } from './gangs.js?v=20261021203858';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021204152';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021204152';
+import { makeFighter, simulate } from './combat.js?v=20261021204152';
+import { GangMixin } from './gangs.js?v=20261021204152';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -649,6 +649,23 @@ export class SimServer {
     STATS.forEach((s) => { stats[s] = ts[s]; });
     return { name: this.p.name, level: this.p.level, cls: this.p.cls, stats, weapon: this.weaponDmg(), armor: ts.armor };
   }
+
+  // what other players see in the hall of fame: look, stats with gear, worn items (never cash or the inventory)
+  publicProfile() {
+    const ts = this.totalStats(false);
+    const stats = {};
+    STATS.forEach((s) => { stats[s] = ts[s]; });
+    const gear = {};
+    for (const [slot, id] of Object.entries(this.p.equipment)) {
+      const it = id && this.item(id);
+      if (it) gear[slot] = { base: it.base, rarity: it.rarity, level: it.level, upgrade: it.upgrade, bonus: this.itemBonus(it) };
+    }
+    return { name: this.p.name, cls: this.p.cls, level: this.p.level, look: this.p.look || null, stats, armor: ts.armor, weapon: this.weaponDmg(), hp: this.maxHp(), gear };
+  }
+
+  // offline there is nobody else: the hall lists only you (online the server answers these from the database)
+  hallOfFame() { return ok({ list: [{ id: 'me', name: this.p.name, level: this.p.level, cls: this.p.cls, points: this.state.pvp.points, me: true }] }); }
+  playerProfile() { return ok({ profile: this.publicProfile() }); }
 
   playerFighter() {
     const ts = this.totalStats();

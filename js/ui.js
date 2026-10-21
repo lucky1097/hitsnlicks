@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021203858';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021203858';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021203858';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021204152';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021204152';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021204152';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -46,6 +46,7 @@ const MENU = [
   { id: 'arena', name: 'Aréna', desc: 'Súboje s inými hráčmi a rebríček.' },
   { id: 'boss', name: 'Boss fights', desc: 'Línia bossov Mesta 1. Kladivo čaká v uličke za obchodmi.' },
   { id: 'gang', name: 'Gang', desc: 'Tvoj gang, pokladnica, členovia a boje o územie.' },
+  { id: 'hall', name: 'Sieň slávy', desc: 'Všetci registrovaní hráči. Klikni na hráča a uvidíš jeho staty a výbavu.' },
   { id: 'settings', name: 'Nastavenia', desc: 'Testovací režim a uložená hra.' },
   { id: 'title', name: 'Hlavné menu', desc: 'Späť na úvodnú obrazovku. Hra sa ukladá sama.' },
 ];
@@ -392,9 +393,11 @@ export class UI {
         else this.open(a);
       },
       async 'modal-close'() { this.closeModal(); },
+      async profile(a) { const r = await this.s.playerProfile(a); if (this.check(r)) this.open('profile', r.profile, true); },
       async 'menu-go'(a) {
         if (a === 'title') { this.open('title'); return; }
         if (a === 'missions') { this.open('missions', this.s.state.mission ? this.s.state.mission.giver : null); return; }
+        if (a === 'hall') { const r = await this.s.hallOfFame(); if (this.check(r)) this.open('hall', r.list, true); return; }
         this.open(a, null, true);
       },
       async 'pick-class'(a) { if ($('#name-input')) this.sel.newName = $('#name-input').value; this.sel.cls = a; this.render(); },
@@ -614,6 +617,46 @@ export class UI {
         (this.buffChips() ? '<div class="buffs-list">' + this.buffChips() + '</div>' : '') +
         '<div style="margin-top:8px;border-top:1px solid var(--line)">' + rows + '</div>' +
         (p.points > 0 ? '<p class="note gold" style="font-size:16px">Voľné body: ' + p.points + '</p>' : '<p class="note">Staty si dokupuješ za peniaze, cena s každým bodom rastie.</p>') +
+        '</div>',
+    };
+  }
+
+  // hall of fame: registered players, highest level first; a tap opens their profile
+  scr_hall(list) {
+    list = list || [];
+    const rows = list.map((r, i) => '<button class="hrow' + (r.me ? ' me' : '') + '" data-act="profile" data-arg="' + esc(r.id) + '">' +
+      '<span class="num rk">' + (i + 1) + '.</span><span class="nm">' + esc(r.name) + (r.me ? ' <small>· ty</small>' : '') + '</span>' +
+      '<span class="cl">' + (CLASSES[r.cls] ? CLASSES[r.cls].name : '') + '</span><span class="num lv">úr. ' + r.level + '</span></button>').join('');
+    return {
+      html: this.hdr('Sieň slávy', list.length + ' hráčov') + '<div class="body">' + (rows || '<p class="p">Zatiaľ tu nikto nie je.</p>') +
+        (this.s.online ? '' : '<p class="note">Offline hra: ostatných hráčov uvidíš po prihlásení.</p>') + '</div>',
+    };
+  }
+
+  // another player's card: look, stats with gear and every worn item
+  scr_profile(pr) {
+    const bonusStr = (b) => Object.entries(b).map(([k, v]) => (k === 'dmg' ? 'Zbraň +' + v : k === 'armor' ? 'Brnenie +' + v : STAT_NAMES[k] + ' +' + v)).join(' · ');
+    const slotHtml = (id) => {
+      const s = SLOTS.find((x) => x.id === id);
+      const it = pr.gear[id];
+      const box = it ? '<span class="box rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt="' + esc(ITEM_BASES[it.base].name) + '">' + (it.upgrade ? '<span class="up">+' + it.upgrade + '</span>' : '') + '</span>' : '<span class="box empty"></span>';
+      return '<div class="slot">' + box + '<small>' + s.name + '</small></div>';
+    };
+    const c = CLASSES[pr.cls];
+    const stats = STATS.map((st) => '<div class="statrow' + (c && c.stat === st ? ' cls' : '') + '"><span class="n sc">' + STAT_NAMES[st] + '</span><span class="v">' + fmt(pr.stats[st]) + '</span></div>').join('');
+    const items = SLOTS.filter((s) => pr.gear[s.id]).map((s) => {
+      const it = pr.gear[s.id], r = rar(it.rarity), base = ITEM_BASES[it.base];
+      return '<div class="item rar-' + it.rarity + '"><img src="' + art(base.art) + '" alt=""><div class="mid"><div class="t">' + esc(base.name) + (it.upgrade ? ' +' + it.upgrade : '') + '</div><div class="s"><span style="color:' + r.color + '">' + r.name + '</span> · úr. ' + it.level + ' · ' + s.name + '</div><div class="s" style="color:#c9c4b8">' + bonusStr(it.bonus) + '</div></div></div>';
+    }).join('');
+    return {
+      html: this.hdr(esc(pr.name), 'Úroveň <span class="gold">' + pr.level + '</span> · ' + (c ? c.name : '')) +
+        '<div class="body"><div class="char">' +
+        '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
+        '<div class="portrait">' + (LOOK_BASE ? this.lookHtml(pr.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="">') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(pr.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + (c ? c.name : '') + ' · úroveň ' + pr.level + '</span></div></div>' +
+        '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
+        '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">Životy ' + fmt(pr.hp) + ' · zbraň ' + fmt(pr.weapon) + ' · brnenie ' + fmt(pr.armor) + '</p>' +
+        '<div style="margin-top:8px;border-top:1px solid var(--line)">' + stats + '</div>' +
+        '<div class="sec sc">Výbava</div>' + (items || '<p class="p">Nemá nasadenú žiadnu výbavu.</p>') +
         '</div>',
     };
   }

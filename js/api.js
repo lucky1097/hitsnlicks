@@ -9,10 +9,11 @@
 //   nameTaken(name, id) -> boolean
 //   arenaPool(id, points, n) -> [{ id, name, level, cls, stats, weapon, armor, points }]
 //   ladder(n) -> [{ id, name, points }]
+//   hall(n) -> [{ id, name, level, cls, points }]   (highest level first)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261021203858';
-import { GIVERS, SHOPS } from './data.js?v=20261021203858';
+import { SimServer } from './server.js?v=20261021204152';
+import { GIVERS, SHOPS } from './data.js?v=20261021204152';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -69,6 +70,15 @@ function refresh(s) {
 export async function handle(db, userId, action, args = []) {
   if (!userId) return fail('Nie si prihlásený.');
   if (action === 'deleteCharacter') { await db.deletePlayer(userId); return { ok: true, state: null }; }
+  // hall of fame: read-only, the caller's own state is neither loaded nor saved
+  if (action === 'hallOfFame') return { ok: true, list: (await db.hall(200)).map((r) => ({ ...r, me: r.id === userId })) };
+  if (action === 'playerProfile') {
+    const id = String(args[0] || '');
+    if (!/^[\w-]{1,64}$/.test(id)) return fail('Hráč neexistuje.');
+    const row = await db.loadPlayer(id);
+    if (!row) return fail('Hráč neexistuje.');
+    return { ok: true, profile: new SimServer({ store: memStore, live: true, state: row.state }).publicProfile() };
+  }
   const fn = ACTIONS[action];
   if (!fn) return fail('Neznáma akcia.');
   if (!Array.isArray(args)) args = [];
@@ -125,6 +135,10 @@ export function memoryDb() {
         .map((r) => ({ id: r.id, ...r.fighter, points: r.points }));
     },
     async ladder(n) { return [...rows.values()].sort((a, b) => b.points - a.points).slice(0, n).map((r) => ({ id: r.id, name: r.name, points: r.points })); },
+    async hall(n) {
+      return [...rows.values()].sort((a, b) => b.level - a.level || b.points - a.points).slice(0, n)
+        .map((r) => ({ id: r.id, name: r.name, level: r.level, cls: r.cls, points: r.points }));
+    },
     async addPoints(id, delta) { const r = rows.get(id); if (r) r.points = Math.max(0, r.points + delta); },
     async deletePlayer(id) { rows.delete(id); },
   };
