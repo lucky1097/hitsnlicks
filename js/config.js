@@ -58,6 +58,7 @@ export const CONFIG = {
   shopRefreshMin: 30,
   shopStock: 6,
   shopRerollChains: 1, // new goods right away for one gold bar
+  bmEpicChains: 10, // an epic piece on the Black Market costs its cash price plus these gold bars
   // rolled item stats: one stat = itemPower(level, rarity mult) × share; common 1 stat, rare 2, epic 3,
   // legendary = class main stat + odolnosť, each twice the epic value
   itemStatCount: { bezny: 1, vzacny: 2, epicky: 3 },

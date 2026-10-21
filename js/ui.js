@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021202031';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021202031';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021202031';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021203013';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021203013';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021203013';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -690,21 +690,22 @@ export class UI {
   scr_shop(shopId) {
     const sh = this.s.shop(shopId);
     const p = this.s.p;
-    const row = (it) => {
+    const row = (it, bm) => {
       const r = rar(it.rarity);
+      const bars = bm === true && it.rarity === 'epicky' ? CONFIG.bmEpicChains : 0;
       const cur = p.equipment[it.slot] && this.s.item(p.equipment[it.slot]);
       return '<div class="item rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div class="mid"><div class="t">' + this.itemName(it) + '</div><div class="s"><span style="color:' + r.color + '">' + r.name + '</span> · úr. ' + it.level + '</div><div class="s" style="color:#c9c4b8">' + this.bonusText(it) + '</div>' + this.descHtml(it) + (cur ? '<div class="s">Teraz: ' + this.bonusText(cur) + '</div>' : '') + '</div>' +
-        '<div class="acts"><button class="btn small gold num" data-act="buy-item" data-arg="' + it.id + '"' + (p.cash < it.price ? ' disabled' : '') + '>' + money(it.price) + '</button></div></div>';
+        '<div class="acts"><button class="btn small gold num" data-act="buy-item" data-arg="' + it.id + '"' + (p.cash < it.price || p.chains < bars ? ' disabled' : '') + '>' + money(it.price) + (bars ? '<br>+ ' + bars + ' tehličiek' : '') + '</button></div></div>';
     };
     let h = '';
     if (sh.bm) {
       h += '<div class="bm"><div class="sec sc" style="margin-top:0;color:#ff6aa8">Čierny trh · len dnes večer · ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % na epický kus</div>' +
-        (sh.bm.length ? sh.bm.map(row).join('') : '<p class="p">Čierny trh je vypredaný.</p>') + '</div>';
+        (sh.bm.length ? sh.bm.map((it) => row(it, true)).join('') : '<p class="p">Čierny trh je vypredaný.</p>') + '</div>';
     }
     h += '<p class="p" style="font-style:italic">„' + sh.blurb + '“</p>';
     h += sh.list.map(row).join('');
     if (!sh.list.length) h += '<p class="p">Všetko vypredané.</p>';
-    if (!sh.bm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, každý kus má ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % šancu byť epický.</p>';
+    if (!sh.bm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, každý kus má ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % šancu byť epický. Epický kus stojí peniaze a ' + CONFIG.bmEpicChains + ' zlatých tehličiek.</p>';
     h += '<button class="btn wide" data-act="shop-reroll" data-arg="' + shopId + '"' + (p.chains < CONFIG.shopRerollChains ? ' disabled' : '') + '>Nový tovar hneď · ' + CONFIG.shopRerollChains + ' zlatá tehlička</button>';
     h += '<p class="note">Nový tovar o <span data-until="' + (Date.now() + sh.refreshIn) + '"></span> alebo po novej úrovni.</p>';
     return { html: this.hdr(sh.name, money(p.cash)) + '<div class="body">' + h + '</div>' };

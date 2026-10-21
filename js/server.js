@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021202031';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021202031';
-import { makeFighter, simulate } from './combat.js?v=20261021202031';
-import { GangMixin } from './gangs.js?v=20261021202031';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021203013';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021203013';
+import { makeFighter, simulate } from './combat.js?v=20261021203013';
+import { GangMixin } from './gangs.js?v=20261021203013';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -356,8 +356,11 @@ export class SimServer {
     const inBm = !!(st && st.bm && this.blackMarketOpen() && st.bm.find((i) => i.id === itemId));
     const it = st && (inBm ? st.bm : st.list).find((i) => i.id === itemId);
     if (!it) return fail('Tento predmet už nie je na predaj.');
+    const bars = inBm && it.rarity === 'epicky' ? CONFIG.bmEpicChains : 0;
     if (this.p.cash < it.price) return fail('Nemáš dosť peňazí.');
+    if (this.p.chains < bars) return fail('Epický kus stojí aj ' + bars + ' zlatých tehličiek.');
     this.p.cash -= it.price;
+    this.p.chains -= bars;
     if (inBm) st.bm = st.bm.filter((i) => i.id !== itemId);
     else st.list = st.list.filter((i) => i.id !== itemId);
     this.giveItem(it);
