@@ -1,7 +1,8 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022122633';
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022174317';
+import { mulberry32 } from './combat.js?v=20261022174317'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -12,7 +13,8 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 // hooks: { input:{x,y,fire}, labelLayer:HTMLElement, paused():bool, heatStars():number, readyGiver():string|null,
-//          weapon():{attack,cooldown,auto}|null, onCrime('shot'|'hitGun'|'hitMelee'), onPill('red'|'blue'|'green'), onPoi(poi|null), onAction(), onPolice() }
+//          weapon():{attack,cooldown,auto}|null, onCrime('shot'|'hitGun'|'hitMelee'), onPill('red'|'blue'|'green'), onPoi(poi|null), onAction(), onPolice(),
+//          daily():{done,escapeSec,tasks:[{i,type,got,data,done}]}|null, onDailyStep(task, step) }
 export function createWorld(parent, hooks) {
   class City extends Phaser.Scene {
     constructor() { super('city'); }
@@ -110,6 +112,18 @@ export function createWorld(parent, hooks) {
       // officer on foot (spawned at high heat)
       this.officer = null;
       this.officerCooldown = 0;
+
+      // daily missions: gold target rings, packages on the street, an arrow at the screen edge
+      this.dailyG = this.add.graphics().setDepth(4.5);
+      this.dailyPacks = new Map(); // "task:k" -> sprite
+      this.dailySent = new Map(); // "task:step" -> time sent (one report at a time)
+      this.dailyEsc = { on: false, t: 0, sent: false };
+      this.dailyHint = null;
+      this.dailyArrow = document.createElement('div');
+      this.dailyArrow.className = 'daily-arrow';
+      this.dailyArrow.hidden = true;
+      this.dailyArrow.innerHTML = '<i></i><b>D</b>';
+      hooks.labelLayer.appendChild(this.dailyArrow);
 
       // camera: we place it ourselves so the whole map can be shown when zoomed out
       this.cameras.main.setRoundPixels(true);
@@ -426,6 +440,12 @@ export function createWorld(parent, hooks) {
       g.fillStyle(0xe0352b, 1).fillRect(3, 9, 5, 2);
       g.fillStyle(0x2f6fe0, 1).fillRect(10, 9, 5, 2);
       g.generateTexture('car_ambulance', 18, 32).clear();
+      // daily stash package: a taped brown parcel
+      g.fillStyle(0x000000, 0.5).fillRect(1, 2, 9, 8);
+      g.fillStyle(0x8a5a2b, 1).fillRect(0, 1, 9, 8);
+      g.fillStyle(0xb07a3e, 1).fillRect(0, 1, 9, 2);
+      g.fillStyle(0xe8d9a8, 1).fillRect(4, 1, 1, 8).fillRect(0, 4, 9, 1);
+      g.generateTexture('fx_pack', 10, 10).clear();
       g.destroy();
     }
 
@@ -677,6 +697,98 @@ export function createWorld(parent, hooks) {
       }
     }
 
+    // ---------------------------------------------------------------- daily missions
+    // gold rings on the places a task sends you, parcels on the street, the escape clock; the nearest
+    // target is kept in dailyHint for the edge arrow and the HUD
+    updateDaily(dt, paused) {
+      const v = hooks.daily();
+      const g = this.dailyG;
+      g.clear();
+      const px = this.player.x, py = this.player.y;
+      const targets = [], packs = new Set();
+      let esc = null;
+      if (v && !v.done) {
+        for (const t of v.tasks) {
+          if (t.done) continue;
+          if (t.type === 'scout') {
+            t.data.spots.forEach((id, k) => { if (!t.got.includes(k)) targets.push({ ...this.spot(id), task: t.i, step: k, r: 14 }); });
+          } else if (t.type === 'courier') {
+            targets.push({ ...this.spot(t.got.length ? t.data.to : t.data.from), task: t.i, step: t.got.length, r: 14 });
+          } else if (t.type === 'stash') {
+            this.stashSpots(t.data.seed).forEach((p, k) => {
+              if (t.got.includes(k)) return;
+              targets.push({ ...p, task: t.i, step: k, r: 9, pack: true });
+              packs.add(t.i + ':' + k);
+            });
+          } else if (t.type === 'escape') esc = t;
+        }
+      }
+      // parcels: a sprite for each one still lying there
+      for (const tg of targets) {
+        const key = tg.task + ':' + tg.step;
+        if (!tg.pack || this.dailyPacks.has(key)) continue;
+        const s = this.add.image(tg.x, tg.y, 'fx_pack').setDepth(6.5);
+        this.tweens.add({ targets: s, y: tg.y - 2, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+        this.dailyPacks.set(key, s);
+      }
+      for (const [key, s] of this.dailyPacks) {
+        if (packs.has(key)) continue;
+        this.tweens.killTweensOf(s);
+        this.tweens.add({ targets: s, alpha: 0, scale: 2, y: s.y - 10, duration: 260, onComplete: () => s.destroy() });
+        this.dailyPacks.delete(key);
+      }
+      const pulse = 0.5 + 0.5 * Math.sin(this.time.now / 260);
+      let best = null, bd = 1e9;
+      for (const tg of targets) {
+        g.fillStyle(0xf0c95a, 0.16).fillCircle(tg.x, tg.y, (tg.pack ? 7 : 10) + pulse * 3);
+        g.lineStyle(1.5, 0xf0c95a, 0.9).strokeCircle(tg.x, tg.y, (tg.pack ? 5 : 7) + pulse * 2);
+        const d = Math.hypot(tg.x - px, tg.y - py);
+        if (d < bd) { bd = d; best = tg; }
+        if (!paused && d < tg.r) this.dailyReport(tg.task, tg.step);
+      }
+      this.dailyHint = best ? { x: best.x, y: best.y, dist: bd, task: best.task } : null;
+      this.updateEscape(esc, v ? v.escapeSec : 30, dt, paused);
+    }
+
+    // a building's door from city.json
+    spot(id) { const m = this.city.marks[id]; return m ? { x: m[0], y: m[1] } : { x: -999, y: -999 }; }
+
+    // five parcels on sidewalks, at least 120 px apart, from the task's seed (the same on every device)
+    stashSpots(seedV) {
+      if (this.stashCache && this.stashCache.seed === seedV) return this.stashCache.pts;
+      const rng = mulberry32(seedV), pts = [];
+      for (let guard = 0; pts.length < 5 && guard < 300; guard++) {
+        const n = this.walkNodes[Math.floor(rng() * this.walkNodes.length)];
+        const link = n.links[Math.floor(rng() * n.links.length)];
+        const s = this.edgeSeg('walk', rng() < 0.5 ? 1 : -1, n, link);
+        const u = 0.3 + rng() * 0.4;
+        const p = { x: s.x0 + (s.x1 - s.x0) * u, y: s.y0 + (s.y1 - s.y0) * u };
+        if (this.solidAt(p.x, p.y) || pts.some((q) => Math.hypot(q.x - p.x, q.y - p.y) < 120)) continue;
+        pts.push(p);
+      }
+      this.stashCache = { seed: seedV, pts };
+      return pts;
+    }
+
+    // one report per step until the server answers (a refused one is tried again after 3 s)
+    dailyReport(task, step) {
+      const key = task + ':' + step, now = this.time.now;
+      if (now - (this.dailySent.get(key) || -1e9) < 3000) return;
+      this.dailySent.set(key, now);
+      hooks.onDailyStep(task, step);
+    }
+
+    // escape: the clock runs while the officer on foot chases you; being caught (or him leaving) resets it
+    updateEscape(t, sec, dt, paused) {
+      const e = this.dailyEsc;
+      if (!t || !this.officer) { e.on = false; this.dailyEscT = 0; return; }
+      if (paused) return;
+      if (!e.on) { e.on = true; e.t = 0; e.sent = false; hooks.onDailyStep(t.i, 0); }
+      e.t += dt;
+      if (e.t >= sec + 0.5 && !e.sent) { e.sent = true; hooks.onDailyStep(t.i, 1); }
+      this.dailyEscT = e.t;
+    }
+
     updateBullets(dt) {
       this.fx.clear();
       this.bullets = this.bullets.filter((b) => {
@@ -747,6 +859,22 @@ export function createWorld(parent, hooks) {
         }
         if (l.npc) l.el.classList.toggle('ready', ready === l.npc);
       }
+
+      // daily target off screen: an arrow on the edge of the free band between the HUD and the joystick
+      const h = this.dailyHint, ar = this.dailyArrow;
+      let showA = false;
+      if (h) {
+        const hx = (h.x - this.camX) * z + sw / 2, hy = (h.y - this.camY) * z + sh / 2;
+        const m = 26, top = 160, bottom = Math.max(top + 60, sh - 250);
+        if (hx < m || hx > sw - m || hy < top || hy > bottom) {
+          const cx = sw / 2, cy = (top + bottom) / 2, ang = Math.atan2(hy - cy, hx - cx);
+          const k = Math.min((sw / 2 - m) / Math.max(1e-6, Math.abs(Math.cos(ang))), ((bottom - top) / 2) / Math.max(1e-6, Math.abs(Math.sin(ang))));
+          ar.style.transform = 'translate(' + Math.round(cx + Math.cos(ang) * k) + 'px,' + Math.round(cy + Math.sin(ang) * k) + 'px) translate(-50%,-50%)';
+          ar.firstChild.style.transform = 'rotate(' + Math.round(deg(ang)) + 'deg)';
+          showA = true;
+        }
+      }
+      if (ar.hidden === showA) ar.hidden = !showA;
     }
 
     update(time, deltaMs) {
@@ -789,6 +917,7 @@ export function createWorld(parent, hooks) {
       this.updateRunner(dt);
       this.updateAmbulances(dt, time);
       this.updateTurf(dt);
+      this.updateDaily(dt, paused);
 
       // --- points of interest
       let best = null, bestD = 1e9;

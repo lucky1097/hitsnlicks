@@ -1,16 +1,16 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261022122633';
-import { NET } from './net.js?v=20261022122633';
-import { CONFIG } from './config.js?v=20261022122633';
-import { SHOPS } from './data.js?v=20261022122633';
+import { SimServer } from './server.js?v=20261022174317';
+import { NET } from './net.js?v=20261022174317';
+import { CONFIG } from './config.js?v=20261022174317';
+import { SHOPS } from './data.js?v=20261022174317';
 
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
 // actions that change something: they run on the server and are async here
 const ACTIONS = ['newGame', 'setLook', 'spendPoint', 'buyStat', 'equip', 'unequip', 'sellItem', 'upgradeItem', 'buyItem', 'rerollShop',
-  'startMission', 'skipMission', 'claimMission', 'policeCheck', 'lawyer', 'buyBars', 'buyElixir', 'catchRipper', 'takePill', 'hitRunner',
+  'startMission', 'skipMission', 'claimMission', 'policeCheck', 'lawyer', 'buyBars', 'buyElixir', 'dailyStep', 'catchRipper', 'takePill', 'hitRunner',
   'fightBoss', 'fightArena', 'createGang', 'recruit', 'promote', 'deposit', 'buyGangUpgrade', 'refillTurf', 'toggleDefender', 'attackTurf'];
 
 const noStore = { load: () => null, save() {}, clear() {} };
@@ -29,7 +29,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261022122633');
+    const { handle, memoryDb } = await import('./api.js?v=20261022174317');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };
@@ -131,6 +131,7 @@ export class RemoteServer extends SimServer {
     return { opponents: v.opponents || [], ladder, points: v.points, freeLeft: Math.max(0, CONFIG.pvpFreePerHour - v.used), windowEnds: v.windowStart + this.gameMs(60), wins: v.wins, losses: v.losses };
   }
   gangTick() {} // rival gangs move on the server
+  dailyQuests() { return this.state.dailyQ || { key: '', tasks: [], done: false }; } // rolled on the server
   crime(heat) { this.call('crime', heat); } // fire and forget
 }
 

@@ -1,9 +1,9 @@
-import { SimServer } from './server.js?v=20261022122633';
-import { RemoteServer } from './remote.js?v=20261022122633';
-import { ONLINE } from './net.js?v=20261022122633';
-import { CONFIG } from './config.js?v=20261022122633';
-import { UI } from './ui.js?v=20261022122633';
-import { createWorld } from './world.js?v=20261022122633';
+import { SimServer } from './server.js?v=20261022174317';
+import { RemoteServer } from './remote.js?v=20261022174317';
+import { ONLINE } from './net.js?v=20261022174317';
+import { CONFIG } from './config.js?v=20261022174317';
+import { UI } from './ui.js?v=20261022174317';
+import { createWorld } from './world.js?v=20261022174317';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'don', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -40,7 +40,15 @@ const game = createWorld(document.getElementById('game'), {
   onPoi: (poi) => ui.setPoi(poi),
   onAction: () => ui.action(),
   onPolice: () => ui.police(),
+  daily: () => (server.hasSave() ? server.dailyMap() : null),
+  onDailyStep: (task, step) => ui.dailyStep(task, step),
 });
+
+// what the map knows about the daily task (nearest target, escape clock) for the HUD
+ui.dailyWorld = () => {
+  const city = game.scene.getScene('city');
+  return city && city.dailyG ? { hint: city.dailyHint, esc: city.dailyEscT || 0, px: city.player.x, py: city.player.y } : null;
+};
 
 ui.zoom = (dir) => {
   const city = game.scene.getScene('city');

@@ -58,6 +58,12 @@ export const CONFIG = {
   shopRefreshMin: 30,
   shopStock: 6,
   shopRerollChains: 1, // new goods right away for one gold bar
+  // daily missions (js/daily.js): cash day = this many minutes of mission cash (day 14 pays twice day 1),
+  // gold bars on days 5 / 10 / 15, courier and escape time limits in seconds
+  dailyCashMin: 30,
+  dailyBars: { 5: 20, 10: 35, 15: 50 },
+  dailyCourierSec: 120,
+  dailyEscapeSec: 30,
   elixirChains: 100, // Wexler's elixir: opens the Black Market for one player
   elixirHours: 24,
   bmEpicChains: 10, // an epic piece on the Black Market costs its cash price plus these gold bars

@@ -1,7 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022122633';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022122633';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022122633';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022174317';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022174317';
+import { DAILY_TYPES } from './daily.js?v=20261022174317';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022174317';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -52,6 +53,7 @@ const MENU = [
   { id: 'character', name: 'Postava', desc: 'Staty, výbava a vylepšenia tvojej postavy.' },
   { id: 'inventory', name: 'Inventár', desc: 'Všetky predmety, ktoré nosíš so sebou.' },
   { id: 'missions', name: 'Misie', desc: 'Aktívna misia a kde nájdeš zadávateľov.' },
+  { id: 'daily', name: 'Denné misie', desc: 'Tri úlohy na mape každý deň a 15-dňový kalendár odmien.' },
   { id: 'arena', name: 'Aréna', desc: 'Súboje s inými hráčmi a rebríček.' },
   { id: 'boss', name: 'Boss fights', desc: 'Línia bossov Mesta 1. Kladivo čaká v uličke za obchodmi.' },
   { id: 'gang', name: 'Gang', desc: 'Tvoj gang, pokladnica, členovia a boje o územie.' },
@@ -172,7 +174,7 @@ export class UI {
     this.el.screen.hidden = false;
     this.el.hud.hidden = !this.s.hasSave() || this.name === 'title';
     if (out.after) out.after();
-    this.setTab({ character: 'character', inventory: 'character', missions: 'missions', arena: 'arena', gang: 'gang', turf: 'gang', war: 'gang' }[this.name] || 'city');
+    this.setTab({ character: 'character', inventory: 'character', missions: 'missions', daily: 'missions', arena: 'arena', gang: 'gang', turf: 'gang', war: 'gang' }[this.name] || 'city');
     this.tick();
   }
 
@@ -235,11 +237,98 @@ export class UI {
       if (this.lastGangLog !== undefined && g.log[0].bad && this.name !== 'war') this.toast('Gang: ' + g.log[0].text, true);
       this.lastGangLog = g.log[0].at;
     }
+    this.dailyHud();
     const bl = $('#hud-buffs');
     const chips = this.buffChips();
     bl.hidden = !chips;
     if (chips !== bl.dataset.html) { bl.innerHTML = chips; bl.dataset.html = chips; }
     this.updateAction();
+  }
+
+  // ---------------------------------------------------------------- daily missions
+  // HUD chip: progress of the day and what to do next (distance to the nearest target, courier or escape clock)
+  dailyHud() {
+    const el = $('#hud-daily');
+    const v = this.s.dailyMap();
+    if (!v.tasks.length) { el.hidden = true; return; }
+    el.hidden = false;
+    const doneN = v.tasks.filter((t) => t.done).length;
+    el.classList.toggle('ready', v.done);
+    $('#hud-dly-label').textContent = 'Denné misie · ' + doneN + ' / ' + v.tasks.length;
+    if (v.done) {
+      $('#hud-dly-name').textContent = 'Hotovo na dnes';
+      $('#hud-dly-sub').textContent = 'nové o ' + clock(this.s.nextDayAt() - Date.now());
+      return;
+    }
+    const w = this.dailyWorld ? this.dailyWorld() : null;
+    const hint = w && w.hint;
+    const t = (hint && v.tasks[hint.task]) || v.tasks.find((x) => !x.done);
+    const T = DAILY_TYPES[t.type];
+    $('#hud-dly-name').textContent = T.name + ' ' + t.got.length + '/' + T.need;
+    let sub = hint && hint.task === t.i ? Math.max(1, Math.round(hint.dist / 2)) + ' m' : '';
+    if (t.type === 'courier' && t.got.length) sub = 'zostáva ' + clock(Math.max(0, t.data.pickedAt + v.courierSec * 1000 - Date.now())) + (sub ? ' · ' + sub : '');
+    if (t.type === 'escape') sub = w && w.esc > 0 ? 'útek ' + Math.min(v.escapeSec, Math.floor(w.esc)) + ' / ' + v.escapeSec + ' s' : 'čaká na policajta';
+    if (t.type === 'runner') sub = 'bežec alebo Ripper na mape';
+    $('#hud-dly-sub').textContent = sub;
+  }
+
+  // the map stepped on a target / picked a parcel / survived the escape
+  async dailyStep(task, step) {
+    const r = await this.s.dailyStep(task, step);
+    if (!r.ok) { if (!/Príliš rýchlo|Ešte si neušiel/.test(r.error)) this.toast(r.error, true); return; }
+    if (r.started) { this.toast('Útek: vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa policajt nechytí.'); return; }
+    if (r.already) return;
+    if (r.failed) { this.toast(r.failed, true); return; }
+    const t = this.s.dailyMap().tasks[task];
+    const T = DAILY_TYPES[t.type];
+    if (t.type === 'courier' && r.have === 1) this.toast('Balík máš. Dones ho do ' + CONFIG.dailyCourierSec / 60 + ' minút, sleduj šípku.');
+    else this.toast(T.name + ': ' + r.have + ' / ' + r.need + (r.done ? ' · splnené' : ''));
+    if (r.reward) this.dailyRewardModal(r.reward);
+    if (this.name === 'daily') this.render();
+  }
+
+  // a runner / Ripper hit counted for today (the hit's own window shows first)
+  dailyAfter(d) {
+    if (!d) return;
+    this.toast(d.name + ': splnené');
+    if (d.reward) this.dailyRewardModal(d.reward);
+  }
+
+  dailyRewardText(r) {
+    if (r.type === 'cash') return money(r.cash);
+    if (r.type === 'level') return 'Nová úroveň';
+    if (r.type === 'bars') return r.bars + ' zlatých tehličiek';
+    return 'Legendárny predmet + ' + r.bars + ' tehličiek';
+  }
+
+  dailyRewardModal(rw) {
+    if (this.modalOpen) { this.pendingDaily = rw; return; } // after the window that is open now
+    this.modal('<h2 class="win">Denné misie splnené</h2><p class="sub">Deň ' + rw.day + ' z 15</p>' +
+      '<div class="rew"><span class="gold">' + this.dailyRewardText(rw) + '</span></div>' + (rw.item ? this.lootHtml(rw.item) : '') + this.levelUpText(rw.levelUps || 0) +
+      '<p class="sub" style="font-size:16px;color:#9b968b">Nové úlohy o polnoci.</p><div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
+    if (this.name === 'daily') this.render();
+  }
+
+  scr_daily() {
+    const v = this.s.dailyView();
+    const GROUP = { easy: 'Ľahká', action: 'Akčná', hard: 'Ťažká' };
+    let h = '<p class="p">Tri úlohy priamo na mape. Ciele ukazujú zlaté kruhy a šípka na kraji obrazovky. Keď splníš všetky tri, dostaneš odmenu dňa z kalendára.</p>';
+    for (const t of v.tasks) {
+      const timer = t.type === 'courier' && t.have === 1 && !t.done ? '<div class="s gold">Zostáva <b data-until="' + (t.data.pickedAt + CONFIG.dailyCourierSec * 1000) + '"></b></div>' : '';
+      h += '<div class="dtask' + (t.done ? ' done' : '') + '"><div class="top"><span class="t">' + (t.done ? '✓ ' : '') + t.name + '</span><span class="sc g-' + t.group + '">' + GROUP[t.group] + '</span></div>' +
+        '<div class="s">' + esc(t.text) + '</div>' + timer +
+        '<div class="bar" style="height:6px;margin-top:6px"><i style="width:' + Math.round((t.have / t.need) * 100) + '%"></i></div><div class="num s" style="text-align:right">' + t.have + ' / ' + t.need + '</div></div>';
+    }
+    h += v.done ? '<p class="note gold">Dnes máš hotovo. Nové úlohy o <span data-until="' + v.nextAt + '"></span>.</p>' : '<p class="note">Úlohy sa menia o polnoci (<span data-until="' + v.nextAt + '"></span>). Vynechaný deň nevadí, kalendár počká.</p>';
+    // the 15-day calendar: the day the next finished set pays is highlighted
+    const cur = v.done ? v.day - 1 || 15 : v.day;
+    h += '<div class="sec sc">Kalendár odmien</div><div class="dcal">' + v.calendar.map((r, k) => {
+      const n = k + 1;
+      const label = r.type === 'cash' ? money(r.cash) : r.type === 'level' ? '+1 úroveň' : r.type === 'bars' ? r.bars + ' tehl.' : 'Legendárka';
+      const cls = (n < v.day ? ' past' : '') + (n === cur && !v.done ? ' now' : '') + (n === cur && v.done ? ' got' : '') + ' t-' + r.type;
+      return '<div class="dday' + cls + '"><small>Deň ' + n + '</small><b>' + label + '</b></div>';
+    }).join('') + '</div>';
+    return { html: this.hdr('Denné misie', 'deň <span class="gold">' + (v.done ? cur : v.day) + '</span> / 15') + '<div class="body">' + h + '</div>' };
   }
 
   // one chip per pill colour: icon, stacks, time until the next stack runs out
@@ -296,10 +385,12 @@ export class UI {
   }
 
   async reaperCaught() {
-    if (!this.check(await this.s.catchRipper())) return;
+    const r = await this.s.catchRipper();
+    if (!this.check(r)) return;
     this.modal('<h2 class="win">Chytil si ho</h2><p class="sub">Ripper ležal na zemi a tehličku pustil.</p><div class="rew"><span class="gold">+1 zlatá tehlička</span></div>' +
       '<p class="sub" style="font-style:italic;font-size:17px;color:#d8d3c7">Wexler: „Dobrá práca. Nechaj si ju, zaslúžil si si ju.“</p>' +
       '<div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
+    this.dailyAfter(r.daily); // the day's reward waits until this window closes
   }
 
   async runnerHit() {
@@ -311,6 +402,7 @@ export class UI {
     } else {
       this.toast('Zmizol v oblaku iskier. Tentoraz nič nepustil.');
     }
+    this.dailyAfter(r.daily);
   }
 
   // heat bar with the selected mission's share drawn on top
@@ -346,6 +438,7 @@ export class UI {
     this.el.modal.hidden = true;
     this.el.modal.innerHTML = '';
     this.updateAction();
+    if (this.pendingDaily) { const rw = this.pendingDaily; this.pendingDaily = null; this.dailyRewardModal(rw); }
   }
 
   info(title, text) {
@@ -693,7 +786,11 @@ export class UI {
     const v = this.s.view();
     const m = this.s.state.mission;
     if (!giverId) {
-      let h = '<p class="p">Misie zadávajú postavy v meste. Hľadaj bielu bublinu „!“ nad hlavou. Každá misia sa končí súbojom.</p>' +
+      const dv = this.s.dailyMap();
+      const dn = dv.tasks.filter((t) => t.done).length;
+      let h = '<button class="card daily-card" data-act="open" data-arg="daily"><span class="dbadge">D</span><span class="mid"><span class="t">Denné misie</span><span class="s">' +
+        (dv.done ? 'Dnes hotovo · nové o polnoci' : dn + ' / ' + dv.tasks.length + ' splnené · úlohy na mape') + '</span></span><span class="end"><span class="s">deň ' + this.s.dailyDayNow() + ' / 15</span></span></button>' +
+        '<p class="p">Misie zadávajú postavy v meste. Hľadaj bielu bublinu „!“ nad hlavou. Každá misia sa končí súbojom.</p>' +
         '<div class="card" style="cursor:default"><img class="ph" src="' + art('photo_don') + '" alt=""><div class="mid"><span class="t">Don</span><span class="s">Park v strede štvrte, pri fontáne</span></div></div>' +
         '<div class="card" style="cursor:default"><img class="ph" src="' + art('photo_diler') + '" alt=""><div class="mid"><span class="t">Díler</span><span class="s">Chodník pri corneri, západ štvrte</span></div></div>';
       if (v.jailLeft > 0) h += '<p class="warn" style="padding:8px 10px;border:1px solid rgba(168,35,28,.6);color:#e6a49c">Si zatknutý. Misie až o <b data-until="' + this.s.state.jailUntil + '"></b>.</p>';

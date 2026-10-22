@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700;900&amp;family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20261022122633">
+<link rel="stylesheet" href="css/style.css?v=20261022174317">
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 </head>
 <body>
@@ -42,11 +42,18 @@
         </div>
         <div class="buffs" id="hud-buffs" hidden></div>
       </div>
-      <button class="tracker" id="hud-tracker" data-act="tab" data-arg="missions" hidden>
-        <span class="sc" id="hud-trk-label">Aktívna misia</span>
-        <span class="trk-name" id="hud-trk-name"></span>
-        <span class="trk-time"><img class="px" src="assets/icons/i_clock.png" alt=""><b id="hud-trk-time"></b></span>
-      </button>
+      <div class="hud-right">
+        <button class="tracker" id="hud-tracker" data-act="tab" data-arg="missions" hidden>
+          <span class="sc" id="hud-trk-label">Aktívna misia</span>
+          <span class="trk-name" id="hud-trk-name"></span>
+          <span class="trk-time"><img class="px" src="assets/icons/i_clock.png" alt=""><b id="hud-trk-time"></b></span>
+        </button>
+        <button class="tracker daily" id="hud-daily" data-act="open" data-arg="daily" hidden>
+          <span class="sc" id="hud-dly-label">Denné misie</span>
+          <span class="trk-name" id="hud-dly-name"></span>
+          <span class="trk-time"><b id="hud-dly-sub"></b></span>
+        </button>
+      </div>
     </div>
     <div class="zoom">
       <button data-act="zoom" data-arg="1" aria-label="Priblížiť">+</button>
@@ -70,6 +77,6 @@
   <div id="modal" hidden></div>
   <div id="toasts"></div>
 </div>
-<script type="module" src="js/main.js?v=20261022122633"></script>
+<script type="module" src="js/main.js?v=20261022174317"></script>
 </body>
 </html>

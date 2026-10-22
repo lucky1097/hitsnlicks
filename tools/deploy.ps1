@@ -7,7 +7,7 @@ $root = Split-Path -Parent $PSScriptRoot
 $dest = Join-Path $root 'supabase\functions\game\game'
 New-Item -ItemType Directory -Force $dest | Out-Null
 $enc = New-Object Text.UTF8Encoding($false)
-foreach ($m in 'config', 'data', 'combat', 'server', 'gangs', 'api') {
+foreach ($m in 'config', 'data', 'combat', 'server', 'gangs', 'daily', 'api') {
   # the browser's cache-busting ?v= stamps (tools/publish.ps1) are dropped for Deno
   $t = [IO.File]::ReadAllText((Join-Path $root "js\$m.js"), $enc)
   [IO.File]::WriteAllText((Join-Path $dest "$m.js"), [regex]::Replace($t, '\.js\?v=\d+', '.js'), $enc)
