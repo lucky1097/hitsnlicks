@@ -146,6 +146,8 @@ export const MISSIONS = {
       hit: 'Z kríkov cvaká fotoaparát. Niekto si ťa práve odfotil a nechce o fotky prísť.', foe: { name: 'Fotograf', title: 'Bulvár platí za každú tvár', art: 'photo_n_fotograf' } },
     { text: 'Sleduj chlapíka, ktorý vraj donáša polícii. Ak je to pravda, Don chce vedieť, komu.',
       hit: 'Mokrý informátor si ťa všimol. Je vystrašený, a vystrašení ľudia bijú bez rozmyslu.', foe: { name: 'Informátor', title: 'Spieva každému, kto platí', art: 'photo_n_informator' } },
+    { text: 'Don chce vedieť, kto chodí k jeho dlžníkovi na sídlisku. Postav sa pod okná a pozeraj. Lenže na sídlisku vidí všetko niekto iný.',
+      hit: 'Babka v natáčkach ťa sleduje z okna už hodinu. Teraz zišla dolu s paličkou a nie je zvedavá, je nahnevaná.', foe: { name: 'Babka Hedviga', title: 'Oči sídliska', art: 'photo_n_babka' } },
   ] },
   dorucenie: { name: 'Doručenie zásielky', minutes: 4, minLevel: 1, heat: 5, art: 'it_package', stories: [
     { text: 'Balík, adresa, žiadne otázky. Čo je vnútri, ťa nezaujíma. Na druhej strane štvrte ťa už ale niekto čaká a nie je to adresát.',
@@ -156,6 +158,8 @@ export const MISSIONS = {
       hit: 'Kuriér na bicykli ti zastavil cestu. Chce tvoju obálku do svojej tašky.', foe: { name: 'Cyklokuriér', title: 'Doručí čokoľvek, aj cudzie', art: 'photo_n_cyklokurier' } },
     { text: 'Zásielka ide taxíkom. Šofér vraj nekladie otázky. Lenže taxikár, ktorý sa toľko usmieva, niečo chystá.',
       hit: 'Taxikár zastavil v tmavej ulici a otočil sa. Zlatý zub, zlé úmysly.', foe: { name: 'Taxikár', title: 'Taxameter beží stále', art: 'photo_n_taxikar' } },
+    { text: 'Balík pre lekára, ktorý operuje bez otázok a bez licencie. Čaká v pivnici pod lekárňou. A nemá rád neohlásené návštevy.',
+      hit: 'Doktorko si navliekol rukavice. Za balík chce viac, ako sa dohodlo, a skalpel má po ruke.', foe: { name: 'Doktorko', title: 'Šije bez otázok', art: 'photo_n_doktorko' } },
   ] },
   predaj: { name: 'Predaj tovaru', minutes: 6, minLevel: 1, heat: 6, art: 'it_duffel', stories: [
     { text: 'Dostal si tašku. Do večera musí zmiznúť. Kto vie, čo v nej je. Pozor, ihrisko na sídlisku má svoju šéfku a tá nemá rada cudzí tovar.',
@@ -166,6 +170,10 @@ export const MISSIONS = {
       hit: 'Paser zabuchol dvere dodávky. Toto je jeho ulička.', foe: { name: 'Paser', title: 'Kradnutá elektronika lacno', art: 'photo_n_paser' } },
     { text: 'Barman z rohu vraj kúpi všetko. Pod pultom má viac fliaš ako peňazí.',
       hit: 'Barman odložil pohár. Za tovar zaplatí, ale päsťami.', foe: { name: 'Barman', title: 'Spod pultu', art: 'photo_n_barman' } },
+    { text: 'Tovar si chce kúpiť zlatník. Platí dobre, ale každý kus si najprv dlho prezerá cez lupu.',
+      hit: 'Zlatník odložil lupu. Tvrdí, že tovar je falošný, a jeho ochranka už zamyká dvere.', foe: { name: 'Zlatník', title: 'Všetko si preverí', art: 'photo_n_zlatnik' } },
+    { text: 'Predavač tenisiek z rohu vraj vezme všetko, čo sa dá predať ďalej. Lenže rád si nechá aj to, za čo nezaplatí.',
+      hit: 'Teniskár položil škatuľu a zapol si reťaz. Rokovanie skončilo.', foe: { name: 'Teniskár', title: 'Kúpi lacno, predá draho', art: 'photo_n_tenisky' } },
   ] },
   vymahanie: { name: 'Vymáhanie dlhu', minutes: 9, minLevel: 3, heat: 10, art: 'it_bat', stories: [
     { text: 'Mladý motorkár si od Dona požičal na novú mašinu. Splátky nechodia, mašina áno. Pripomeň mu, komu patrí.',
@@ -176,6 +184,10 @@ export const MISSIONS = {
       hit: 'Advokát sa usmieva a zviera kufrík. Zmluvu podpíše, až keď prehrá.', foe: { name: 'Advokát', title: 'Paragrafy a výhovorky', art: 'photo_n_advokat' } },
     { text: 'Starý pán z verandy požičal pred rokmi Donovi peniaze. Teraz si ich pýta späť aj s úrokmi. Don tvrdí, že je to naopak.',
       hit: 'Dedko vstal z hojdačky a zvierol palicu. Pamätá si časy, keď sa to robilo inak.', foe: { name: 'Dedo Ferko', title: 'Úžerník na dôchodku', art: 'photo_n_dedko' } },
+    { text: 'Holič z hlavnej ulice platil každý mesiac. Tento mesiac vraj nemá. Nožnice ale má stále ostré.',
+      hit: 'Holič sa usmieva a pomaly otvára zlaté nožnice. Strihať bude dnes zadarmo.', foe: { name: 'Holič', title: 'Strihá všetko', art: 'photo_n_holic' } },
+    { text: 'Úradník z banky si požičal na hazard. Teraz chodí po meste s kufrom a tvári sa, že ťa nepozná.',
+      hit: 'Úradník zviera kufrík a potí sa. Keď ho zaženieš do kúta, bude sa biť ako o život.', foe: { name: 'Úradník', title: 'Dlh až po kravatu', art: 'photo_n_uradnik' } },
   ] },
   kradez_auta: { name: 'Krádež auta', minutes: 8, minLevel: 4, heat: 10, art: 'it_keys', stories: [
     { text: 'Pred hotelom stojí čierne auto, ktoré už nepatrí svojmu majiteľovi. Kľúče máš, stačí ho odviezť do garáže. Šofér však nespí.',
@@ -184,6 +196,12 @@ export const MISSIONS = {
       hit: 'Nočnú zmenu tu robí vyhadzovač z klubu. A nespí.', foe: { name: 'Vyhadzovač', title: 'Nočná zmena', art: 'photo_n_vyhadzovac' } },
     { text: 'Čierna limuzína parkuje pred bankou. Vzadu sedí niekto, kto vie o autách viac ako ty.',
       hit: 'Žena z limuzíny odložila tablet. Už vie, kto si, a nepáči sa jej to.', foe: { name: 'Šoférka', title: 'Vodička pre bossov', art: 'photo_n_soferka' } },
+    { text: 'V servise na juhu stojí auto, ktoré Don chce. Mechanik ho vraj opravuje. Skôr ho schováva.',
+      hit: 'Mladý mechanik si prehodil kľúč z ruky do ruky. Auto nedostaneš bez neho.', foe: { name: 'Šrobovák', title: 'Servis bez faktúr', art: 'photo_n_automechanik' } },
+    { text: 'Pred tetovacím salónom parkuje motorka, ktorá patrí rivalom. Kľúče sú vo vnútri. Majiteľka salónu nie je priateľská.',
+      hit: 'Tatérka si zapla strojček. Tvoju tvár si zapamätá, a ty jej podpis tiež.', foe: { name: 'Tatérka', title: 'Atrament a krv', art: 'photo_n_tatuerka' } },
+    { text: 'Pred bytom influencerky stojí nové kupé. Kľúče nechala na stolíku pri okne. Lenže ona práve natáča.',
+      hit: 'Influencerka ťa má na videu naživo. Telefón nepustí a nechty má ostré.', foe: { name: 'Bibi', title: 'Milión sledovateľov', art: 'photo_n_influencerka' } },
   ] },
   prepadnutie: { name: 'Prepadnutie rivala', minutes: 10, minLevel: 6, heat: 12, art: 'it_bat', stories: [
     { text: 'Červení si myslia, že im patrí corner. Prejdi okolo a ukáž im, že sa mýlia.',
@@ -192,6 +210,10 @@ export const MISSIONS = {
       hit: 'Kuriérom je známa tvár z podchodu. Obálku len tak nepustí.', foe: { name: 'Sprejer', title: 'Kuriér červených', art: 'photo_n_sprejer' } },
     { text: 'Rivali posielajú sprejera, aby premaľoval tvoje značky. Zastav ho skôr, než pokryje celú stenu.',
       hit: 'Farbiar sa usmial a potriasol sprejom. Nevieš, či ti ho strčí do tváre, alebo ťa ním udrie.', foe: { name: 'Farbiar', title: 'Sprejer červených', art: 'photo_n_farbiar' } },
+    { text: 'Rivali dostávajú zbrane od starého puškára v dielni za mestom. Dnes si ich vyzdvihneš ty.',
+      hit: 'Puškár položil skrutkovač a siahol po revolveri na stole.', foe: { name: 'Puškár', title: 'Dielňa rivalov', art: 'photo_n_puskar' } },
+    { text: 'Rivali majú v uličke vlastného vymáhača. Vždy v tej istej mikine, vždy s tou istou reťazou.',
+      hit: 'Chlap v kapucni vyšiel z tmy. Nič nepovie, rovno udrie.', foe: { name: 'Kapucňa', title: 'Vymáhač červených', art: 'photo_n_kapucna' } },
   ] },
   ochrana: { name: 'Ochrana podniku', minutes: 12, minLevel: 8, heat: 6, art: 'it_pistol', stories: [
     { text: 'Postráž bar, kým sa nezotmie. Nikto nesmie robiť problémy. Jeden to aj tak skúsi.',
@@ -202,6 +224,10 @@ export const MISSIONS = {
       hit: 'Mladý policajt volá posily a trasú sa mu ruky. Toho sa treba zbaviť rýchlo.', foe: { name: 'Zelenáč', title: 'Prvý týždeň v uniforme', art: 'photo_n_zelenac' } },
     { text: 'Policajná hliadka stojí pred klubom už hodinu. Vraj kvôli kontrole. Skôr kvôli šiškám z pekárne vedľa.',
       hit: 'Policajt dojedol šišku a utrel si fúzy. Teraz má čas aj na teba.', foe: { name: 'Šiška', title: 'Hliadka pri pekárni', art: 'photo_n_sisky' } },
+    { text: 'Pojazdný bufet pred klubom platí za ochranu. Konkurenčný kuchár ho chce vytlačiť a dnes prišiel osobne.',
+      hit: 'Kuchár ti ponúka hranolky. V druhej ruke drží niečo oveľa horšie.', foe: { name: 'Kuchár', title: 'Bufet na kolesách', art: 'photo_n_kuchar' } },
+    { text: 'Nonstop pri klube patrí pod Donovu ochranu. Nočná predavačka ale dnes pustila dnu niekoho, kto platiť nechce.',
+      hit: 'Predavačka nafúkla bublinu a vytiahla spod pultu basebalku.', foe: { name: 'Pokladníčka', title: 'Nočná zmena v nonstope', art: 'photo_n_predavacka' } },
   ] },
   kradez_sklad: { name: 'Krádež zo skladu', minutes: 15, minLevel: 10, heat: 12, art: 'it_duffel', stories: [
     { text: 'Sklad pri klube je dnes v noci prázdny. Skoro. Jeden strážnik zostal a nemá dobrú náladu.',
@@ -214,6 +240,10 @@ export const MISSIONS = {
       hit: 'Za štítom stojí zásahovka. Cesta von vedie len cez neho.', foe: { name: 'Zásahovka', title: 'Štít a helma', art: 'photo_n_zasahovka' } },
     { text: 'Tovar zo skladu treba vyviezť po diaľnici. Na odbočke stojí dopravák s radarom a nerád vidí rýchle dodávky.',
       hit: 'Dopravák si zložil okuliare. Pokutu dnes nebude písať.', foe: { name: 'Radar', title: 'Dopravná polícia', art: 'photo_n_radar' } },
+    { text: 'Tovar z policajného skladu je uložený vo väznici. Strážnik pozná každý kľúč aj každú cestu.',
+      hit: 'Dozorca zatriasol zväzkom kľúčov. Odtiaľto nikto neodchádza bez jeho súhlasu.', foe: { name: 'Dozorca', title: 'Kľúče od všetkého', art: 'photo_n_dozorca' } },
+    { text: 'Sklad stráži psovod so psom. Pes ťa zacíti skôr, ako ho uvidíš.',
+      hit: 'Psovod pustil vodítko. Za ním ide aj on.', foe: { name: 'Psovod', title: 'Psia hliadka', art: 'photo_n_psovod' } },
   ] },};
 
 // photo: wide header image + focus (CSS object-position)
