@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022122414';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022122414';
-import { makeFighter, simulate } from './combat.js?v=20261022122414';
-import { GangMixin } from './gangs.js?v=20261022122414';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022122633';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022122633';
+import { makeFighter, simulate } from './combat.js?v=20261022122633';
+import { GangMixin } from './gangs.js?v=20261022122633';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -29,6 +29,21 @@ export class SimServer {
     this.live = !!opts.live;
     this.dirty = false;
     this.state = opts.state !== undefined ? opts.state : this.store.load();
+    if (this.state) this.dropRemovedItems();
+  }
+
+  // items whose base was taken out of the game (old placeholder art) vanish from saves and shop stock
+  dropRemovedItems() {
+    const known = (it) => !!ITEM_BASES[it.base];
+    const p = this.state.player;
+    if (p && p.inventory && !p.inventory.every(known)) {
+      p.inventory = p.inventory.filter(known);
+      for (const s of Object.keys(p.equipment)) if (p.equipment[s] && !p.inventory.some((i) => i.id === p.equipment[s])) p.equipment[s] = null;
+    }
+    for (const st of Object.values(this.state.shops || {})) {
+      if (st.list) st.list = st.list.filter(known);
+      if (st.bm) st.bm = st.bm.filter(known);
+    }
   }
 
   // ---------------------------------------------------------------- persistence & time
@@ -66,7 +81,7 @@ export class SimServer {
       counters: { missions: 0, fails: 0, raids: 0 },
     };
     const bat = this.makeItem('bat', 1, 'bezny');
-    const sneaker = this.makeItem('sneaker', 1, 'bezny');
+    const sneaker = this.makeItem('sneaker_black', 1, 'bezny');
     this.p.inventory.push(bat, sneaker);
     this.p.equipment.zbran = bat.id;
     this.p.equipment.topanky = sneaker.id;
