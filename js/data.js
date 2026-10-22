@@ -148,6 +148,8 @@ export const MISSIONS = {
       hit: 'Mokrý informátor si ťa všimol. Je vystrašený, a vystrašení ľudia bijú bez rozmyslu.', foe: { name: 'Informátor', title: 'Spieva každému, kto platí', art: 'photo_n_informator' } },
     { text: 'Don chce vedieť, kto chodí k jeho dlžníkovi na sídlisku. Postav sa pod okná a pozeraj. Lenže na sídlisku vidí všetko niekto iný.',
       hit: 'Babka v natáčkach ťa sleduje z okna už hodinu. Teraz zišla dolu s paličkou a nie je zvedavá, je nahnevaná.', foe: { name: 'Babka Hedviga', title: 'Oči sídliska', art: 'photo_n_babka' } },
+    { text: 'Pod mostom sa zhromažďujú ľudia, ktorí vidia všetko a nik ich nevidí. Don chce vedieť, čo videl jeden z nich.',
+      hit: 'Bezdomovec pri sude sa usmieva. Za informáciu chce viac, ako máš, a vie, že ho sleduješ.', foe: { name: 'Starý Lojzo', title: 'Kráľ spod mosta', art: 'photo_n_bezdomovec' } },
   ] },
   dorucenie: { name: 'Doručenie zásielky', minutes: 4, minLevel: 1, heat: 5, art: 'it_package', stories: [
     { text: 'Balík, adresa, žiadne otázky. Čo je vnútri, ťa nezaujíma. Na druhej strane štvrte ťa už ale niekto čaká a nie je to adresát.',
@@ -160,6 +162,8 @@ export const MISSIONS = {
       hit: 'Taxikár zastavil v tmavej ulici a otočil sa. Zlatý zub, zlé úmysly.', foe: { name: 'Taxikár', title: 'Taxameter beží stále', art: 'photo_n_taxikar' } },
     { text: 'Balík pre lekára, ktorý operuje bez otázok a bez licencie. Čaká v pivnici pod lekárňou. A nemá rád neohlásené návštevy.',
       hit: 'Doktorko si navliekol rukavice. Za balík chce viac, ako sa dohodlo, a skalpel má po ruke.', foe: { name: 'Doktorko', title: 'Šije bez otázok', art: 'photo_n_doktorko' } },
+    { text: 'Zásielku odovzdáš rozvozárovi pred kaviarňou. Do batohu sa zmestí viac ako pizza. Len či je to ten správny rozvozár.',
+      hit: 'Rozvozár zložil batoh. Jedlo neprivezie, privezie päste.', foe: { name: 'Rozvozár', title: 'Doručí aj to, čo nemá', art: 'photo_n_rozvozar' } },
   ] },
   predaj: { name: 'Predaj tovaru', minutes: 6, minLevel: 1, heat: 6, art: 'it_duffel', stories: [
     { text: 'Dostal si tašku. Do večera musí zmiznúť. Kto vie, čo v nej je. Pozor, ihrisko na sídlisku má svoju šéfku a tá nemá rada cudzí tovar.',
@@ -174,6 +178,8 @@ export const MISSIONS = {
       hit: 'Zlatník odložil lupu. Tvrdí, že tovar je falošný, a jeho ochranka už zamyká dvere.', foe: { name: 'Zlatník', title: 'Všetko si preverí', art: 'photo_n_zlatnik' } },
     { text: 'Predavač tenisiek z rohu vraj vezme všetko, čo sa dá predať ďalej. Lenže rád si nechá aj to, za čo nezaplatí.',
       hit: 'Teniskár položil škatuľu a zapol si reťaz. Rokovanie skončilo.', foe: { name: 'Teniskár', title: 'Kúpi lacno, predá draho', art: 'photo_n_tenisky' } },
+    { text: 'Na ihrisku v uličke sa predáva všeličo. Chlapík v bielom klobúku tam rozhoduje, kto smie.',
+      hit: 'Klobúk zahodil cigaretu a odložil loptu. Toto je jeho ihrisko.', foe: { name: 'Klobúk', title: 'Šéf ihriska v uličke', art: 'photo_n_klobuk' } },
   ] },
   vymahanie: { name: 'Vymáhanie dlhu', minutes: 9, minLevel: 3, heat: 10, art: 'it_bat', stories: [
     { text: 'Mladý motorkár si od Dona požičal na novú mašinu. Splátky nechodia, mašina áno. Pripomeň mu, komu patrí.',
@@ -188,6 +194,10 @@ export const MISSIONS = {
       hit: 'Holič sa usmieva a pomaly otvára zlaté nožnice. Strihať bude dnes zadarmo.', foe: { name: 'Holič', title: 'Strihá všetko', art: 'photo_n_holic' } },
     { text: 'Úradník z banky si požičal na hazard. Teraz chodí po meste s kufrom a tvári sa, že ťa nepozná.',
       hit: 'Úradník zviera kufrík a potí sa. Keď ho zaženieš do kúta, bude sa biť ako o život.', foe: { name: 'Úradník', title: 'Dlh až po kravatu', art: 'photo_n_uradnik' } },
+    { text: 'Synček z bohatej rodiny požičal od Dona na nové auto. Splácať sa mu nechce, veď mu všetko kúpi otec.',
+      hit: 'Frajer v okuliaroch sa uškŕňa. Myslí si, že ho peniaze otca ochránia.', foe: { name: 'Frajer', title: 'Peniaze po otcovi', art: 'photo_n_frajer' } },
+    { text: 'Krupiér z kasína vypláca výhry len tým, ktorí mu dávajú podiel. Don nedostal nič.',
+      hit: 'Krupiér zložil žetóny. Banka dnes vyhrá, myslí si.', foe: { name: 'Krupiér', title: 'Banka vždy vyhrá', art: 'photo_n_krupier' } },
   ] },
   kradez_auta: { name: 'Krádež auta', minutes: 8, minLevel: 4, heat: 10, art: 'it_keys', stories: [
     { text: 'Pred hotelom stojí čierne auto, ktoré už nepatrí svojmu majiteľovi. Kľúče máš, stačí ho odviezť do garáže. Šofér však nespí.',
@@ -244,6 +254,10 @@ export const MISSIONS = {
       hit: 'Dozorca zatriasol zväzkom kľúčov. Odtiaľto nikto neodchádza bez jeho súhlasu.', foe: { name: 'Dozorca', title: 'Kľúče od všetkého', art: 'photo_n_dozorca' } },
     { text: 'Sklad stráži psovod so psom. Pes ťa zacíti skôr, ako ho uvidíš.',
       hit: 'Psovod pustil vodítko. Za ním ide aj on.', foe: { name: 'Psovod', title: 'Psia hliadka', art: 'photo_n_psovod' } },
+    { text: 'Tovar sa presúva cez obchodné centrum v noci. Strážnik SBS má byť na obchôdzke. Je na nej len napoly.',
+      hit: 'Strážnik s vysielačkou ťa zbadal. Spotený, ale odhodlaný.', foe: { name: 'Strážnik SBS', title: 'Nočná zmena v obchodnom centre', art: 'photo_n_sbs' } },
+    { text: 'Hotovosť zo skladu sa ráno ukladá v banke. Pokladníčka pozná kód od trezoru. Strach jej dodáva odvahu.',
+      hit: 'Pokladníčka za sklom stlačila tlačidlo. Potom zdvihla ťažkú pečiatku.', foe: { name: 'Pokladníčka z banky', title: 'Za nepriestrelným sklom', art: 'photo_n_pokladnicka' } },
   ] },};
 
 // photo: wide header image + focus (CSS object-position)
