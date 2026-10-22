@@ -1,7 +1,7 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261021210158';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261021210158';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261021210158';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022122015';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022122015';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022122015';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -447,6 +447,7 @@ export class UI {
         this.readyNotified = false;
         this.open('fight', { kind: 'mission', ...r, artB: r.b.portrait, title: r.b.name, subtitle: r.b.title, intro: r.story.hit }, true);
       },
+      async 'buy-elixir'() { if (this.check(await this.s.buyElixir())) { this.toast('Čierny trh je otvorený na ' + CONFIG.elixirHours + ' hodín.'); this.render(); } },
       async 'shop-reroll'(a) { if (this.check(await this.s.rerollShop(a))) { this.toast('Nový tovar je v obchode.'); this.render(); } },
       async 'buy-item'(a) {
         const r = await this.s.buyItem(this.arg, a);
@@ -751,7 +752,8 @@ export class UI {
     };
     let h = '';
     if (sh.bm) {
-      h += '<div class="bm"><div class="sec sc" style="margin-top:0;color:#ff6aa8">Čierny trh · len dnes večer · ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % na epický kus</div>' +
+      const el = this.s.elixirLeft();
+      h += '<div class="bm"><div class="sec sc" style="margin-top:0;color:#ff6aa8">Čierny trh · ' + (el > 0 ? 'elixír ešte <span data-until="' + (Date.now() + el) + '"></span>' : 'len dnes večer') + ' · ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % na epický kus</div>' +
         (sh.bm.length ? sh.bm.map((it) => row(it, true)).join('') : '<p class="p">Čierny trh je vypredaný.</p>') + '</div>';
     }
     h += '<p class="p" style="font-style:italic">„' + sh.blurb + '“</p>';
@@ -842,6 +844,14 @@ export class UI {
         '<div class="acts"><button class="btn small gold num" data-act="buy-bars" data-arg="' + i + '">' + pk.price + '</button></div></div>';
     });
     h += '<p class="note">Testovacia kúpa: tehličky sa pripíšu hneď. Skutočná platba cez Stripe príde neskôr.</p>';
+    // the elixir: Black Market (epic goods) in every shop for elixirHours, only for this player
+    const left = this.s.elixirLeft();
+    h += '<div class="sec sc">Elixír Čierneho trhu</div>' +
+      '<div class="item rar-epicky"><img src="' + art('x_elixir_bm') + '" alt=""><div class="mid"><div class="t">Elixír Čierneho trhu</div>' +
+      '<div class="s">Na ' + CONFIG.elixirHours + ' hodín ti otvorí Čierny trh vo všetkých obchodoch. Epické kusy ťa čakajú hocikedy, nielen v piatok večer.</div>' +
+      (left > 0 ? '<div class="s gold">Účinkuje ešte <b data-until="' + (Date.now() + left) + '"></b>. Ďalší elixír čas predĺži.</div>' : '') +
+      '<div class="desc">Čierny ako noc, zapečatený pešiakom. Kto sa napije, nájde dvere, ktoré ostatní nevidia.</div></div>' +
+      '<div class="acts"><button class="btn small gold num" data-act="buy-elixir"' + (p.chains < CONFIG.elixirChains ? ' disabled' : '') + '>' + CONFIG.elixirChains + ' tehličiek</button></div></div>';
     return { html: this.hdr('Wexler', '<span class="gold">' + fmt(p.chains) + '</span> tehličiek') + top + '<div class="body">' + h + '</div>' };
   }
 

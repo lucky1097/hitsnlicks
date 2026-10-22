@@ -12,8 +12,8 @@
 //   hall(n) -> [{ id, name, level, cls, points }]   (highest level first)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261021210158';
-import { GIVERS, SHOPS } from './data.js?v=20261021210158';
+import { SimServer } from './server.js?v=20261022122015';
+import { GIVERS, SHOPS } from './data.js?v=20261022122015';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -38,6 +38,7 @@ const ACTIONS = {
   policeCheck: (s, [choice]) => s.policeCheck(choice),
   lawyer: (s) => s.lawyer(),
   buyBars: (s, [i]) => s.buyBars(i),
+  buyElixir: (s) => s.buyElixir(),
   catchRipper: (s) => s.catchRipper(),
   takePill: (s, [kind]) => s.takePill(kind),
   hitRunner: (s) => s.hitRunner(),

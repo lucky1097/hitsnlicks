@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261021210158';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261021210158';
-import { makeFighter, simulate } from './combat.js?v=20261021210158';
-import { GangMixin } from './gangs.js?v=20261021210158';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022122015';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022122015';
+import { makeFighter, simulate } from './combat.js?v=20261022122015';
+import { GangMixin } from './gangs.js?v=20261022122015';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -255,7 +255,7 @@ export class SimServer {
   }
 
   blackMarketOpen() {
-    if (this.state.settings.blackMarket) return true;
+    if (this.state.settings.blackMarket || this.elixirLeft() > 0) return true;
     const l = localParts();
     return l.weekday === CONFIG.blackMarketDay && l.hour >= CONFIG.blackMarketFromHour;
   }
@@ -310,7 +310,8 @@ export class SimServer {
     if (expired) st = this.restock(shopId);
     // Black Market stock is rolled once per opening and stays until it closes
     const bmOpen = this.blackMarketOpen();
-    const bmKey = localParts().date;
+    // Friday: one stall per evening; with Wexler's elixir it restocks with the regular goods
+    const bmKey = this.elixirLeft() > 0 ? 'e' + st.at : localParts().date;
     if (bmOpen && st.bmKey !== bmKey) {
       st.bmKey = bmKey;
       st.bm = [];
@@ -564,6 +565,17 @@ export class SimServer {
 
   // ---------------------------------------------------------------- Wexler & Ripper
   // test purchase until Stripe is wired up: the pack is credited right away
+  // Wexler's elixir: the Black Market stays open for this player for elixirHours (a second one adds time)
+  elixirLeft() { return Math.max(0, (this.state.bmUntil || 0) - Date.now()); }
+
+  buyElixir() {
+    if (this.p.chains < CONFIG.elixirChains) return fail('Elixír stojí ' + CONFIG.elixirChains + ' zlatých tehličiek.');
+    this.p.chains -= CONFIG.elixirChains;
+    this.state.bmUntil = Date.now() + this.elixirLeft() + CONFIG.elixirHours * 3600000;
+    this.save();
+    return ok({ until: this.state.bmUntil });
+  }
+
   buyBars(index) {
     if (this.live) return fail('Platby cez Stripe ešte nie sú zapojené.');
     const pack = CONFIG.barPacks[index];

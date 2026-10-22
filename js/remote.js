@@ -1,16 +1,16 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261021210158';
-import { NET } from './net.js?v=20261021210158';
-import { CONFIG } from './config.js?v=20261021210158';
-import { SHOPS } from './data.js?v=20261021210158';
+import { SimServer } from './server.js?v=20261022122015';
+import { NET } from './net.js?v=20261022122015';
+import { CONFIG } from './config.js?v=20261022122015';
+import { SHOPS } from './data.js?v=20261022122015';
 
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
 // actions that change something: they run on the server and are async here
 const ACTIONS = ['newGame', 'setLook', 'spendPoint', 'buyStat', 'equip', 'unequip', 'sellItem', 'upgradeItem', 'buyItem', 'rerollShop',
-  'startMission', 'skipMission', 'claimMission', 'policeCheck', 'lawyer', 'buyBars', 'catchRipper', 'takePill', 'hitRunner',
+  'startMission', 'skipMission', 'claimMission', 'policeCheck', 'lawyer', 'buyBars', 'buyElixir', 'catchRipper', 'takePill', 'hitRunner',
   'fightBoss', 'fightArena', 'createGang', 'recruit', 'promote', 'deposit', 'buyGangUpgrade', 'refillTurf', 'toggleDefender', 'attackTurf'];
 
 const noStore = { load: () => null, save() {}, clear() {} };
@@ -29,7 +29,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261021210158');
+    const { handle, memoryDb } = await import('./api.js?v=20261022122015');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };
