@@ -63,6 +63,17 @@ export const CONFIG = {
   dailyCashMin: 30,
   dailyBars: { 5: 20, 10: 35, 15: 50 },
   dailyCourierSec: 120,
+  // police on foot (heat >= raidFrom): every officer you put down doubles how many chase you, up to copMax;
+  // one officer may drop an epic item (copEpicChance, at most one a day); caught after a kill = lose all cash or
+  // killJailMin without Don / Díler missions
+  copMax: 8,
+  copEpicChance: 0.25,
+  heatCopHit: 4,
+  heatCopKill: 15,
+  killJailMin: 1440,
+  // cars on the street: heat for a hit and for a blown-up car
+  heatCarHit: 1,
+  heatBlast: 10,
   dailyEscapeSec: 30,
   elixirChains: 100, // Wexler's elixir: opens the Black Market for one player
   elixirHours: 24,

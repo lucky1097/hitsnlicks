@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022174317';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022174317';
-import { DAILY_TYPES } from './daily.js?v=20261022174317';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022174317';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022175351';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022175351';
+import { DAILY_TYPES } from './daily.js?v=20261022175351';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022175351';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -267,7 +267,10 @@ export class UI {
     $('#hud-dly-name').textContent = T.name + ' ' + t.got.length + '/' + T.need;
     let sub = hint && hint.task === t.i ? Math.max(1, Math.round(hint.dist / 2)) + ' m' : '';
     if (t.type === 'courier' && t.got.length) sub = 'zostáva ' + clock(Math.max(0, t.data.pickedAt + v.courierSec * 1000 - Date.now())) + (sub ? ' · ' + sub : '');
-    if (t.type === 'escape') sub = w && w.esc > 0 ? 'útek ' + Math.min(v.escapeSec, Math.floor(w.esc)) + ' / ' + v.escapeSec + ' s' : 'čaká na policajta';
+    const fleeing = w && w.esc > 0 ? 'útek ' + Math.min(v.escapeSec, Math.floor(w.esc)) + ' / ' + v.escapeSec + ' s' : '';
+    if (t.type === 'escape') sub = fleeing || 'čaká na policajta';
+    if (t.type === 'razia') sub = t.got.length < 2 ? 'zlož policajtov ' + t.got.length + ' / 2' : fleeing || 'teraz ujdi';
+    if (t.type === 'vypalne' && sub) sub = 'auto ' + sub;
     if (t.type === 'runner') sub = 'bežec alebo Ripper na mape';
     $('#hud-dly-sub').textContent = sub;
   }
@@ -445,9 +448,33 @@ export class UI {
     this.modal('<h2>' + esc(title) + '</h2><p class="sub" style="font-size:17px;color:#c9c4b8">' + esc(text) + '</p><div class="acts"><button class="btn gold" data-act="modal-close">Rozumiem</button></div>');
   }
 
+  // an officer on foot went down: more come, maybe an epic item, maybe a raid step
+  async copDown() {
+    const r = await this.s.copDown();
+    if (!r.ok) return; // the chase already ended
+    this.toast('Policajt na zemi. Teraz ťa naháňa ' + r.wanted + ' policajtov.', true);
+    if (r.item) {
+      this.modal('<h2 class="win">Z policajta niečo vypadlo</h2><p class="sub">Na zemi ostal epický kus. Dnes už z policajtov nič také nepadne.</p>' + this.lootHtml(r.item) +
+        '<div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
+    }
+    if (r.daily) {
+      if (r.daily.have < r.daily.need) this.toast(r.daily.name + ': ' + r.daily.have + ' / 2 policajti' + (r.daily.have >= 2 ? '. Teraz ujdi!' : ''));
+      if (r.daily.reward) this.dailyRewardModal(r.daily.reward);
+    }
+  }
+
   police() {
     if (this.paused() || !this.s.hasSave()) return;
     const v = this.s.view();
+    // an officer is down: no bribe, no running; all your cash, or a day without missions
+    if (this.s.copKills() > 0) {
+      this.modal('<h2 class="lose">Zatknutý</h2><p class="sub">Zložil si policajta. Tentoraz sa to nedá vybaviť pokutou.</p>' +
+        '<div class="acts">' +
+        '<button class="btn wide" data-act="police-killer" data-arg="peniaze">Prísť o všetky peniaze · ' + money(this.s.p.cash) + '</button>' +
+        '<button class="btn wide" data-act="police-killer" data-arg="basa">' + Math.round(CONFIG.killJailMin / 60) + ' hodín bez misií od Dona a Dílera</button>' +
+        '</div><p class="sub" style="font-size:15px;color:#9b968b">Denné misie môžeš robiť aj v base.</p>');
+      return;
+    }
     this.modal(
       '<h2 class="lose">Kontrola</h2><p class="sub">Policajt ťa zastavil. Heat ' + Math.round(v.heat) + ' / 100.</p>' +
       '<div class="acts">' +
@@ -570,6 +597,13 @@ export class UI {
         const msg = { escaped: 'Ušiel si. Heat +5.', caught: 'Chytili ťa. Pokuta ' + money(x.fine || 0) + ' a ' + CONFIG.jailMinutes + ' min bez misií.', bribed: 'Policajt zobral ' + money(x.cost || 0) + ' a odišiel.', jail: 'Vzdal si sa. ' + CONFIG.jailMinutes + ' min bez misií.' }[x.type];
         this.closeModal();
         this.toast(msg, x.type === 'caught' || x.type === 'jail');
+      },
+      async 'police-killer'(a) {
+        const r = await this.s.policeKiller(a);
+        if (!this.check(r)) return;
+        this.closeModal();
+        const x = r.result;
+        this.toast(x.type === 'cash' ? 'Zobrali ti všetky peniaze: ' + money(x.lost) + '.' : Math.round(x.minutes / 60) + ' hodín bez misií od Dona a Dílera.', true);
       },
       async 'test-mode'() { await this.s.setTestMode(!this.s.state.settings.testMode); this.render(); },
       async 'test-bm'() { await this.s.setBlackMarket(!this.s.state.settings.blackMarket); this.render(); },

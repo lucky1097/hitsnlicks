@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261022174317';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022174317';
+import { CONFIG, F } from './config.js?v=20261022175351';
+import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022175351';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -24,7 +24,9 @@ export const DAILY_TYPES = {
   stash: { group: 'easy', name: 'Skrýše', need: 5, text: () => 'Pozbieraj 5 balíčkov schovaných po uliciach štvrte.' },
   courier: { group: 'easy', name: 'Kuriér', need: 2, text: (d) => 'Vyzdvihni balík: ' + spotName(d.from) + '. Dones ho do ' + CONFIG.dailyCourierSec / 60 + ' minút: ' + spotName(d.to) + '.' },
   runner: { group: 'action', name: 'Bežec alebo Ripper', need: 1, text: () => 'Zraz šťastného bežca alebo chyť Rippera, ktorý okradol Wexlera.' },
-  escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Keď ťa pri vysokom heate naháňa policajt pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
+  vypalne: { group: 'action', name: 'Výpalné', need: 1, text: () => 'Majiteľ podniku neplatí. Jeho auto je na mape označené zlatým kruhom. Rozbi ho, kým nezačne horieť a nevybuchne.' },
+  escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Keď ťa pri vysokom heate naháňa polícia pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
+  razia: { group: 'hard', name: 'Policajná razia', need: 3, text: () => 'Pri vysokom heate zlož 2 policajtov a potom sa ' + CONFIG.dailyEscapeSec + ' sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.' },
 };
 
 export const DailyMixin = {
@@ -39,18 +41,18 @@ export const DailyMixin = {
     return q;
   },
 
-  // phase 1: two easy tasks and one of the street events (runner / Ripper or the escape)
+  // one easy, one action and one hard task
   rollDailyTasks() {
-    const easy = shuffle(Object.keys(DAILY_TYPES).filter((t) => DAILY_TYPES[t].group === 'easy')).slice(0, 2);
-    const types = [...easy, pick(['runner', 'escape'])];
-    return types.map((type) => ({ type, have: [], data: this.dailyData(type) }));
+    const of = (g) => pick(Object.keys(DAILY_TYPES).filter((t) => DAILY_TYPES[t].group === g));
+    return ['easy', 'action', 'hard'].map(of).map((type) => ({ type, have: [], data: this.dailyData(type) }));
   },
 
   dailyData(type) {
     if (type === 'scout') return { spots: shuffle(DAILY_SPOTS.map((s) => s.id)).slice(0, 3) };
     if (type === 'stash') return { seed: seed() };
     if (type === 'courier') { const [from, to] = shuffle(DAILY_SPOTS.map((s) => s.id)); return { from, to, pickedAt: 0 }; }
-    if (type === 'escape') return { startedAt: 0 };
+    if (type === 'escape' || type === 'razia') return { startedAt: 0 };
+    if (type === 'vypalne') return { seed: seed() }; // which car of the traffic
     return {};
   },
 
@@ -117,11 +119,15 @@ export const DailyMixin = {
         if (took < 4000) return fail('Príliš rýchlo.');
         t.have.push(1);
       }
-    } else if (t.type === 'escape') {
+    } else if (t.type === 'escape' || t.type === 'razia') {
+      // the raid's escape counts only after its two officers (dailyEvent from copDown)
+      if (t.type === 'razia' && t.have.length < 2) return fail('Najprv zlož dvoch policajtov.');
       if (step === 0) { t.data.startedAt = now; this.save(); return ok({ started: true }); }
       if (!t.data.startedAt || now - t.data.startedAt < (CONFIG.dailyEscapeSec - 2) * 1000) return fail('Ešte si neušiel.');
       if (this.heatNow() < CONFIG.raidFrom) return fail('Polícia ťa už nenaháňa.');
       t.have.push(1);
+    } else if (t.type === 'vypalne') {
+      t.have.push(1); // the marked car blew up
     } else {
       return fail('Túto úlohu splníš inak.');
     }
@@ -132,21 +138,21 @@ export const DailyMixin = {
     return ok({ ...out, reward });
   },
 
-  // street events count for the runner task (called from hitRunner / catchRipper)
+  // street events count for tasks: runner (hitRunner / catchRipper), the raid's officers (copDown)
   dailyEvent(type) {
     const q = this.dailyQuests();
     if (q.done) return null;
-    const t = q.tasks.find((x) => x.type === type && x.have.length < DAILY_TYPES[x.type].need);
+    const cap = type === 'razia' ? 2 : null; // the raid's last step is its escape
+    const t = q.tasks.find((x) => x.type === type && x.have.length < (cap || DAILY_TYPES[x.type].need));
     if (!t) return null;
     t.have.push(1);
-    return { name: DAILY_TYPES[type].name, reward: this.dailyCheckDone() };
+    return { name: DAILY_TYPES[type].name, have: t.have.length, need: DAILY_TYPES[type].need, reward: this.dailyCheckDone() };
   },
 
-  // caught by the officer: the escape starts over
+  // caught by the police: an escape starts over
   dailyCaught() {
     const q = this.state.dailyQ;
-    const t = q && q.tasks.find((x) => x.type === 'escape');
-    if (t) t.data.startedAt = 0;
+    if (q) q.tasks.forEach((x) => { if (x.type === 'escape' || x.type === 'razia') x.data.startedAt = 0; });
   },
 
   // all three done: pay the calendar day right away (nothing can be lost at midnight)

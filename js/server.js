@@ -1,10 +1,10 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022174317';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022174317';
-import { makeFighter, simulate } from './combat.js?v=20261022174317';
-import { GangMixin } from './gangs.js?v=20261022174317';
-import { DailyMixin } from './daily.js?v=20261022174317';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022175351';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022175351';
+import { makeFighter, simulate } from './combat.js?v=20261022175351';
+import { GangMixin } from './gangs.js?v=20261022175351';
+import { DailyMixin } from './daily.js?v=20261022175351';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -561,8 +561,50 @@ export class SimServer {
 
   policeRunChance() { return F.missionChance(this.totalStats().obratnost, this.p.level); }
 
+  // officers put down in the current chase; the chase (and the count) ends when heat drops below raidFrom
+  copKills() {
+    const c = this.state.cops;
+    if (c && c.kills && this.heatNow() < CONFIG.raidFrom) c.kills = 0;
+    return (c && c.kills) || 0;
+  }
+
+  copsWanted() { return Math.min(CONFIG.copMax, 2 ** this.copKills()); }
+
+  // an officer on foot went down: more of them come, maybe an epic item (one a day), counts for the raid task
+  copDown() {
+    if (this.heatNow() < CONFIG.raidFrom) return fail('Nikto ťa nenaháňa.');
+    const c = this.state.cops || (this.state.cops = { kills: 0, lastAt: 0 });
+    const now = Date.now();
+    if (now - c.lastAt < 1000) return fail('Príliš rýchlo.');
+    c.lastAt = now;
+    c.kills += 1;
+    this.addHeat(CONFIG.heatCopKill);
+    const day = this.daily();
+    let item = null;
+    if (!day.copEpic && Math.random() < CONFIG.copEpicChance) {
+      item = this.randomItem(this.p.level, 'blackmarket');
+      if (item) { this.giveItem(item); day.copEpic = true; }
+    }
+    const daily = this.dailyEvent('razia');
+    this.save();
+    return ok({ kills: c.kills, wanted: this.copsWanted(), item, daily });
+  }
+
+  // caught after putting an officer down: all your cash, or a day without Don's and the Díler's missions
+  policeKiller(choice) {
+    if (!this.copKills()) return fail('Nie je za čo.');
+    this.dailyCaught();
+    let out;
+    if (choice === 'peniaze') { out = { type: 'cash', lost: this.p.cash }; this.p.cash = 0; }
+    else { this.state.jailUntil = Date.now() + this.gameMs(CONFIG.killJailMin); out = { type: 'jail', minutes: CONFIG.killJailMin }; }
+    this.state.cops.kills = 0;
+    this.save();
+    return ok({ result: out });
+  }
+
   policeCheck(choice) {
     let out;
+    if (this.copKills()) return fail('Zložil si policajta. Tu už úplatok nepomôže.');
     this.dailyCaught();
     if (choice === 'utiect') {
       if (Math.random() < this.policeRunChance()) { this.addHeat(5); out = { type: 'escaped' }; }

@@ -1,9 +1,9 @@
-import { SimServer } from './server.js?v=20261022174317';
-import { RemoteServer } from './remote.js?v=20261022174317';
-import { ONLINE } from './net.js?v=20261022174317';
-import { CONFIG } from './config.js?v=20261022174317';
-import { UI } from './ui.js?v=20261022174317';
-import { createWorld } from './world.js?v=20261022174317';
+import { SimServer } from './server.js?v=20261022175351';
+import { RemoteServer } from './remote.js?v=20261022175351';
+import { ONLINE } from './net.js?v=20261022175351';
+import { CONFIG } from './config.js?v=20261022175351';
+import { UI } from './ui.js?v=20261022175351';
+import { createWorld } from './world.js?v=20261022175351';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'don', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -30,7 +30,9 @@ const game = createWorld(document.getElementById('game'), {
     return h >= CONFIG.raidFrom ? 3 : h >= 40 ? 2 : h > 0 ? 1 : 0;
   },
   weapon: () => (server.hasSave() ? server.streetWeapon() : null),
-  onCrime: (kind) => server.crime({ shot: CONFIG.heatShot, hitGun: CONFIG.heatHitGun, hitMelee: CONFIG.heatHitMelee }[kind] || 0),
+  onCrime: (kind) => server.crime({ shot: CONFIG.heatShot, hitGun: CONFIG.heatHitGun, hitMelee: CONFIG.heatHitMelee, car: CONFIG.heatCarHit, blast: CONFIG.heatBlast, copHit: CONFIG.heatCopHit }[kind] || 0),
+  copsWanted: () => (server.hasSave() ? server.copsWanted() : 1),
+  onCopDown: () => ui.copDown(),
   reaper: () => (server.hasSave() ? server.reaper() : null),
   onRipperCaught: () => ui.reaperCaught(),
   onPill: (kind) => ui.pill(kind),

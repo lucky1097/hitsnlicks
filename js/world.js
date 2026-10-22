@@ -1,20 +1,27 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022174317';
-import { mulberry32 } from './combat.js?v=20261022174317'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022175351';
+import { mulberry32 } from './combat.js?v=20261022175351'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
 const SPEED = 62; // map px per second
 const MAX_ZOOM = 4;
+const CAR_HL = 15, CAR_HW = 8; // half length / width of a car sprite (front = top)
+const CAR_HP = 6; // hits until a car catches fire; it blows up FIRE_SEC later
+const FIRE_SEC = 3;
+const WRECK_SEC = 20;
+const COP_HP = 3; // hits until an officer on foot goes down
+const COP_SPEED = 46;
 const deg = (r) => (r * 180) / Math.PI;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 // hooks: { input:{x,y,fire}, labelLayer:HTMLElement, paused():bool, heatStars():number, readyGiver():string|null,
 //          weapon():{attack,cooldown,auto}|null, onCrime('shot'|'hitGun'|'hitMelee'), onPill('red'|'blue'|'green'), onPoi(poi|null), onAction(), onPolice(),
-//          daily():{done,escapeSec,tasks:[{i,type,got,data,done}]}|null, onDailyStep(task, step) }
+//          daily():{done,escapeSec,tasks:[{i,type,got,data,done}]}|null, onDailyStep(task, step),
+//          copsWanted():number, onCopDown() }
 export function createWorld(parent, hooks) {
   class City extends Phaser.Scene {
     constructor() { super('city'); }
@@ -109,9 +116,12 @@ export function createWorld(parent, hooks) {
       this.pills = [];
       this.ambulances = [];
 
-      // officer on foot (spawned at high heat)
-      this.officer = null;
-      this.officerCooldown = 0;
+      // every car can be smashed: hp, then fire, then a wreck that clears away
+      for (const c of [...this.cars, ...this.policeCars]) { c.hp = CAR_HP; c.state = null; c.fxT = 0; c.marked = null; }
+
+      // police on foot at high heat: hooks.copsWanted() of them (doubled for every one you put down)
+      this.cops = [];
+      this.copCooldown = 0;
 
       // daily missions: gold target rings, packages on the street, an arrow at the screen edge
       this.dailyG = this.add.graphics().setDepth(4.5);
@@ -367,6 +377,9 @@ export function createWorld(parent, hooks) {
         if (diff > Math.PI) diff = 2 * Math.PI - diff;
         if (diff < 1.25) this.knock(wk, 'hitMelee');
       }
+      // and a car right in front of you
+      const reach = { x: px + f.x * 12, y: py + f.y * 12 };
+      for (const c of this.allCars()) if (!c.state && this.carHit(c, reach.x, reach.y, 6)) { this.hitCar(c); break; }
     }
 
     // everyone a swing or a bullet can hit
@@ -374,10 +387,12 @@ export function createWorld(parent, hooks) {
       const t = [...this.walkers];
       if (this.rp.on) t.push(this.rp);
       if (this.rn.on) t.push(this.rn);
+      for (const c of this.cops) if (c.down <= 0 && !c.gone) t.push(c);
       return t;
     }
 
     knock(wk, kind) {
+      if (wk.cop) { this.hitCop(wk); return; }
       if (wk === this.rn) { // the lucky runner vanishes in a burst of sparkles
         wk.on = false;
         wk.s.setVisible(false);
@@ -707,9 +722,15 @@ export function createWorld(parent, hooks) {
       const px = this.player.x, py = this.player.y;
       const targets = [], packs = new Set();
       let esc = null;
+      for (const c of this.cars) c.marked = null;
       if (v && !v.done) {
         for (const t of v.tasks) {
           if (t.done) continue;
+          if (t.type === 'vypalne') { // the owner's car: one of the traffic, marked while it is whole
+            const car = this.cars[t.data.seed % this.cars.length];
+            if (car.state !== 'wreck') { car.marked = t.i; targets.push({ x: car.s.x, y: car.s.y, task: t.i, step: 0, r: -1, car: true }); }
+          }
+          if (t.type === 'razia' && t.got.length >= 2) esc = t; // two officers down: now get away
           if (t.type === 'scout') {
             t.data.spots.forEach((id, k) => { if (!t.got.includes(k)) targets.push({ ...this.spot(id), task: t.i, step: k, r: 14 }); });
           } else if (t.type === 'courier') {
@@ -740,8 +761,9 @@ export function createWorld(parent, hooks) {
       const pulse = 0.5 + 0.5 * Math.sin(this.time.now / 260);
       let best = null, bd = 1e9;
       for (const tg of targets) {
-        g.fillStyle(0xf0c95a, 0.16).fillCircle(tg.x, tg.y, (tg.pack ? 7 : 10) + pulse * 3);
-        g.lineStyle(1.5, 0xf0c95a, 0.9).strokeCircle(tg.x, tg.y, (tg.pack ? 5 : 7) + pulse * 2);
+        const r = tg.car ? 18 : tg.pack ? 5 : 7;
+        g.fillStyle(0xf0c95a, 0.16).fillCircle(tg.x, tg.y, r + 3 + pulse * 3);
+        g.lineStyle(1.5, 0xf0c95a, 0.9).strokeCircle(tg.x, tg.y, r + pulse * 2);
         const d = Math.hypot(tg.x - px, tg.y - py);
         if (d < bd) { bd = d; best = tg; }
         if (!paused && d < tg.r) this.dailyReport(tg.task, tg.step);
@@ -781,12 +803,180 @@ export function createWorld(parent, hooks) {
     // escape: the clock runs while the officer on foot chases you; being caught (or him leaving) resets it
     updateEscape(t, sec, dt, paused) {
       const e = this.dailyEsc;
-      if (!t || !this.officer) { e.on = false; this.dailyEscT = 0; return; }
+      const chased = this.cops.some((c) => c.down <= 0 && !c.gone);
+      if (!t || !chased) { e.on = false; this.dailyEscT = 0; return; }
       if (paused) return;
       if (!e.on) { e.on = true; e.t = 0; e.sent = false; hooks.onDailyStep(t.i, 0); }
       e.t += dt;
       if (e.t >= sec + 0.5 && !e.sent) { e.sent = true; hooks.onDailyStep(t.i, 1); }
       this.dailyEscT = e.t;
+    }
+
+    // ---------------------------------------------------------------- cars: solid, breakable, explosive
+    allCars() { return this.cars.concat(this.policeCars); }
+
+    // a point in the car's own frame: a = along its heading (+ = in front), s = to the side
+    carLocal(c, x, y) {
+      const t = (((c.ang || 0) - 90) * Math.PI) / 180, hx = Math.cos(t), hy = Math.sin(t);
+      const dx = x - c.s.x, dy = y - c.s.y;
+      return { a: dx * hx + dy * hy, s: -dx * hy + dy * hx, hx, hy };
+    }
+
+    carHit(c, x, y, pad = 0) { const l = this.carLocal(c, x, y); return Math.abs(l.a) < CAR_HL + pad && Math.abs(l.s) < CAR_HW + pad; }
+
+    // a car waits for you (or a burning car / wreck) standing in its lane just ahead
+    carBlocked(c) {
+      const ahead = (x, y, len) => { const l = this.carLocal(c, x, y); return l.a > 0 && l.a < len && Math.abs(l.s) < CAR_HW + 3; };
+      if (ahead(this.player.x, this.player.y, CAR_HL + 14)) return true;
+      return this.allCars().some((o) => o !== c && o.state && ahead(o.s.x, o.s.y, CAR_HL * 2 + 8));
+    }
+
+    // you can't walk through a car: push out along the shallower side
+    pushOutOfCars() {
+      const p = this.player;
+      for (const c of this.allCars()) {
+        const l = this.carLocal(c, p.x, p.y);
+        const pa = CAR_HL + 4 - Math.abs(l.a), ps = CAR_HW + 4 - Math.abs(l.s);
+        if (pa <= 0 || ps <= 0) continue;
+        if (pa < ps) { const k = Math.sign(l.a) || 1; p.x += l.hx * pa * k; p.y += l.hy * pa * k; }
+        else { const k = Math.sign(l.s) || 1; p.x += -l.hy * ps * k; p.y += l.hx * ps * k; }
+      }
+    }
+
+    hitCar(c) {
+      if (c.state) return; // already burning or a wreck
+      c.hp -= 1;
+      c.s.setTint(0xffc0b0);
+      this.time.delayedCall(80, () => { if (!c.state) c.s.clearTint(); });
+      hooks.onCrime('car');
+      if (c.hp <= 0) this.igniteCar(c);
+    }
+
+    igniteCar(c) {
+      if (c.state) return;
+      c.state = 'fire';
+      c.fireT = FIRE_SEC;
+      c.s.setTint(0xb07858);
+      // the driver jumps out and runs away from you
+      const dx = c.s.x - this.player.x, dy = c.s.y - this.player.y, d = Math.hypot(dx, dy) || 1;
+      const man = this.add.image(c.s.x, c.s.y, c.light ? 'p_policajt' : 'p_chodec').setDepth(9).setAngle(deg(Math.atan2(dy, dx)) - 90);
+      this.tweens.add({ targets: man, x: c.s.x + (dx / d) * 60, y: c.s.y + (dy / d) * 60, duration: 1600, ease: 'Sine.out' });
+      this.tweens.add({ targets: man, alpha: 0, delay: 1300, duration: 400, onComplete: () => man.destroy() });
+    }
+
+    puff(x, y, color, alpha, r, rise, ms) {
+      const s = this.add.circle(x, y, r, color, alpha).setDepth(14);
+      this.tweens.add({ targets: s, y: y - rise, scale: 2.2, alpha: 0, duration: ms, ease: 'Sine.out', onComplete: () => s.destroy() });
+    }
+
+    explodeCar(c) {
+      const x = c.s.x, y = c.s.y;
+      c.state = 'wreck';
+      c.wreckT = WRECK_SEC;
+      c.s.setTint(0x2b2622);
+      if (c.light) c.light.clear();
+      const flash = this.add.circle(x, y, 8, 0xfff2c0, 1).setDepth(15);
+      this.tweens.add({ targets: flash, scale: 5, alpha: 0, duration: 380, ease: 'Cubic.out', onComplete: () => flash.destroy() });
+      const ring = this.add.circle(x, y, 10, 0xff7a20, 0.6).setDepth(14);
+      this.tweens.add({ targets: ring, scale: 4.5, alpha: 0, duration: 650, onComplete: () => ring.destroy() });
+      for (let i = 0; i < 12; i++) this.puff(x + (Math.random() - 0.5) * 26, y + (Math.random() - 0.5) * 26, i % 3 ? 0x3a3532 : 0xff8a20, 0.8, 3 + Math.random() * 3, 14, 1100);
+      const scorch = this.add.circle(x, y, 20, 0x0c0a08, 0.55).setDepth(1.5);
+      this.tweens.add({ targets: scorch, alpha: 0, delay: 30000, duration: 4000, onComplete: () => scorch.destroy() });
+      this.cameras.main.shake(260, 0.006);
+      hooks.onCrime('blast');
+      // the blast knocks down people and officers around, and sets nearby cars on fire
+      const near = (s, r) => Math.hypot(s.x - x, s.y - y) < r;
+      for (const w of this.walkers) if (w.down <= 0 && near(w.s, 36)) this.knock(w, 'hitMelee');
+      for (const cop of this.cops) if (cop.down <= 0 && !cop.gone && near(cop.s, 36)) this.copFall(cop);
+      for (const o of this.allCars()) if (o !== c && !o.state && near(o.s, 34)) this.igniteCar(o);
+      if (c.marked !== null) hooks.onDailyStep(c.marked, 0);
+    }
+
+    // fire, smoke, the countdown to the blast, the wreck clearing away
+    updateCarFx(c, dt) {
+      c.fxT -= dt;
+      if (c.state === 'fire') {
+        c.fireT -= dt;
+        if (c.fxT <= 0) {
+          c.fxT = 0.05;
+          this.puff(c.s.x + (Math.random() - 0.5) * 10, c.s.y + (Math.random() - 0.5) * 18, pick([0xffd060, 0xff8a20, 0xff4a10]), 0.9, 2 + Math.random() * 1.5, 8, 420);
+          if (Math.random() < 0.35) this.puff(c.s.x, c.s.y, 0x2e2a28, 0.55, 3, 18, 1200);
+        }
+        if (c.fireT <= 0) this.explodeCar(c);
+      } else if (c.state === 'wreck') {
+        c.wreckT -= dt;
+        if (c.fxT <= 0 && c.wreckT > WRECK_SEC - 8) { c.fxT = 0.25; this.puff(c.s.x, c.s.y, 0x2e2a28, 0.5, 3, 18, 1300); }
+        if (c.wreckT <= 0) this.respawnCar(c);
+      } else if (c.hp <= CAR_HP / 2 && c.fxT <= 0) {
+        c.fxT = 0.3;
+        this.puff(c.s.x, c.s.y, 0x8a8580, 0.45, 2.5, 14, 900); // damaged: it smokes
+      }
+    }
+
+    // the wreck is towed away; the car comes back somewhere else in the city, as new
+    respawnCar(c) {
+      const fresh = this.spawnAgent('car', c.speed);
+      Object.assign(c, fresh, { s: c.s, light: c.light });
+      c.state = null;
+      c.hp = CAR_HP;
+      c.ang = undefined;
+      c.s.clearTint();
+    }
+
+    // ---------------------------------------------------------------- police on foot
+    hitCop(cop) {
+      cop.hits += 1;
+      cop.s.setTint(0xff5040);
+      this.time.delayedCall(120, () => { if (cop.down <= 0) cop.s.clearTint(); });
+      const dx = cop.s.x - this.player.x, dy = cop.s.y - this.player.y, d = Math.hypot(dx, dy) || 1;
+      cop.s.x += (dx / d) * 6; cop.s.y += (dy / d) * 6; // knocked back a step
+      if (cop.hits >= COP_HP) this.copFall(cop);
+      else hooks.onCrime('copHit');
+    }
+
+    copFall(cop) {
+      cop.down = 15; // lies there, then fades away
+      cop.s.setAngle(cop.s.angle + 90).setTint(0x9a948c);
+      const blood = this.add.image(cop.s.x, cop.s.y, 'fx_blood').setDepth(5.5).setAngle(Math.random() * 360).setScale(0.25);
+      this.tweens.add({ targets: blood, scale: 1, duration: 1400, ease: 'Cubic.out' });
+      this.tweens.add({ targets: blood, alpha: 0, delay: 30000, duration: 4000, onComplete: () => blood.destroy() });
+      hooks.onCopDown();
+    }
+
+    // stars >= 3: officers come one after another up to hooks.copsWanted(); touching you = caught
+    updateCops(dt, paused, stars) {
+      const px = this.player.x, py = this.player.y;
+      this.copCooldown -= dt;
+      const alive = this.cops.filter((c) => c.down <= 0 && !c.gone);
+      if (stars < 3) alive.forEach((c) => { c.s.destroy(); c.gone = true; });
+      else if (!paused && this.copCooldown <= 0 && alive.length < hooks.copsWanted()) {
+        const ang = Math.random() * Math.PI * 2;
+        const s = this.add.image(px + Math.cos(ang) * 110, py + Math.sin(ang) * 110, 'p_policajt').setDepth(9);
+        this.cops.push({ s, cop: true, hits: 0, down: 0, t: 0 });
+        this.copCooldown = alive.length ? 1.5 : 0;
+      }
+      for (const c of this.cops) {
+        if (c.gone) continue;
+        if (c.down > 0) {
+          c.down -= dt;
+          if (c.down <= 0) { c.gone = true; this.tweens.add({ targets: c.s, alpha: 0, duration: 600, onComplete: () => c.s.destroy() }); }
+          continue;
+        }
+        if (paused) continue;
+        const dx = px - c.s.x, dy = py - c.s.y, d = Math.hypot(dx, dy) || 1;
+        if (d < 9) { // caught: everyone still standing leaves, a minute of peace
+          this.cops.forEach((o) => { if (o.down <= 0 && !o.gone) { o.s.destroy(); o.gone = true; } });
+          this.copCooldown = 60;
+          hooks.onPolice();
+          break;
+        }
+        c.s.x += (dx / d) * COP_SPEED * dt;
+        c.s.y += (dy / d) * COP_SPEED * dt;
+        c.s.setAngle(deg(Math.atan2(dy, dx)) - 90);
+        c.t += dt * 6;
+        c.s.setFlipX(Math.floor(c.t) % 2 === 1);
+      }
+      this.cops = this.cops.filter((c) => !c.gone || c.down > 0);
     }
 
     updateBullets(dt) {
@@ -804,6 +994,9 @@ export function createWorld(parent, hooks) {
           }
           for (const wk of this.targets()) {
             if (wk.down <= 0 && Math.hypot(wk.s.x - b.x, wk.s.y - b.y) < 7) { this.knock(wk, 'hitGun'); return false; }
+          }
+          for (const c of this.allCars()) {
+            if (c.state !== 'wreck' && this.carHit(c, b.x, b.y)) { this.hitCar(c); return false; }
           }
         }
         b.life -= dt;
@@ -944,8 +1137,10 @@ export function createWorld(parent, hooks) {
       // --- traffic and police in the right-hand lane
       const stars = hooks.heatStars();
       const lights = stars >= 2, on = Math.floor(time / 250) % 2 === 0;
-      for (const c of [...this.cars, ...this.policeCars]) {
-        this.stepAgent(c, dt);
+      for (const c of this.allCars()) {
+        this.updateCarFx(c, dt);
+        if (c.state) continue; // burning or a wreck: it stays where it is
+        if (!this.carBlocked(c)) this.stepAgent(c, dt);
         const p = this.agentPos(c);
         // steer smoothly through a turn instead of snapping to the new heading
         const target = deg(Math.atan2(p.dy, p.dx)) + 90;
@@ -957,30 +1152,10 @@ export function createWorld(parent, hooks) {
           if (lights) c.light.fillStyle(on ? 0xe0352b : 0x2f6fe0, 0.18).fillCircle(p.x, p.y, 16);
         }
       }
+      this.pushOutOfCars();
 
-      // --- officer chase at high heat
-      this.officerCooldown -= dt;
-      if (!this.officer && !paused && stars >= 3 && this.officerCooldown <= 0) {
-        const ang = Math.random() * Math.PI * 2;
-        this.officer = this.add.image(px + Math.cos(ang) * 90, py + Math.sin(ang) * 90, 'p_policajt').setDepth(9);
-        this.officerT = 0;
-      }
-      if (this.officer) {
-        if (stars < 3) { this.officer.destroy(); this.officer = null; }
-        else if (!paused) {
-          const dx = px - this.officer.x, dy = py - this.officer.y, d = Math.hypot(dx, dy);
-          if (d < 9) {
-            this.officer.destroy(); this.officer = null; this.officerCooldown = 60;
-            hooks.onPolice();
-          } else {
-            this.officer.x += (dx / d) * 44 * dt;
-            this.officer.y += (dy / d) * 44 * dt;
-            this.officer.setAngle(deg(Math.atan2(dy, dx)) - 90);
-            this.officerT += dt * 6;
-            this.officer.setFlipX(Math.floor(this.officerT) % 2 === 1);
-          }
-        }
-      }
+      // --- officers on foot at high heat
+      this.updateCops(dt, paused, stars);
 
       this.updateCamera(dt);
     }
