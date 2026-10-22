@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022231928';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022231928';
-import { DAILY_TYPES } from './daily.js?v=20261022231928';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022231928';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022234056';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022234056';
+import { DAILY_TYPES } from './daily.js?v=20261022234056';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022234056';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -546,7 +546,8 @@ export class UI {
 
   bonusText(it) {
     const b = this.s.itemBonus(it);
-    return Object.entries(b).map(([k, v]) => (k === 'dmg' ? 'Zbraň +' + v : k === 'armor' ? 'Brnenie +' + v : STAT_NAMES[k] + ' +' + v)).join(' · ');
+    const car = ITEM_BASES[it.base].car;
+    return (car ? ['Heat −' + pct(car.heat), 'čas misií −' + pct(car.time)] : []).concat(Object.entries(b).map(([k, v]) => (k === 'dmg' ? 'Zbraň +' + v : k === 'armor' ? 'Brnenie +' + v : STAT_NAMES[k] + ' +' + v))).join(' · ');
   }
 
   // flavour text of an item (ITEM_BASES desc)
@@ -712,6 +713,7 @@ export class UI {
       },
       async 'gang-uninvite'(a) { if (this.check(await this.s.cancelInvite(a))) this.render(); },
       async 'gang-member'(a) { this.gangMemberModal(a); },
+      async 'open-shop'(a) { this.open('shop', a, true); },
       async 'hall-tab'(a) {
         if (a === 'gangs') { const r = await this.s.gangHall(); if (!this.check(r)) return; this.sel.hallGangs = { list: r.list, mine: r.mine }; }
         this.sel.hallTab = a;
@@ -1002,7 +1004,8 @@ export class UI {
 
   scr_upgrade() {
     const p = this.s.p;
-    let h = '<p class="p">Mechanik vylepší tvoje nasadené veci. Každé vylepšenie pridá 10 % bonusu, najviac +' + CONFIG.maxUpgrade + '. Garáž drží tvoj gang.</p>';
+    let h = '<button class="card" data-act="open-shop" data-arg="autobazar"><img src="' + art('x_car_hatch') + '" alt=""><span class="mid"><span class="t">Autobazár</span><span class="s">Auto znižuje heat zo všetkého aj čas misií. Jazdiť môžeš od úrovne ' + CONFIG.autoUnlockLevel + '.</span></span></button>';
+    h += '<p class="p">Mechanik vylepší tvoje nasadené veci. Každé vylepšenie pridá 10 % bonusu, najviac +' + CONFIG.maxUpgrade + '. Garáž drží tvoj gang.</p>';
     let any = false;
     for (const s of SLOTS) {
       const it = p.equipment[s.id] && this.s.item(p.equipment[s.id]);

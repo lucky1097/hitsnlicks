@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261022231928';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022231928';
+import { CONFIG, F } from './config.js?v=20261022234056';
+import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022234056';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });

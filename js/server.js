@@ -1,10 +1,10 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022231928';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022231928';
-import { makeFighter, simulate } from './combat.js?v=20261022231928';
-import { GangMixin } from './gangs.js?v=20261022231928';
-import { DailyMixin } from './daily.js?v=20261022231928';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022234056';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022234056';
+import { makeFighter, simulate } from './combat.js?v=20261022234056';
+import { GangMixin } from './gangs.js?v=20261022234056';
+import { DailyMixin } from './daily.js?v=20261022234056';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -182,8 +182,18 @@ export class SimServer {
 
   heatNow() { this.daily(); return this.state.heat.value; }
 
-  addHeat(v) {
+  // the worn car (from level CONFIG.autoUnlockLevel): { heat, time } shares taken off
+  carBonus() {
+    const id = this.p.equipment.auto;
+    const it = id && this.p.level >= CONFIG.autoUnlockLevel && this.item(id);
+    const c = it && ITEM_BASES[it.base].car;
+    return c ? { heat: c.heat, time: c.time } : { heat: 0, time: 0 };
+  }
+
+  // new heat from anything is cut by the car; pre = already cut (a mission's own preview)
+  addHeat(v, pre = false) {
     this.daily();
+    if (v > 0 && !pre) v *= 1 - this.carBonus().heat;
     this.state.heat.value = clamp(this.state.heat.value + v, 0, CONFIG.heatMax);
     this.state.heat.at = Date.now();
   }
@@ -359,7 +369,12 @@ export class SimServer {
   restock(shopId) {
     const old = this.state.shops[shopId] || {};
     const st = { ...old, at: Date.now(), level: this.p.level, list: [] };
-    for (let i = 0; i < CONFIG.shopStock; i++) { const it = this.randomItem(this.p.level, 'shop', SHOPS[shopId].bases); if (it) st.list.push(it); }
+    // different pieces first; a base repeats only when the shop has fewer kinds than places
+    for (let i = 0; i < CONFIG.shopStock; i++) {
+      const fresh = SHOPS[shopId].bases.filter((b) => !st.list.some((x) => x.base === b));
+      const it = this.randomItem(this.p.level, 'shop', fresh.length ? fresh : SHOPS[shopId].bases) || this.randomItem(this.p.level, 'shop', SHOPS[shopId].bases);
+      if (it) st.list.push(it);
+    }
     this.state.shops[shopId] = st;
     this.save();
     return st;
@@ -453,12 +468,13 @@ export class SimServer {
     const L = this.p.level;
     const story = t.stories[v] || t.stories[0];
     const gb = this.gangBonus(); // turf and gang upgrades
+    const car = this.carBonus();
     return {
       tpl: tplId, v, minutes: t.minutes,
-      durationMs: Math.round(this.gameMs(t.minutes * F.durationFactor(L)) * (1 - gb.time)),
+      durationMs: Math.round(this.gameMs(t.minutes * F.durationFactor(L)) * (1 - gb.time) * (1 - car.time)),
       cash: Math.round(F.missionCash(L, t.minutes) * (1 + gb.cash)),
       xp: Math.round(F.missionXp(L, t.minutes) * (1 + gb.xp)),
-      heat: Math.max(1, Math.round(t.minutes * CONFIG.heatPerMissionMin * F.heatFactor(L))),
+      heat: Math.max(1, Math.round(t.minutes * CONFIG.heatPerMissionMin * F.heatFactor(L) * (1 - car.heat))),
       foe: story.foe,
     };
   }
@@ -470,7 +486,7 @@ export class SimServer {
     if (!offer) return fail('Táto misia už neplatí.');
     const pv = this.preview(tplId, offer.v);
     if (this.heatNow() + pv.heat > CONFIG.heatMax) return fail('Heat je takmer plný. Polícia ťa sleduje, na dnes stačilo. Skús právničku alebo počkaj do polnoci.');
-    this.addHeat(pv.heat); // the day's budget is spent when the job starts
+    this.addHeat(pv.heat, true); // the day's budget is spent when the job starts (the car is already in pv.heat)
     const now = Date.now();
     this.state.mission = { giver: giverId, ...pv, startedAt: now, endsAt: now + pv.durationMs };
     this.save();
