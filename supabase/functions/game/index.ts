@@ -19,14 +19,50 @@ const must = <T>(r: { data: T; error: unknown }) => { if (r.error) throw r.error
 
 const db = {
   async loadPlayer(id: string) {
-    const row = must(await admin.from('players').select('state, version, pvp_points').eq('id', id).maybeSingle()) as any;
-    return row ? { state: row.state, version: row.version, points: row.pvp_points } : null;
+    const row = must(await admin.from('players').select('state, version, pvp_points, gang_id').eq('id', id).maybeSingle()) as any;
+    return row ? { state: row.state, version: row.version, points: row.pvp_points, gangId: row.gang_id } : null;
   },
-  async savePlayer(id: string, state: unknown, version: number | null, pub: any) {
-    return must(await admin.rpc('save_player', {
-      p_id: id, p_state: state, p_version: version, p_name: pub.name, p_cls: pub.cls, p_level: pub.level,
-      p_fighter: pub.fighter, p_points: pub.points, p_delta: pub.pointsDelta,
+  async saveAll(p: any) {
+    return must(await admin.rpc('save_all', {
+      p_id: p.id, p_state: p.state, p_version: p.version, p_name: p.pub.name, p_cls: p.pub.cls, p_level: p.pub.level,
+      p_fighter: p.pub.fighter, p_points: p.pub.points, p_delta: p.pub.pointsDelta,
+      p_gangs: p.gangs, p_world: p.world, p_world_version: p.worldVersion, p_members: p.members,
     })) as boolean;
+  },
+  async loadGang(id: string) {
+    const g = must(await admin.from('gangs').select('id, data, wins, version').eq('id', id).maybeSingle()) as any;
+    return g || null;
+  },
+  async loadWorld() {
+    return (must(await admin.from('world').select('data, version').eq('id', 'mesto1').maybeSingle()) as any) || null;
+  },
+  async people(ids: string[]) {
+    const rows = must(await admin.from('players').select('id, name, level, cls, fighter, gang_id').in('id', ids)) as any[];
+    return rows.map((r) => ({ id: r.id, name: r.name, level: r.level, cls: r.cls, fighter: r.fighter, gangId: r.gang_id }));
+  },
+  async findPlayer(name: string) {
+    const rows = must(await admin.from('players').select('id, name, level, cls, gang_id').ilike('name', name.replace(/[%_\\]/g, '\\$&')).limit(1)) as any[];
+    const r = rows[0];
+    return r ? { id: r.id, name: r.name, level: r.level, cls: r.cls, gangId: r.gang_id } : null;
+  },
+  async gangTagTaken(tag: string) {
+    const rows = must(await admin.from('gangs').select('id').ilike('tag', tag.replace(/[%_\\]/g, '\\$&')).limit(1)) as any[];
+    return rows.length > 0;
+  },
+  async gangHall(n: number) {
+    const rows = must(await admin.from('gangs').select('id, name, tag, color, wins, leader, members:data->members').order('wins', { ascending: false }).limit(n)) as any[];
+    const leaders = rows.map((r) => r.leader).filter(Boolean);
+    const names = leaders.length ? must(await admin.from('players').select('id, name').in('id', leaders)) as any[] : [];
+    const byId = Object.fromEntries(names.map((p) => [p.id, p.name]));
+    return rows.map((r) => ({ id: r.id, name: r.name, tag: r.tag, color: r.color, wins: r.wins, members: (r.members || []).length, leaderName: byId[r.leader] || '' }));
+  },
+  async inbox(pid: string) {
+    const req = must(await admin.from('gangs').select('id').contains('data', { requests: [{ id: pid }] })) as any[];
+    const inv = must(await admin.from('gangs').select('id, name, tag, color').contains('data', { invites: [{ id: pid }] })) as any[];
+    return { requests: req.map((g) => g.id), invites: inv };
+  },
+  async addGangLogs(list: any[]) {
+    for (const l of list) must(await admin.rpc('add_gang_log', { p_gang: l.gang, p_entry: l.entry }));
   },
   async nameTaken(name: string, id: string) {
     const rows = must(await admin.from('players').select('id').ilike('name', name.replace(/[%_\\]/g, '\\$&')).neq('id', id).limit(1)) as any[];

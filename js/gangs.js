@@ -1,32 +1,78 @@
-// Gangs (guilds like in Shakes & Fidget) and Gang Wars: turf objects on the map give the whole gang
-// a bonus while it holds them. Rival gangs are computer-run until a real server brings real players.
-// Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261022223826';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261022223826';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261022223826';
+// Gangs (guilds like in Shakes & Fidget) and Gang Wars, shared by real players.
+// Online the server (js/api.js) loads three things around every action and hands them in as this.ctx:
+//   ctx.gang   = { id, data, wins, version } of the player's gang (null without one)
+//   ctx.world  = the shared city: 12 turf objects every gang fights over, plus the computer rivals
+//   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
+// and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
+// and the player is the only member. Mixed into SimServer, so `this` is the server.
+import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261022231928';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261022231928';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261022231928';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
 const seed = () => Math.floor(Math.random() * 2 ** 31);
-const RANK_ORDER = ['novacik', 'vojak', 'ruka'];
+const newId = () => (globalThis.crypto && crypto.randomUUID ? crypto.randomUUID() : 'g' + Date.now() + Math.floor(Math.random() * 1e6));
+
+// what each rank may do (boss = the founder or whoever got the lead)
+const CAN = {
+  attack: ['boss', 'ruka', 'vojak'],
+  refill: ['boss', 'ruka', 'vojak'],
+  upgrade: ['boss', 'ruka'],
+  recruit: ['boss', 'ruka'], // answer requests, invite players
+  kick: ['boss'],
+  rank: ['boss'],
+  lead: ['boss'],
+};
+const ONLINE_ONLY = 'Funguje len online, s inými hráčmi.';
 
 export const GangMixin = {
-  gang() { return this.state.gang || null; },
+  // ---------------------------------------------------------------- whose gang, who am I
+  selfId() { return this.uid || (this.state && this.state.uid) || 'me'; },
+  gangRow() {
+    if (this.ctx) return this.ctx.gang;
+    let g = this.state && this.state.gang;
+    if (g && !g.leader) g = this.state.gang = this.migrateLegacyGang(g); // an offline save from the computer-member days
+    return g ? { id: g.id || 'local', data: g, wins: g.wins || 0 } : null;
+  },
+  gang() { const r = this.gangRow(); return r ? r.data : null; },
+  myGangId() { const r = this.gangRow(); return r ? r.id : null; },
+  myRank() { const g = this.gang(); const m = g && g.members.find((x) => x.id === this.selfId()); return m ? m.rank : null; },
+  can(what) { return CAN[what].includes(this.myRank()); },
 
-  // ---------------------------------------------------------------- turf state
+  // name, level, class and arena snapshot of the players around the gang
+  people() {
+    if (this.ctx) return this.ctx.people;
+    const g = this.state.gang;
+    if (g && g.people) return g.people; // the online mirror: sent by the server
+    if (this.state.turfPeople) return this.state.turfPeople; // mirror without a gang: who guards the city
+    return { [this.selfId()]: { name: this.p.name, level: this.p.level, cls: this.p.cls, fighter: this.publicFighter(), gangId: this.myGangId() } };
+  },
+  person(id) { return this.people()[id] || null; },
+
+  // city timers run on real time on the server (test mode only speeds up the offline game)
+  wMs(min) { return this.ctx ? min * MIN : this.gameMs(min); },
+  wScale() { return this.ctx ? 1 : this.scale(); },
+
+  // ---------------------------------------------------------------- the city
+  freshObj(owner) { return { owner, og: null, strength: 1, at: Date.now(), defenders: [], seed: seed(), retry: {}, safeUntil: 0 }; },
+
   turf() {
-    let t = this.state.turf;
+    let t = this.ctx ? this.ctx.world : this.state.turf;
     if (!t) {
-      const now = Date.now();
-      t = this.state.turf = { objects: {}, nextRaidAt: now + this.gameMs(CONFIG.gangRaidEveryMin) };
-      TURF.forEach((o) => { t.objects[o.id] = { owner: o.start, strength: 1, at: now, defenders: [], seed: seed(), retryAt: 0, safeUntil: 0 }; });
+      t = { objects: {}, nextRaidAt: Date.now() + this.wMs(CONFIG.gangRaidEveryMin) };
+      TURF.forEach((o) => { t.objects[o.id] = this.freshObj(o.start); });
+      if (this.ctx) this.ctx.world = t; else this.state.turf = t;
     }
     // the map changed (new or removed objects): saves follow the current list
     const ids = new Set(TURF.map((o) => o.id));
-    if (Object.keys(t.objects).some((id) => !ids.has(id)) || TURF.some((o) => !t.objects[o.id])) {
-      for (const id of Object.keys(t.objects)) if (!ids.has(id)) delete t.objects[id];
-      TURF.forEach((o) => { if (!t.objects[o.id]) t.objects[o.id] = { owner: o.start, strength: 1, at: Date.now(), defenders: [], seed: seed(), retryAt: 0, safeUntil: 0 }; });
+    for (const id of Object.keys(t.objects)) if (!ids.has(id)) delete t.objects[id];
+    TURF.forEach((o) => { if (!t.objects[o.id]) t.objects[o.id] = this.freshObj(o.start); });
+    // saves from the single-player gangs: owner 'player', one retry time
+    for (const o of Object.values(t.objects)) {
+      if (o.owner === 'player') o.owner = this.myGangId() || null;
+      if (!o.retry) { o.retry = {}; delete o.retryAt; }
     }
     return t;
   },
@@ -34,24 +80,28 @@ export const GangMixin = {
   turfObj(id) { return this.turf().objects[id]; },
 
   strengthNow(o) {
-    const hours = ((Date.now() - o.at) / MIN / 60) * this.scale();
+    const hours = ((Date.now() - o.at) / MIN / 60) * this.wScale();
     return Math.max(CONFIG.turfMinStrength, o.strength - hours * CONFIG.turfDecayPerHour);
   },
 
   setStrength(o, v) { o.strength = v; o.at = Date.now(); },
 
-  ownerInfo(owner) {
-    if (owner === 'player') { const g = this.gang(); return { id: 'player', name: g.name, tag: g.tag, color: g.color, mine: true }; }
-    if (owner && RIVAL_GANGS[owner]) return { id: owner, ...RIVAL_GANGS[owner], mine: false };
-    return null;
+  ownerInfo(o) {
+    const ow = o && o.owner;
+    if (!ow) return null;
+    if (RIVAL_GANGS[ow]) return { id: ow, ...RIVAL_GANGS[ow], mine: false, rival: true };
+    const mine = ow === this.myGangId();
+    const g = mine ? this.gang() : o.og || { name: 'Gang', tag: '?', color: '#9b968b' };
+    return { id: ow, name: g.name, tag: g.tag, color: g.color, mine };
   },
 
   // what the map and screens need: one entry per object
   turfView() {
     this.gangTick();
+    const gid = this.myGangId();
     return TURF.map((d) => {
       const o = this.turfObj(d.id);
-      return { ...d, kindInfo: TURF_KINDS[d.kind], owner: this.ownerInfo(o.owner), strength: this.strengthNow(o), defenders: o.defenders, retryAt: o.retryAt, safeUntil: o.safeUntil };
+      return { ...d, kindInfo: TURF_KINDS[d.kind], owner: this.ownerInfo(o), strength: this.strengthNow(o), defenders: o.defenders, retryAt: (gid && o.retry[gid]) || 0, safeUntil: o.safeUntil };
     });
   },
 
@@ -73,23 +123,25 @@ export const GangMixin = {
     return makeFighter(b.name, level, stats, Math.round(power * CONFIG.weaponDmgMult), { cls: b.cls, armor: Math.round(power * 5), hpMult: Math.sqrt(strength), portrait: 'bot' });
   },
 
-  memberLevel(m) { return Math.max(1, this.p.level + m.off); },
-  memberFighter(m, strength = 1) { return this.fighterOf(m, this.memberLevel(m), strength); },
+  // a real member as he stands in his last saved arena snapshot (you: as you are now)
+  memberFighter(id, strength = 1) {
+    if (id === this.selfId()) { const f = this.playerFighter(); return { ...f, hp: Math.round(f.hp * Math.sqrt(strength)), pid: id }; }
+    const p = this.person(id);
+    if (!p || !p.fighter) return null;
+    const f = p.fighter;
+    return { ...makeFighter(p.name, f.level, f.stats, f.weapon, { cls: f.cls, armor: f.armor || 0, hpMult: Math.sqrt(strength), wbase: f.wbase || null }), pid: id };
+  },
 
-  rivalSquad(o, kind) {
+  rivalSquad(o, kind, level = this.p.level) {
     const rng = mulberry32(o.seed);
     const k = TURF_KINDS[kind];
     const s = this.strengthNow(o);
-    return Array.from({ length: k.defenders }, (_, i) => {
-      const b = this.botFrom(rng);
-      return this.fighterOf(b, Math.max(1, this.p.level + k.lvl[i % 2]), s);
-    });
+    return Array.from({ length: k.defenders }, (_, i) => this.fighterOf(this.botFrom(rng), Math.max(1, level + k.lvl[i % 2]), s));
   },
 
   defenderSquad(o) {
-    const g = this.gang();
     const s = this.strengthNow(o);
-    return o.defenders.map((id) => g.members.find((m) => m.id === id)).filter(Boolean).map((m) => this.memberFighter(m, s));
+    return o.defenders.map((id) => this.memberFighter(id, s)).filter(Boolean);
   },
 
   // sequential duels like a S&F guild fight: the winner keeps his remaining life and faces the next one
@@ -110,7 +162,7 @@ export const GangMixin = {
     return { win: j >= Ds.length, duels };
   },
 
-  // ---------------------------------------------------------------- gang management
+  // ---------------------------------------------------------------- founding a gang
   gangCreateCost() { return Math.round(F.cashPerMin(this.p.level) * CONFIG.gangCreateMin); },
 
   createGang(name, tag, colorId) {
@@ -119,55 +171,227 @@ export const GangMixin = {
     tag = String(tag || '').trim().toUpperCase().replace(/[^A-Z0-9ÁČĎÉÍĽĹŇÓÔŔŠŤÚÝŽ]/g, '').slice(0, 4);
     if (name.length < 3) return fail('Meno gangu musí mať aspoň 3 znaky.');
     if (tag.length < 2) return fail('Skratka musí mať 2 až 4 znaky.');
-    if (Object.values(RIVAL_GANGS).some((r) => r.tag === tag)) return fail('Túto skratku už má iný gang.');
+    if (Object.values(RIVAL_GANGS).some((r) => r.tag === tag) || (this.ctx && this.ctx.tagTaken)) return fail('Túto skratku už má iný gang.');
     const color = (GANG_COLORS.find((c) => c.id === colorId) || GANG_COLORS[0]).color;
     const cost = this.gangCreateCost();
     if (this.p.cash < cost) return fail('Založenie gangu stojí ' + cost + ' $.');
     this.p.cash -= cost;
+    const me = this.selfId();
+    const data = { name, tag, color, createdAt: Date.now(), leader: me, treasury: 0, upgrades: { vycvik: 0, vypalne: 0, opevnenie: 0 }, members: [{ id: me, rank: 'boss', joinedAt: Date.now() }], requests: [], invites: [], log: [] };
+    if (this.ctx) {
+      const id = newId();
+      this.ctx.gang = { id, data, wins: 0, version: null };
+      this.ctx.memberChanges.push({ id: me, gang: id, expect: null });
+    } else {
+      this.state.gang = data;
+    }
     this.turf();
-    this.state.gang = { name, tag, color, createdAt: Date.now(), treasury: 0, upgrades: { vycvik: 0, vypalne: 0, opevnenie: 0 }, members: [], log: [], nextMemberId: 1, lastDonationAt: Date.now() };
-    for (let i = 0; i < CONFIG.gangStartMembers; i++) this.addMember();
-    this.gangLog('Gang ' + name + ' [' + tag + '] je založený. Pridali sa prví ' + CONFIG.gangStartMembers + ' členovia.');
+    this.gangLog('Gang ' + name + ' [' + tag + '] je založený.');
     this.save();
     return ok({ cost });
   },
 
-  addMember() {
-    const g = this.gang();
-    const used = new Set(g.members.map((m) => m.name));
-    const names = BOT_NAMES.filter((n) => !used.has(n));
-    const b = this.botFrom(Math.random, 0, names.length ? names[Math.floor(Math.random() * names.length)] : 'Nováčik ' + g.nextMemberId);
-    const m = { id: 'm' + g.nextMemberId++, name: b.name, cls: b.cls, raw: b.raw, wr: b.wr, off: Math.floor(Math.random() * 4) - 2, rank: 'novacik' };
-    g.members.push(m);
-    return m;
+  // an old single-player gang (computer members) becomes a real one led by this player
+  migrateLegacyGang(old) {
+    const me = this.selfId();
+    return {
+      name: old.name, tag: old.tag, color: old.color, createdAt: old.createdAt || Date.now(), leader: me,
+      treasury: old.treasury || 0, upgrades: old.upgrades || { vycvik: 0, vypalne: 0, opevnenie: 0 },
+      members: [{ id: me, rank: 'boss', joinedAt: old.createdAt || Date.now() }], requests: [], invites: [],
+      log: [{ at: Date.now(), text: 'Počítačoví členovia odišli. Do gangu teraz vstupujú skutoční hráči.', bad: false }].concat(old.log || []).slice(0, 30),
+    };
   },
 
-  recruitCost() { return Math.round(F.cashPerMin(this.p.level) * CONFIG.gangRecruitMin); },
+  // ---------------------------------------------------------------- joining and leaving
+  targetGang(gangId) { return (this.ctx && this.ctx.targets[gangId]) || null; },
 
-  recruit() {
+  // a player without a gang asks to join
+  requestJoin(gangId) {
+    if (!this.ctx) return fail(ONLINE_ONLY);
+    if (this.gang()) return fail('Už si v gangu.');
+    const t = this.targetGang(gangId);
+    if (!t) return fail('Taký gang už neexistuje.');
+    const me = this.selfId();
+    if (t.data.members.length >= CONFIG.gangSlots) return fail('Gang je plný.');
+    if (t.data.requests.some((r) => r.id === me)) return ok({ already: true });
+    t.data.requests.push({ id: me, name: this.p.name, level: this.p.level, cls: this.p.cls, at: Date.now() });
+    t.data.requests = t.data.requests.slice(-20);
+    return ok();
+  },
+
+  cancelRequest(gangId) {
+    const t = this.targetGang(gangId);
+    if (!t) return fail('Taký gang už neexistuje.');
+    t.data.requests = t.data.requests.filter((r) => r.id !== this.selfId());
+    return ok();
+  },
+
+  // join a gang that invited you
+  acceptInvite(gangId) {
+    if (!this.ctx) return fail(ONLINE_ONLY);
+    if (this.gang()) return fail('Už si v gangu.');
+    const t = this.targetGang(gangId);
+    const me = this.selfId();
+    if (!t || !t.data.invites.some((i) => i.id === me)) return fail('Pozvánka už neplatí.');
+    if (t.data.members.length >= CONFIG.gangSlots) return fail('Gang je medzitým plný.');
+    t.data.invites = t.data.invites.filter((i) => i.id !== me);
+    t.data.requests = t.data.requests.filter((r) => r.id !== me);
+    t.data.members.push({ id: me, rank: 'novacik', joinedAt: Date.now() });
+    this.ctx.memberChanges.push({ id: me, gang: gangId, expect: null });
+    this.logTo(gangId, this.p.name + ' prijal pozvánku a je v gangu.');
+    return ok({ name: t.data.name });
+  },
+
+  declineInvite(gangId) {
+    const t = this.targetGang(gangId);
+    if (!t) return ok();
+    t.data.invites = t.data.invites.filter((i) => i.id !== this.selfId());
+    return ok();
+  },
+
+  // boss / right hand: take a requesting player in, or turn him down
+  approveJoin(playerId) {
+    if (!this.ctx) return fail(ONLINE_ONLY);
     const g = this.gang();
     if (!g) return fail('Nemáš gang.');
-    if (g.members.length + 1 >= CONFIG.gangSlots) return fail('Gang je plný (' + CONFIG.gangSlots + ' miest).');
-    const cost = this.recruitCost();
-    if (g.treasury < cost) return fail('V pokladnici chýbajú peniaze.');
-    g.treasury -= cost;
-    const m = this.addMember();
-    this.gangLog(m.name + ' sa pridal do gangu.');
+    if (!this.can('recruit')) return fail('Žiadosti vybavuje šéf alebo pravá ruka.');
+    const r = g.requests.find((x) => x.id === playerId);
+    if (!r) return fail('Táto žiadosť už neplatí.');
+    g.requests = g.requests.filter((x) => x.id !== playerId);
+    const p = this.person(playerId);
+    if (!p || p.gangId) { this.save(); return ok({ gone: true }); } // joined another gang meanwhile
+    if (g.members.length >= CONFIG.gangSlots) return fail('Gang je plný (' + CONFIG.gangSlots + ' členov).');
+    g.members.push({ id: playerId, rank: 'novacik', joinedAt: Date.now() });
+    g.invites = g.invites.filter((i) => i.id !== playerId);
+    this.ctx.memberChanges.push({ id: playerId, gang: this.myGangId(), expect: null });
+    this.gangLog(r.name + ' je nový člen gangu.');
     this.save();
-    return ok({ member: m });
+    return ok({ name: r.name });
   },
 
-  promote(id) {
+  denyJoin(playerId) {
     const g = this.gang();
-    const m = g && g.members.find((x) => x.id === id);
-    if (!m) return fail('Taký člen nie je.');
-    let next = RANK_ORDER[(RANK_ORDER.indexOf(m.rank) + 1) % RANK_ORDER.length];
-    if (next === 'ruka' && g.members.some((x) => x.rank === 'ruka' && x !== m)) next = 'novacik'; // only one right hand
-    m.rank = next;
+    if (!g || !this.can('recruit')) return fail('Žiadosti vybavuje šéf alebo pravá ruka.');
+    g.requests = g.requests.filter((x) => x.id !== playerId);
     this.save();
-    return ok({ rank: next });
+    return ok();
   },
 
+  // boss / right hand: invite a player by nickname
+  invitePlayer(name) {
+    if (!this.ctx) return fail(ONLINE_ONLY);
+    const g = this.gang();
+    if (!g) return fail('Nemáš gang.');
+    if (!this.can('recruit')) return fail('Pozývať môže šéf alebo pravá ruka.');
+    const f = this.ctx.found;
+    if (!f) return fail('Hráč s takou prezývkou nie je.');
+    if (f.id === this.selfId() || g.members.some((m) => m.id === f.id)) return fail(f.name + ' už je v tvojom gangu.');
+    if (f.gangId) return fail(f.name + ' už je v inom gangu.');
+    if (g.members.length >= CONFIG.gangSlots) return fail('Gang je plný.');
+    if (!g.invites.some((i) => i.id === f.id)) g.invites.push({ id: f.id, name: f.name, at: Date.now() });
+    g.invites = g.invites.slice(-20);
+    this.save();
+    return ok({ name: f.name });
+  },
+
+  cancelInvite(playerId) {
+    const g = this.gang();
+    if (!g || !this.can('recruit')) return fail('Pozvánky ruší šéf alebo pravá ruka.');
+    g.invites = g.invites.filter((i) => i.id !== playerId);
+    this.save();
+    return ok();
+  },
+
+  // a member leaves: off every object he defended, out of the gang
+  dropMember(id) {
+    const g = this.gang(), gid = this.myGangId();
+    g.members = g.members.filter((m) => m.id !== id);
+    for (const o of Object.values(this.turf().objects)) if (o.owner === gid) o.defenders = o.defenders.filter((x) => x !== id);
+    if (this.ctx) this.ctx.memberChanges.push({ id, gang: null, expect: gid });
+  },
+
+  kickMember(id) {
+    const g = this.gang();
+    if (!g) return fail('Nemáš gang.');
+    if (!this.can('kick')) return fail('Vyhodiť člena môže len šéf.');
+    if (id === this.selfId()) return fail('Sám seba nevyhodíš. Môžeš z gangu odísť.');
+    const m = g.members.find((x) => x.id === id);
+    if (!m) return fail('Taký člen nie je.');
+    const name = (this.person(id) || {}).name || 'Člen';
+    this.dropMember(id);
+    this.gangLog(name + ' bol vyhodený z gangu.', true);
+    this.save();
+    return ok({ name });
+  },
+
+  // boss sets a rank; one right hand at a time
+  setRank(id, rank) {
+    const g = this.gang();
+    if (!g) return fail('Nemáš gang.');
+    if (!this.can('rank')) return fail('Hodnosti mení len šéf.');
+    if (!['ruka', 'vojak', 'novacik'].includes(rank)) return fail('Neznáma hodnosť.');
+    const m = g.members.find((x) => x.id === id);
+    if (!m || m.rank === 'boss') return fail('Tomuto členovi hodnosť nezmeníš.');
+    if (rank === 'ruka') g.members.forEach((x) => { if (x.rank === 'ruka') x.rank = 'vojak'; });
+    m.rank = rank;
+    this.save();
+    return ok();
+  },
+
+  transferLead(id) {
+    const g = this.gang();
+    if (!g || !this.can('lead')) return fail('Vedenie môže odovzdať len šéf.');
+    const m = g.members.find((x) => x.id === id);
+    if (!m || id === this.selfId()) return fail('Taký člen nie je.');
+    g.members.forEach((x) => { if (x.rank === 'ruka') x.rank = 'vojak'; });
+    g.members.find((x) => x.id === this.selfId()).rank = 'ruka';
+    m.rank = 'boss';
+    g.leader = id;
+    this.gangLog(((this.person(id) || {}).name || 'Člen') + ' je novým šéfom gangu.');
+    this.save();
+    return ok();
+  },
+
+  // the boss's lead passes to the right hand, else to the longest-serving member; the last one out closes the gang
+  leaveGang() {
+    const g = this.gang();
+    if (!g) return fail('Nie si v gangu.');
+    const me = this.selfId();
+    if (g.members.length <= 1) return this.disbandGang(true);
+    const wasBoss = this.myRank() === 'boss';
+    this.dropMember(me);
+    if (wasBoss) {
+      const next = g.members.find((x) => x.rank === 'ruka') || [...g.members].sort((a, b) => a.joinedAt - b.joinedAt)[0];
+      next.rank = 'boss';
+      g.leader = next.id;
+    }
+    this.gangLog(this.p.name + ' odišiel z gangu.' + (wasBoss ? ' Vedenie prebral ' + ((this.person(g.leader) || {}).name || 'ďalší člen') + '.' : ''), true);
+    if (this.ctx) this.ctx.gangLeft = true; else delete this.state.gang;
+    this.save();
+    return ok();
+  },
+
+  // boss closes the gang: everyone out, its objects stand free
+  disbandGang(lastOne = false) {
+    const g = this.gang();
+    if (!g) return fail('Nie si v gangu.');
+    if (!lastOne && !this.can('lead')) return fail('Gang môže rozpustiť len šéf.');
+    const gid = this.myGangId();
+    for (const o of Object.values(this.turf().objects)) {
+      if (o.owner !== gid) continue;
+      Object.assign(o, this.freshObj(null));
+    }
+    if (this.ctx) {
+      g.members.forEach((m) => this.ctx.memberChanges.push({ id: m.id, gang: null, expect: gid }));
+      this.ctx.gang.deleted = true;
+    } else {
+      delete this.state.gang;
+    }
+    this.save();
+    return ok();
+  },
+
+  // ---------------------------------------------------------------- treasury and upgrades
   deposit(amount) {
     const g = this.gang();
     if (!g) return fail('Nemáš gang.');
@@ -175,6 +399,7 @@ export const GangMixin = {
     if (amount <= 0) return fail('Nemáš peniaze na vklad.');
     this.p.cash -= amount;
     g.treasury += amount;
+    if (amount >= F.cashPerMin(this.p.level) * 30) this.gangLog(this.p.name + ' vložil do pokladnice ' + amount + ' $.');
     this.save();
     return ok({ amount });
   },
@@ -184,6 +409,7 @@ export const GangMixin = {
   buyGangUpgrade(id) {
     const g = this.gang();
     if (!g || !GANG_UPGRADES[id]) return fail('Neznáme vylepšenie.');
+    if (!this.can('upgrade')) return fail('Vylepšenia kupuje šéf alebo pravá ruka.');
     if (g.upgrades[id] >= CONFIG.gangUpgradeMax) return fail('Vylepšenie je na maxime.');
     const cost = this.gangUpgradeCost(id);
     if (g.treasury < cost) return fail('V pokladnici chýbajú peniaze.');
@@ -194,13 +420,17 @@ export const GangMixin = {
     return ok();
   },
 
-  gangLog(text, bad = false) {
-    const g = this.gang();
-    if (!g) return;
-    g.log.unshift({ at: Date.now(), text, bad });
-    g.log.length = Math.min(g.log.length, 30);
-    if (bad) g.unseenBad = (g.unseenBad || 0) + 1;
+  // a line in a gang's diary: yours right here, another gang's through the server after the save
+  logTo(gangId, text, bad = false) {
+    if (!gangId) return;
+    const entry = { at: Date.now(), text, bad };
+    if (gangId === this.myGangId()) { const g = this.gang(); g.log.unshift(entry); g.log.length = Math.min(g.log.length, 30); return; }
+    const t = this.targetGang(gangId);
+    if (t) { t.data.log.unshift(entry); t.data.log.length = Math.min(t.data.log.length, 30); return; }
+    if (this.ctx) this.ctx.otherLogs.push({ gang: gangId, entry });
   },
+
+  gangLog(text, bad = false) { this.logTo(this.myGangId(), text, bad); },
 
   // ---------------------------------------------------------------- bonuses
   // summed over held objects and gang upgrades, each capped
@@ -209,8 +439,9 @@ export const GangMixin = {
     const g = this.gang();
     if (!g) return b;
     this.gangTick();
+    const gid = this.myGangId();
     for (const d of TURF) {
-      if (this.turfObj(d.id).owner !== 'player') continue;
+      if (this.turfObj(d.id).owner !== gid) continue;
       for (const [k, v] of Object.entries(TURF_KINDS[d.kind].bonus)) b[k] += v;
     }
     b.xp += g.upgrades.vycvik * GANG_UPGRADES.vycvik.per;
@@ -226,7 +457,8 @@ export const GangMixin = {
   refillTurf(id) {
     const g = this.gang();
     const o = this.turfObj(id);
-    if (!g || !o || o.owner !== 'player') return fail('Tento objekt nedržíte.');
+    if (!g || !o || o.owner !== this.myGangId()) return fail('Tento objekt nedržíte.');
+    if (!this.can('refill')) return fail('Nováčik obranu dopĺňať nemôže.');
     if (this.strengthNow(o) >= this.fullStrength() - 0.005) return fail('Obrana je plná.');
     const cost = this.refillCost();
     if (g.treasury < cost) return fail('V pokladnici chýbajú peniaze.');
@@ -236,111 +468,126 @@ export const GangMixin = {
     return ok({ cost });
   },
 
-  // members defend one object at a time
+  // every member defends one object at a time; you post yourself, the boss can take anyone off
   toggleDefender(id, memberId) {
     const g = this.gang();
     const o = this.turfObj(id);
-    if (!g || !o || o.owner !== 'player') return fail('Tento objekt nedržíte.');
+    const gid = this.myGangId();
+    memberId = memberId || this.selfId();
+    if (!g || !o || o.owner !== gid) return fail('Tento objekt nedržíte.');
+    if (!g.members.some((m) => m.id === memberId)) return fail('Taký člen nie je.');
     const d = TURF.find((x) => x.id === id);
-    if (o.defenders.includes(memberId)) { o.defenders = o.defenders.filter((x) => x !== memberId); this.save(); return ok(); }
+    if (o.defenders.includes(memberId)) {
+      if (memberId !== this.selfId() && !this.can('kick')) return fail('Iného člena z obrany stiahne len šéf.');
+      o.defenders = o.defenders.filter((x) => x !== memberId);
+      this.save();
+      return ok();
+    }
+    if (memberId !== this.selfId()) return fail('Brániť sa prihlasuje každý sám.');
     if (o.defenders.length >= TURF_KINDS[d.kind].slots) return fail('Na objekte je plno obrancov.');
-    for (const other of Object.values(this.turf().objects)) other.defenders = other.defenders.filter((x) => x !== memberId);
+    for (const other of Object.values(this.turf().objects)) if (other.owner === gid) other.defenders = other.defenders.filter((x) => x !== memberId);
     o.defenders.push(memberId);
     this.save();
     return ok();
   },
 
+  // you and the strongest other members (their saved arena form; they don't have to be online)
   attackSquad() {
     const g = this.gang();
-    const team = [this.playerFighter()];
-    [...g.members].sort((a, b) => b.off - a.off).slice(0, CONFIG.gangAttackSize - 1).forEach((m) => team.push(this.memberFighter(m)));
-    return team;
+    const team = [this.memberFighter(this.selfId())];
+    const others = g.members.filter((m) => m.id !== this.selfId()).map((m) => this.memberFighter(m.id)).filter(Boolean)
+      .sort((a, b) => b.level - a.level).slice(0, CONFIG.gangAttackSize - 1);
+    return team.concat(others);
   },
 
   attackTurf(id) {
     const g = this.gang();
     if (!g) return fail('Na boj o územie potrebuješ gang.');
+    if (!this.can('attack')) return fail('Nováčik ešte na územie útočiť nemôže. Šéf ti musí dať hodnosť.');
     const d = TURF.find((x) => x.id === id);
     const o = this.turfObj(id);
     if (!d) return fail('Neznámy objekt.');
     this.gangTick();
-    if (o.owner === 'player') return fail('Tento objekt už držíte.');
+    const gid = this.myGangId();
+    if (o.owner === gid) return fail('Tento objekt už držíte.');
     const now = Date.now();
-    if (now < o.retryAt) return fail('Ďalší útok na tento objekt až o chvíľu.');
+    if (now < (o.retry[gid] || 0)) return fail('Ďalší útok na tento objekt až o chvíľu.');
     if (now < o.safeUntil) return fail('Objekt bol práve obsadený. Chvíľu je pod ochranou.');
     const A = this.attackSquad();
     const prev = o.owner;
-    const D = prev ? this.rivalSquad(o, d.kind) : [];
+    const prevInfo = this.ownerInfo(o);
+    const D = !prev ? [] : RIVAL_GANGS[prev] ? this.rivalSquad(o, d.kind) : this.defenderSquad(o);
     const battle = this.teamBattle(A, D);
     const L = this.p.level;
-    const res = { win: battle.win, cash: 0, xp: 0, levelUps: 0, prev: this.ownerInfo(prev), name: d.name };
+    const res = { win: battle.win, cash: 0, xp: 0, levelUps: 0, prev: prevInfo, name: d.name };
     this.addHeat(CONFIG.gangAttackHeat);
     if (battle.win) {
-      o.owner = 'player';
+      if (prev && !RIVAL_GANGS[prev]) this.logTo(prev, 'Gang ' + g.name + ' [' + g.tag + '] vám prebral ' + d.name + '.', true);
+      o.owner = gid;
+      o.og = { name: g.name, tag: g.tag, color: g.color };
       this.setStrength(o, this.fullStrength());
-      o.safeUntil = now + this.gameMs(CONFIG.gangSafeMin);
-      o.retryAt = 0;
+      o.safeUntil = now + this.wMs(CONFIG.gangSafeMin);
+      o.retry = {};
+      o.seed = seed();
       // the members who fought move in as defenders (if they don't guard something else)
-      const busy = new Set(Object.values(this.turf().objects).flatMap((x) => x.defenders));
-      o.defenders = [...g.members].sort((a, b) => b.off - a.off).filter((m) => !busy.has(m.id)).slice(0, TURF_KINDS[d.kind].slots).map((m) => m.id);
+      const busy = new Set(Object.values(this.turf().objects).filter((x) => x.owner === gid).flatMap((x) => x.defenders));
+      o.defenders = A.map((f) => f.pid).filter((pid) => pid && !busy.has(pid)).slice(0, TURF_KINDS[d.kind].slots);
       res.cash = Math.round(F.cashPerMin(L) * CONFIG.turfRewardMin);
       res.xp = Math.round(F.xpNext(L) * 0.03);
       this.p.cash += res.cash;
       res.levelUps = this.addXp(res.xp);
-      this.gangLog(prev ? 'Prebrali ste ' + d.name + ' gangu ' + RIVAL_GANGS[prev].name + '.' : 'Obsadili ste ' + d.name + '.');
+      const row = this.gangRow();
+      if (this.ctx) row.winsDelta = (row.winsDelta || 0) + 1; else g.wins = (g.wins || 0) + 1;
+      this.gangLog(this.p.name + (prev ? ' prebral ' + d.name + ' gangu ' + prevInfo.name + '.' : ' obsadil ' + d.name + '.'));
     } else {
-      o.retryAt = now + this.gameMs(CONFIG.gangRetryMin);
-      this.gangLog('Útok na ' + d.name + ' nevyšiel.', true);
-      g.unseenBad = Math.max(0, (g.unseenBad || 1) - 1); // you saw this one yourself
+      o.retry[gid] = now + this.wMs(CONFIG.gangRetryMin);
+      if (prev && !RIVAL_GANGS[prev]) this.logTo(prev, 'Ubránili ste ' + d.name + ' pred gangom ' + g.name + '.');
+      this.gangLog(this.p.name + ': útok na ' + d.name + ' nevyšiel.', true);
     }
     this.save();
     return ok({ A, D, battle, result: res, turf: d });
   },
 
-  // ---------------------------------------------------------------- the world moves on (once per game hour)
+  // ---------------------------------------------------------------- the city moves on (once an hour)
   gangTick() {
     const t = this.turf();
     const now = Date.now();
     let changed = false, n = 0;
     while (now >= t.nextRaidAt && n < 6) {
       this.gangHour();
-      t.nextRaidAt += this.gameMs(CONFIG.gangRaidEveryMin);
+      t.nextRaidAt += this.wMs(CONFIG.gangRaidEveryMin);
       changed = true; n++;
     }
-    if (now >= t.nextRaidAt) t.nextRaidAt = now + this.gameMs(CONFIG.gangRaidEveryMin); // long absence: skip the rest
+    if (now >= t.nextRaidAt) t.nextRaidAt = now + this.wMs(CONFIG.gangRaidEveryMin); // long quiet: skip the rest
     if (changed) this.save();
   },
 
+  // the computer rivals raid objects held by players' gangs and shuffle the rest among themselves
   gangHour() {
-    const g = this.gang();
     const rivals = Object.keys(RIVAL_GANGS);
     const now = Date.now();
-    if (g) {
-      // computer members chip into the treasury
-      const sum = g.members.reduce((a, m) => a + F.cashPerMin(this.memberLevel(m)) * CONFIG.gangDonationMin, 0);
-      g.treasury += Math.round(sum);
-    }
     for (const d of TURF) {
       const o = this.turfObj(d.id);
-      if (o.owner === 'player') {
+      if (o.owner && !RIVAL_GANGS[o.owner]) {
         if (now < o.safeUntil || Math.random() >= CONFIG.gangRaidChance) continue;
         const attacker = rivals[Math.floor(Math.random() * rivals.length)];
-        const rng = mulberry32(seed());
-        const A = Array.from({ length: TURF_KINDS[d.kind].defenders }, () => this.fighterOf(this.botFrom(rng), Math.max(1, this.p.level - 1)));
         const D = this.defenderSquad(o);
+        const lvl = D.length ? Math.round(D.reduce((a, f) => a + f.level, 0) / D.length) : this.p.level;
+        const rng = mulberry32(seed());
+        const A = Array.from({ length: TURF_KINDS[d.kind].defenders }, () => this.fighterOf(this.botFrom(rng), Math.max(1, lvl - 1)));
         const lost = !D.length || !this.teamBattle(D, A).win;
+        const owner = o.owner;
         if (lost) {
-          o.owner = attacker; o.defenders = []; o.seed = seed(); this.setStrength(o, 1);
-          o.safeUntil = now + this.gameMs(CONFIG.gangSafeMin);
-          this.gangLog(RIVAL_GANGS[attacker].name + ' vám prebrali ' + d.name + (D.length ? '.' : ' – nikto ho nebránil.'), true);
+          Object.assign(o, this.freshObj(attacker));
+          o.safeUntil = now + this.wMs(CONFIG.gangSafeMin);
+          this.logTo(owner, RIVAL_GANGS[attacker].name + ' vám prebrali ' + d.name + (D.length ? '.' : ' – nikto ho nebránil.'), true);
         } else {
           this.setStrength(o, Math.max(CONFIG.turfMinStrength, this.strengthNow(o) - 0.05));
-          this.gangLog('Ubránili ste ' + d.name + ' pred gangom ' + RIVAL_GANGS[attacker].name + '.');
+          this.logTo(owner, 'Ubránili ste ' + d.name + ' pred gangom ' + RIVAL_GANGS[attacker].name + '.');
         }
       } else if (now >= o.safeUntil && Math.random() < CONFIG.gangRivalMoveChance) {
         const others = rivals.filter((r) => r !== o.owner);
-        o.owner = others[Math.floor(Math.random() * others.length)];
-        o.seed = seed(); this.setStrength(o, 1);
+        Object.assign(o, this.freshObj(others[Math.floor(Math.random() * others.length)]));
       }
     }
   },

@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261022223826';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022223826';
+import { CONFIG, F } from './config.js?v=20261022231928';
+import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022231928';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -59,7 +59,7 @@ export const DailyMixin = {
     if (type === 'vypalne' || type === 'dlznik' || type === 'vreckar' || type === 'sledovanie') return { seed: seed(), startedAt: 0 }; // where the person starts / which car
     if (type === 'graffiti') { // a building of a rival gang (any turf when you hold them all)
       const objs = this.turf().objects;
-      const rival = TURF.filter((t) => objs[t.id] && objs[t.id].owner && objs[t.id].owner !== 'player');
+      const rival = TURF.filter((t) => objs[t.id] && objs[t.id].owner && objs[t.id].owner !== this.myGangId());
       return { spot: pick(rival.length ? rival : TURF).id, startedAt: 0 };
     }
     return {};

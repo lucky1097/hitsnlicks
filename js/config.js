@@ -144,18 +144,15 @@ export const CONFIG = {
   // gangs & Gang Wars
   gangCreateMin: 20, // founding a gang costs this many minutes of mission cash
   gangSlots: 10,
-  gangStartMembers: 4, // computer members who join a new gang
-  gangRecruitMin: 10, // recruiting one more member, paid from the treasury (minutes of mission cash)
-  gangDonationMin: 1, // each computer member puts this many minutes of his cash into the treasury every hour
   gangUpgradeMin: 25, // first upgrade level; level n costs this × n^1.5
   gangUpgradeMax: 5,
   gangBonusCap: 0.5,
-  gangAttackSize: 4, // you + up to 3 members
+  gangAttackSize: 5, // you + up to 4 other members (their saved arena form)
   gangAttackHeat: 8,
   gangRetryMin: 30, // after a lost attack on an object
   gangSafeMin: 60, // a freshly taken object can't be attacked for this long
   gangRaidEveryMin: 60, // rival gangs make their moves once an hour
-  gangRaidChance: 0.35, // chance a rival attacks each of your objects that hour
+  gangRaidChance: 0.35, // chance a computer rival attacks each object a players' gang holds that hour
   gangRivalMoveChance: 0.15, // chance a rival / free object changes hands that hour
   turfDecayPerHour: 0.04, // defence strength lost per hour unless refilled
   turfMinStrength: 0.5,

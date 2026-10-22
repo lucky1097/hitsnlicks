@@ -178,6 +178,11 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .hrow .cl { color: #9b968b; font-size: 14px; }
 .hrow .lv { color: var(--gold-l); text-align: right; font-size: 15px; }
 .hrow.me { background: rgba(201,162,74,.1); }
+.ghrow { cursor: default; }
+.ghrow .gtag { min-width: 34px; height: 24px; font-size: 13px; border-width: 1px; vertical-align: middle; }
+.seg { display: flex; gap: 0; margin-bottom: 10px; border: 1px solid var(--line2); }
+.seg button { flex: 1; padding: 8px 0; border: 0; background: none; color: #9b968b; font: inherit; font-size: 16px; cursor: pointer; }
+.seg button.on { background: rgba(201,162,74,.14); color: var(--gold-l); }
 .hrow:nth-child(-n+3) .rk { color: var(--gold-l); }
 .wrow { padding: 6px 6px 8px; margin-bottom: 6px; border: 1px solid var(--line); background: var(--panel); transition: opacity .3s, border-color .3s; }
 .wrow .top { display: flex; justify-content: space-between; gap: 6px; font-size: 15px; margin-bottom: 4px; }

@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022223826';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022223826';
-import { DAILY_TYPES } from './daily.js?v=20261022223826';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022223826';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022231928';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022231928';
+import { DAILY_TYPES } from './daily.js?v=20261022231928';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022231928';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -693,12 +693,47 @@ export class UI {
         if (this.check(r)) { this.toast('Gang založený za ' + money(r.cost) + '.'); this.render(); }
       },
       async deposit(a) { const r = await this.s.deposit(Number(a)); if (this.check(r)) { this.toast('Vložené do pokladnice: ' + money(r.amount) + '.'); this.render(); } },
-      async recruit() { const r = await this.s.recruit(); if (this.check(r)) { this.toast(r.member.name + ' sa pridal do gangu.'); this.render(); } },
-      async promote(a) { if (this.check(await this.s.promote(a))) this.render(); },
+      async 'gang-ask'(a) { if (this.check(await this.s.requestJoin(a))) { this.toast('Žiadosť odoslaná. Počkaj, kým ju šéf schváli.'); this.render(); } },
+      async 'gang-unask'(a) { if (this.check(await this.s.cancelRequest(a))) this.render(); },
+      async 'gang-accept'(a) { const r = await this.s.acceptInvite(a); if (this.check(r)) { this.toast('Si v gangu ' + r.name + '.'); this.render(); } },
+      async 'gang-decline'(a) { if (this.check(await this.s.declineInvite(a))) this.render(); },
+      async 'gang-approve'(a) {
+        const r = await this.s.approveJoin(a);
+        if (!this.check(r)) return;
+        this.toast(r.gone ? 'Tento hráč je už v inom gangu.' : r.name + ' je nový člen gangu.');
+        this.render();
+      },
+      async 'gang-deny'(a) { if (this.check(await this.s.denyJoin(a))) this.render(); },
+      async 'gang-invite'() {
+        const name = ($('#gang-invite') && $('#gang-invite').value.trim()) || '';
+        if (!name) return;
+        const r = await this.s.invitePlayer(name);
+        if (this.check(r)) { this.toast('Pozvánka pre ' + r.name + ' odoslaná.'); this.render(); }
+      },
+      async 'gang-uninvite'(a) { if (this.check(await this.s.cancelInvite(a))) this.render(); },
+      async 'gang-member'(a) { this.gangMemberModal(a); },
+      async 'hall-tab'(a) {
+        if (a === 'gangs') { const r = await this.s.gangHall(); if (!this.check(r)) return; this.sel.hallGangs = { list: r.list, mine: r.mine }; }
+        this.sel.hallTab = a;
+        this.render();
+      },
+      async 'gang-rank'(a) { const [id, rank] = a.split(':'); if (this.check(await this.s.setRank(id, rank))) { this.closeModal(); this.render(); } },
+      async 'gang-lead'(a) { if (this.check(await this.s.transferLead(a))) { this.closeModal(); this.toast('Vedenie gangu je odovzdané.'); this.render(); } },
+      async 'gang-kick'(a) { const r = await this.s.kickMember(a); if (this.check(r)) { this.closeModal(); this.toast(r.name + ' už nie je v gangu.', true); this.render(); } },
+      async 'gang-leave'() {
+        this.modal('<h2>Odísť z gangu?</h2><p class="sub">' + (this.s.gang().members.length <= 1 ? 'Si posledný člen, gang sa tým rozpustí a jeho objekty ostanú voľné.' : this.s.myRank() === 'boss' ? 'Vedenie prevezme pravá ruka alebo najstarší člen.' : 'Do gangu sa môžeš vrátiť len na novú žiadosť.') + '</p>' +
+          '<div class="acts"><button class="btn" data-act="modal-close">Zostať</button><button class="btn gold" data-act="gang-leave-yes">Odísť</button></div>');
+      },
+      async 'gang-leave-yes'() { if (this.check(await this.s.leaveGang())) { this.closeModal(); this.sel.gangList = null; this.toast('Už nie si v gangu.'); this.render(); } },
+      async 'gang-disband'() {
+        this.modal('<h2>Rozpustiť gang?</h2><p class="sub">Všetci členovia budú bez gangu, pokladnica prepadne a objekty gangu ostanú voľné. Nedá sa to vrátiť.</p>' +
+          '<div class="acts"><button class="btn" data-act="modal-close">Nie</button><button class="btn gold" data-act="gang-disband-yes">Rozpustiť</button></div>');
+      },
+      async 'gang-disband-yes'() { if (this.check(await this.s.disbandGang())) { this.closeModal(); this.sel.gangList = null; this.toast('Gang je rozpustený.', true); this.render(); } },
       async 'gang-up'(a) { if (this.check(await this.s.buyGangUpgrade(a))) { this.toast('Vylepšené.'); this.render(); } },
       async turf(a) { this.open('turf', a, true); },
       async 'turf-refill'() { const r = await this.s.refillTurf(this.arg); if (this.check(r)) { this.toast('Obrana doplnená za ' + money(r.cost) + '.'); this.render(); } },
-      async 'turf-def'(a) { if (this.check(await this.s.toggleDefender(this.arg, a))) this.render(); },
+      async 'turf-def'(a) { if (this.check(await this.s.toggleDefender(this.arg, a || undefined))) this.render(); },
       async 'turf-attack'() {
         const r = await this.s.attackTurf(this.arg);
         if (!this.check(r)) return;
@@ -814,14 +849,28 @@ export class UI {
   }
 
   // hall of fame: registered players, highest level first; a tap opens their profile
+  // two tabs: players (highest level first) and gangs (most Gang Wars wins first)
   scr_hall(list) {
     list = list || [];
-    const rows = list.map((r, i) => '<button class="hrow' + (r.me ? ' me' : '') + '" data-act="profile" data-arg="' + esc(r.id) + '">' +
-      '<span class="num rk">' + (i + 1) + '.</span><span class="nm">' + esc(r.name) + (r.me ? ' <small>· ty</small>' : '') + '</span>' +
-      '<span class="cl">' + (CLASSES[r.cls] ? CLASSES[r.cls].name : '') + '</span><span class="num lv">úr. ' + r.level + '</span></button>').join('');
+    const tab = this.sel.hallTab || 'players';
+    const tabs = '<div class="seg"><button class="' + (tab === 'players' ? 'on' : '') + '" data-act="hall-tab" data-arg="players">Hráči</button><button class="' + (tab === 'gangs' ? 'on' : '') + '" data-act="hall-tab" data-arg="gangs">Gangy</button></div>';
+    let rows, count;
+    if (tab === 'gangs') {
+      const gl = this.sel.hallGangs || { list: [], mine: null };
+      count = gl.list.length + ' gangov';
+      rows = gl.list.map((x, i) => '<div class="hrow ghrow' + (x.id === gl.mine ? ' me' : '') + '"><span class="num rk">' + (i + 1) + '.</span><span class="nm">' + this.tagBox(x) + ' ' + esc(x.name) + (x.id === gl.mine ? ' <small>· tvoj</small>' : '') + '</span>' +
+        '<span class="cl num">' + x.members + ' čl.</span><span class="num lv">' + x.wins + ' výh.</span></div>').join('');
+      if (!rows) rows = '<p class="p">Zatiaľ tu nie je žiadny gang.</p>';
+    } else {
+      count = list.length + ' hráčov';
+      rows = list.map((r, i) => '<button class="hrow' + (r.me ? ' me' : '') + '" data-act="profile" data-arg="' + esc(r.id) + '">' +
+        '<span class="num rk">' + (i + 1) + '.</span><span class="nm">' + esc(r.name) + (r.me ? ' <small>· ty</small>' : '') + '</span>' +
+        '<span class="cl">' + (CLASSES[r.cls] ? CLASSES[r.cls].name : '') + '</span><span class="num lv">úr. ' + r.level + '</span></button>').join('') || '<p class="p">Zatiaľ tu nikto nie je.</p>';
+    }
     return {
-      html: this.hdr('Sieň slávy', list.length + ' hráčov') + '<div class="body">' + (rows || '<p class="p">Zatiaľ tu nikto nie je.</p>') +
-        (this.s.online ? '' : '<p class="note">Offline hra: ostatných hráčov uvidíš po prihlásení.</p>') + '</div>',
+      html: this.hdr('Sieň slávy', count) + '<div class="body">' + tabs + rows +
+        (tab === 'gangs' ? '<p class="note">Poradie podľa vyhratých bojov o územie (Gang Wars).</p>' : '') +
+        (this.s.online ? '' : '<p class="note">Offline hra: ostatných hráčov a gangy uvidíš po prihlásení.</p>') + '</div>',
     };
   }
 
@@ -1124,6 +1173,7 @@ export class UI {
     return '<div class="grow"><span class="mid"><span class="t">' + esc(f.name) + '</span><span class="s num">' + CLASSES[f.cls].name + ' · úr. ' + f.level + ' · životy ' + fmt(f.hp) + ' · úder ' + Math.round(F.hitOf(f)) + '</span></span>' + extra + '</div>';
   }
 
+  // the gang: without one, found a gang or ask to join one; in one, members, requests, treasury, upgrades, city
   scr_gang() {
     const g = this.s.gang(), p = this.s.p;
     const turf = this.s.turfView();
@@ -1131,51 +1181,101 @@ export class UI {
     if (!g) {
       const cost = this.s.gangCreateCost();
       const col = this.sel.gangColor || 'gold';
-      let h = '<p class="p">Gang je tvoj cech. Spolu držíte objekty v meste a kým ich držíte, celý gang má ich bonus. Rivalské gangy vám ich budú chcieť zobrať, tak ich musíte brániť.</p>';
+      const inbox = this.s.gangInbox();
+      let h = '<p class="p">Gang je tvoj cech. Spolu s ostatnými hráčmi držíte objekty v meste a kým ich držíte, celý gang má ich bonus. Ostatné gangy aj počítačoví rivali vám ich budú chcieť zobrať.</p>';
+      if (inbox.invites.length) {
+        h += '<div class="sec sc">Pozvánky</div>' + inbox.invites.map((i) => '<div class="grow">' + this.tagBox(i) + '<span class="mid"><span class="t">' + esc(i.name) + '</span><span class="s">ťa pozýva do gangu</span></span>' +
+          '<button class="btn small gold" data-act="gang-accept" data-arg="' + i.id + '">Vstúpiť</button><button class="btn small" data-act="gang-decline" data-arg="' + i.id + '">Nie</button></div>').join('');
+      }
+      h += '<div class="sec sc">Gangy v meste</div>';
+      const list = this.sel.gangList;
+      if (!list) h += '<p class="note">Načítavam…</p>';
+      else if (!list.length) h += '<p class="note">Zatiaľ tu nie je žiadny gang. Založ prvý.</p>';
+      else h += list.map((x) => {
+        const asked = inbox.requests.includes(x.id), full = x.members >= CONFIG.gangSlots;
+        return '<div class="grow">' + this.tagBox(x) + '<span class="mid"><span class="t">' + esc(x.name) + '</span><span class="s num">' + x.members + ' / ' + CONFIG.gangSlots + ' členov · ' + x.wins + ' výhier' + (x.leaderName ? ' · šéf ' + esc(x.leaderName) : '') + '</span></span>' +
+          (asked ? '<button class="btn small" data-act="gang-unask" data-arg="' + x.id + '">Zrušiť žiadosť</button>' : '<button class="btn small gold" data-act="gang-ask" data-arg="' + x.id + '"' + (full ? ' disabled' : '') + '>' + (full ? 'Plný' : 'Požiadať') + '</button>') + '</div>';
+      }).join('');
+      if (!this.s.online) h += '<p class="note">Offline hra: ostatné gangy uvidíš po prihlásení.</p>';
+      h += '<div class="sec sc">Založiť vlastný gang</div>';
       h += '<div class="field"><label for="gang-name">Meno gangu</label><input id="gang-name" maxlength="20" placeholder="napr. Nočné Mory" autocomplete="off" value="' + esc(this.sel.gangName || '') + '"></div>';
       h += '<div class="field"><label for="gang-tag">Skratka (2–4 znaky, uvidíš ju na mape)</label><input id="gang-tag" maxlength="4" placeholder="NM" autocomplete="off" style="text-transform:uppercase" value="' + esc(this.sel.gangTag || '') + '"></div>';
       h += '<div class="field"><label>Farba graffiti</label><div class="swatches">' + GANG_COLORS.map((c) => '<button class="sw' + (c.id === col ? ' sel' : '') + '" data-act="gang-color" data-arg="' + c.id + '" style="background:' + c.color + '" aria-label="' + c.name + '"></button>').join('') + '</div></div>';
       h += '<button class="btn gold wide" data-act="gang-create"' + (p.cash < cost ? ' disabled' : '') + '>Založiť gang · ' + money(cost) + '</button>';
-      h += '<p class="note">Pridajú sa k tebe ' + CONFIG.gangStartMembers + ' členovia. Zatiaľ sú to počítačoví hráči.</p>';
-      return { html: this.hdr('Gang', money(p.cash)) + '<div class="body">' + h + turfList + '</div>' };
+      return { html: this.hdr('Gang', money(p.cash)) + '<div class="body">' + h + turfList + '</div>', after: () => this.loadGangList() };
     }
+    const me = this.s.selfId(), rank = this.s.myRank(), can = (w) => this.s.can(w);
     const b = this.s.gangBonus();
     const chips = [b.cash && '+' + pct(b.cash) + ' peňazí', b.xp && '+' + pct(b.xp) + ' XP', b.time && '−' + pct(b.time) + ' čas misií', b.epic && '+' + pct(b.epic) + ' epický drop'].filter(Boolean);
-    let h = '<div class="ghead"><span class="gtag big" style="border-color:' + g.color + ';color:' + g.color + '">' + esc(g.tag) + '</span><div><div class="bl" style="font-size:30px;color:#efe9dc">' + esc(g.name) + '</div><div class="s muted num">' + (g.members.length + 1) + ' / ' + CONFIG.gangSlots + ' členov · ' + turf.filter((v) => v.owner && v.owner.mine).length + ' objektov</div></div></div>';
+    let h = '<div class="ghead"><span class="gtag big" style="border-color:' + g.color + ';color:' + g.color + '">' + esc(g.tag) + '</span><div><div class="bl" style="font-size:30px;color:#efe9dc">' + esc(g.name) + '</div><div class="s muted num">' + g.members.length + ' / ' + CONFIG.gangSlots + ' členov · ' + turf.filter((v) => v.owner && v.owner.mine).length + ' objektov · ' + (g.wins || 0) + ' výhier · ty: ' + GANG_RANKS[rank] + '</div></div></div>';
     h += '<div class="chips">' + (chips.length ? chips.map((c) => '<span class="chip">' + c + '</span>').join('') : '<span class="note" style="margin:0">Zatiaľ žiadny bonus. Obsaďte nejaký objekt.</span>') + '</div>';
 
     const d1 = Math.round(F.cashPerMin(p.level) * 10), d2 = Math.round(F.cashPerMin(p.level) * 60);
     h += '<div class="sec sc">Pokladnica</div><div class="switch" style="border:none;padding-top:0"><span class="num gold" style="font-size:24px">' + money(g.treasury) + '</span><span style="display:flex;gap:6px">' +
       '<button class="btn small num" data-act="deposit" data-arg="' + d1 + '"' + (p.cash < 1 ? ' disabled' : '') + '>+ ' + money(d1) + '</button><button class="btn small num" data-act="deposit" data-arg="' + d2 + '"' + (p.cash < 1 ? ' disabled' : '') + '>+ ' + money(d2) + '</button></span></div>';
-    h += '<p class="note" style="text-align:left;margin-top:0">Členovia do nej každú hodinu sami prispievajú. Z pokladnice sa platia vylepšenia, nábor a obrana objektov.</p>';
+    h += '<p class="note" style="text-align:left;margin-top:0">Vkladať môže každý člen. Z pokladnice sa platia vylepšenia a obrana objektov.</p>';
+
+    // members: boss and right hand first, then by level; your own buttons by your rank
+    const where = {};
+    turf.forEach((v) => (v.defenders || []).forEach((id) => { if (v.owner && v.owner.mine) where[id] = v.name; }));
+    const order = { boss: 0, ruka: 1, vojak: 2, novacik: 3 };
+    const who = (id) => this.s.person(id) || { name: '?', level: 0, cls: 'svalovec' };
+    h += '<div class="sec sc">Členovia ' + g.members.length + ' / ' + CONFIG.gangSlots + '</div>';
+    [...g.members].sort((a, b2) => order[a.rank] - order[b2.rank] || who(b2.id).level - who(a.id).level).forEach((m) => {
+      const pp = who(m.id), self = m.id === me;
+      let btns = '';
+      if (!self && can('rank') && m.rank !== 'boss') btns += '<button class="btn small" data-act="gang-member" data-arg="' + m.id + '">Upraviť</button>';
+      h += '<div class="grow"><span class="mid"><span class="t' + (self ? ' gold' : '') + '">' + esc(pp.name) + (self ? ' <small class="muted">· ty</small>' : '') + '</span><span class="s num">' + GANG_RANKS[m.rank] + ' · ' + (CLASSES[pp.cls] ? CLASSES[pp.cls].name : '') + ' · úr. ' + pp.level + (where[m.id] ? ' · bráni ' + esc(where[m.id]) : '') + '</span></span>' + btns + '</div>';
+    });
+
+    if (can('recruit')) {
+      h += '<div class="sec sc">Žiadosti o vstup</div>';
+      h += g.requests.length ? g.requests.map((r) => '<div class="grow"><span class="mid"><span class="t">' + esc(r.name) + '</span><span class="s num">' + (CLASSES[r.cls] ? CLASSES[r.cls].name : '') + ' · úr. ' + r.level + ' · ' + this.ago(r.at) + '</span></span>' +
+        '<button class="btn small gold" data-act="gang-approve" data-arg="' + r.id + '"' + (g.members.length >= CONFIG.gangSlots ? ' disabled' : '') + '>Prijať</button><button class="btn small" data-act="gang-deny" data-arg="' + r.id + '">Odmietnuť</button></div>').join('')
+        : '<p class="note" style="text-align:left">Žiadne žiadosti. Hráči bez gangu ťa nájdu v zozname gangov.</p>';
+      h += '<div class="field" style="margin-top:8px"><label for="gang-invite">Pozvať hráča (prezývka)</label><div style="display:flex;gap:6px"><input id="gang-invite" maxlength="16" autocomplete="off" style="flex:1"><button class="btn small gold" data-act="gang-invite"' + (g.members.length >= CONFIG.gangSlots ? ' disabled' : '') + '>Pozvať</button></div></div>';
+      if (g.invites.length) h += g.invites.map((i) => '<div class="grow"><span class="mid"><span class="t">' + esc(i.name) + '</span><span class="s">pozvaný · ' + this.ago(i.at) + '</span></span><button class="btn small" data-act="gang-uninvite" data-arg="' + i.id + '">Zrušiť</button></div>').join('');
+    }
 
     h += '<div class="sec sc">Vylepšenia gangu</div>';
     for (const [id, u] of Object.entries(GANG_UPGRADES)) {
       const n = g.upgrades[id], max = n >= CONFIG.gangUpgradeMax, cost = max ? 0 : this.s.gangUpgradeCost(id);
       h += '<div class="grow"><span class="mid"><span class="t">' + u.name + ' <small class="muted num">' + n + ' / ' + CONFIG.gangUpgradeMax + '</small></span><span class="s">' + (n ? u.text(n) : 'zatiaľ nič') + (max ? '' : ' → ' + u.text(n + 1)) + '</span></span>' +
-        (max ? '<span class="gold s">max</span>' : '<button class="btn small num" data-act="gang-up" data-arg="' + id + '"' + (g.treasury < cost ? ' disabled' : '') + '>' + money(cost) + '</button>') + '</div>';
+        (max ? '<span class="gold s">max</span>' : can('upgrade') ? '<button class="btn small num" data-act="gang-up" data-arg="' + id + '"' + (g.treasury < cost ? ' disabled' : '') + '>' + money(cost) + '</button>' : '<span class="s muted num">' + money(cost) + '</span>') + '</div>';
     }
+    if (!can('upgrade')) h += '<p class="note">Vylepšenia kupuje šéf alebo pravá ruka.</p>';
 
     h += turfList;
-
-    const where = {};
-    turf.forEach((v) => (v.defenders || []).forEach((id) => { if (v.owner && v.owner.mine) where[id] = v.name; }));
-    h += '<div class="sec sc">Členovia</div>';
-    h += '<div class="grow"><span class="mid"><span class="t gold">' + esc(p.name) + '</span><span class="s num">' + GANG_RANKS.boss + ' · ' + CLASSES[p.cls].name + ' · úr. ' + p.level + '</span></span></div>';
-    [...g.members].sort((a, b2) => b2.off - a.off).forEach((m) => {
-      h += '<div class="grow"><span class="mid"><span class="t">' + esc(m.name) + '</span><span class="s num">' + GANG_RANKS[m.rank] + ' · ' + CLASSES[m.cls].name + ' · úr. ' + this.s.memberLevel(m) + (where[m.id] ? ' · bráni ' + esc(where[m.id]) : '') + '</span></span>' +
-        '<button class="btn small" data-act="promote" data-arg="' + m.id + '">Hodnosť</button></div>';
-    });
-    const full = g.members.length + 1 >= CONFIG.gangSlots, rc = this.s.recruitCost();
-    h += full ? '<p class="note">Gang je plný. Ďalšie miesta sa budú dať dokúpiť u právničky.</p>'
-      : '<button class="btn wide num" style="margin-top:8px" data-act="recruit"' + (g.treasury < rc ? ' disabled' : '') + '>Naverbovať člena · ' + money(rc) + ' z pokladnice</button>';
-
-    h += '<div class="sec sc">Denník</div><ol class="ladder">' + (g.log.length ? g.log.slice(0, 12).map((l) => '<li' + (l.bad ? ' style="color:#e6a49c"' : '') + '><span>' + esc(l.text) + '</span><span class="num muted" style="flex:none;margin-left:8px">' + this.ago(l.at) + '</span></li>').join('') : '<li>Zatiaľ ticho.</li>') + '</ol>';
-    h += '<p class="note">Chat a skutoční hráči prídu so serverom.</p>';
-    g.unseenBad = 0;
+    h += '<div class="sec sc">Denník</div><ol class="ladder">' + (g.log.length ? g.log.slice(0, 15).map((l) => '<li' + (l.bad ? ' style="color:#e6a49c"' : '') + '><span>' + esc(l.text) + '</span><span class="num muted" style="flex:none;margin-left:8px">' + this.ago(l.at) + '</span></li>').join('') : '<li>Zatiaľ ticho.</li>') + '</ol>';
+    h += '<div style="display:flex;gap:8px;margin-top:14px"><button class="btn wide" data-act="gang-leave">Odísť z gangu</button>' + (can('lead') ? '<button class="btn wide" data-act="gang-disband">Rozpustiť gang</button>' : '') + '</div>';
     return { html: this.hdr('Gang', '<span class="gold">' + money(g.treasury) + '</span>') + '<div class="body">' + h + '</div>' };
   }
 
+  // the list of gangs to ask, fetched each time the screen opens without a gang
+  async loadGangList() {
+    if (this.gangListBusy) return;
+    this.gangListBusy = true;
+    const r = await this.s.gangHall();
+    this.gangListBusy = false;
+    if (!r.ok) return;
+    const json = JSON.stringify(r.list);
+    if (json === JSON.stringify(this.sel.gangList)) return;
+    this.sel.gangList = r.list;
+    if (this.name === 'gang' && !this.s.gang()) this.render();
+  }
+
+  // boss: one member's options
+  gangMemberModal(id) {
+    const g = this.s.gang(), m = g && g.members.find((x) => x.id === id);
+    if (!m) return;
+    const pp = this.s.person(id) || { name: '?' };
+    const rk = (r) => '<button class="btn wide' + (m.rank === r ? ' gold' : '') + '" data-act="gang-rank" data-arg="' + id + ':' + r + '">' + GANG_RANKS[r] + (r === 'ruka' ? ' (len jedna)' : '') + '</button>';
+    this.modal('<h2>' + esc(pp.name) + '</h2><p class="sub">' + GANG_RANKS[m.rank] + '</p><div class="acts" style="flex-direction:column">' + rk('ruka') + rk('vojak') + rk('novacik') +
+      '<button class="btn wide" data-act="gang-lead" data-arg="' + id + '">Odovzdať mu vedenie</button>' +
+      '<button class="btn wide" data-act="gang-kick" data-arg="' + id + '" style="color:#e6a49c">Vyhodiť z gangu</button>' +
+      '<button class="btn wide" data-act="modal-close">Zavrieť</button></div>' +
+      '<p class="sub" style="font-size:15px;color:#9b968b">Nováčik môže vkladať do pokladnice a brániť. Vojak aj útočí a dopĺňa obranu. Pravá ruka navyše prijíma členov a kupuje vylepšenia.</p>');
+  }
   ago(t) {
     const m = Math.floor((Date.now() - t) / 60000);
     return m < 1 ? 'teraz' : m < 60 ? m + ' min' : Math.floor(m / 60) + ' h';
@@ -1193,21 +1293,31 @@ export class UI {
       if (v.strength < full - 0.005) h += '<button class="btn wide num" style="margin-top:10px" data-act="turf-refill"' + (g.treasury < cost ? ' disabled' : '') + '>Doplniť obranu na ' + pct(full) + ' · ' + money(cost) + ' z pokladnice</button>';
       else h += '<p class="note">Obrana je plná. Bez doplnenia slabne o ' + pct(CONFIG.turfDecayPerHour) + ' za hodinu.</p>';
       if (now < v.safeUntil) h += '<p class="note">Pod ochranou ešte <span data-until="' + v.safeUntil + '"></span>.</p>';
-      const busy = {};
-      this.s.turfView().forEach((x) => { if (x.owner && x.owner.mine && x.id !== id) x.defenders.forEach((m) => { busy[m] = x.name; }); });
+      const me = this.s.selfId();
+      let mineElsewhere = null;
+      this.s.turfView().forEach((x) => { if (x.owner && x.owner.mine && x.id !== id && x.defenders.includes(me)) mineElsewhere = x.name; });
       h += '<div class="sec sc">Obrancovia ' + v.defenders.length + ' / ' + v.kindInfo.slots + '</div>';
-      if (!v.defenders.length) h += '<p class="warn" style="color:#e6a49c">Objekt nikto nebráni. Prvý útok rivalov ho zoberie.</p>';
-      [...g.members].sort((a, b) => b.off - a.off).forEach((m) => {
-        const on = v.defenders.includes(m.id);
-        const f = this.s.memberFighter(m, v.strength);
-        h += this.fighterRow(f, '<button class="btn small' + (on ? ' gold' : '') + '" data-act="turf-def" data-arg="' + m.id + '">' + (on ? 'Bráni' : busy[m.id] ? 'Presunúť' : 'Brániť') + '</button>');
+      if (!v.defenders.length) h += '<p class="warn" style="color:#e6a49c">Objekt nikto nebráni. Prvý útok ho zoberie.</p>';
+      v.defenders.forEach((pid) => {
+        const f = this.s.memberFighter(pid, v.strength);
+        if (!f) return;
+        const off = pid === me || this.s.can('kick');
+        h += this.fighterRow(f, off ? '<button class="btn small" data-act="turf-def" data-arg="' + pid + '">' + (pid === me ? 'Odísť' : 'Stiahnuť') + '</button>' : '');
       });
-      h += '<p class="note">Rivalské gangy skúšajú vaše objekty prebrať zhruba raz za hodinu. Obrancovia bojujú postupne, víťaz duelu ide proti ďalšiemu.</p>';
+      if (!v.defenders.includes(me)) {
+        h += v.defenders.length < v.kindInfo.slots
+          ? '<button class="btn gold wide" style="margin-top:8px" data-act="turf-def" data-arg="">' + (mineElsewhere ? 'Presunúť sa sem (teraz bránim ' + esc(mineElsewhere) + ')' : 'Brániť tento objekt') + '</button>'
+          : '<p class="note">Na objekte je plno obrancov.</p>';
+      }
+      h += '<p class="note">Každý člen bráni jeden objekt a bojuje v ňom so svojou výbavou, aj keď nie je online. Počítačoví rivali skúšajú objekty prebrať zhruba raz za hodinu, iné gangy kedykoľvek.</p>';
       return { html: this.hdr(v.kindInfo.name, g ? '<span class="gold">' + money(g.treasury) + '</span>' : '') + '<div class="body">' + h + '</div>' };
     }
 
-    if (o) {
+    if (o && o.rival) {
       h += '<div class="sec sc">Obrancovia</div>' + this.s.rivalSquad(this.s.turfObj(id), v.kind).map((f) => this.fighterRow(f)).join('');
+    } else if (o) {
+      const ds = v.defenders.map((pid) => this.s.memberFighter(pid, v.strength)).filter(Boolean);
+      h += '<div class="sec sc">Obrancovia gangu ' + esc(o.name) + '</div>' + (ds.length ? ds.map((f) => this.fighterRow(f)).join('') : '<p class="note" style="text-align:left">Nikto ho nebráni. Stačí prísť a zobrať ho.</p>');
     } else {
       h += '<p class="note" style="text-align:left">Objekt nikto nedrží. Stačí prísť s gangom a obsadiť ho.</p>';
     }
@@ -1217,7 +1327,8 @@ export class UI {
       if (o) h += '<div class="sec sc">Tvoj tím</div>' + this.s.attackSquad().map((f) => this.fighterRow(f)).join('');
       if (now < v.retryAt) h += '<p class="note">Ďalší útok o <span data-until="' + v.retryAt + '"></span>.</p>';
       else if (now < v.safeUntil) h += '<p class="note">Objekt bol práve obsadený. Pod ochranou ešte <span data-until="' + v.safeUntil + '"></span>.</p>';
-      else h += '<button class="btn gold wide" style="margin-top:12px" data-act="turf-attack">' + (o ? 'Zaútočiť' : 'Obsadiť') + '</button>' + (o ? '<p class="note">Útok zvýši heat o ' + CONFIG.gangAttackHeat + '.</p>' : '');
+      else if (!this.s.can('attack')) h += '<p class="note">Ako nováčik ešte útočiť nemôžeš. Hodnosť vojaka ti dá šéf.</p>';
+      else h += '<button class="btn gold wide" style="margin-top:12px" data-act="turf-attack">' + (o ? 'Zaútočiť' : 'Obsadiť') + '</button>' + (o ? '<p class="note">Útok zvýši heat o ' + CONFIG.gangAttackHeat + '. S tebou idú najsilnejší ďalší členovia gangu (aj keď nie sú online).</p>' : '');
     }
     return { html: this.hdr(v.kindInfo.name, g ? '<span class="gold">' + money(g.treasury) + '</span>' : '') + '<div class="body">' + h + '</div>' };
   }
