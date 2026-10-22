@@ -196,17 +196,22 @@ export const GIVERS = {
 // art: portrait in fights (transparent bust or photo_*); wide: big illustration for the boss screen;
 // focus: CSS object-position of the wide image
 export const BOSSES = [
-  { name: 'Kladivo', title: 'Miestny vymáhač', art: 'kladivo', profile: { sila: 1.3, odolnost: 1.2, obratnost: 0.7, charizma: 0.6, stastie: 1.2 } },
-  { name: 'Kazateľ', title: 'Káže, kým ostatní platia', art: 'photo_kazatel', wide: 'photo_kazatel_wide', focus: '55% 20%', profile: { sila: 0.9, odolnost: 1.0, obratnost: 1.0, charizma: 1.3, stastie: 0.8 } },
-  { name: 'Kožuch', title: 'Úžerník z penthousu', art: 'photo_kozuch', wide: 'photo_kozuch_wide', focus: '40% 22%', profile: { sila: 1.3, odolnost: 1.4, obratnost: 0.6, charizma: 1.0, stastie: 0.7 } },
-  { name: 'Žiletka', title: 'Rezák z cornera', art: 'photo_ziletka', wide: 'photo_ziletka', focus: '50% 38%', profile: { sila: 1.0, odolnost: 0.8, obratnost: 1.4, charizma: 0.6, stastie: 1.2 } },
-  { name: 'Šťastný Charlie', title: 'Kartár v župane', art: 'photo_charlie', wide: 'photo_charlie_wide', focus: '58% 0%', titleLow: true, profile: { sila: 0.7, odolnost: 1.0, obratnost: 0.9, charizma: 1.3, stastie: 1.6 } },
-  { name: 'Lasica', title: 'Zlodej áut', profile: { sila: 0.8, odolnost: 0.9, obratnost: 1.5, charizma: 0.8, stastie: 1.0 } },
-  { name: 'Doktor', title: 'Pašerák', profile: { sila: 0.9, odolnost: 1.0, obratnost: 1.0, charizma: 1.3, stastie: 0.8 } },
-  { name: 'Bager', title: 'Kápo stavbárov', profile: { sila: 1.5, odolnost: 1.3, obratnost: 0.5, charizma: 0.7, stastie: 1.0 } },
-  { name: 'Šakal', title: 'Nájomný vrah', profile: { sila: 1.2, odolnost: 0.8, obratnost: 1.3, charizma: 0.5, stastie: 1.2 } },
-  { name: 'Vdova', title: 'Majiteľka klubu', profile: { sila: 0.8, odolnost: 1.1, obratnost: 1.1, charizma: 1.4, stastie: 0.6 } },
-  { name: 'Starý Vincent', title: 'Šéf mesta', profile: { sila: 1.2, odolnost: 1.2, obratnost: 1.0, charizma: 1.0, stastie: 1.0 } },
+  // square portraits: the same picture is the boss screen (wide, focus) and the fight card (art)
+  { name: 'Pitbull', title: 'Kráľ sídliska', art: 'photo_b_pitbull', wide: 'photo_b_pitbull', focus: '55% 22%', profile: { sila: 1.3, odolnost: 1.2, obratnost: 0.7, charizma: 0.6, stastie: 1.2 } },
+  { name: 'Starý Moric', title: 'Záložňa za mrežami', art: 'photo_b_moric', wide: 'photo_b_moric', focus: '50% 25%', profile: { sila: 0.7, odolnost: 1.0, obratnost: 0.9, charizma: 1.3, stastie: 1.6 } },
+  { name: 'Hasák', title: 'Garáž bez papierov', art: 'photo_b_hasak', wide: 'photo_b_hasak', focus: '50% 22%', profile: { sila: 1.4, odolnost: 1.3, obratnost: 0.7, charizma: 0.7, stastie: 0.9 } },
+  { name: 'Glitch', title: 'Hacker z pivnice', art: 'photo_b_glitch', wide: 'photo_b_glitch', focus: '50% 25%', profile: { sila: 0.6, odolnost: 0.8, obratnost: 1.5, charizma: 0.9, stastie: 1.4 } },
+  { name: 'Rudý Patrick', title: 'Vymáhač z írskeho pubu', art: 'photo_b_rudy', wide: 'photo_b_rudy', focus: '50% 20%', profile: { sila: 1.3, odolnost: 1.1, obratnost: 1.0, charizma: 0.8, stastie: 1.0 } },
+  { name: 'Elegán Rudi', title: 'Deväťdesiatky nikdy neskončili', art: 'photo_b_elegan', wide: 'photo_b_elegan', focus: '50% 22%', profile: { sila: 0.9, odolnost: 0.9, obratnost: 1.1, charizma: 1.4, stastie: 1.2 } },
+  { name: 'Profesor', title: 'Tlačí vlastné peniaze', art: 'photo_b_profesor', wide: 'photo_b_profesor', focus: '45% 22%', profile: { sila: 0.7, odolnost: 1.0, obratnost: 1.0, charizma: 1.3, stastie: 1.3 } },
+  { name: 'Kapitán Hák', title: 'Pán prístavu', art: 'photo_b_hak', wide: 'photo_b_hak', focus: '50% 20%', profile: { sila: 1.5, odolnost: 1.3, obratnost: 0.5, charizma: 0.7, stastie: 1.0 } },
+  { name: 'Plukovník', title: 'Sklad plný bední', art: 'photo_b_plukovnik', wide: 'photo_b_plukovnik', focus: '50% 22%', profile: { sila: 1.2, odolnost: 1.1, obratnost: 1.2, charizma: 0.8, stastie: 0.9 } },
+  { name: 'Kráľ cely', title: 'Basa je jeho hotel', art: 'photo_b_cela', wide: 'photo_b_cela', focus: '55% 22%', profile: { sila: 1.3, odolnost: 1.4, obratnost: 0.8, charizma: 1.0, stastie: 0.8 } },
+  { name: 'Komisár Tučko', title: 'Zákon má cenu', art: 'photo_b_komisar', wide: 'photo_b_komisar', focus: '50% 20%', profile: { sila: 1.0, odolnost: 1.4, obratnost: 0.6, charizma: 1.4, stastie: 1.0 } },
+  { name: 'Medveď', title: 'Sauna, vodka a dlžníci', art: 'photo_b_medved', wide: 'photo_b_medved', focus: '50% 18%', profile: { sila: 1.5, odolnost: 1.5, obratnost: 0.5, charizma: 0.8, stastie: 0.9 } },
+  { name: 'Čierna vdova', title: 'Kráľovná kasína', art: 'photo_b_vdova', wide: 'photo_b_vdova', focus: '45% 22%', profile: { sila: 0.8, odolnost: 1.1, obratnost: 1.3, charizma: 1.5, stastie: 1.1 } },
+  { name: 'Majster Lao', title: 'Dračí stôl', art: 'photo_b_lao', wide: 'photo_b_lao', focus: '50% 20%', profile: { sila: 1.0, odolnost: 1.1, obratnost: 1.3, charizma: 1.3, stastie: 1.3 } },
+  { name: 'Šampión', title: 'Kráľ podzemných zápasov', art: 'photo_b_sampion', wide: 'photo_b_sampion', focus: '50% 22%', profile: { sila: 1.5, odolnost: 1.4, obratnost: 1.1, charizma: 0.8, stastie: 1.0 } },
 ];
 
 export const BOT_NAMES = ['Šakal', 'Vrana', 'Malý Jano', 'Zub', 'Betónko', 'Sivý', 'Fero Nôž', 'Lord', 'Duch', 'Roxor', 'Kobra', 'Miro Klinec', 'Tichý', 'Bárny', 'Zlatko', 'Krtko', 'Doga', 'Rambo z Petržalky'];

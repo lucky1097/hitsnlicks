@@ -1,14 +1,14 @@
-import { SimServer } from './server.js?v=20261022180123';
-import { RemoteServer } from './remote.js?v=20261022180123';
-import { ONLINE } from './net.js?v=20261022180123';
-import { CONFIG } from './config.js?v=20261022180123';
-import { UI } from './ui.js?v=20261022180123';
-import { createWorld } from './world.js?v=20261022180123';
+import { SimServer } from './server.js?v=20261022180832';
+import { RemoteServer } from './remote.js?v=20261022180832';
+import { ONLINE } from './net.js?v=20261022180832';
+import { CONFIG } from './config.js?v=20261022180832';
+import { UI } from './ui.js?v=20261022180832';
+import { createWorld } from './world.js?v=20261022180832';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'don', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
   .forEach((n) => { new Image().src = 'assets/art/' + n + '.png'; });
-['photo_don', 'photo_don_wide', 'photo_diler', 'photo_diler_wide', 'photo_rival', 'photo_dlznik', 'photo_kazatel', 'photo_kazatel_wide', 'photo_kozuch', 'photo_kozuch_wide', 'photo_wexler', 'photo_svalovec', 'photo_ziletka', 'photo_charlie', 'photo_charlie_wide']
+['photo_don', 'photo_don_wide', 'photo_diler', 'photo_diler_wide', 'photo_rival', 'photo_dlznik', 'photo_wexler', 'photo_svalovec']
   .forEach((n) => { new Image().src = 'assets/art/' + n + '.jpg'; });
 
 // online: the real server decides everything; offline: the prototype runs in this browser
