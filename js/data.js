@@ -215,6 +215,14 @@ export const BOSSES = [
   { name: 'Čierna vdova', title: 'Kráľovná kasína', art: 'photo_b_vdova', wide: 'photo_b_vdova', focus: '45% 22%', profile: { sila: 0.8, odolnost: 1.1, obratnost: 1.3, charizma: 1.5, stastie: 1.1 } },
   { name: 'Majster Lao', title: 'Dračí stôl', art: 'photo_b_lao', wide: 'photo_b_lao', focus: '50% 20%', profile: { sila: 1.0, odolnost: 1.1, obratnost: 1.3, charizma: 1.3, stastie: 1.3 } },
   { name: 'Šampión', title: 'Kráľ podzemných zápasov', art: 'photo_b_sampion', wide: 'photo_b_sampion', focus: '50% 22%', profile: { sila: 1.5, odolnost: 1.4, obratnost: 1.1, charizma: 0.8, stastie: 1.0 } },
+  // the top of the city: the strongest seven, the King last
+  { name: 'Starosta', title: 'Mesto mu podpisuje šeky', art: 'photo_b_starosta', wide: 'photo_b_starosta', focus: '50% 15%', profile: { sila: 0.9, odolnost: 1.3, obratnost: 1.0, charizma: 1.7, stastie: 1.2 } },
+  { name: 'Bankárka', title: 'Trezor má len jeden kľúč', art: 'photo_b_bankarka', wide: 'photo_b_bankarka', focus: '50% 15%', profile: { sila: 0.9, odolnost: 1.4, obratnost: 1.2, charizma: 1.4, stastie: 1.3 } },
+  { name: 'Rančer', title: 'Biely tiger na terase', art: 'photo_b_rancer', wide: 'photo_b_rancer', focus: '50% 15%', profile: { sila: 1.5, odolnost: 1.4, obratnost: 1.0, charizma: 1.1, stastie: 1.2 } },
+  { name: 'La Reina', title: 'Kartel v bielom', art: 'photo_b_reina', wide: 'photo_b_reina', focus: '50% 15%', profile: { sila: 1.1, odolnost: 1.2, obratnost: 1.4, charizma: 1.6, stastie: 1.2 } },
+  { name: 'Oyabun', title: 'Kapor na hrudi, meč za chrbtom', art: 'photo_b_oyabun', wide: 'photo_b_oyabun', focus: '50% 15%', profile: { sila: 1.4, odolnost: 1.3, obratnost: 1.6, charizma: 1.0, stastie: 1.3 } },
+  { name: 'Krstný otec', title: 'Ruža v klope, mačka na kolenách', art: 'photo_b_krstny', wide: 'photo_b_krstny', focus: '50% 15%', profile: { sila: 1.3, odolnost: 1.5, obratnost: 1.1, charizma: 1.7, stastie: 1.2 } },
+  { name: 'Kráľ', title: 'Celé mesto pod jeho oknom', art: 'photo_b_kral', wide: 'photo_b_kral', focus: '55% 15%', profile: { sila: 1.5, odolnost: 1.5, obratnost: 1.4, charizma: 1.6, stastie: 1.4 } },
 ];
 
 export const BOT_NAMES = ['Šakal', 'Vrana', 'Malý Jano', 'Zub', 'Betónko', 'Sivý', 'Fero Nôž', 'Lord', 'Duch', 'Roxor', 'Kobra', 'Miro Klinec', 'Tichý', 'Bárny', 'Zlatko', 'Krtko', 'Doga', 'Rambo z Petržalky'];

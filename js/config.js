@@ -191,7 +191,7 @@ export const F = {
   itemPower: (L, rarityMult) => Math.round((1.5 * L + 5) * rarityMult),
   itemPrice: (L, rarityMult) => Math.round(F.cashPerMin(L) * 6 * rarityMult * rarityMult),
   upgradeCost: (item) => Math.round(item.price * 0.35 * (item.upgrade + 1)),
-  bossLevel: (k) => 4 * k + 2,
+  bossLevel: (k) => Math.round(6 + (k - 1) * 1.8), // 25 bosses of Mesto 1: level 6 … 49
   bossStat: (Lb) => 10 + 2.5 * Lb,
   npcStat: (L) => 10 + 2.2 * L,
 };
