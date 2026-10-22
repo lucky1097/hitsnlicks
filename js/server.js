@@ -1,10 +1,10 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022234056';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022234056';
-import { makeFighter, simulate } from './combat.js?v=20261022234056';
-import { GangMixin } from './gangs.js?v=20261022234056';
-import { DailyMixin } from './daily.js?v=20261022234056';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022235132';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022235132';
+import { makeFighter, simulate } from './combat.js?v=20261022235132';
+import { GangMixin } from './gangs.js?v=20261022235132';
+import { DailyMixin } from './daily.js?v=20261022235132';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -279,7 +279,7 @@ export class SimServer {
     else if (source === 'blackmarket') rarity = 'epicky';
     else if (source === 'boss') rarity = Math.random() < CONFIG.legendaryBossChance ? 'legendarny' : 'vzacny';
     else rarity = this.rollRarity();
-    let pool = this.basesFor(rarity, bases);
+    let pool = this.basesFor(rarity, bases).filter((id) => !ITEM_BASES[id].shopOnly);
     if (rarity === 'legendarny') pool = pool.filter((id) => ITEM_BASES[id].rarity === 'legendarny');
     if (!pool.length) return null;
     return this.makeItem(pick(pool), level, rarity);
@@ -339,6 +339,12 @@ export class SimServer {
     let st = this.state.shops[shopId];
     const expired = !st || Date.now() - st.at > this.gameMs(CONFIG.shopRefreshMin) || st.level !== this.p.level;
     if (expired) st = this.restock(shopId);
+    // premium pieces (Autobazár): always all of them, made for your level; a bought one comes back with the restock
+    if (s.premium && (!st.premium || st.premiumLevel !== this.p.level)) {
+      st.premium = s.premium.map((b) => this.makeItem(b, this.p.level, ITEM_BASES[b].rarity));
+      st.premiumLevel = this.p.level;
+      this.save();
+    }
     // Black Market stock is rolled once per opening and stays until it closes
     const bmOpen = this.blackMarketOpen();
     // Friday: one stall per evening; with Wexler's elixir it restocks with the regular goods
@@ -362,7 +368,7 @@ export class SimServer {
       }
       this.save();
     }
-    return { ...s, id: shopId, list: st.list, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
+    return { ...s, id: shopId, list: st.list, premium: st.premium || null, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
   }
 
   // fresh common goods; keeps the Black Market stall as it is
@@ -388,17 +394,27 @@ export class SimServer {
     return ok();
   }
 
+  // what a piece costs right there: Black Market epics add bars, premium cars are bars (+ cash for the epic ones)
+  shopPrice(it, where) {
+    if (where === 'premium') return { cash: it.rarity === 'legendarny' ? 0 : it.price, bars: CONFIG.carBars[it.rarity] || 0 };
+    return { cash: it.price, bars: where === 'bm' && it.rarity === 'epicky' ? CONFIG.bmEpicChains : 0 };
+  }
+
   buyItem(shopId, itemId) {
     const st = this.state.shops[shopId];
-    const inBm = !!(st && st.bm && this.blackMarketOpen() && st.bm.find((i) => i.id === itemId));
-    const it = st && (inBm ? st.bm : st.list).find((i) => i.id === itemId);
+    if (!st) return fail('Tento predmet už nie je na predaj.');
+    const inBm = !!(st.bm && this.blackMarketOpen() && st.bm.find((i) => i.id === itemId));
+    const inPremium = !!(st.premium && st.premium.find((i) => i.id === itemId));
+    const where = inBm ? 'bm' : inPremium ? 'premium' : 'list';
+    const it = (inBm ? st.bm : inPremium ? st.premium : st.list).find((i) => i.id === itemId);
     if (!it) return fail('Tento predmet už nie je na predaj.');
-    const bars = inBm && it.rarity === 'epicky' ? CONFIG.bmEpicChains : 0;
-    if (this.p.cash < it.price) return fail('Nemáš dosť peňazí.');
-    if (this.p.chains < bars) return fail('Epický kus stojí aj ' + bars + ' zlatých tehličiek.');
-    this.p.cash -= it.price;
-    this.p.chains -= bars;
+    const cost = this.shopPrice(it, where);
+    if (this.p.cash < cost.cash) return fail('Nemáš dosť peňazí.');
+    if (this.p.chains < cost.bars) return fail('Stojí aj ' + cost.bars + ' zlatých tehličiek.');
+    this.p.cash -= cost.cash;
+    this.p.chains -= cost.bars;
     if (inBm) st.bm = st.bm.filter((i) => i.id !== itemId);
+    else if (inPremium) st.premium = st.premium.map((i) => (i.id === itemId ? this.makeItem(i.base, this.p.level, i.rarity) : i)); // another one waits there
     else st.list = st.list.filter((i) => i.id !== itemId);
     this.giveItem(it);
     this.save();

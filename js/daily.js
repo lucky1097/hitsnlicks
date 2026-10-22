@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261022234056';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022234056';
+import { CONFIG, F } from './config.js?v=20261022235132';
+import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022235132';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -183,7 +183,7 @@ export const DailyMixin = {
     if (r.bars) this.p.chains += r.bars;
     if (r.type === 'level') out.levelUps = this.addXp(Math.max(1, F.xpNext(this.p.level) - this.p.xp));
     if (r.type === 'legendary') {
-      const pool = Object.keys(ITEM_BASES).filter((id) => ITEM_BASES[id].rarity === 'legendarny');
+      const pool = Object.keys(ITEM_BASES).filter((id) => ITEM_BASES[id].rarity === 'legendarny' && !ITEM_BASES[id].shopOnly);
       out.item = this.makeItem(pick(pool), this.p.level, 'legendarny');
       this.giveItem(out.item);
     }

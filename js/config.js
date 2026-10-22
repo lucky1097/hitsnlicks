@@ -81,6 +81,8 @@ export const CONFIG = {
   dailyFollowSec: 45, // tracking: stay behind the target this long
   dailySpraySec: 3, // graffiti: stand at the rival's door this long
   dailySprayHeat: 8,
+  // premium cars in the Autobazár: epic = cash + bars, legendary = bars only
+  carBars: { epicky: 100, legendarny: 500 },
   elixirChains: 100, // Wexler's elixir: opens the Black Market for one player
   elixirHours: 24,
   bmEpicChains: 10, // an epic piece on the Black Market costs its cash price plus these gold bars
