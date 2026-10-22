@@ -1,9 +1,9 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022122015';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022122015';
-import { makeFighter, simulate } from './combat.js?v=20261022122015';
-import { GangMixin } from './gangs.js?v=20261022122015';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022122414';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022122414';
+import { makeFighter, simulate } from './combat.js?v=20261022122414';
+import { GangMixin } from './gangs.js?v=20261022122414';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -219,7 +219,8 @@ export class SimServer {
 
   makeItem(baseId, level, rarityId) {
     const base = ITEM_BASES[baseId];
-    const r = RARITIES.find((x) => x.id === (base.rarity || rarityId));
+    const rid = !base.rarity || (base.rarity === 'bezny' && rarityId === 'vzacny') ? rarityId : base.rarity;
+    const r = RARITIES.find((x) => x.id === rid);
     return { id: 'i' + this.state.nextId++, base: baseId, slot: base.slot, rarity: r.id, level, upgrade: 0, power: F.itemPower(level, r.mult), price: F.itemPrice(level, r.mult), stats: this.rollStats(level, r.id) };
   }
 
@@ -236,9 +237,13 @@ export class SimServer {
     return out;
   }
 
-  // bases that can appear with the given rarity (fixed-rarity weapons only in their own tier)
+  // bases that can appear with the given rarity: fixed-rarity bases only in their own tier, except that a
+  // common base can also come as a rare piece (Black Market, mission loot)
   basesFor(rarity, from = Object.keys(ITEM_BASES)) {
-    return from.filter((id) => !ITEM_BASES[id].legacy && (!ITEM_BASES[id].rarity || ITEM_BASES[id].rarity === rarity));
+    return from.filter((id) => {
+      const b = ITEM_BASES[id];
+      return !b.legacy && (!b.rarity || b.rarity === rarity || (rarity === 'vzacny' && b.rarity === 'bezny'));
+    });
   }
 
   // source: 'shop' (bežné), 'blackmarket' (epické), 'mission' (bežné / vzácne), 'boss' (1 % legendárne, inak vzácne)
