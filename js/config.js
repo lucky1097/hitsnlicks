@@ -75,6 +75,9 @@ export const CONFIG = {
   heatCarHit: 1,
   heatBlast: 10,
   dailyEscapeSec: 30,
+  dailyFollowSec: 45, // tracking: stay behind the target this long
+  dailySpraySec: 3, // graffiti: stand at the rival's door this long
+  dailySprayHeat: 8,
   elixirChains: 100, // Wexler's elixir: opens the Black Market for one player
   elixirHours: 24,
   bmEpicChains: 10, // an epic piece on the Black Market costs its cash price plus these gold bars

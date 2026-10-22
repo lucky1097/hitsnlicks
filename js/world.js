@@ -1,8 +1,8 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022175351';
-import { mulberry32 } from './combat.js?v=20261022175351'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022180123';
+import { mulberry32 } from './combat.js?v=20261022180123'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -128,6 +128,9 @@ export function createWorld(parent, hooks) {
       this.dailyPacks = new Map(); // "task:k" -> sprite
       this.dailySent = new Map(); // "task:step" -> time sent (one report at a time)
       this.dailyEsc = { on: false, t: 0, sent: false };
+      this.specials = new Map(); // task index -> debtor / bag carrier / tracked target
+      this.dailyFollow = { on: false, t: 0, lostT: 0, sent: false, cool: 0 };
+      this.dailySpray = { t: 0, sent: false };
       this.dailyHint = null;
       this.dailyArrow = document.createElement('div');
       this.dailyArrow.className = 'daily-arrow';
@@ -388,11 +391,13 @@ export function createWorld(parent, hooks) {
       if (this.rp.on) t.push(this.rp);
       if (this.rn.on) t.push(this.rn);
       for (const c of this.cops) if (c.down <= 0 && !c.gone) t.push(c);
+      for (const sp of this.specials.values()) if (sp.kind === 'dlznik' && !sp.downed) t.push(sp);
       return t;
     }
 
     knock(wk, kind) {
       if (wk.cop) { this.hitCop(wk); return; }
+      if (wk.special) { this.hitDebtor(wk); return; }
       if (wk === this.rn) { // the lucky runner vanishes in a burst of sparkles
         wk.on = false;
         wk.s.setVisible(false);
@@ -720,13 +725,20 @@ export function createWorld(parent, hooks) {
       const g = this.dailyG;
       g.clear();
       const px = this.player.x, py = this.player.y;
-      const targets = [], packs = new Set();
-      let esc = null;
+      const targets = [], packs = new Set(), live = new Set();
+      let esc = null, spray = null;
       for (const c of this.cars) c.marked = null;
       if (v && !v.done) {
         for (const t of v.tasks) {
           if (t.done) continue;
-          if (t.type === 'vypalne') { // the owner's car: one of the traffic, marked while it is whole
+          if (t.type === 'dlznik' || t.type === 'vreckar' || t.type === 'sledovanie') {
+            const sp = this.special(t);
+            live.add(t.i);
+            if (!sp.downed) targets.push({ x: sp.s.x, y: sp.s.y, task: t.i, step: 0, r: -1, person: true });
+            this.moveSpecial(sp, t, v, dt, paused);
+          }
+          if (t.type === 'graffiti') { targets.push({ ...this.spot(t.data.spot), task: t.i, step: 0, r: -1 }); spray = t; }
+          if (t.type === 'vypalne' || t.type === 'dlznik') { // the owner's / debtor's car: one of the traffic, marked while it is whole
             const car = this.cars[t.data.seed % this.cars.length];
             if (car.state !== 'wreck') { car.marked = t.i; targets.push({ x: car.s.x, y: car.s.y, task: t.i, step: 0, r: -1, car: true }); }
           }
@@ -761,7 +773,7 @@ export function createWorld(parent, hooks) {
       const pulse = 0.5 + 0.5 * Math.sin(this.time.now / 260);
       let best = null, bd = 1e9;
       for (const tg of targets) {
-        const r = tg.car ? 18 : tg.pack ? 5 : 7;
+        const r = tg.car ? 18 : tg.pack ? 5 : tg.person ? 9 : 7;
         g.fillStyle(0xf0c95a, 0.16).fillCircle(tg.x, tg.y, r + 3 + pulse * 3);
         g.lineStyle(1.5, 0xf0c95a, 0.9).strokeCircle(tg.x, tg.y, r + pulse * 2);
         const d = Math.hypot(tg.x - px, tg.y - py);
@@ -770,6 +782,110 @@ export function createWorld(parent, hooks) {
       }
       this.dailyHint = best ? { x: best.x, y: best.y, dist: bd, task: best.task } : null;
       this.updateEscape(esc, v ? v.escapeSec : 30, dt, paused);
+      this.updateSpray(spray, v ? v.spraySec : 3, dt, paused);
+      // people of finished tasks: a beaten debtor stays down a few seconds, the rest leave at once
+      for (const [i, sp] of this.specials) {
+        if (live.has(i)) continue;
+        if (sp.downed && (sp.dropT = (sp.dropT ?? 4) - dt) > 0) continue;
+        this.dropSpecial(i);
+      }
+    }
+
+    // ---------------------------------------------------------------- daily people: debtor, bag carrier, tracked target
+    // one per task while it is open, starting on a corner picked from the task's seed
+    special(t) {
+      let sp = this.specials.get(t.i);
+      if (sp && sp.kind !== t.type) { this.dropSpecial(t.i); sp = null; }
+      if (sp) return sp;
+      const rng = mulberry32(t.data.seed);
+      const n = this.walkNodes[Math.floor(rng() * this.walkNodes.length)];
+      const sprite = { dlznik: 'p_svalovec', vreckar: 'p_chodkyna', sledovanie: 'p_dealer' }[t.type];
+      sp = { kind: t.type, task: t.i, special: true, on: true, s: this.add.image(n.x, n.y, sprite).setDepth(9), prev: null, to: pick(n.n), walkT: 0, down: 0, hits: 0, downed: false, run: false };
+      if (t.type === 'vreckar') sp.bag = this.add.rectangle(n.x, n.y, 4, 4, 0xc9a24a).setDepth(9.5);
+      sp.label = this.makeLabel({ text: { dlznik: 'Dlžník', vreckar: 'Taška', sledovanie: 'Cieľ' }[t.type], kind: 'boss', obj: sp, dy: -16 });
+      this.labels.push(sp.label);
+      this.specials.set(t.i, sp);
+      return sp;
+    }
+
+    dropSpecial(i) {
+      const sp = this.specials.get(i);
+      if (!sp) return;
+      sp.on = false;
+      sp.s.destroy();
+      if (sp.bag) sp.bag.destroy();
+      sp.label.el.remove();
+      this.labels = this.labels.filter((l) => l !== sp.label);
+      this.specials.delete(i);
+    }
+
+    // debtor: strolls, runs once you come close; bag carrier: strolls, bolts when noticed, a touch takes
+    // the bag; tracked target: strolls, you keep between 20 and 110 px for followSec
+    moveSpecial(sp, t, v, dt, paused) {
+      if (paused || sp.downed) return;
+      const d = Math.hypot(sp.s.x - this.player.x, sp.s.y - this.player.y);
+      if (sp.kind === 'dlznik') {
+        if (sp.down > 0) { sp.down -= dt; if (sp.down <= 0) sp.s.clearTint(); return; } // staggered by a hit
+        if (d < 70) sp.run = true; else if (d > 160) sp.run = false;
+        this.runStep(sp, dt, sp.run ? 48 : 16, 110);
+      } else if (sp.kind === 'vreckar') {
+        if (d < 40) sp.run = true;
+        this.runStep(sp, dt, sp.run ? 50 : 15, sp.run ? 120 : 0);
+        sp.bag.setPosition(sp.s.x + 4, sp.s.y + 3);
+        if (d < 10) this.dailyReport(t.i, 0);
+      } else {
+        this.runStep(sp, dt, 18, 0);
+        this.updateFollow(sp, t, v.followSec, d, dt);
+      }
+    }
+
+    hitDebtor(sp) {
+      sp.hits += 1;
+      sp.down = 0.5;
+      sp.s.setTint(0xff5040);
+      const dx = sp.s.x - this.player.x, dy = sp.s.y - this.player.y, d = Math.hypot(dx, dy) || 1;
+      sp.s.x += (dx / d) * 6; sp.s.y += (dy / d) * 6;
+      hooks.onCrime('hitMelee');
+      if (sp.hits < 3) return;
+      sp.downed = true;
+      sp.s.setAngle(sp.s.angle + 90).setTint(0x9a948c);
+      this.dailyReport(sp.task, 0);
+    }
+
+    // tracking: starts when you are close enough behind; too close = he notices you, too far for 3 s = lost
+    updateFollow(sp, t, sec, d, dt) {
+      const f = this.dailyFollow;
+      const key = t.i + ':' + t.data.seed; // a new day's task starts clean even in the same slot
+      if (f.key !== key) Object.assign(f, { key, on: false, t: 0, lostT: 0, sent: false, cool: 0 });
+      f.cool -= dt;
+      const fail = (msg) => { f.on = false; f.t = 0; f.cool = 3; hooks.onDailyFail(msg); };
+      if (!f.on) {
+        if (f.cool <= 0 && d > 20 && d < 90) { Object.assign(f, { on: true, t: 0, lostT: 0, sent: false }); hooks.onDailyStep(t.i, 0); }
+      } else if (d < 20) fail('Všimol si ťa. Odstúp a začni sledovať odznova.');
+      else {
+        f.lostT = d > 110 ? f.lostT + dt : 0;
+        if (f.lostT > 3) fail('Stratil si ho z dohľadu. Nájdi ho a začni odznova.');
+        else {
+          f.t += dt;
+          if (f.t >= sec + 0.5 && !f.sent) { f.sent = true; hooks.onDailyStep(t.i, 1); }
+        }
+      }
+      this.dailyFollowT = f.on ? f.t : 0;
+    }
+
+    // graffiti: stand at the rival's door for spraySec; a green arc fills around you
+    updateSpray(t, sec, dt, paused) {
+      const s = this.dailySpray;
+      const at = t && this.spot(t.data.spot);
+      const here = at && Math.hypot(at.x - this.player.x, at.y - this.player.y) < 16;
+      if (!here || paused) { if (!here) { s.t = 0; s.sent = false; s.started = false; } this.dailySprayT = s.t; return; }
+      if (!s.started) { s.started = true; hooks.onDailyStep(t.i, 0); }
+      s.t += dt;
+      const a = -Math.PI / 2;
+      this.dailyG.lineStyle(2, 0x6ee06e, 0.95).beginPath().arc(this.player.x, this.player.y, 12, a, a + Math.min(1, s.t / sec) * Math.PI * 2).strokePath();
+      if (Math.random() < 0.5) this.puff(at.x + (Math.random() - 0.5) * 10, at.y - 4, 0x6ee06e, 0.5, 1.5, 6, 500);
+      if (s.t >= sec + 0.3 && !s.sent) { s.sent = true; hooks.onDailyStep(t.i, 1); }
+      this.dailySprayT = s.t;
     }
 
     // a building's door from city.json
@@ -1035,7 +1151,7 @@ export function createWorld(parent, hooks) {
 
       const ready = hooks.readyGiver();
       for (const l of this.labels) {
-        const src = l.follow ? this.player : l.reaper ? this.rp.s : l;
+        const src = l.follow ? this.player : l.reaper ? this.rp.s : l.obj ? l.obj.s : l;
         const wx = src.x;
         const wy = src.y + (l.dy || 0);
         let sx = (wx - this.camX) * z + sw / 2;
@@ -1043,7 +1159,7 @@ export function createWorld(parent, hooks) {
         // the whole city at once: only district names (and you), everything else would pile up
         const far = z < 0.55 && l.kind !== 'district' && !l.follow;
         const inZoom = !far && (!l.minZoom || z >= l.minZoom) && (!l.maxZoom || z < l.maxZoom);
-        const show = inZoom && (!l.reaper || this.rp.on) && sx > -80 && sx < sw + 80 && sy > -30 && sy < sh + 30;
+        const show = inZoom && (!l.reaper || this.rp.on) && (!l.obj || l.obj.on) && sx > -80 && sx < sw + 80 && sy > -30 && sy < sh + 30;
         if (show !== l.shown) { l.el.hidden = !show; l.shown = show; }
         if (show) {
           if (!l.w) l.w = l.el.offsetWidth;

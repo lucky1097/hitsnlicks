@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261022175351';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022175351';
+import { CONFIG, F } from './config.js?v=20261022180123';
+import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022180123';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -24,6 +24,10 @@ export const DAILY_TYPES = {
   stash: { group: 'easy', name: 'Skrýše', need: 5, text: () => 'Pozbieraj 5 balíčkov schovaných po uliciach štvrte.' },
   courier: { group: 'easy', name: 'Kuriér', need: 2, text: (d) => 'Vyzdvihni balík: ' + spotName(d.from) + '. Dones ho do ' + CONFIG.dailyCourierSec / 60 + ' minút: ' + spotName(d.to) + '.' },
   runner: { group: 'action', name: 'Bežec alebo Ripper', need: 1, text: () => 'Zraz šťastného bežca alebo chyť Rippera, ktorý okradol Wexlera.' },
+  dlznik: { group: 'action', name: 'Dlžník', need: 1, text: () => 'Dlžník chodí po štvrti a pred tebou uteká. Zbi ho tromi údermi, alebo mu vyhoď do vzduchu auto (obe sú označené).' },
+  vreckar: { group: 'action', name: 'Vreckár', need: 1, text: () => 'Chodec s plnou taškou sa prechádza po chodníku. Keď sa priblížiš, dá sa na útek. Dobehni ho a tašku mu vytrhni.' },
+  sledovanie: { group: 'action', name: 'Sledovanie', need: 1, text: () => 'Choď ' + CONFIG.dailyFollowSec + ' sekúnd za označeným cieľom. Nepribližuj sa príliš, inak si ťa všimne, a nestrať ho z dohľadu.' },
+  graffiti: { group: 'hard', name: 'Graffiti', need: 1, text: (d) => 'Nastriekaj značku na objekt rivalov: ' + spotName(d.spot) + '. Postoj ' + CONFIG.dailySpraySec + ' sekundy pri dverách. Rivali si to všimnú, heat stúpne.' },
   vypalne: { group: 'action', name: 'Výpalné', need: 1, text: () => 'Majiteľ podniku neplatí. Jeho auto je na mape označené zlatým kruhom. Rozbi ho, kým nezačne horieť a nevybuchne.' },
   escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Keď ťa pri vysokom heate naháňa polícia pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
   razia: { group: 'hard', name: 'Policajná razia', need: 3, text: () => 'Pri vysokom heate zlož 2 policajtov a potom sa ' + CONFIG.dailyEscapeSec + ' sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.' },
@@ -52,7 +56,12 @@ export const DailyMixin = {
     if (type === 'stash') return { seed: seed() };
     if (type === 'courier') { const [from, to] = shuffle(DAILY_SPOTS.map((s) => s.id)); return { from, to, pickedAt: 0 }; }
     if (type === 'escape' || type === 'razia') return { startedAt: 0 };
-    if (type === 'vypalne') return { seed: seed() }; // which car of the traffic
+    if (type === 'vypalne' || type === 'dlznik' || type === 'vreckar' || type === 'sledovanie') return { seed: seed(), startedAt: 0 }; // where the person starts / which car
+    if (type === 'graffiti') { // a building of a rival gang (any turf when you hold them all)
+      const objs = this.turf().objects;
+      const rival = TURF.filter((t) => objs[t.id] && objs[t.id].owner && objs[t.id].owner !== 'player');
+      return { spot: pick(rival.length ? rival : TURF).id, startedAt: 0 };
+    }
     return {};
   },
 
@@ -84,7 +93,7 @@ export const DailyMixin = {
   // what the map needs every frame: open tasks with the steps already done
   dailyMap() {
     const q = this.dailyQuests();
-    return { done: q.done, escapeSec: CONFIG.dailyEscapeSec, courierSec: CONFIG.dailyCourierSec, tasks: q.tasks.map((t, i) => ({ i, type: t.type, got: t.have, data: t.data, done: t.have.length >= DAILY_TYPES[t.type].need })) };
+    return { done: q.done, escapeSec: CONFIG.dailyEscapeSec, courierSec: CONFIG.dailyCourierSec, followSec: CONFIG.dailyFollowSec, spraySec: CONFIG.dailySpraySec, tasks: q.tasks.map((t, i) => ({ i, type: t.type, got: t.have, data: t.data, done: t.have.length >= DAILY_TYPES[t.type].need })) };
   },
 
   // the map reports one step of task i; step = which spot / package / stage
@@ -126,8 +135,15 @@ export const DailyMixin = {
       if (!t.data.startedAt || now - t.data.startedAt < (CONFIG.dailyEscapeSec - 2) * 1000) return fail('Ešte si neušiel.');
       if (this.heatNow() < CONFIG.raidFrom) return fail('Polícia ťa už nenaháňa.');
       t.have.push(1);
-    } else if (t.type === 'vypalne') {
-      t.have.push(1); // the marked car blew up
+    } else if (t.type === 'vypalne' || t.type === 'dlznik' || t.type === 'vreckar') {
+      t.have.push(1); // the marked car blew up / the debtor went down / the bag is yours
+    } else if (t.type === 'sledovanie' || t.type === 'graffiti') {
+      // timed on the map: step 0 starts the clock, step 1 ends it (too early = refused)
+      const sec = t.type === 'sledovanie' ? CONFIG.dailyFollowSec : CONFIG.dailySpraySec;
+      if (step === 0) { t.data.startedAt = now; this.save(); return ok({ started: true }); }
+      if (!t.data.startedAt || now - t.data.startedAt < (sec - 1.5) * 1000) return fail('Ešte nie.');
+      t.have.push(1);
+      if (t.type === 'graffiti') this.addHeat(CONFIG.dailySprayHeat);
     } else {
       return fail('Túto úlohu splníš inak.');
     }

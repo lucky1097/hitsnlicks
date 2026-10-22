@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022175351';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022175351';
-import { DAILY_TYPES } from './daily.js?v=20261022175351';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022175351';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022180123';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022180123';
+import { DAILY_TYPES } from './daily.js?v=20261022180123';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022180123';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -271,6 +271,8 @@ export class UI {
     if (t.type === 'escape') sub = fleeing || 'čaká na policajta';
     if (t.type === 'razia') sub = t.got.length < 2 ? 'zlož policajtov ' + t.got.length + ' / 2' : fleeing || 'teraz ujdi';
     if (t.type === 'vypalne' && sub) sub = 'auto ' + sub;
+    if (t.type === 'sledovanie' && w && w.follow > 0) sub = 'sleduješ ' + Math.min(v.followSec, Math.floor(w.follow)) + ' / ' + v.followSec + ' s';
+    if (t.type === 'graffiti' && w && w.spray > 0) sub = 'sprej ' + Math.min(v.spraySec, Math.floor(w.spray)) + ' / ' + v.spraySec + ' s';
     if (t.type === 'runner') sub = 'bežec alebo Ripper na mape';
     $('#hud-dly-sub').textContent = sub;
   }
@@ -278,8 +280,12 @@ export class UI {
   // the map stepped on a target / picked a parcel / survived the escape
   async dailyStep(task, step) {
     const r = await this.s.dailyStep(task, step);
-    if (!r.ok) { if (!/Príliš rýchlo|Ešte si neušiel/.test(r.error)) this.toast(r.error, true); return; }
-    if (r.started) { this.toast('Útek: vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa policajt nechytí.'); return; }
+    if (!r.ok) { if (!/Príliš rýchlo|Ešte si neušiel|Ešte nie/.test(r.error)) this.toast(r.error, true); return; }
+    if (r.started) {
+      const type = this.s.dailyMap().tasks[task].type;
+      this.toast(type === 'sledovanie' ? 'Sleduješ ho. Drž sa za ním ' + CONFIG.dailyFollowSec + ' sekúnd.' : type === 'graffiti' ? 'Sprejuješ. Nehýb sa.' : 'Útek: vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa policajt nechytí.');
+      return;
+    }
     if (r.already) return;
     if (r.failed) { this.toast(r.failed, true); return; }
     const t = this.s.dailyMap().tasks[task];
