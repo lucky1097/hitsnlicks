@@ -257,6 +257,7 @@ export const POIS = [
   { id: 'arena', name: 'Aréna', verb: 'Vstúpiť', action: 'arena', at: 'arena', r: 20 },
   { id: 'mechanik', name: 'Garáž · mechanik', verb: 'Vylepšiť', action: 'upgrade', at: 'mechanik', r: 22 },
   { id: 'pravnicka', name: 'Právnička', verb: 'Hovoriť', action: 'lawyer', at: 'pravnicka', r: 22 },
+  { id: 'skrysa', name: 'Skrýša', verb: 'Skryť sa', action: 'hideout', x: 200, y: 390, r: 16 },
   { id: 'lekarka', name: 'Lekárka', verb: 'Hovoriť', action: 'soon', arg: 'Liečenie po súbojoch príde spolu s gangmi.', at: 'lekarka', r: 22 },
 ];
 
@@ -338,6 +339,7 @@ export const LABELS = [
   { text: 'Boss', at: 'kladivo', dy: -22, kind: 'boss' },
   { text: 'Wexler', x: 746, y: 764, dy: -22, kind: 'mine' },
   { text: 'Mechanik', at: 'mechanik', dy: -16, kind: 'dim', minZoom: 2 },
+  { text: 'Skrýša', x: 200, y: 390, dy: -16, kind: 'service' },
 ];
 // street life (they move on the street graph from city.json)
 export const TRAFFIC_CARS = ['car_sedan_blue', 'car_taxi', 'car_sedan_red', 'car_van', 'car_sedan_white', 'car_pickup', 'car_sedan_green', 'car_taxi', 'car_sedan_blue', 'car_van'];

@@ -67,6 +67,9 @@ export const CONFIG = {
   // one officer may drop an epic item (copEpicChance, at most one a day); caught after a kill = lose all cash or
   // killJailMin without Don / Díler missions
   copMax: 8,
+  // hideout: stay hideMin minutes and the police on foot leave you alone for shadowMin, even at high heat
+  hideMin: 5,
+  shadowMin: 20,
   copEpicChance: 0.25,
   heatCopHit: 4,
   heatCopKill: 15,

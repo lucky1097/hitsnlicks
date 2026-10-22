@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022181841';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022181841';
-import { DAILY_TYPES } from './daily.js?v=20261022181841';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022181841';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022182446';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022182446';
+import { DAILY_TYPES } from './daily.js?v=20261022182446';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022182446';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -238,11 +238,57 @@ export class UI {
       this.lastGangLog = g.log[0].at;
     }
     this.dailyHud();
+    this.hideHud();
     const bl = $('#hud-buffs');
     const chips = this.buffChips();
     bl.hidden = !chips;
     if (chips !== bl.dataset.html) { bl.innerHTML = chips; bl.dataset.html = chips; }
     this.updateAction();
+  }
+
+  // ---------------------------------------------------------------- hideout
+  // HUD chip while in the shadows; the hiding time is up (or you walked out of the screen): settle it
+  hideHud() {
+    const h = this.s.hideState();
+    if (h.since && !this.hideBusy && (this.s.hidingLeft() <= 0 || (this.name !== 'hideout' && this.name !== 'title'))) this.hideFinish();
+    const left = this.s.shadowLeft();
+    const el = $('#hud-shadow');
+    el.hidden = !left;
+    if (left) el.innerHTML = 'V tieni · polícia ťa nehľadá · <b>' + clock(left) + '</b>';
+  }
+
+  async hideFinish() {
+    if (this.hideBusy || !this.s.hideState().since) return;
+    this.hideBusy = true;
+    const r = await this.s.hideEnd();
+    this.hideBusy = false;
+    if (!r.ok) return;
+    if (r.shadow) this.toast('Teraz sa skrývaš v tieni. Polícia ťa ' + CONFIG.shadowMin + ' minút nebude naháňať.');
+    else this.toast('Odišiel si zo skrýše príliš skoro. Polícia ťa stále hľadá.', true);
+    if (this.name === 'hideout') this.render();
+  }
+
+  scr_hideout() {
+    const h = this.s.hideState(), heat = this.s.heatNow();
+    let inner;
+    if (h.since) {
+      inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Skrývaš sa v tieni</span>' +
+        '<span class="clock" data-until="' + (Date.now() + this.s.hidingLeft()) + '"></span>' +
+        '<p>Vonku hliadkuje polícia. Vydrž tu ' + CONFIG.hideMin + ' minút a potom ťa ' + CONFIG.shadowMin + ' minút nebude nikto naháňať, ani pri vysokom heate.</p>' +
+        '<button class="btn wide" data-act="hide-leave">Odísť skôr (bez ochrany)</button>';
+    } else if (this.s.shadowLeft() > 0) {
+      inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Si v tieni</span>' +
+        '<span class="clock" data-until="' + (Date.now() + this.s.shadowLeft()) + '"></span>' +
+        '<p>Polícia ťa teraz nehľadá. Keď čas vyprší, pri vysokom heate ťa začnú znova naháňať.</p>' +
+        '<button class="btn gold wide" data-act="back">Vyjsť von</button>';
+    } else {
+      inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Zadný vchod</span>' +
+        '<p>Pivnica bez okien, matrac a zámok z vnútornej strany. Keď ťa pri heate nad ' + CONFIG.raidFrom + ' % naháňa polícia, schovaj sa tu na ' + CONFIG.hideMin + ' minút. Potom budeš ' + CONFIG.shadowMin + ' minút v tieni a polícia ťa nebude naháňať.</p>' +
+        '<p class="num">Heat teraz: ' + Math.round(heat) + ' %</p>' +
+        '<button class="btn gold wide" data-act="hide-start"' + (heat < CONFIG.raidFrom ? ' disabled' : '') + '>Skryť sa</button>' +
+        (heat < CONFIG.raidFrom ? '<p style="font-size:15px">Polícia ťa teraz nenaháňa, nie je pred kým sa skrývať.</p>' : '');
+    }
+    return { html: this.hdr('Skrýša') + '<div class="body" style="padding:0"><div class="hide-scr">' + inner + '</div></div>' };
   }
 
   // ---------------------------------------------------------------- daily missions
@@ -390,6 +436,7 @@ export class UI {
     else if (p.action === 'lawyer') this.open('lawyer');
     else if (p.action === 'wexler') this.open('wexler');
     else if (p.action === 'turf') this.open('turf', p.arg);
+    else if (p.action === 'hideout') this.open('hideout');
     else this.info(p.name, p.arg);
   }
 
@@ -604,6 +651,8 @@ export class UI {
         this.closeModal();
         this.toast(msg, x.type === 'caught' || x.type === 'jail');
       },
+      async 'hide-start'() { if (this.check(await this.s.hideStart())) this.render(); },
+      async 'hide-leave'() { await this.hideFinish(); this.back(); },
       async 'police-killer'(a) {
         const r = await this.s.policeKiller(a);
         if (!this.check(r)) return;

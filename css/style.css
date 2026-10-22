@@ -141,6 +141,13 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .sw { width: 44px; height: 44px; border: 2px solid transparent; outline: 1px solid var(--line2); cursor: pointer; }
 .sw.sel { border-color: #070707; outline: 2px solid var(--bone); }
 .war { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* hideout: the HUD chip while the police leave you alone, and the screen inside */
+.shadow-tag { padding: 4px 9px; background: rgba(8,8,8,.8); border: 1px solid #3a3835; border-left: 3px solid #b9b4a8; color: #d8d3c7; font-size: 14px; }
+.shadow-tag b { color: #efe9dc; font-variant-numeric: tabular-nums; }
+.hide-scr { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 24px; text-align: center; background: radial-gradient(ellipse 70% 50% at 50% 40%, #1b1a18, #050505 75%); }
+.hide-scr .bl { font-size: 40px; color: #efe9dc; }
+.hide-scr .clock { font-size: 46px; color: var(--gold-l); font-variant-numeric: tabular-nums; }
+.hide-scr p { max-width: 340px; color: #9b968b; font-size: 17px; margin: 0; }
 /* daily missions: edge arrow on the map, task cards, the 15-day calendar */
 .daily-arrow { position: absolute; left: 0; top: 0; width: 34px; height: 34px; pointer-events: none; z-index: 3; }
 .daily-arrow i { position: absolute; inset: 0; }

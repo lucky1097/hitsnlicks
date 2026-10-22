@@ -1,10 +1,10 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022181841';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022181841';
-import { makeFighter, simulate } from './combat.js?v=20261022181841';
-import { GangMixin } from './gangs.js?v=20261022181841';
-import { DailyMixin } from './daily.js?v=20261022181841';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022182446';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022182446';
+import { makeFighter, simulate } from './combat.js?v=20261022182446';
+import { GangMixin } from './gangs.js?v=20261022182446';
+import { DailyMixin } from './daily.js?v=20261022182446';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -560,6 +560,36 @@ export class SimServer {
   }
 
   policeRunChance() { return F.missionChance(this.totalStats().obratnost, this.p.level); }
+
+  // ---------------------------------------------------------------- hideout
+  // { since } while you sit in the hideout; { shadowUntil } = no police on foot until then
+  hideState() { return this.state.hide || (this.state.hide = { since: 0, shadowUntil: 0 }); }
+  shadowLeft() { return Math.max(0, this.hideState().shadowUntil - Date.now()); }
+  hidingLeft() { const h = this.hideState(); return h.since ? Math.max(0, h.since + this.gameMs(CONFIG.hideMin) - Date.now()) : 0; }
+
+  hideStart() {
+    const h = this.hideState();
+    if (h.since) return ok({ since: h.since });
+    if (this.shadowLeft() > 0) return fail('Už si v tieni. Polícia ťa nenaháňa.');
+    if (this.heatNow() < CONFIG.raidFrom) return fail('Polícia ťa nenaháňa. Skrýša sa oplatí až pri heate ' + CONFIG.raidFrom + ' %.');
+    h.since = Date.now();
+    this.save();
+    return ok({ since: h.since });
+  }
+
+  // leaving the hideout: after hideMin you are in the shadows for shadowMin; earlier it was for nothing
+  hideEnd() {
+    const h = this.hideState();
+    if (!h.since) return fail('Nie si v skrýši.');
+    const done = Date.now() - h.since >= this.gameMs(CONFIG.hideMin) - 1000;
+    h.since = 0;
+    if (done) {
+      h.shadowUntil = Date.now() + this.gameMs(CONFIG.shadowMin);
+      if (this.state.cops) this.state.cops.kills = 0; // the chase is over
+    }
+    this.save();
+    return ok({ shadow: done, until: h.shadowUntil });
+  }
 
   // officers put down in the current chase; the chase (and the count) ends when heat drops below raidFrom
   copKills() {
