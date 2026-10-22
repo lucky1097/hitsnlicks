@@ -1,8 +1,8 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022180832';
-import { mulberry32 } from './combat.js?v=20261022180832'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022181304';
+import { mulberry32 } from './combat.js?v=20261022181304'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
