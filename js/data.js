@@ -139,53 +139,52 @@ export const SHOPS = {
 export const MISSIONS = {
   sledovanie: { name: 'Sledovanie', minutes: 2, minLevel: 1, heat: 3, art: 'it_watch', stories: [
     { text: 'Don chce vedieť, s kým sa stretáva majiteľ práčovne. Sadni si na lavičku, tvár sa, že čítaš noviny, a pozeraj. Len si daj pozor, aby niekto nesledoval teba.',
-      hit: 'Zvedavec z ulice si ťa všimol a nepáči sa mu, čo robíš.', foe: { name: 'Zvedavec', title: 'Pouličník', art: 'diler' } },
+      hit: 'Chlapík so semienkami sedí na vedľajšej lavičke celý deň. Videl ťa a pľuje šupky rovno pred teba.', foe: { name: 'Semienko', title: 'Gopník zo sídliska', art: 'photo_n_semienko' } },
     { text: 'Nový chlapík na corneri chodí každý večer tou istou cestou. Zisti kam. Tieň za tebou ale nemusí byť len tvoj.',
-      hit: 'Za rohom stojí rivalský pozorovateľ. Videl ťa skôr ako ty jeho.', foe: { name: 'Pozorovateľ', title: 'Rival z cornera', art: 'photo_rival' } },
+      hit: 'V podchode sa na teba usmieva chalan v čiapke. Sledoval ťa celý čas.', foe: { name: 'Sprejer', title: 'Oči rivalov v podchode', art: 'photo_n_sprejer' } },
   ] },
   dorucenie: { name: 'Doručenie zásielky', minutes: 4, minLevel: 1, heat: 5, art: 'it_package', stories: [
     { text: 'Balík, adresa, žiadne otázky. Čo je vnútri, ťa nezaujíma. Na druhej strane štvrte ťa už ale niekto čaká a nie je to adresát.',
-      hit: 'Pouličný zlodejíček chce tvoj balík. Nedostane ho.', foe: { name: 'Zlodejíček', title: 'Pouličná zberba', art: 'diler' } },
+      hit: 'Vreckárka v baretke ti už jednu peňaženku vytiahla. Balík nedostane.', foe: { name: 'Vreckárka', title: 'Prsty ako hodváb', art: 'photo_n_vreckarka' } },
     { text: 'Zásielka pre kamaráta z garáže. Cesta vedie cez park, kde sa večer motajú tí, čo nemajú čo stratiť.',
-      hit: 'Opitý chuligán sa rozhodol, že dnes stratíš ty.', foe: { name: 'Chuligán', title: 'Opitý a nahnevaný', art: 'diler' } },
+      hit: 'Chuligán so šálom sa vracia zo zápasu. Prehrali a niekto za to zaplatí.', foe: { name: 'Chuligán', title: 'Z kotla', art: 'photo_n_chuligan' } },
   ] },
   predaj: { name: 'Predaj tovaru', minutes: 6, minLevel: 1, heat: 6, art: 'it_duffel', stories: [
-    { text: 'Dostal si tašku. Do večera musí zmiznúť. Kto vie, čo v nej je. Pozor, za rohom môžu číhať mačky. A mačky majú rady plné tašky.',
-      hit: 'Mačka v civile. Odznak ukázal až po prvej rane.', foe: { name: 'Mačka', title: 'Policajt v civile', art: 'don' } },
+    { text: 'Dostal si tašku. Do večera musí zmiznúť. Kto vie, čo v nej je. Pozor, ihrisko na sídlisku má svoju šéfku a tá nemá rada cudzí tovar.',
+      hit: 'Kobra si zapla bundu. Na jej ihrisku sa nepredáva bez jej súhlasu.', foe: { name: 'Kobra', title: 'Šéfka ihriska', art: 'photo_n_kobra' } },
     { text: 'Kupec chce tovar hneď a za hotové. Lenže kupci, ktorí platia hneď, zvyknú mať v rukáve aj niečo iné.',
-      hit: 'Kupec nemá peniaze. Má len päste.', foe: { name: 'Kupec', title: 'Podozrivý zákazník', art: 'don' } },
+      hit: 'Kupec nemá peniaze. Má len boxer na prstoch.', foe: { name: 'Boxer', title: 'Kupec zo schodiska', art: 'photo_n_boxer' } },
   ] },
   vymahanie: { name: 'Vymáhanie dlhu', minutes: 9, minLevel: 3, heat: 10, art: 'it_bat', stories: [
-    { text: 'Jeden chlapík nám dlhuje. Sedí doma a počíta peniaze, ktoré nie sú jeho. Pripomeň mu, komu patria.',
-      hit: 'Dlžník sa rozhodol, že platiť nebude. Aspoň nie dobrovoľne.', foe: { name: 'Dlžník', title: 'Počíta cudzie peniaze', art: 'photo_dlznik' } },
+    { text: 'Mladý motorkár si od Dona požičal na novú mašinu. Splátky nechodia, mašina áno. Pripomeň mu, komu patrí.',
+      hit: 'Nováčik sa len usmieva. Myslí si, že ho chlapi z klubu kryjú.', foe: { name: 'Nováčik', title: 'Motorkár na skúšku', art: 'photo_n_novacik' } },
     { text: 'Majiteľ večierky zabudol na mesačnú platbu. Pripomenutie musí byť zdvorilé. Prvýkrát.',
-      hit: 'Synovec majiteľa si myslí, že zdvorilosť je slabosť.', foe: { name: 'Synovec', title: 'Z večierky', art: 'diler' } },
+      hit: 'Synovec majiteľa trénuje v pivnici zápasy. Zdvorilosť pokladá za slabosť.', foe: { name: 'Zápasník', title: 'Synovec z večierky', art: 'photo_n_zapasnik' } },
   ] },
   kradez_auta: { name: 'Krádež auta', minutes: 8, minLevel: 4, heat: 10, art: 'it_keys', stories: [
-    { text: 'Pred klubom stojí čierne auto, ktoré už nepatrí svojmu majiteľovi. Kľúče máš, stačí ho odviezť do garáže. Šofér však nespí.',
-      hit: 'Šofér vystúpil z auta a nevyzerá, že by sa chcel rozlúčiť.', foe: { name: 'Šofér', title: 'Verný svojmu šéfovi', art: 'don' } },
+    { text: 'Pred hotelom stojí čierne auto, ktoré už nepatrí svojmu majiteľovi. Kľúče máš, stačí ho odviezť do garáže. Šofér však nespí.',
+      hit: 'Šofér si naťahuje čierne rukavice. Tento muž nie je obyčajný šofér.', foe: { name: 'Čistič', title: 'Muž z izby 29', art: 'photo_n_cistic' } },
     { text: 'Autobazár dostal nový kúsok. Don ho chce skôr, než ho niekto kúpi. Nočná zmena by mala spať.',
-      hit: 'Nočný strážnik nespí. A má baterku aj obušok.', foe: { name: 'Strážnik', title: 'Nočná zmena', art: 'diler' } },
+      hit: 'Nočnú zmenu tu robí vyhadzovač z klubu. A nespí.', foe: { name: 'Vyhadzovač', title: 'Nočná zmena', art: 'photo_n_vyhadzovac' } },
   ] },
   prepadnutie: { name: 'Prepadnutie rivala', minutes: 10, minLevel: 6, heat: 12, art: 'it_bat', stories: [
     { text: 'Červení si myslia, že im patrí corner. Prejdi okolo a ukáž im, že sa mýlia.',
-      hit: 'Rivalský pešiak vytiahol zbraň skôr, než si stihol pozdraviť.', foe: { name: 'Pešiak', title: 'Červený gang', art: 'photo_rival' } },
+      hit: 'Z uličky vyšiel chlap so šatkou cez tvár. Červení si poslali svojho najhoršieho.', foe: { name: 'Maska', title: 'Červený gang', art: 'photo_n_maska' } },
     { text: 'Kuriér rivalov nosí každý piatok obálku. Dnes ju donesie nám.',
-      hit: 'Kuriér obálku len tak nepustí.', foe: { name: 'Kuriér', title: 'Červený gang', art: 'photo_rival' } },
+      hit: 'Kuriérom je známa tvár z podchodu. Obálku len tak nepustí.', foe: { name: 'Sprejer', title: 'Kuriér červených', art: 'photo_n_sprejer' } },
   ] },
   ochrana: { name: 'Ochrana podniku', minutes: 12, minLevel: 8, heat: 6, art: 'it_pistol', stories: [
     { text: 'Postráž bar, kým sa nezotmie. Nikto nesmie robiť problémy. Jeden to aj tak skúsi.',
-      hit: 'Výtržník rozbil pohár a pozerá rovno na teba.', foe: { name: 'Výtržník', title: 'Hosť bez pozvania', art: 'diler' } },
+      hit: 'Chuligán po zápase rozbil pohár a pozerá rovno na teba.', foe: { name: 'Chuligán', title: 'Hosť bez pozvania', art: 'photo_n_chuligan' } },
     { text: 'Majiteľ klubu platí za pokoj. Dnes večer príde niekto, kto pokoj nemá rád.',
-      hit: 'Vyhadzovač konkurencie prišiel robiť poriadok po svojom.', foe: { name: 'Vyhadzovač', title: 'Od konkurencie', art: 'photo_rival' } },
+      hit: 'Vyhadzovač konkurencie prišiel robiť poriadok po svojom.', foe: { name: 'Vyhadzovač', title: 'Od konkurencie', art: 'photo_n_vyhadzovac' } },
   ] },
   kradez_sklad: { name: 'Krádež zo skladu', minutes: 15, minLevel: 10, heat: 12, art: 'it_duffel', stories: [
     { text: 'Sklad pri klube je dnes v noci prázdny. Skoro. Jeden strážnik zostal a nemá dobrú náladu.',
-      hit: 'Strážnik skladu zhasol baterku a vyšiel z tmy.', foe: { name: 'Strážnik', title: 'Sklad rivalov', art: 'diler' } },
+      hit: 'Strážnik skladu zhasol svetlo na schodisku a navliekol si boxer.', foe: { name: 'Boxer', title: 'Strážnik skladu', art: 'photo_n_boxer' } },
     { text: 'V sklade rivalov leží hotovosť za tisíce. Dvere sú otvorené, pes nie je. Zato je tam niekto horší.',
-      hit: 'Pokladník rivalov práve počíta. A nerád sa necháva rušiť.', foe: { name: 'Pokladník', title: 'Červený gang', art: 'photo_dlznik' } },
-  ] },
-};
+      hit: 'Peniaze stráži muž v čiernom obleku. Rukavice má už natiahnuté.', foe: { name: 'Čistič', title: 'Strážca hotovosti', art: 'photo_n_cistic' } },
+  ] },};
 
 // photo: wide header image + focus (CSS object-position)
 export const GIVERS = {
