@@ -22,10 +22,9 @@ export const CLASSES = {
 };
 
 export const RARITIES = [
-  { id: 'bezny', name: 'bežný', mult: 1.0, weight: 70, color: '#5aa9ff' },
-  { id: 'vzacny', name: 'vzácny', mult: 1.3, weight: 30, color: '#e9e4d8' },
-  { id: 'epicky', name: 'epický', mult: 1.7, weight: 0, color: '#ff6aa8' },
-  { id: 'legendarny', name: 'legendárny', mult: 2.2, weight: 0, color: '#e8c873' },
+  { id: 'bezny', name: 'bežný', mult: 1.0, color: '#5aa9ff' },
+  { id: 'epicky', name: 'epický', mult: 1.7, color: '#ff6aa8' },
+  { id: 'legendarny', name: 'legendárny', mult: 2.2, color: '#e8c873' },
 ];
 
 export const CONFIG = {
@@ -98,10 +97,10 @@ export const CONFIG = {
   elixirChains: 100, // Wexler's elixir: opens the Black Market for one player
   elixirHours: 24,
   bmEpicChains: 10, // an epic piece on the Black Market costs its cash price plus these gold bars
-  // rolled item stats: one stat = itemPower(level, rarity mult) × share; common 1 stat, rare 2, epic 3,
+  // rolled item stats: one stat = itemPower(level, rarity mult) × share; common 1 stat, epic 3,
   // legendary = class main stat + odolnosť, each twice the epic value
-  itemStatCount: { bezny: 1, vzacny: 2, epicky: 3 },
-  itemStatShare: { bezny: 0.6, vzacny: 0.45, epicky: 0.4 },
+  itemStatCount: { bezny: 1, epicky: 3 },
+  itemStatShare: { bezny: 0.6, epicky: 0.4 },
 
   bossCooldownMin: 240,
   bossRetryChains: 10,
@@ -113,14 +112,15 @@ export const CONFIG = {
 
   maxRounds: 50,
   weaponDmgMult: 3, // weapon damage = item power × this × weapon's own mult
+  botGearMults: [1, 1.3, 1.7], // computer fighters (arena bots, rival gangsters) carry gear of one of these strengths
   armorPerLevel: 40, // armor ÷ (attacker level × this) = share of damage stopped (up to the class cap)
   baseLife: 20, // life = (Odolnosť × (level + 1) + baseLife) × class hp × lifeMult
   lifeMult: 3, // longer fights = less luck in who wins
   maxUpgrade: 5,
   autoUnlockLevel: 20,
 
-  // where rarities come from: shops sell common, the Black Market (Friday evening) epic,
-  // bosses drop legendary with this chance (otherwise a rare item)
+  // where rarities come from: shops and missions common, the Black Market (Friday evening) only epic,
+  // bosses drop legendary with this chance (otherwise an epic item)
   legendaryBossChance: 0.01,
   // street violence raises heat
   heatShot: 1,
@@ -152,8 +152,7 @@ export const CONFIG = {
 
   blackMarketDay: 5, // 0 = Sunday … 5 = Friday
   blackMarketFromHour: 18,
-  blackMarketStock: 3,
-  blackMarketEpicChance: 0.2, // each Black Market piece is epic with this chance, otherwise rare (or common if no rare fits)
+  blackMarketStock: 3, // epic pieces per shop, every base at most once
 
   // gangs & Gang Wars
   gangCreateMin: 20, // founding a gang costs this many minutes of mission cash

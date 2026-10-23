@@ -329,7 +329,6 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 
 /* items */
 .rar-bezny { border-color: rgba(90,169,255,.6) !important; }
-.rar-vzacny { border-color: rgba(233,228,216,.6) !important; }
 .rar-epicky { border-color: rgba(255,106,168,.8) !important; box-shadow: 0 0 10px rgba(255,106,168,.25); }
 .bm { margin-bottom: 14px; padding: 10px; border: 1px solid rgba(255,106,168,.45); background: linear-gradient(180deg, rgba(255,106,168,.08), rgba(255,106,168,0)); }
 .rar-legendarny { border-color: var(--gold) !important; box-shadow: 0 0 10px rgba(201,162,74,.3); }

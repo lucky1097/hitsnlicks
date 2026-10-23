@@ -1,10 +1,10 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261023220122';
-import { NET } from './net.js?v=20261023220122';
-import { CONFIG } from './config.js?v=20261023220122';
-import { SHOPS } from './data.js?v=20261023220122';
+import { SimServer } from './server.js?v=20261023221250';
+import { NET } from './net.js?v=20261023221250';
+import { CONFIG } from './config.js?v=20261023221250';
+import { SHOPS } from './data.js?v=20261023221250';
 
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
@@ -31,7 +31,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261023220122');
+    const { handle, memoryDb } = await import('./api.js?v=20261023221250');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };
@@ -125,9 +125,10 @@ export class RemoteServer extends SimServer {
   shop(shopId) {
     const st = this.state.shops[shopId];
     const base = SHOPS[shopId];
-    if (!st) return { ...base, id: shopId, list: [], bm: null, refreshIn: 0 };
-    const bmOpen = this.blackMarketOpen();
-    return { ...base, id: shopId, list: st.list, premium: st.premium || null, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
+    const hasBm = this.bmBases(shopId).length > 0;
+    if (!st) return { ...base, id: shopId, list: [], hasBm, bm: null, refreshIn: 0 };
+    const bmOpen = this.blackMarketOpen() && hasBm;
+    return { ...base, id: shopId, list: st.list, premium: st.premium || null, hasBm, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
   }
   arena() {
     const v = this.state.pvp;

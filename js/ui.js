@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261023220122';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261023220122';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261023220122';
-import { DAILY_TYPES } from './daily.js?v=20261023220122';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261023220122';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261023221250';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261023221250';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261023221250';
+import { DAILY_TYPES } from './daily.js?v=20261023221250';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261023221250';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -12,7 +12,7 @@ const pct = (x) => Math.round(x * 100) + ' %';
 const art = (n) => 'assets/art/' + n + (/^(photo_|w_|x_)/.test(n) ? '.jpg' : '.png');
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pad = (n) => String(n).padStart(2, '0');
-const rar = (id) => RARITIES.find((r) => r.id === id);
+const rar = (id) => RARITIES.find((r) => r.id === id) || RARITIES[0];
 const BACK = '<svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>';
 const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'diler', dealer: 'photo_dlznik' };
 // where the face sits in each class artwork (CSS object-position)
@@ -1046,13 +1046,13 @@ export class UI {
     if (sh.bm) {
       const el = this.s.elixirLeft();
       const evb = this.s.ev();
-      h += '<div class="bm"><div class="sec sc" style="margin-top:0;color:#ff6aa8">Čierny trh · ' + (el > 0 ? 'elixír ešte <span data-until="' + (Date.now() + el) + '"></span>' : evb.bmAll ? 'celý víkend' : 'len dnes večer') + ' · ' + Math.round(Math.max(CONFIG.blackMarketEpicChance, evb.bmEpic || 0) * 100) + ' % na epický kus</div>' +
+      h += '<div class="bm"><div class="sec sc" style="margin-top:0;color:#ff6aa8">Čierny trh · ' + (el > 0 ? 'elixír ešte <span data-until="' + (Date.now() + el) + '"></span>' : evb.bmAll ? 'celý víkend' : 'len dnes večer') + ' · len epické kusy</div>' +
         (sh.bm.length ? sh.bm.map((it) => row(it, 'bm')).join('') : '<p class="p">Čierny trh je vypredaný.</p>') + '</div>';
     }
     h += '<p class="p" style="font-style:italic">„' + sh.blurb + '“</p>';
     h += sh.list.map((it) => row(it)).join('');
     if (!sh.list.length) h += '<p class="p">Všetko vypredané.</p>';
-    if (!sh.bm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, každý kus má ' + Math.round(CONFIG.blackMarketEpicChance * 100) + ' % šancu byť epický. Epický kus stojí peniaze a ' + CONFIG.bmEpicChains + ' zlatých tehličiek.</p>';
+    if (!sh.bm && sh.hasBm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, len epické kusy. Každý stojí peniaze a ' + CONFIG.bmEpicChains + ' zlatých tehličiek.</p>';
     const rc = this.s.rerollCost();
     h += '<button class="btn wide" data-act="shop-reroll" data-arg="' + shopId + '"' + (p.chains < rc ? ' disabled' : '') + '>Nový tovar hneď · ' + (rc ? rc + ' zlatá tehlička' : 'zadarmo') + '</button>';
     h += '<p class="note">Nový tovar o <span data-until="' + (Date.now() + sh.refreshIn) + '"></span> alebo po novej úrovni.</p>';
@@ -1104,7 +1104,7 @@ export class UI {
       '<div><div class="top"><span class="bl">Ty</span><span class="num muted" style="font-size:14px">úr. ' + me.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(me.hp) + '<br>Úder ' + Math.round(F.hitOf(me)) + '</p></div>' +
       '<div><div class="top"><span class="bl">' + info.boss.name + '</span><span class="num muted" style="font-size:14px">úr. ' + f.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(f.hp) + '<br>Úder ' + Math.round(F.hitOf(f)) + '</p></div></div>';
     const legendPct = Math.round(Math.max(CONFIG.legendaryBossChance, this.s.ev().legendBoss || 0) * 100);
-    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · vzácny predmet, ' + legendPct + ' % šanca na legendárny predmet</p>';
+    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · epický predmet, ' + legendPct + ' % šanca, že bude legendárny</p>';
     h += info.hunt ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · Hon na bossov, bez čakania</button>'
       : info.free ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · pokus zadarmo</button>'
       : '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať za ' + CONFIG.bossRetryChains + ' zlatých tehličiek</button><p class="note">Ďalší pokus zadarmo o <span data-until="' + info.freeAt + '"></span></p>';

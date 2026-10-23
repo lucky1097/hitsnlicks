@@ -2,12 +2,12 @@
 // a better one and a weaker one, following a 6-weekend rotation. Server and client compute them from the date,
 // so every player has the same weekend. fx() merges what the active events change; the game reads it where
 // rewards, prices and timers are worked out.
-import { localParts } from './config.js?v=20261023220122';
+import { localParts } from './config.js?v=20261023221250';
 
 const DAY = 86400000;
 
 // fx keys: xp, cash, missionTime, missionHeat, wanted, price, lawyerCost (multipliers);
-// barChance, bossBars, legendBoss, legendMission, bmEpic (values); reaperEvery, runnerEvery, runnerEpic, pillTime,
+// barChance, bossBars, legendBoss, legendMission, bmStock (values); reaperEvery, runnerEvery, runnerEpic, pillTime,
 // turfReward, turfWins (multipliers); bmAll, freeReroll, bossFree, noDecay, noRetry, lawyerUnlimited (switches)
 export const EVENTS = {
   xp2: { name: 'Dvojité XP', tier: 'lepsi', icon: '★', desc: 'Misie, bossovia, aréna aj Gang Wars dávajú dvojnásobné XP.', fx: { xp: 2 } },
@@ -18,7 +18,7 @@ export const EVENTS = {
   amnesty: { name: 'Amnestia', tier: 'horsi', icon: '⚖', desc: 'Právnička je za polovicu a bez denného limitu.', fx: { lawyerCost: 0.5, lawyerUnlimited: true } },
   cash2: { name: 'Dvojité peniaze', tier: 'lepsi', icon: '$', desc: 'Misie, bossovia, aréna aj Gang Wars dávajú dvojnásobné peniaze.', fx: { cash: 2 } },
   strike: { name: 'Policajný štrajk', tier: 'horsi', icon: '✋', desc: 'Hľadanosť na ulici aj heat z misií pribúdajú o polovicu pomalšie.', fx: { wanted: 0.5, missionHeat: 0.5 } },
-  bm: { name: 'Čierny trh celý víkend', tier: 'lepsi', icon: '◆', desc: 'Čierny trh je otvorený pre všetkých celý víkend a každý kus má 35 % šancu byť epický.', fx: { bmAll: true, bmEpic: 0.35 } },
+  bm: { name: 'Čierny trh celý víkend', tier: 'lepsi', icon: '◆', desc: 'Čierny trh je otvorený pre všetkých celý víkend a v každom obchode ponúka o 2 epické kusy viac.', fx: { bmAll: true, bmStock: 2 } },
   sale: { name: 'Výpredaj', tier: 'horsi', icon: '%', desc: 'Obchody aj vylepšenia u mechanika sú o 30 % lacnejšie a nový tovar je zadarmo.', fx: { price: 0.7, freeReroll: true } },
   legend: { name: 'Legendárny víkend', tier: 'lepsi', icon: '♛', desc: 'Šanca na legendárny predmet z bossa je 5 % namiesto 1 % a legendárny predmet môže padnúť aj z misie.', fx: { legendBoss: 0.05, legendMission: 0.005 } },
   bosshunt: { name: 'Hon na bossov', tier: 'horsi', icon: '☠', desc: 'Pokusy na bossov sú bez čakania a bez tehličiek.', fx: { bossFree: true } },

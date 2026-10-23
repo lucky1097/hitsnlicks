@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261023220122';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261023220122';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261023220122';
+import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261023221250';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261023221250';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261023221250';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -111,7 +111,7 @@ export const GangMixin = {
   botFrom(rng, level, name) {
     const raw = STATS.map(() => 0.6 + rng() * 0.8);
     const classes = Object.keys(CLASSES);
-    const rm = RARITIES[Math.floor(rng() * 3)].mult;
+    const rm = CONFIG.botGearMults[Math.floor(rng() * CONFIG.botGearMults.length)];
     return { name: name || BOT_NAMES[Math.floor(rng() * BOT_NAMES.length)], cls: classes[Math.floor(rng() * classes.length)], raw, wr: rm, off: 0, level };
   },
 

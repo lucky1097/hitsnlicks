@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023220122';
-import { eventFx } from './events.js?v=20261023220122';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023220122';
-import { makeFighter, simulate } from './combat.js?v=20261023220122';
-import { GangMixin } from './gangs.js?v=20261023220122';
-import { DailyMixin } from './daily.js?v=20261023220122';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023221250';
+import { eventFx } from './events.js?v=20261023221250';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023221250';
+import { makeFighter, simulate } from './combat.js?v=20261023221250';
+import { GangMixin } from './gangs.js?v=20261023221250';
+import { DailyMixin } from './daily.js?v=20261023221250';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -34,17 +34,23 @@ export class SimServer {
     if (this.state) this.dropRemovedItems();
   }
 
-  // items whose base was taken out of the game (old placeholder art) vanish from saves and shop stock
+  // items whose base was taken out of the game (old placeholder art) vanish from saves and shop stock;
+  // the old rare tier is gone: such pieces stay as they are but count as common, and a Black Market stall
+  // that still holds anything but epic pieces is rolled again
   dropRemovedItems() {
     const known = (it) => !!ITEM_BASES[it.base];
+    const relabel = (it) => { if (!RARITIES.some((r) => r.id === it.rarity)) it.rarity = 'bezny'; };
     const p = this.state.player;
     if (p && p.inventory && !p.inventory.every(known)) {
       p.inventory = p.inventory.filter(known);
       for (const s of Object.keys(p.equipment)) if (p.equipment[s] && !p.inventory.some((i) => i.id === p.equipment[s])) p.equipment[s] = null;
     }
+    if (p && p.inventory) p.inventory.forEach(relabel);
     for (const st of Object.values(this.state.shops || {})) {
-      if (st.list) st.list = st.list.filter(known);
+      if (st.list) { st.list = st.list.filter(known); st.list.forEach(relabel); }
+      if (st.premium) st.premium.forEach(relabel);
       if (st.bm) st.bm = st.bm.filter(known);
+      if (st.bm && st.bm.some((it) => it.rarity !== 'epicky')) { st.bm = []; st.bmKey = null; }
     }
   }
 
@@ -241,20 +247,13 @@ export class SimServer {
   }
 
   // ---------------------------------------------------------------- items
-  // mission loot: common, sometimes rare (luck helps a little)
-  rollRarity() {
-    const luck = this.totalStats().stastie;
-    return Math.random() * 100 < RARITIES[1].weight + luck * 0.1 ? 'vzacny' : 'bezny';
-  }
-
   makeItem(baseId, level, rarityId) {
     const base = ITEM_BASES[baseId];
-    const rid = !base.rarity || (base.rarity === 'bezny' && rarityId === 'vzacny') ? rarityId : base.rarity;
-    const r = RARITIES.find((x) => x.id === rid);
+    const r = RARITIES.find((x) => x.id === (base.rarity || rarityId));
     return { id: 'i' + this.state.nextId++, base: baseId, slot: base.slot, rarity: r.id, level, upgrade: 0, power: F.itemPower(level, r.mult), price: F.itemPrice(level, r.mult), stats: this.rollStats(level, r.id) };
   }
 
-  // common: 1 random stat, rare 2, epic 3; legendary: class main stat + odolnosť at twice the epic value
+  // common: 1 random stat, epic 3; legendary: class main stat + odolnosť at twice the epic value
   rollStats(level, rarity) {
     const one = (rid) => Math.max(1, Math.round(F.itemPower(level, RARITIES.find((x) => x.id === rid).mult) * CONFIG.itemStatShare[rid]));
     if (rarity === 'legendarny') {
@@ -267,22 +266,20 @@ export class SimServer {
     return out;
   }
 
-  // bases that can appear with the given rarity: fixed-rarity bases only in their own tier, except that a
-  // common base can also come as a rare piece (Black Market, mission loot)
+  // bases that can appear with the given rarity: fixed-rarity bases only in their own tier
   basesFor(rarity, from = Object.keys(ITEM_BASES)) {
     return from.filter((id) => {
       const b = ITEM_BASES[id];
-      return !b.legacy && (!b.rarity || b.rarity === rarity || (rarity === 'vzacny' && b.rarity === 'bezny'));
+      return !b.legacy && (!b.rarity || b.rarity === rarity);
     });
   }
 
-  // source: 'shop' (bežné), 'blackmarket' (epické), 'mission' (bežné / vzácne), 'boss' (1 % legendárne, inak vzácne)
+  // source: 'shop' and 'mission' (bežné), 'blackmarket' (epické), 'boss' (1 % legendárne, inak epické)
   randomItem(level, source, bases) {
     let rarity;
-    if (source === 'shop') rarity = 'bezny';
-    else if (source === 'blackmarket') rarity = 'epicky';
-    else if (source === 'boss') rarity = Math.random() < Math.max(CONFIG.legendaryBossChance, this.ev().legendBoss || 0) ? 'legendarny' : 'vzacny';
-    else rarity = this.rollRarity();
+    if (source === 'blackmarket') rarity = 'epicky';
+    else if (source === 'boss') rarity = Math.random() < Math.max(CONFIG.legendaryBossChance, this.ev().legendBoss || 0) ? 'legendarny' : 'epicky';
+    else rarity = 'bezny';
     let pool = this.basesFor(rarity, bases).filter((id) => !ITEM_BASES[id].shopOnly);
     if (rarity === 'legendarny') pool = pool.filter((id) => ITEM_BASES[id].rarity === 'legendarny');
     if (!pool.length) return null;
@@ -344,6 +341,9 @@ export class SimServer {
   }
 
   // ---------------------------------------------------------------- shops
+  // what the shop's Black Market stall can hold: its epic goods; a shop without them (Autobazár) has no stall
+  bmBases(shopId) { return this.basesFor('epicky', SHOPS[shopId].bases).filter((id) => ITEM_BASES[id].rarity === 'epicky'); }
+
   shop(shopId) {
     const s = SHOPS[shopId];
     let st = this.state.shops[shopId];
@@ -356,29 +356,24 @@ export class SimServer {
       this.save();
     }
     // Black Market stock is rolled once per opening and stays until it closes
-    const bmOpen = this.blackMarketOpen();
+    const epicBases = this.bmBases(shopId);
+    const bmOpen = this.blackMarketOpen() && epicBases.length > 0;
     // Friday: one stall per evening; with Wexler's elixir it restocks with the regular goods
     const bmKey = this.elixirLeft() > 0 ? 'e' + st.at : localParts().date;
     if (bmOpen && st.bmKey !== bmKey) {
       st.bmKey = bmKey;
       st.bm = [];
-      // each piece is epic with CONFIG.blackMarketEpicChance, otherwise rare (common if nothing rare fits);
-      // every epic base at most once per stall
-      let epicLeft = this.basesFor('epicky', s.bases);
-      for (let i = 0; i < CONFIG.blackMarketStock; i++) {
-        let it = null;
-        if (epicLeft.length && Math.random() < Math.max(CONFIG.blackMarketEpicChance, this.ev().bmEpic || 0)) {
-          it = this.randomItem(this.p.level, 'blackmarket', epicLeft);
-          epicLeft = epicLeft.filter((b) => b !== it.base);
-        } else {
-          const rarity = this.basesFor('vzacny', s.bases).length ? 'vzacny' : 'bezny';
-          it = this.makeItem(pick(this.basesFor(rarity, s.bases)), this.p.level, rarity);
-        }
+      // only epic pieces, every epic base at most once per stall
+      let epicLeft = epicBases;
+      for (let i = 0; i < CONFIG.blackMarketStock + (this.ev().bmStock || 0) && epicLeft.length; i++) {
+        const it = this.randomItem(this.p.level, 'blackmarket', epicLeft);
+        if (!it) break;
+        epicLeft = epicLeft.filter((b) => b !== it.base);
         st.bm.push(it);
       }
       this.save();
     }
-    return { ...s, id: shopId, list: st.list, premium: st.premium || null, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
+    return { ...s, id: shopId, list: st.list, premium: st.premium || null, hasBm: epicBases.length > 0, bm: bmOpen ? st.bm || [] : null, refreshIn: Math.max(0, st.at + this.gameMs(CONFIG.shopRefreshMin) - Date.now()) };
   }
 
   // fresh common goods; keeps the Black Market stall as it is
@@ -943,8 +938,8 @@ export class SimServer {
     const sum = raw.reduce((a, b) => a + b, 0);
     const stats = {};
     STATS.forEach((s, i) => { stats[s] = Math.max(5, Math.round(F.npcStat(level) * raw[i] * (5 / sum))); });
-    const r = pick(RARITIES.slice(0, 3));
-    return { name: pick(BOT_NAMES), cls: pick(Object.keys(CLASSES)), level, stats, weapon: F.itemPower(level, r.mult) * CONFIG.weaponDmgMult, armor: F.itemPower(level, r.mult) * 5, points };
+    const gear = pick(CONFIG.botGearMults);
+    return { name: pick(BOT_NAMES), cls: pick(Object.keys(CLASSES)), level, stats, weapon: F.itemPower(level, gear) * CONFIG.weaponDmgMult, armor: F.itemPower(level, gear) * 5, points };
   }
 
   pvpWindow() {
