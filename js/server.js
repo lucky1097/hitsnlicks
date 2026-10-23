@@ -1,10 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023214817';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023214817';
-import { makeFighter, simulate } from './combat.js?v=20261023214817';
-import { GangMixin } from './gangs.js?v=20261023214817';
-import { DailyMixin } from './daily.js?v=20261023214817';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023220122';
+import { eventFx } from './events.js?v=20261023220122';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023220122';
+import { makeFighter, simulate } from './combat.js?v=20261023220122';
+import { GangMixin } from './gangs.js?v=20261023220122';
+import { DailyMixin } from './daily.js?v=20261023220122';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -141,7 +142,7 @@ export class SimServer {
   takePill(kind) {
     if (!PILLS.includes(kind)) return fail('Neznáma pilulka.');
     const list = this.buffs()[kind];
-    const until = Date.now() + this.gameMs(CONFIG.pillMinutes);
+    const until = Date.now() + this.gameMs(CONFIG.pillMinutes * this.ev().pillTime);
     const refreshed = list.length >= CONFIG.pillMaxStacks;
     if (refreshed) list.sort((a, b) => a - b).shift();
     list.push(until);
@@ -190,6 +191,9 @@ export class SimServer {
     return c ? { heat: c.heat, time: c.time } : { heat: 0, time: 0 };
   }
 
+  // what this weekend's events change (js/events.js); all ones on a normal day
+  ev() { return eventFx(); }
+
   // new heat from anything is cut by the car; pre = already cut (a mission's own preview)
   addHeat(v, pre = false) {
     this.daily();
@@ -198,7 +202,7 @@ export class SimServer {
     this.state.heat.at = Date.now();
   }
 
-  lawyerLeft() { return Math.max(0, CONFIG.lawyerPerDay - this.daily().lawyer); }
+  lawyerLeft() { return this.ev().lawyerUnlimited ? 99 : Math.max(0, CONFIG.lawyerPerDay - this.daily().lawyer); }
 
   jailLeft() { return Math.max(0, this.state.jailUntil - Date.now()); }
 
@@ -277,7 +281,7 @@ export class SimServer {
     let rarity;
     if (source === 'shop') rarity = 'bezny';
     else if (source === 'blackmarket') rarity = 'epicky';
-    else if (source === 'boss') rarity = Math.random() < CONFIG.legendaryBossChance ? 'legendarny' : 'vzacny';
+    else if (source === 'boss') rarity = Math.random() < Math.max(CONFIG.legendaryBossChance, this.ev().legendBoss || 0) ? 'legendarny' : 'vzacny';
     else rarity = this.rollRarity();
     let pool = this.basesFor(rarity, bases).filter((id) => !ITEM_BASES[id].shopOnly);
     if (rarity === 'legendarny') pool = pool.filter((id) => ITEM_BASES[id].rarity === 'legendarny');
@@ -285,8 +289,14 @@ export class SimServer {
     return this.makeItem(pick(pool), level, rarity);
   }
 
+  // a random legendary piece of any slot (never one of the cars sold only in the Autobazár)
+  legendaryItem() {
+    const pool = Object.keys(ITEM_BASES).filter((id) => ITEM_BASES[id].rarity === 'legendarny' && !ITEM_BASES[id].shopOnly);
+    return pool.length ? this.makeItem(pick(pool), this.p.level, 'legendarny') : null;
+  }
+
   blackMarketOpen() {
-    if (this.state.settings.blackMarket || this.elixirLeft() > 0) return true;
+    if (this.state.settings.blackMarket || this.elixirLeft() > 0 || this.ev().bmAll) return true;
     const l = localParts();
     return l.weekday === CONFIG.blackMarketDay && l.hour >= CONFIG.blackMarketFromHour;
   }
@@ -319,13 +329,13 @@ export class SimServer {
     return ok({ gain });
   }
 
-  upgradeCost(id) { const it = this.item(id); return it ? F.upgradeCost(it) : 0; }
+  upgradeCost(id) { const it = this.item(id); return it ? Math.round(F.upgradeCost(it) * this.ev().price) : 0; }
 
   upgradeItem(id) {
     const it = this.item(id);
     if (!it) return fail('Predmet nemáš.');
     if (it.upgrade >= CONFIG.maxUpgrade) return fail('Predmet je na maxime.');
-    const cost = F.upgradeCost(it);
+    const cost = this.upgradeCost(id);
     if (this.p.cash < cost) return fail('Nemáš dosť peňazí.');
     this.p.cash -= cost;
     it.upgrade += 1;
@@ -357,7 +367,7 @@ export class SimServer {
       let epicLeft = this.basesFor('epicky', s.bases);
       for (let i = 0; i < CONFIG.blackMarketStock; i++) {
         let it = null;
-        if (epicLeft.length && Math.random() < CONFIG.blackMarketEpicChance) {
+        if (epicLeft.length && Math.random() < Math.max(CONFIG.blackMarketEpicChance, this.ev().bmEpic || 0)) {
           it = this.randomItem(this.p.level, 'blackmarket', epicLeft);
           epicLeft = epicLeft.filter((b) => b !== it.base);
         } else {
@@ -388,16 +398,21 @@ export class SimServer {
 
   rerollShop(shopId) {
     if (!SHOPS[shopId]) return fail('Neznámy obchod.');
-    if (this.p.chains < CONFIG.shopRerollChains) return fail('Nemáš zlatú tehličku.');
-    this.p.chains -= CONFIG.shopRerollChains;
+    const cost = this.rerollCost();
+    if (this.p.chains < cost) return fail('Nemáš zlatú tehličku.');
+    this.p.chains -= cost;
     this.restock(shopId);
     return ok();
   }
 
-  // what a piece costs right there: Black Market epics add bars, premium cars are bars (+ cash for the epic ones)
+  rerollCost() { return this.ev().freeReroll ? 0 : CONFIG.shopRerollChains; }
+
+  // what a piece costs right there: Black Market epics add bars, premium cars are bars (+ cash for the epic ones);
+  // the Výpredaj weekend takes a share off the cash
   shopPrice(it, where) {
-    if (where === 'premium') return { cash: it.rarity === 'legendarny' ? 0 : it.price, bars: CONFIG.carBars[it.rarity] || 0 };
-    return { cash: it.price, bars: where === 'bm' && it.rarity === 'epicky' ? CONFIG.bmEpicChains : 0 };
+    const off = this.ev().price;
+    if (where === 'premium') return { cash: it.rarity === 'legendarny' ? 0 : Math.round(it.price * off), bars: CONFIG.carBars[it.rarity] || 0 };
+    return { cash: Math.round(it.price * off), bars: where === 'bm' && it.rarity === 'epicky' ? CONFIG.bmEpicChains : 0 };
   }
 
   buyItem(shopId, itemId) {
@@ -485,12 +500,13 @@ export class SimServer {
     const story = t.stories[v] || t.stories[0];
     const gb = this.gangBonus(); // turf and gang upgrades
     const car = this.carBonus();
+    const ev = this.ev(); // weekend events: rewards, time and heat are fixed when the job starts
     return {
       tpl: tplId, v, minutes: t.minutes,
-      durationMs: Math.round(this.gameMs(t.minutes * F.durationFactor(L)) * (1 - gb.time) * (1 - car.time)),
-      cash: Math.round(F.missionCash(L, t.minutes) * (1 + gb.cash)),
-      xp: Math.round(F.missionXp(L, t.minutes) * (1 + gb.xp)),
-      heat: Math.max(1, Math.round(t.minutes * CONFIG.heatPerMissionMin * F.heatFactor(L) * (1 - car.heat))),
+      durationMs: Math.round(this.gameMs(t.minutes * F.durationFactor(L)) * (1 - gb.time) * (1 - car.time) * ev.missionTime),
+      cash: Math.round(F.missionCash(L, t.minutes) * (1 + gb.cash) * ev.cash),
+      xp: Math.round(F.missionXp(L, t.minutes) * (1 + gb.xp) * ev.xp),
+      heat: Math.max(1, Math.round(t.minutes * CONFIG.heatPerMissionMin * F.heatFactor(L) * (1 - car.heat) * ev.missionHeat)),
       foe: story.foe,
     };
   }
@@ -559,6 +575,13 @@ export class SimServer {
       if (epic > 0 && Math.random() < epic) {
         res.epic = this.randomItem(this.p.level, 'blackmarket');
         if (res.epic) this.giveItem(res.epic);
+      }
+      // weekend events: gold bars, a legendary piece
+      const ev = this.ev();
+      if (ev.barChance && Math.random() < ev.barChance) { res.bars = 1 + Math.floor(Math.random() * 3); this.p.chains += res.bars; }
+      if (ev.legendMission && Math.random() < ev.legendMission) {
+        res.legend = this.legendaryItem();
+        if (res.legend) this.giveItem(res.legend);
       }
       this.state.counters.missions += 1;
     } else {
@@ -725,7 +748,7 @@ export class SimServer {
     const now = Date.now();
     let r = this.state.reaper;
     if (!r) r = this.state.reaper = { nextAt: now + this.gameMs(CONFIG.reaperFirstMin), caught: false };
-    const run = this.gameMs(CONFIG.reaperRunMin), every = this.gameMs(CONFIG.reaperEveryMin);
+    const run = this.gameMs(CONFIG.reaperRunMin), every = this.gameMs(CONFIG.reaperEveryMin * this.ev().reaperEvery);
     let changed = false;
     while (now >= r.nextAt + run) { r.nextAt += every; r.caught = false; changed = true; }
     if (changed) this.save();
@@ -750,9 +773,10 @@ export class SimServer {
 
   hitRunner() {
     if (!this.runner().active) return fail('Už je preč.');
-    this.state.runner.nextAt = Date.now() + this.gameMs(CONFIG.runnerEveryMin);
+    const ev = this.ev();
+    this.state.runner.nextAt = Date.now() + this.gameMs(CONFIG.runnerEveryMin * ev.runnerEvery);
     let item = null;
-    if (Math.random() < CONFIG.runnerEpicChance) {
+    if (Math.random() < CONFIG.runnerEpicChance * ev.runnerEpic) {
       item = this.randomItem(this.p.level, 'blackmarket');
       if (item) this.giveItem(item);
     }
@@ -796,7 +820,7 @@ export class SimServer {
 
   addWanted(v) {
     const w = this.wanted();
-    w.stars = Math.min(5, w.stars + v * (1 + this.heatNow() / 100));
+    w.stars = Math.min(5, w.stars + v * (1 + this.heatNow() / 100) * this.ev().wanted);
     w.at = Date.now();
   }
 
@@ -814,7 +838,7 @@ export class SimServer {
     return ok({ stars: w.stars });
   }
 
-  lawyerCost() { return F.lawyerCost(this.p.level); }
+  lawyerCost() { return Math.round(F.lawyerCost(this.p.level) * this.ev().lawyerCost); }
 
   lawyer() {
     const cost = this.lawyerCost();
@@ -879,10 +903,11 @@ export class SimServer {
     if (i >= BOSSES.length) return { done: true, total: BOSSES.length };
     const f = this.bossFighter(i);
     const L = this.p.level;
+    const ev = this.ev();
     return {
       done: false, index: i, total: BOSSES.length, boss: BOSSES[i], fighter: f,
-      freeAt: this.state.boss.nextFreeAt, free: Date.now() >= this.state.boss.nextFreeAt,
-      reward: { cash: Math.round(F.cashPerMin(L) * 30), xp: Math.round(F.xpNext(L) * 0.25) },
+      freeAt: this.state.boss.nextFreeAt, free: ev.bossFree || Date.now() >= this.state.boss.nextFreeAt, hunt: !!ev.bossFree,
+      reward: { cash: Math.round(F.cashPerMin(L) * 30 * ev.cash), xp: Math.round(F.xpNext(L) * 0.25 * ev.xp), bars: ev.bossBars || 0 },
     };
   }
 
@@ -892,7 +917,7 @@ export class SimServer {
     if (!info.free) {
       if (this.p.chains < CONFIG.bossRetryChains) return fail('Nemáš dosť zlatých tehličiek.');
       this.p.chains -= CONFIG.bossRetryChains;
-    } else {
+    } else if (!info.hunt) { // Hon na bossov: no cooldown at all
       this.state.boss.nextFreeAt = Date.now() + this.gameMs(CONFIG.bossCooldownMin);
     }
     const me = this.playerFighter();
@@ -907,6 +932,7 @@ export class SimServer {
       if (res.item) this.giveItem(res.item);
       this.p.cash += res.cash;
       res.levelUps = this.addXp(res.xp);
+      if (info.reward.bars) { res.bars = info.reward.bars; this.p.chains += res.bars; }
     }
     this.save();
     return ok({ fight, a: me, b: info.fighter, result: res });
@@ -963,8 +989,9 @@ export class SimServer {
     const res = { win, points: 0, cash: 0, xp: 0, levelUps: 0 };
     if (win) {
       res.points = Math.round(20 * clamp(1 + (opp.points - v.points) / 400, 0.5, 1.5));
-      res.cash = Math.round(F.cashPerMin(L) * 3);
-      res.xp = Math.round(F.xpNext(L) * 0.03);
+      const ev = this.ev();
+      res.cash = Math.round(F.cashPerMin(L) * 3 * ev.cash);
+      res.xp = Math.round(F.xpNext(L) * 0.03 * ev.xp);
       this.p.cash += res.cash;
       res.levelUps = this.addXp(res.xp);
       v.wins += 1;

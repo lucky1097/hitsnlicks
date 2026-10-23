@@ -142,6 +142,18 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .sw.sel { border-color: #070707; outline: 2px solid var(--bone); }
 .war { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 /* hideout: the HUD chip while the police leave you alone, and the screen inside */
+/* weekend events: HUD chip, title banner, cards */
+.event-tag { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 4px 9px; background: rgba(8,8,8,.85); border: 1px solid rgba(232,200,115,.55); border-left: 3px solid #e8c873; color: #e8c873; font: inherit; font-size: 13px; text-align: left; cursor: pointer; box-shadow: 0 0 12px rgba(232,200,115,.2); }
+.event-tag b { font-weight: 400; font-size: 12px; color: #b9b4a8; font-variant-numeric: tabular-nums; }
+.ev-banner { margin: 2px 0 14px; padding: 8px 10px; border: 1px solid rgba(232,200,115,.5); background: rgba(232,200,115,.08); color: #e8c873; font-size: 16px; text-align: center; }
+.ev-banner small { display: block; font-size: 13px; color: #b9b4a8; }
+.evcard { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; margin-bottom: 8px; border: 1px solid var(--line2); border-left: 3px solid #9b968b; background: var(--panel); }
+.evcard.lepsi { border-left-color: #e8c873; }
+.evcard.on { box-shadow: 0 0 14px rgba(232,200,115,.18); }
+.evcard .ic { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgba(232,200,115,.5); border-radius: 50%; color: #e8c873; font-size: 17px; }
+.evcard .t { display: block; font-size: 18px; color: #efe9dc; }
+.evcard .t small { font-size: 12px; color: #9b968b; font-style: italic; }
+.evcard .s { display: block; font-size: 15px; color: #b9b4a8; }
 .wanted { padding: 2px 8px; background: rgba(8,8,8,.8); border: 1px solid #3a3835; font-size: 17px; letter-spacing: 2px; color: #4f4c46; }
 .wanted b { color: #f0c95a; font-weight: 400; text-shadow: 0 0 6px rgba(240,201,90,.6); }
 .wanted.chase { border-color: rgba(224,53,43,.7); animation: pulse 1s infinite alternate; }

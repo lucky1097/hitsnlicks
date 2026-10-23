@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261023214817';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261023214817';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261023214817';
+import { CONFIG, F, STATS, CLASSES, RARITIES } from './config.js?v=20261023220122';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261023220122';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261023220122';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -80,6 +80,7 @@ export const GangMixin = {
   turfObj(id) { return this.turf().objects[id]; },
 
   strengthNow(o) {
+    if (this.ev().noDecay) return o.strength; // Víkend gangov: defence doesn't wear off
     const hours = ((Date.now() - o.at) / MIN / 60) * this.wScale();
     return Math.max(CONFIG.turfMinStrength, o.strength - hours * CONFIG.turfDecayPerHour);
   },
@@ -532,15 +533,16 @@ export const GangMixin = {
       // the members who fought move in as defenders (if they don't guard something else)
       const busy = new Set(Object.values(this.turf().objects).filter((x) => x.owner === gid).flatMap((x) => x.defenders));
       o.defenders = A.map((f) => f.pid).filter((pid) => pid && !busy.has(pid)).slice(0, TURF_KINDS[d.kind].slots);
-      res.cash = Math.round(F.cashPerMin(L) * CONFIG.turfRewardMin);
-      res.xp = Math.round(F.xpNext(L) * 0.03);
+      const ev = this.ev(); // weekend events: double cash / XP, Víkend gangov
+      res.cash = Math.round(F.cashPerMin(L) * CONFIG.turfRewardMin * ev.cash * ev.turfReward);
+      res.xp = Math.round(F.xpNext(L) * 0.03 * ev.xp);
       this.p.cash += res.cash;
       res.levelUps = this.addXp(res.xp);
       const row = this.gangRow();
-      if (this.ctx) row.winsDelta = (row.winsDelta || 0) + 1; else g.wins = (g.wins || 0) + 1;
+      if (this.ctx) row.winsDelta = (row.winsDelta || 0) + ev.turfWins; else g.wins = (g.wins || 0) + ev.turfWins;
       this.gangLog(this.p.name + (prev ? ' prebral ' + d.name + ' gangu ' + prevInfo.name + '.' : ' obsadil ' + d.name + '.'));
     } else {
-      o.retry[gid] = now + this.wMs(CONFIG.gangRetryMin);
+      if (!this.ev().noRetry) o.retry[gid] = now + this.wMs(CONFIG.gangRetryMin);
       if (prev && !RIVAL_GANGS[prev]) this.logTo(prev, 'Ubránili ste ' + d.name + ' pred gangom ' + g.name + '.');
       this.gangLog(this.p.name + ': útok na ' + d.name + ' nevyšiel.', true);
     }
@@ -566,8 +568,10 @@ export const GangMixin = {
   gangHour() {
     const rivals = Object.keys(RIVAL_GANGS);
     const now = Date.now();
+    const keep = this.ev().noDecay;
     for (const d of TURF) {
       const o = this.turfObj(d.id);
+      if (keep) o.at = now; // the weekend's hours won't count once the decay is back
       if (o.owner && !RIVAL_GANGS[o.owner]) {
         if (now < o.safeUntil || Math.random() >= CONFIG.gangRaidChance) continue;
         const attacker = rivals[Math.floor(Math.random() * rivals.length)];
