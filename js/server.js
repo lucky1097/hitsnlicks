@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023221250';
-import { eventFx } from './events.js?v=20261023221250';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023221250';
-import { makeFighter, simulate } from './combat.js?v=20261023221250';
-import { GangMixin } from './gangs.js?v=20261023221250';
-import { DailyMixin } from './daily.js?v=20261023221250';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023221751';
+import { eventFx } from './events.js?v=20261023221751';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023221751';
+import { makeFighter, simulate } from './combat.js?v=20261023221751';
+import { GangMixin } from './gangs.js?v=20261023221751';
+import { DailyMixin } from './daily.js?v=20261023221751';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -253,12 +253,17 @@ export class SimServer {
     return { id: 'i' + this.state.nextId++, base: baseId, slot: base.slot, rarity: r.id, level, upgrade: 0, power: F.itemPower(level, r.mult), price: F.itemPrice(level, r.mult), stats: this.rollStats(level, r.id) };
   }
 
-  // common: 1 random stat, epic 3; legendary: class main stat + odolnosť at twice the epic value
+  // common: 1 random stat; epic: class main stat + odolnosť + šťastie; legendary: class main stat + odolnosť
+  // at twice the epic value
   rollStats(level, rarity) {
     const one = (rid) => Math.max(1, Math.round(F.itemPower(level, RARITIES.find((x) => x.id === rid).mult) * CONFIG.itemStatShare[rid]));
     if (rarity === 'legendarny') {
       const v = one('epicky') * 2;
       return { [F.mainStat(this.p.cls)]: v, odolnost: v };
+    }
+    if (rarity === 'epicky') {
+      const v = one('epicky');
+      return { [F.mainStat(this.p.cls)]: v, odolnost: v, stastie: v };
     }
     const pool = [...STATS];
     const out = {};
@@ -396,7 +401,9 @@ export class SimServer {
     const cost = this.rerollCost();
     if (this.p.chains < cost) return fail('Nemáš zlatú tehličku.');
     this.p.chains -= cost;
-    this.restock(shopId);
+    const st = this.restock(shopId);
+    // an open Black Market stall is rolled again together with the regular goods
+    if (this.blackMarketOpen()) { st.bmKey = null; this.shop(shopId); }
     return ok();
   }
 
