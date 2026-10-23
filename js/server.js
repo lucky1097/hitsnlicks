@@ -1,10 +1,10 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023211107';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023211107';
-import { makeFighter, simulate } from './combat.js?v=20261023211107';
-import { GangMixin } from './gangs.js?v=20261023211107';
-import { DailyMixin } from './daily.js?v=20261023211107';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023214817';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023214817';
+import { makeFighter, simulate } from './combat.js?v=20261023214817';
+import { GangMixin } from './gangs.js?v=20261023214817';
+import { DailyMixin } from './daily.js?v=20261023214817';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -637,21 +637,23 @@ export class SimServer {
     return Math.min(CONFIG.copMax, (s - CONFIG.wantedChase + 1) * 2 ** this.copKills());
   }
 
-  // an officer on foot went down: more of them come, maybe an epic item (one a day), counts for the raid task
+  // an officer on foot went down: more of them come, maybe an epic item (copEpicChance each, at most
+  // copEpicPerDay a day), counts for the raid task
   copDown() {
     if (this.wantedStars() < CONFIG.wantedChase) return fail('Nikto ťa nenaháňa.');
-    this.addWanted(CONFIG.wantedGain.copKill);
     const c = this.state.cops || (this.state.cops = { kills: 0, lastAt: 0 });
     const now = Date.now();
-    if (now - c.lastAt < 1000) return fail('Príliš rýchlo.');
+    // a blast can drop several officers at once, so only a flood of calls is refused
+    if (now - c.lastAt < CONFIG.copKillGapMs) return fail('Príliš rýchlo.');
     c.lastAt = now;
+    this.addWanted(CONFIG.wantedGain.copKill);
     c.kills += 1;
     this.addHeat(CONFIG.heatCopKill);
     const day = this.daily();
     let item = null;
-    if (!day.copEpic && Math.random() < CONFIG.copEpicChance) {
+    if ((day.copEpic || 0) < CONFIG.copEpicPerDay && Math.random() < CONFIG.copEpicChance) {
       item = this.randomItem(this.p.level, 'blackmarket');
-      if (item) { this.giveItem(item); day.copEpic = true; }
+      if (item) { this.giveItem(item); day.copEpic = (day.copEpic || 0) + 1; }
     }
     const daily = this.dailyEvent('razia');
     this.save();

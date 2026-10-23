@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261023211107';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261023211107';
-import { DAILY_TYPES } from './daily.js?v=20261023211107';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261023211107';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261023214817';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261023214817';
+import { DAILY_TYPES } from './daily.js?v=20261023214817';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261023214817';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -522,7 +522,7 @@ export class UI {
     if (!r.ok) return; // the chase already ended
     this.toast('Policajt na zemi. Teraz ťa naháňa ' + r.wanted + ' policajtov.', true);
     if (r.item) {
-      this.modal('<h2 class="win">Z policajta niečo vypadlo</h2><p class="sub">Na zemi ostal epický kus. Dnes už z policajtov nič také nepadne.</p>' + this.lootHtml(r.item) +
+      this.modal('<h2 class="win">Z policajta niečo vypadlo</h2><p class="sub">Na zemi ostal epický kus.</p>' + this.lootHtml(r.item) +
         '<div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
     }
     if (r.daily) {

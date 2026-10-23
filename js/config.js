@@ -64,7 +64,7 @@ export const CONFIG = {
   dailyBars: { 5: 20, 10: 35, 15: 50 },
   dailyCourierSec: 120,
   // police on foot (heat >= raidFrom): every officer you put down doubles how many chase you, up to copMax;
-  // one officer may drop an epic item (copEpicChance, at most one a day); caught after a kill = lose all cash or
+  // an officer may drop an epic item (copEpicChance, at most copEpicPerDay a day); caught after a kill = lose all cash or
   // killJailMin without Don / Díler missions
   copMax: 8,
   // wanted level (stars): what each street crime adds (×(1 + heat/100)), chase from wantedChase stars,
@@ -80,7 +80,9 @@ export const CONFIG = {
   // hideout: stay hideMin minutes and the police on foot leave you alone for shadowMin, even at high heat
   hideMin: 5,
   shadowMin: 20,
-  copEpicChance: 0.25,
+  copEpicChance: 0.2, // per officer put down
+  copEpicPerDay: 5, // cap per day: it also limits what a modified client could farm
+  copKillGapMs: 250,
   heatCopHit: 4,
   heatCopKill: 15,
   killJailMin: 1440,
