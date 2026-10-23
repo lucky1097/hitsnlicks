@@ -1,10 +1,10 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261022235132';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261022235132';
-import { makeFighter, simulate } from './combat.js?v=20261022235132';
-import { GangMixin } from './gangs.js?v=20261022235132';
-import { DailyMixin } from './daily.js?v=20261022235132';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023211107';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023211107';
+import { makeFighter, simulate } from './combat.js?v=20261023211107';
+import { GangMixin } from './gangs.js?v=20261023211107';
+import { DailyMixin } from './daily.js?v=20261023211107';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -603,7 +603,7 @@ export class SimServer {
     const h = this.hideState();
     if (h.since) return ok({ since: h.since });
     if (this.shadowLeft() > 0) return fail('Už si v tieni. Polícia ťa nenaháňa.');
-    if (this.heatNow() < CONFIG.raidFrom) return fail('Polícia ťa nenaháňa. Skrýša sa oplatí až pri heate ' + CONFIG.raidFrom + ' %.');
+    if (this.wantedStars() < 1) return fail('Polícia ťa nehľadá, nie je pred kým sa skrývať.');
     h.since = Date.now();
     this.save();
     return ok({ since: h.since });
@@ -617,24 +617,30 @@ export class SimServer {
     h.since = 0;
     if (done) {
       h.shadowUntil = Date.now() + this.gameMs(CONFIG.shadowMin);
-      if (this.state.cops) this.state.cops.kills = 0; // the chase is over
+      this.clearWanted(); // the chase is over
     }
     this.save();
     return ok({ shadow: done, until: h.shadowUntil });
   }
 
-  // officers put down in the current chase; the chase (and the count) ends when heat drops below raidFrom
+  // officers put down in the current chase; the chase (and the count) ends when the stars are gone
   copKills() {
     const c = this.state.cops;
-    if (c && c.kills && this.heatNow() < CONFIG.raidFrom) c.kills = 0;
+    if (c && c.kills && this.wantedStars() < 1) c.kills = 0;
     return (c && c.kills) || 0;
   }
 
-  copsWanted() { return Math.min(CONFIG.copMax, 2 ** this.copKills()); }
+  // officers on foot from wantedChase stars on: one more per star, doubled for every one you put down
+  copsWanted() {
+    const s = this.wantedStars();
+    if (s < CONFIG.wantedChase) return 0;
+    return Math.min(CONFIG.copMax, (s - CONFIG.wantedChase + 1) * 2 ** this.copKills());
+  }
 
   // an officer on foot went down: more of them come, maybe an epic item (one a day), counts for the raid task
   copDown() {
-    if (this.heatNow() < CONFIG.raidFrom) return fail('Nikto ťa nenaháňa.');
+    if (this.wantedStars() < CONFIG.wantedChase) return fail('Nikto ťa nenaháňa.');
+    this.addWanted(CONFIG.wantedGain.copKill);
     const c = this.state.cops || (this.state.cops = { kills: 0, lastAt: 0 });
     const now = Date.now();
     if (now - c.lastAt < 1000) return fail('Príliš rýchlo.');
@@ -659,7 +665,7 @@ export class SimServer {
     let out;
     if (choice === 'peniaze') { out = { type: 'cash', lost: this.p.cash }; this.p.cash = 0; }
     else { this.state.jailUntil = Date.now() + this.gameMs(CONFIG.killJailMin); out = { type: 'jail', minutes: CONFIG.killJailMin }; }
-    this.state.cops.kills = 0;
+    this.clearWanted();
     this.save();
     return ok({ result: out });
   }
@@ -668,6 +674,7 @@ export class SimServer {
     let out;
     if (this.copKills()) return fail('Zložil si policajta. Tu už úplatok nepomôže.');
     this.dailyCaught();
+    this.clearWanted(); // caught: whatever comes next, this chase is over
     if (choice === 'utiect') {
       if (Math.random() < this.policeRunChance()) { this.addHeat(5); out = { type: 'escaped' }; }
       else {
@@ -761,10 +768,48 @@ export class SimServer {
     return { base: it.base, attack: b.attack || 'melee', cooldown: b.cooldown || 0.4, auto: !!b.auto };
   }
 
-  // shooting or hitting people on the street
-  crime(heat) {
+  // shooting or hitting people on the street: heat for the day, stars for the police (kind = what they saw)
+  crime(heat, kind) {
     this.addHeat(heat);
+    if (CONFIG.wantedGain[kind]) this.addWanted(CONFIG.wantedGain[kind]);
     this.save();
+  }
+
+  // ---------------------------------------------------------------- wanted level (police stars, 0–5)
+  // Rises only from street crimes, a little faster at high heat. Falls one star for every wantedLoseSec the
+  // police lose sight of you (the map reports it), on its own after wantedIdleSec without new trouble,
+  // and to zero when you are caught or come out of the hideout.
+  wanted() {
+    const w = this.state.wanted || (this.state.wanted = { stars: 0, at: 0 });
+    const idle = (Date.now() - w.at) / 1000 - CONFIG.wantedIdleSec;
+    if (w.stars > 0 && idle > 0) {
+      const drop = Math.floor(idle / CONFIG.wantedLoseSec) + 1;
+      w.stars = Math.max(0, Math.floor(w.stars) - drop);
+      w.at = Date.now() - CONFIG.wantedIdleSec * 1000;
+    }
+    return w;
+  }
+
+  wantedStars() { return Math.floor(this.wanted().stars); }
+
+  addWanted(v) {
+    const w = this.wanted();
+    w.stars = Math.min(5, w.stars + v * (1 + this.heatNow() / 100));
+    w.at = Date.now();
+  }
+
+  clearWanted() { const w = this.wanted(); w.stars = 0; w.at = Date.now(); if (this.state.cops) this.state.cops.kills = 0; }
+
+  // the map: no officer has seen you for wantedLoseSec -> one star less
+  wantedLose() {
+    const w = this.wanted();
+    if (w.stars <= 0) return ok({ stars: 0 });
+    if (Date.now() - w.at < (CONFIG.wantedLoseSec - 2) * 1000) return fail('Ešte ťa hľadajú.');
+    w.stars = Math.max(0, Math.floor(w.stars) - 1); // always one whole star of what the HUD shows
+    w.at = Date.now();
+    if (w.stars <= 0 && this.state.cops) this.state.cops.kills = 0;
+    this.save();
+    return ok({ stars: w.stars });
   }
 
   lawyerCost() { return F.lawyerCost(this.p.level); }

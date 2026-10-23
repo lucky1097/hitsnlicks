@@ -1,9 +1,9 @@
-import { SimServer } from './server.js?v=20261022235132';
-import { RemoteServer } from './remote.js?v=20261022235132';
-import { ONLINE } from './net.js?v=20261022235132';
-import { CONFIG } from './config.js?v=20261022235132';
-import { UI } from './ui.js?v=20261022235132';
-import { createWorld } from './world.js?v=20261022235132';
+import { SimServer } from './server.js?v=20261023211107';
+import { RemoteServer } from './remote.js?v=20261023211107';
+import { ONLINE } from './net.js?v=20261023211107';
+import { CONFIG } from './config.js?v=20261023211107';
+import { UI } from './ui.js?v=20261023211107';
+import { createWorld } from './world.js?v=20261023211107';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -23,17 +23,18 @@ const game = createWorld(document.getElementById('game'), {
     return m && Date.now() >= m.endsAt ? m.giver : null;
   },
   paused: () => ui.paused() || !server.hasSave(),
-  // the map's police: lights from 40 %, an officer on foot only near the top of the bar
-  heatStars: () => {
-    if (!server.hasSave()) return 0;
-    const h = server.heatNow();
-    // in the hideout or in the shadows after it: lights may flash, but nobody comes on foot
+  // the map's police: wanted stars (lights from 1, officers on foot from CONFIG.wantedChase);
+  // in the hideout or in the shadows after it nobody comes on foot
+  police: () => {
+    const base = { arrestSec: CONFIG.arrestSec, loseSec: CONFIG.wantedLoseSec, sightPx: CONFIG.wantedSightPx, peaceSec: CONFIG.caughtPeaceSec };
+    if (!server.hasSave()) return { ...base, stars: 0, chase: false, wanted: 0 };
+    const stars = server.wantedStars();
     const hidden = server.hideState().since || server.shadowLeft() > 0;
-    return h >= CONFIG.raidFrom ? (hidden ? 2 : 3) : h >= 40 ? 2 : h > 0 ? 1 : 0;
+    return { ...base, stars, chase: !hidden && stars >= CONFIG.wantedChase, wanted: server.copsWanted() };
   },
+  onWantedLose: () => ui.wantedLose(),
   weapon: () => (server.hasSave() ? server.streetWeapon() : null),
-  onCrime: (kind) => server.crime({ shot: CONFIG.heatShot, hitGun: CONFIG.heatHitGun, hitMelee: CONFIG.heatHitMelee, car: CONFIG.heatCarHit, blast: CONFIG.heatBlast, copHit: CONFIG.heatCopHit }[kind] || 0),
-  copsWanted: () => (server.hasSave() ? server.copsWanted() : 1),
+  onCrime: (kind) => server.crime({ shot: CONFIG.heatShot, hitGun: CONFIG.heatHitGun, hitMelee: CONFIG.heatHitMelee, car: CONFIG.heatCarHit, blast: CONFIG.heatBlast, copHit: CONFIG.heatCopHit }[kind] || 0, kind),
   onCopDown: () => ui.copDown(),
   reaper: () => (server.hasSave() ? server.reaper() : null),
   onRipperCaught: () => ui.reaperCaught(),

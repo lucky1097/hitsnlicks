@@ -1,8 +1,8 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261022235132';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261022235132';
-import { DAILY_TYPES } from './daily.js?v=20261022235132';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261022235132';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261023211107';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261023211107';
+import { DAILY_TYPES } from './daily.js?v=20261023211107';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261023211107';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -239,6 +239,14 @@ export class UI {
     }
     this.dailyHud();
     this.hideHud();
+    // wanted stars (0–5): only while the police are interested
+    const ws = this.s.wantedStars(), wel = $('#hud-wanted');
+    wel.hidden = !ws;
+    if (ws) {
+      const html = '<b>' + '★'.repeat(ws) + '</b>' + '★'.repeat(5 - ws);
+      if (wel.dataset.html !== html) { wel.innerHTML = html; wel.dataset.html = html; }
+      wel.classList.toggle('chase', ws >= CONFIG.wantedChase);
+    }
     const bl = $('#hud-buffs');
     const chips = this.buffChips();
     bl.hidden = !chips;
@@ -269,7 +277,7 @@ export class UI {
   }
 
   scr_hideout() {
-    const h = this.s.hideState(), heat = this.s.heatNow();
+    const h = this.s.hideState(), stars = this.s.wantedStars();
     let inner;
     if (h.since) {
       inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Skrývaš sa v tieni</span>' +
@@ -283,10 +291,10 @@ export class UI {
         '<button class="btn gold wide" data-act="back">Vyjsť von</button>';
     } else {
       inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Zadný vchod</span>' +
-        '<p>Pivnica bez okien, matrac a zámok z vnútornej strany. Keď ťa pri heate nad ' + CONFIG.raidFrom + ' % naháňa polícia, schovaj sa tu na ' + CONFIG.hideMin + ' minút. Potom budeš ' + CONFIG.shadowMin + ' minút v tieni a polícia ťa nebude naháňať.</p>' +
-        '<p class="num">Heat teraz: ' + Math.round(heat) + ' %</p>' +
-        '<button class="btn gold wide" data-act="hide-start"' + (heat < CONFIG.raidFrom ? ' disabled' : '') + '>Skryť sa</button>' +
-        (heat < CONFIG.raidFrom ? '<p style="font-size:15px">Polícia ťa teraz nenaháňa, nie je pred kým sa skrývať.</p>' : '');
+        '<p>Pivnica bez okien, matrac a zámok z vnútornej strany. Keď ťa hľadá polícia, schovaj sa tu na ' + CONFIG.hideMin + ' minút. Hľadanosť zmizne a ' + CONFIG.shadowMin + ' minút ťa polícia nebude naháňať.</p>' +
+        '<p class="num">Hľadanosť teraz: ' + (stars ? '★'.repeat(stars) : 'žiadna') + '</p>' +
+        '<button class="btn gold wide" data-act="hide-start"' + (stars < 1 ? ' disabled' : '') + '>Skryť sa</button>' +
+        (stars < 1 ? '<p style="font-size:15px">Polícia ťa teraz nehľadá, nie je pred kým sa skrývať.</p>' : '');
     }
     return { html: this.hdr('Skrýša') + '<div class="body" style="padding:0"><div class="hide-scr">' + inner + '</div></div>' };
   }
@@ -501,6 +509,13 @@ export class UI {
     this.modal('<h2>' + esc(title) + '</h2><p class="sub" style="font-size:17px;color:#c9c4b8">' + esc(text) + '</p><div class="acts"><button class="btn gold" data-act="modal-close">Rozumiem</button></div>');
   }
 
+  // nobody saw you for a while: a star less
+  async wantedLose() {
+    const r = await this.s.wantedLose();
+    if (!r.ok) return;
+    this.toast(r.stars ? 'Polícia stratila stopu. Hľadanosť klesla.' : 'Stratil si sa polícii. Nikto ťa nehľadá.');
+  }
+
   // an officer on foot went down: more come, maybe an epic item, maybe a raid step
   async copDown() {
     const r = await this.s.copDown();
@@ -529,7 +544,7 @@ export class UI {
       return;
     }
     this.modal(
-      '<h2 class="lose">Kontrola</h2><p class="sub">Policajt ťa zastavil. Heat ' + Math.round(v.heat) + ' / 100.</p>' +
+      '<h2 class="lose">Kontrola</h2><p class="sub">Policajt ťa chytil. Potom bude ' + Math.round(CONFIG.caughtPeaceSec / 60) + ' minút pokoj.</p>' +
       '<div class="acts">' +
       '<button class="btn wide" data-act="police" data-arg="utiect">Utiecť · Obratnosť ' + pct(this.s.policeRunChance()) + '</button>' +
       '<button class="btn wide" data-act="police" data-arg="podplatit">Podplatiť · ' + money(this.s.policeBribeCost()) + '</button>' +

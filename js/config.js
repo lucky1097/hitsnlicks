@@ -67,6 +67,16 @@ export const CONFIG = {
   // one officer may drop an epic item (copEpicChance, at most one a day); caught after a kill = lose all cash or
   // killJailMin without Don / Díler missions
   copMax: 8,
+  // wanted level (stars): what each street crime adds (×(1 + heat/100)), chase from wantedChase stars,
+  // a star lost every wantedLoseSec out of the officers' sight (and on its own after wantedIdleSec of quiet),
+  // the officer must hold you arrestSec to arrest you, then peace for caughtPeaceSec
+  wantedGain: { shot: 0.25, hitMelee: 0.6, hitGun: 0.8, car: 0.15, blast: 1, copHit: 0.5, copKill: 1, spray: 1 },
+  wantedChase: 2,
+  wantedLoseSec: 20,
+  wantedIdleSec: 120,
+  wantedSightPx: 150,
+  arrestSec: 2.5,
+  caughtPeaceSec: 300,
   // hideout: stay hideMin minutes and the police on foot leave you alone for shadowMin, even at high heat
   hideMin: 5,
   shadowMin: 20,

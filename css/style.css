@@ -142,6 +142,9 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .sw.sel { border-color: #070707; outline: 2px solid var(--bone); }
 .war { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 /* hideout: the HUD chip while the police leave you alone, and the screen inside */
+.wanted { padding: 2px 8px; background: rgba(8,8,8,.8); border: 1px solid #3a3835; font-size: 17px; letter-spacing: 2px; color: #4f4c46; }
+.wanted b { color: #f0c95a; font-weight: 400; text-shadow: 0 0 6px rgba(240,201,90,.6); }
+.wanted.chase { border-color: rgba(224,53,43,.7); animation: pulse 1s infinite alternate; }
 .shadow-tag { padding: 4px 9px; background: rgba(8,8,8,.8); border: 1px solid #3a3835; border-left: 3px solid #b9b4a8; color: #d8d3c7; font-size: 14px; }
 .shadow-tag b { color: #efe9dc; font-variant-numeric: tabular-nums; }
 .hide-scr { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 24px; text-align: center; background: radial-gradient(ellipse 70% 50% at 50% 40%, #1b1a18, #050505 75%); }

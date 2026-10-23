@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261022235132';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261022235132';
+import { CONFIG, F } from './config.js?v=20261023211107';
+import { ITEM_BASES, POIS, TURF } from './data.js?v=20261023211107';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -29,8 +29,8 @@ export const DAILY_TYPES = {
   sledovanie: { group: 'action', name: 'Sledovanie', need: 1, text: () => 'Choď ' + CONFIG.dailyFollowSec + ' sekúnd za označeným cieľom. Nepribližuj sa príliš, inak si ťa všimne, a nestrať ho z dohľadu.' },
   graffiti: { group: 'hard', name: 'Graffiti', need: 1, text: (d) => 'Nastriekaj značku na objekt rivalov: ' + spotName(d.spot) + '. Postoj ' + CONFIG.dailySpraySec + ' sekundy pri dverách. Rivali si to všimnú, heat stúpne.' },
   vypalne: { group: 'action', name: 'Výpalné', need: 1, text: () => 'Majiteľ podniku neplatí. Jeho auto je na mape označené zlatým kruhom. Rozbi ho, kým nezačne horieť a nevybuchne.' },
-  escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Keď ťa pri vysokom heate naháňa polícia pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
-  razia: { group: 'hard', name: 'Policajná razia', need: 3, text: () => 'Pri vysokom heate zlož 2 policajtov a potom sa ' + CONFIG.dailyEscapeSec + ' sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.' },
+  escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Urob si na ulici problémy (aspoň ' + CONFIG.wantedChase + ' hviezdičky hľadanosti). Keď ťa naháňa polícia pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
+  razia: { group: 'hard', name: 'Policajná razia', need: 3, text: () => 'Keď ťa naháňa polícia (od ' + CONFIG.wantedChase + ' hviezdičiek), zlož 2 policajtov a potom sa ' + CONFIG.dailyEscapeSec + ' sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.' },
 };
 
 export const DailyMixin = {
@@ -133,7 +133,7 @@ export const DailyMixin = {
       if (t.type === 'razia' && t.have.length < 2) return fail('Najprv zlož dvoch policajtov.');
       if (step === 0) { t.data.startedAt = now; this.save(); return ok({ started: true }); }
       if (!t.data.startedAt || now - t.data.startedAt < (CONFIG.dailyEscapeSec - 2) * 1000) return fail('Ešte si neušiel.');
-      if (this.heatNow() < CONFIG.raidFrom) return fail('Polícia ťa už nenaháňa.');
+      if (this.wantedStars() < CONFIG.wantedChase) return fail('Polícia ťa už nenaháňa.');
       t.have.push(1);
     } else if (t.type === 'vypalne' || t.type === 'dlznik' || t.type === 'vreckar') {
       t.have.push(1); // the marked car blew up / the debtor went down / the bag is yours
@@ -143,7 +143,7 @@ export const DailyMixin = {
       if (step === 0) { t.data.startedAt = now; this.save(); return ok({ started: true }); }
       if (!t.data.startedAt || now - t.data.startedAt < (sec - 1.5) * 1000) return fail('Ešte nie.');
       t.have.push(1);
-      if (t.type === 'graffiti') this.addHeat(CONFIG.dailySprayHeat);
+      if (t.type === 'graffiti') { this.addHeat(CONFIG.dailySprayHeat); this.addWanted(CONFIG.wantedGain.spray); }
     } else {
       return fail('Túto úlohu splníš inak.');
     }

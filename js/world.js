@@ -1,8 +1,8 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261022235132';
-import { mulberry32 } from './combat.js?v=20261022235132'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261023211107';
+import { mulberry32 } from './combat.js?v=20261023211107'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -18,10 +18,10 @@ const deg = (r) => (r * 180) / Math.PI;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-// hooks: { input:{x,y,fire}, labelLayer:HTMLElement, paused():bool, heatStars():number, readyGiver():string|null,
+// hooks: { input:{x,y,fire}, labelLayer:HTMLElement, paused():bool, police():{stars,chase,wanted,arrestSec,loseSec,sightPx,peaceSec}, onWantedLose(), readyGiver():string|null,
 //          weapon():{attack,cooldown,auto}|null, onCrime('shot'|'hitGun'|'hitMelee'), onPill('red'|'blue'|'green'), onPoi(poi|null), onAction(), onPolice(),
 //          daily():{done,escapeSec,tasks:[{i,type,got,data,done}]}|null, onDailyStep(task, step),
-//          copsWanted():number, onCopDown() }
+//          onCopDown() }
 export function createWorld(parent, hooks) {
   class City extends Phaser.Scene {
     constructor() { super('city'); }
@@ -119,7 +119,7 @@ export function createWorld(parent, hooks) {
       // every car can be smashed: hp, then fire, then a wreck that clears away
       for (const c of [...this.cars, ...this.policeCars]) { c.hp = CAR_HP; c.state = null; c.fxT = 0; c.marked = null; }
 
-      // police on foot at high heat: hooks.copsWanted() of them (doubled for every one you put down)
+      // police on foot while you are wanted: hooks.police().wanted of them (doubled for every one you put down)
       this.cops = [];
       this.copCooldown = 0;
 
@@ -1059,18 +1059,22 @@ export function createWorld(parent, hooks) {
       hooks.onCopDown();
     }
 
-    // stars >= 3: officers come one after another up to hooks.copsWanted(); touching you = caught
-    updateCops(dt, paused, stars) {
+    // the police on foot: w = hooks.police() { stars, chase, wanted (how many), arrestSec, loseSec, sightPx, peaceSec }.
+    // They come while you are wanted; one at your side fills the arrest ring (run or hit to break it);
+    // out of every officer's sight for loseSec you lose a star
+    updateCops(dt, paused, w) {
       const px = this.player.x, py = this.player.y;
       this.copCooldown -= dt;
       const alive = this.cops.filter((c) => c.down <= 0 && !c.gone);
-      if (stars < 3) alive.forEach((c) => { c.s.destroy(); c.gone = true; });
-      else if (!paused && this.copCooldown <= 0 && alive.length < hooks.copsWanted()) {
+      if (!w.chase) {
+        alive.forEach((c) => { c.gone = true; this.tweens.add({ targets: c.s, alpha: 0, duration: 500, onComplete: () => c.s.destroy() }); });
+      } else if (!paused && this.copCooldown <= 0 && alive.length < w.wanted) {
         const ang = Math.random() * Math.PI * 2;
-        const s = this.add.image(px + Math.cos(ang) * 110, py + Math.sin(ang) * 110, 'p_policajt').setDepth(9);
+        const s = this.add.image(px + Math.cos(ang) * 130, py + Math.sin(ang) * 130, 'p_policajt').setDepth(9);
         this.cops.push({ s, cop: true, hits: 0, down: 0, t: 0 });
         this.copCooldown = alive.length ? 1.5 : 0;
       }
+      let near = false, seen = false;
       for (const c of this.cops) {
         if (c.gone) continue;
         if (c.down > 0) {
@@ -1080,19 +1084,39 @@ export function createWorld(parent, hooks) {
         }
         if (paused) continue;
         const dx = px - c.s.x, dy = py - c.s.y, d = Math.hypot(dx, dy) || 1;
-        if (d < 9) { // caught: everyone still standing leaves, a minute of peace
-          this.cops.forEach((o) => { if (o.down <= 0 && !o.gone) { o.s.destroy(); o.gone = true; } });
-          this.copCooldown = 60;
-          hooks.onPolice();
-          break;
+        if (d < w.sightPx) seen = true;
+        if (d < 12) near = true;
+        if (d > 7) { // stops at your side to cuff you
+          c.s.x += (dx / d) * COP_SPEED * dt;
+          c.s.y += (dy / d) * COP_SPEED * dt;
+          c.t += dt * 6;
+          c.s.setFlipX(Math.floor(c.t) % 2 === 1);
         }
-        c.s.x += (dx / d) * COP_SPEED * dt;
-        c.s.y += (dy / d) * COP_SPEED * dt;
         c.s.setAngle(deg(Math.atan2(dy, dx)) - 90);
-        c.t += dt * 6;
-        c.s.setFlipX(Math.floor(c.t) % 2 === 1);
       }
       this.cops = this.cops.filter((c) => !c.gone || c.down > 0);
+      if (paused) return;
+
+      // the arrest ring: fills while an officer holds you, drains when you get away
+      this.arrestT = Math.max(0, (this.arrestT || 0) + (near ? dt : -dt * 1.5));
+      if (this.arrestT > 0) {
+        const a = -Math.PI / 2, k = Math.min(1, this.arrestT / w.arrestSec);
+        this.ring.lineStyle(3, 0x000000, 0.5).beginPath().arc(px, py, 14, 0, Math.PI * 2).strokePath();
+        this.ring.lineStyle(2, 0xe0352b, 0.95).beginPath().arc(px, py, 14, a, a + k * Math.PI * 2).strokePath();
+      }
+      if (this.arrestT >= w.arrestSec) { // caught: everyone still standing leaves, then peace for a while
+        this.arrestT = 0;
+        this.cops.forEach((o) => { if (o.down <= 0 && !o.gone) { o.s.destroy(); o.gone = true; } });
+        this.copCooldown = w.peaceSec;
+        hooks.onPolice();
+        return;
+      }
+
+      // out of sight: a star less every loseSec (the server checks the timing)
+      if (w.stars > 0 && !seen) {
+        this.lostT = (this.lostT || 0) + dt;
+        if (this.lostT >= w.loseSec) { this.lostT = 0; hooks.onWantedLose(); }
+      } else this.lostT = 0;
     }
 
     updateBullets(dt) {
@@ -1251,8 +1275,8 @@ export function createWorld(parent, hooks) {
       }
 
       // --- traffic and police in the right-hand lane
-      const stars = hooks.heatStars();
-      const lights = stars >= 2, on = Math.floor(time / 250) % 2 === 0;
+      const police = hooks.police();
+      const lights = police.stars >= 1, on = Math.floor(time / 250) % 2 === 0;
       for (const c of this.allCars()) {
         this.updateCarFx(c, dt);
         if (c.state) continue; // burning or a wreck: it stays where it is
@@ -1270,8 +1294,8 @@ export function createWorld(parent, hooks) {
       }
       this.pushOutOfCars();
 
-      // --- officers on foot at high heat
-      this.updateCops(dt, paused, stars);
+      // --- officers on foot while you are wanted
+      this.updateCops(dt, paused, police);
 
       this.updateCamera(dt);
     }
