@@ -79,7 +79,7 @@ export const CONFIG = {
   // hideout: stay hideMin minutes and the police on foot leave you alone for shadowMin, even at high heat
   hideMin: 5,
   shadowMin: 20,
-  copEpicChance: 0.2, // per officer put down
+  copEpicChance: 0.1, // per officer put down
   copEpicPerDay: 5, // cap per day: it also limits what a modified client could farm
   copKillGapMs: 250,
   heatCopHit: 4,
@@ -120,8 +120,10 @@ export const CONFIG = {
   autoUnlockLevel: 20,
 
   // where rarities come from: shops and missions common, the Black Market (Friday evening) only epic,
-  // bosses drop legendary with this chance (otherwise an epic item)
+  // bosses drop legendary with this chance, else epic with bossEpicChance, else a common item
   legendaryBossChance: 0.01,
+  bossEpicChance: 0.2,
+  bossGearMult: 1.7, // a boss's weapon and armour are as strong as epic gear of his level
   // street violence raises heat
   heatShot: 1,
   heatHitGun: 5,
@@ -205,7 +207,8 @@ export const F = {
   itemPrice: (L, rarityMult) => Math.round(F.cashPerMin(L) * 6 * rarityMult * rarityMult),
   upgradeCost: (item) => Math.round(item.price * 0.35 * (item.upgrade + 1)),
   bossLevel: (k) => Math.round(6 + (k - 1) * 1.8), // 25 bosses of Mesto 1: level 6 … 49
-  bossStat: (Lb) => 10 + 2.5 * Lb,
+  // grows like a player who also buys stats: a level-30 player is about even with a level-29 boss
+  bossStat: (Lb) => 10 + 2.5 * Lb + 0.25 * Lb * Lb,
   npcStat: (L) => 10 + 2.2 * L,
 };
 

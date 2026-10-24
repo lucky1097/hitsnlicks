@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261023221751';
-import { eventFx } from './events.js?v=20261023221751';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261023221751';
-import { makeFighter, simulate } from './combat.js?v=20261023221751';
-import { GangMixin } from './gangs.js?v=20261023221751';
-import { DailyMixin } from './daily.js?v=20261023221751';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024115302';
+import { eventFx } from './events.js?v=20261024115302';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024115302';
+import { makeFighter, simulate } from './combat.js?v=20261024115302';
+import { GangMixin } from './gangs.js?v=20261024115302';
+import { DailyMixin } from './daily.js?v=20261024115302';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -279,11 +279,15 @@ export class SimServer {
     });
   }
 
-  // source: 'shop' and 'mission' (bežné), 'blackmarket' (epické), 'boss' (1 % legendárne, inak epické)
+  // source: 'shop' and 'mission' (bežné), 'blackmarket' (epické), 'boss' (1 % legendárne, 20 % epické, inak bežné)
   randomItem(level, source, bases) {
     let rarity;
     if (source === 'blackmarket') rarity = 'epicky';
-    else if (source === 'boss') rarity = Math.random() < Math.max(CONFIG.legendaryBossChance, this.ev().legendBoss || 0) ? 'legendarny' : 'epicky';
+    else if (source === 'boss') {
+      const r = Math.random();
+      const legend = Math.max(CONFIG.legendaryBossChance, this.ev().legendBoss || 0);
+      rarity = r < legend ? 'legendarny' : r < legend + CONFIG.bossEpicChance ? 'epicky' : 'bezny';
+    }
     else rarity = 'bezny';
     let pool = this.basesFor(rarity, bases).filter((id) => !ITEM_BASES[id].shopOnly);
     if (rarity === 'legendarny') pool = pool.filter((id) => ITEM_BASES[id].rarity === 'legendarny');
@@ -897,7 +901,7 @@ export class SimServer {
     STATS.forEach((s) => { stats[s] = Math.round(base * b.profile[s]); });
     // a boss fights like the class whose stat his profile favours most
     const cls = Object.keys(CLASSES).reduce((best, c) => (b.profile[CLASSES[c].stat] > b.profile[CLASSES[best].stat] ? c : best), 'svalovec');
-    return makeFighter(b.name, Lb, stats, F.itemPower(Lb, 1.3) * CONFIG.weaponDmgMult, { hpMult: CONFIG.bossHpMult, portrait: b.art || null, title: b.title, cls, armor: F.itemPower(Lb, 1.3) * 5 });
+    return makeFighter(b.name, Lb, stats, F.itemPower(Lb, CONFIG.bossGearMult) * CONFIG.weaponDmgMult, { hpMult: CONFIG.bossHpMult, portrait: b.art || null, title: b.title, cls, armor: F.itemPower(Lb, CONFIG.bossGearMult) * 5 });
   }
 
   bossInfo() {

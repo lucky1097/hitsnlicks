@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261023221751';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261023221751';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261023221751';
-import { DAILY_TYPES } from './daily.js?v=20261023221751';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261023221751';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024115302';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024115302';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024115302';
+import { DAILY_TYPES } from './daily.js?v=20261024115302';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024115302';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -1104,7 +1104,7 @@ export class UI {
       '<div><div class="top"><span class="bl">Ty</span><span class="num muted" style="font-size:14px">úr. ' + me.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(me.hp) + '<br>Úder ' + Math.round(F.hitOf(me)) + '</p></div>' +
       '<div><div class="top"><span class="bl">' + info.boss.name + '</span><span class="num muted" style="font-size:14px">úr. ' + f.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(f.hp) + '<br>Úder ' + Math.round(F.hitOf(f)) + '</p></div></div>';
     const legendPct = Math.round(Math.max(CONFIG.legendaryBossChance, this.s.ev().legendBoss || 0) * 100);
-    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · epický predmet, ' + legendPct + ' % šanca, že bude legendárny</p>';
+    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · predmet: ' + Math.round(CONFIG.bossEpicChance * 100) + ' % epický, ' + legendPct + ' % legendárny</p>';
     h += info.hunt ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · Hon na bossov, bez čakania</button>'
       : info.free ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · pokus zadarmo</button>'
       : '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať za ' + CONFIG.bossRetryChains + ' zlatých tehličiek</button><p class="note">Ďalší pokus zadarmo o <span data-until="' + info.freeAt + '"></span></p>';
