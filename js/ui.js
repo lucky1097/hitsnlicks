@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024154006';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024154006';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024154006';
-import { DAILY_TYPES } from './daily.js?v=20261024154006';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024154006';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024160009';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024160009';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024160009';
+import { DAILY_TYPES } from './daily.js?v=20261024160009';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024160009';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -62,6 +62,7 @@ const MENU = [
   { id: 'events', name: 'Víkendové eventy', desc: 'Každý víkend dva eventy naraz: čo platí teraz a čo príde.' },
   { id: 'policehelp', name: 'Polícia a heat', desc: 'Heat, hviezdy, kontrola, basa, právnička a skrýša na jednom mieste.' },
   { id: 'arena', name: 'Aréna', desc: 'Súboje s inými hráčmi a rebríček.' },
+  { id: 'club', name: 'Podzemné zápasy', desc: 'Sto súperov v pivnici pod klubom, každý silnejší. Jeden zápas za hodinu.' },
   { id: 'boss', name: 'Boss fights', desc: 'Línia bossov Mesta 1. Kladivo čaká v uličke za obchodmi.' },
   { id: 'gang', name: 'Gang', desc: 'Tvoj gang, pokladnica, členovia a boje o územie.' },
   { id: 'hall', name: 'Sieň slávy', desc: 'Všetci registrovaní hráči. Klikni na hráča a uvidíš jeho staty a výbavu.' },
@@ -670,6 +671,11 @@ export class UI {
         const b = this.s.bossInfo();
         this.open('fight', { kind: 'boss', ...r, artB: r.b.portrait || 'kladivo', silhouette: !r.b.portrait, title: r.b.name, subtitle: r.b.title, next: b }, true);
       },
+      async 'club-fight'() {
+        const r = await this.s.fightClub();
+        if (!this.check(r)) return;
+        this.open('fight', { kind: 'club', ...r, artB: r.b.portrait, title: r.b.name, subtitle: 'Poschodie ' + r.result.floor + ' · ' + r.b.title }, true);
+      },
       async 'arena-fight'(a) {
         const opp = this.s.arena().opponents[Number(a)];
         const r = await this.s.fightArena(Number(a));
@@ -842,7 +848,7 @@ export class UI {
         '<svg width="300" height="26" viewBox="0 0 330 26" aria-hidden="true"><path d="M0 13 H128" stroke="#e9e4d8" stroke-opacity=".4"/><path d="M202 13 H330" stroke="#e9e4d8" stroke-opacity=".4"/><path d="M128 13 C136 4 146 4 150 13 C146 22 136 22 128 13 Z M202 13 C194 4 184 4 180 13 C184 22 194 22 202 13 Z M165 3 L175 13 L165 23 L155 13 Z" fill="none" stroke="#c9a24a"/><circle cx="165" cy="13" r="2.2" fill="#c9a24a"/></svg>' +
         '<h2 class="sc" style="margin:8px 0 6px;font-weight:500;font-size:18px;letter-spacing:4px;color:#b9b4a8">Menu</h2>' +
         '<div class="menu">' + MENU.map((m, i) => {
-          const lv = (m.id === 'arena' || (m.id === 'gang' && !this.s.gang())) ? this.s.locked(m.id) : 0;
+          const lv = (m.id === 'arena' || m.id === 'club' || (m.id === 'gang' && !this.s.gang())) ? this.s.locked(m.id) : 0;
           const note = m.locked ? 'od verzie 2' : lv ? 'od úrovne ' + lv : '';
           return '<button class="' + (i === 0 ? 'sel' : '') + (m.locked || lv ? ' locked' : '') + '" data-act="menu-go" data-arg="' + m.id + '" data-desc="' + esc(m.desc) + '">' + m.name + (note ? ' <small style="font-size:14px;font-style:italic">· ' + note + '</small>' : '') + '</button>';
         }).join('') + '</div>' +
@@ -898,9 +904,16 @@ export class UI {
   scr_hall(list) {
     list = list || [];
     const tab = this.sel.hallTab || 'players';
-    const tabs = '<div class="seg"><button class="' + (tab === 'players' ? 'on' : '') + '" data-act="hall-tab" data-arg="players">Hráči</button><button class="' + (tab === 'gangs' ? 'on' : '') + '" data-act="hall-tab" data-arg="gangs">Gangy</button></div>';
+    const tabs = '<div class="seg"><button class="' + (tab === 'players' ? 'on' : '') + '" data-act="hall-tab" data-arg="players">Hráči</button><button class="' + (tab === 'club' ? 'on' : '') + '" data-act="hall-tab" data-arg="club">Zápasy</button><button class="' + (tab === 'gangs' ? 'on' : '') + '" data-act="hall-tab" data-arg="gangs">Gangy</button></div>';
     let rows, count;
-    if (tab === 'gangs') {
+    if (tab === 'club') {
+      // Podzemné zápasy: the highest floor first
+      const cl = list.filter((r) => r.club > 0).sort((a, b) => b.club - a.club || b.level - a.level);
+      count = cl.length + ' hráčov';
+      rows = cl.map((r, i) => '<button class="hrow' + (r.me ? ' me' : '') + '" data-act="profile" data-arg="' + esc(r.id) + '">' +
+        '<span class="num rk">' + (i + 1) + '.</span><span class="nm">' + esc(r.name) + (r.me ? ' <small>· ty</small>' : '') + '</span>' +
+        '<span class="cl num">úr. ' + r.level + '</span><span class="num lv">' + r.club + ' / ' + CONFIG.clubFloors + '</span></button>').join('') || '<p class="p">Zatiaľ nikto nevyhral ani jeden zápas.</p>';
+    } else if (tab === 'gangs') {
       const gl = this.sel.hallGangs || { list: [], mine: null };
       count = gl.list.length + ' gangov';
       rows = gl.list.map((x, i) => '<div class="hrow ghrow' + (x.id === gl.mine ? ' me' : '') + '"><span class="num rk">' + (i + 1) + '.</span><span class="nm">' + this.tagBox(x) + ' ' + esc(x.name) + (x.id === gl.mine ? ' <small>· tvoj</small>' : '') + '</span>' +
@@ -915,6 +928,7 @@ export class UI {
     return {
       html: this.hdr('Sieň slávy', count) + '<div class="body">' + tabs + rows +
         (tab === 'gangs' ? '<p class="note">Poradie podľa vyhratých bojov o územie (Gang Wars).</p>' : '') +
+        (tab === 'club' ? '<p class="note">Poradie podľa najvyššieho poschodia v Podzemných zápasoch.</p>' : '') +
         (this.s.online ? '' : '<p class="note">Offline hra: ostatných hráčov a gangy uvidíš po prihlásení.</p>') + '</div>',
     };
   }
@@ -1104,6 +1118,35 @@ export class UI {
     h += '<div class="sec sc">Línia bossov Mesta 1</div><div class="boss-list">' + BOSSES.map((b, i) => '<span class="' + (i < info.index ? 'done' : i === info.index ? 'now' : '') + '">' + (i <= info.index ? b.name : '?') + '</span>').join('') + '</div>';
     h += '<p class="note">Do tímu si môžeš zobrať 1–2 členov gangu (príde s gangmi).</p></div>';
     return { html: this.hdr('Boss fights', money(this.s.p.cash)) + h };
+  }
+
+  // Podzemné zápasy: the next fighter of the ladder, the clock to the next fight, milestones ahead
+  scr_club() {
+    if (this.s.locked('club')) return this.lockedScr('Podzemné zápasy', 'club', 'Pivnica pod klubom, kde sa bije o peniaze a meno. Sto súperov, každý silnejší ako ten pred ním.');
+    const info = this.s.clubInfo();
+    const hdr = this.hdr('Podzemné zápasy', money(this.s.p.cash));
+    if (info.done) return { html: hdr + '<div class="body"><p class="p">Porazil si všetkých ' + info.total + ' súperov. V pivnici pod klubom už nie je nikto, kto by sa ti postavil.</p></div>' };
+    const f = info.fighter, me = this.s.playerFighter(), rw = info.reward;
+    let h = '<div class="stage"><img class="bg full" src="' + art(f.portrait) + '" alt="' + esc(f.name) + '" style="object-position:50% 25%">' +
+      '<div class="fade-t"></div><div class="fade-b"></div>' +
+      '<div class="title" style="align-items:flex-start;left:16px;top:60px"><span class="sc" style="font-size:14px;color:#b9b4a8">Poschodie ' + info.floor + ' / ' + info.total + '</span><span class="bl" style="font-size:42px;font-weight:900;color:#efe9dc;text-shadow:0 3px 0 #000">' + esc(f.name) + '</span><span class="sc" style="font-size:14px;color:#e05a4f;text-shadow:0 1px 2px #000,0 0 8px #000">' + esc(f.title) + '</span></div></div>';
+    h += '<div class="body"><div class="hpgrid" style="padding:0">' +
+      '<div><div class="top"><span class="bl">Ty</span><span class="num muted" style="font-size:14px">úr. ' + me.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(me.hp) + '<br>Úder ' + Math.round(F.hitOf(me)) + '</p></div>' +
+      '<div><div class="top"><span class="bl">' + esc(f.name) + '</span><span class="num muted" style="font-size:14px">úr. ' + f.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(f.hp) + '<br>Úder ' + Math.round(F.hitOf(f)) + '</p></div></div>';
+    const extra = (rw.bars ? ' · ' + rw.bars + ' tehl.' : '') + (rw.item === 'legendarny' ? ' · legendárny predmet' : rw.item === 'epicky' ? ' · epický predmet' : '');
+    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena za výhru: <span class="gold">' + money(rw.cash) + ' · ' + fmt(rw.xp) + ' XP' + extra + '</span></p>';
+    h += info.ready ? '<button class="btn gold wide" style="margin-top:10px" data-act="club-fight">Nastúpiť do ringu</button>'
+      : '<button class="btn gold wide" style="margin-top:10px" disabled>Ďalší zápas o <span data-until="' + info.nextAt + '"></span></button>';
+    // the next milestones on the ladder
+    const next = [];
+    for (let n = info.floor; n <= info.total && next.length < 3; n++) {
+      if (n === info.total) next.push(n + ': legendárny predmet');
+      else if (n % CONFIG.clubEpicEvery === 0) next.push(n + ': epický predmet' + (n % CONFIG.clubBarsEvery === 0 ? ' a ' + CONFIG.clubBars + ' tehl.' : ''));
+      else if (n % CONFIG.clubBarsEvery === 0) next.push(n + ': ' + CONFIG.clubBars + ' tehličiek');
+    }
+    h += '<div class="sec sc">Poschodia s odmenou navyše</div><p class="note" style="text-align:left">' + next.join(' · ') + '</p>';
+    h += '<p class="note">Jeden zápas za ' + CONFIG.clubCooldownMin + ' minút, vyhraný aj prehraný. Prehra ťa nevráti späť. Poradie nájdeš v Sieni slávy.</p></div>';
+    return { html: this.hdr('Podzemné zápasy', money(this.s.p.cash)) + h };
   }
 
   // every police term on one screen (a tap on the heat bar or the stars opens it)
@@ -1545,7 +1588,7 @@ export class UI {
   // ---------------------------------------------------------------- fight playback
   scr_fight(d) {
     const nameA = esc(d.a.name), nameB = esc(d.b.name);
-    const head = d.kind === 'boss' ? 'Boss fight' : d.kind === 'arena' ? 'Aréna' : MISSIONS[d.result.tpl].name;
+    const head = d.kind === 'boss' ? 'Boss fight' : d.kind === 'arena' ? 'Aréna' : d.kind === 'club' ? 'Podzemné zápasy' : MISSIONS[d.result.tpl].name;
     const h = '<div class="stage" id="stage"><img class="bg" src="' + art('fightbg') + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
       '<div class="title"><span class="bl">' + esc(d.title) + '</span><span class="sc" style="font-size:14px;color:#d0473d;text-shadow:0 1px 0 #000">' + esc(d.subtitle || '') + '</span></div>' +
       '<figure class="fcard me" id="fa">' + (LOOK_BASE ? this.lookHtml(this.s.p.look, 'in-fcard') : '<img src="' + art('maska') + '" alt="' + nameA + '">') + '</figure>' +
@@ -1730,6 +1773,9 @@ export class UI {
     h = r.win ? '<h2 class="win">Víťazstvo</h2>' : '<h2 class="lose">Prehra</h2>';
     if (d.kind === 'boss') {
       h += '<p class="sub">' + (r.win ? esc(d.b.name) + ' je porazený.' + (d.next && !d.next.done ? ' Ďalší boss: ' + d.next.boss.name + '.' : '') : esc(d.b.name) + ' bol silnejší. Vylepši staty a výbavu a skús to znova.') + '</p>';
+      if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span>' + (r.bars ? '<span class="gold">+' + r.bars + ' tehl.</span>' : '') + '</div>' + (r.item ? this.lootHtml(r.item) : '');
+    } else if (d.kind === 'club') {
+      h += '<p class="sub">' + (r.win ? 'Poschodie ' + r.floor + ' je tvoje.' + (r.floor < CONFIG.clubFloors ? ' Ďalší súper o hodinu.' : ' Porazil si všetkých.') : esc(d.b.name) + ' ťa poslal na zem. Ďalší pokus o hodinu.') + '</p>';
       if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span>' + (r.bars ? '<span class="gold">+' + r.bars + ' tehl.</span>' : '') + '</div>' + (r.item ? this.lootHtml(r.item) : '');
     } else {
       h += '<p class="sub">' + (r.win ? 'Rebríček ťa posunul vyššie.' : 'Body si stratil, peniaze nie.') + '</p>';

@@ -21,11 +21,11 @@
 //   nameTaken(name, id) -> boolean
 //   arenaPool(id, points, n) -> [{ id, name, level, cls, stats, weapon, armor, points }]
 //   ladder(n) -> [{ id, name, points }]
-//   hall(n) -> [{ id, name, level, cls, points }]   (highest level first)
+//   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261024154006';
-import { GIVERS, SHOPS } from './data.js?v=20261024154006';
+import { SimServer } from './server.js?v=20261024160009';
+import { GIVERS, SHOPS } from './data.js?v=20261024160009';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -63,6 +63,7 @@ const ACTIONS = {
   crime: (s, [heat, kind]) => { s.crime(Math.max(0, Math.min(10, Number(heat) || 0)), String(kind || '')); return { ok: true }; },
   wantedLose: (s) => s.wantedLose(),
   fightBoss: (s) => s.fightBoss(),
+  fightClub: (s) => s.fightClub(),
   fightArena: (s, [i]) => s.fightArena(i),
   createGang: (s, [name, tag, color]) => s.createGang(name, tag, color),
   requestJoin: (s, [id]) => s.requestJoin(id),
@@ -298,7 +299,7 @@ export function memoryDb() {
     async ladder(n) { return [...rows.values()].sort((a, b) => b.points - a.points).slice(0, n).map((r) => ({ id: r.id, name: r.name, points: r.points })); },
     async hall(n) {
       return [...rows.values()].sort((a, b) => b.level - a.level || b.points - a.points).slice(0, n)
-        .map((r) => ({ id: r.id, name: r.name, level: r.level, cls: r.cls, points: r.points }));
+        .map((r) => ({ id: r.id, name: r.name, level: r.level, cls: r.cls, points: r.points, club: (r.state && r.state.club && r.state.club.floor) || 0 }));
     },
     async addPoints(id, delta) { const r = rows.get(id); if (r) r.points = Math.max(0, r.points + delta); },
     async deletePlayer(id) { rows.delete(id); },

@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024154006';
-import { eventFx } from './events.js?v=20261024154006';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024154006';
-import { makeFighter, simulate } from './combat.js?v=20261024154006';
-import { GangMixin } from './gangs.js?v=20261024154006';
-import { DailyMixin } from './daily.js?v=20261024154006';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024160009';
+import { eventFx } from './events.js?v=20261024160009';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024160009';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024160009';
+import { GangMixin } from './gangs.js?v=20261024160009';
+import { DailyMixin } from './daily.js?v=20261024160009';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -15,6 +15,12 @@ const fail = (error) => ({ ok: false, error });
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const seed = () => Math.floor(Math.random() * 2 ** 31);
 const PILLS = ['red', 'blue', 'green'];
+// Podzemné zápasy: the mission foes (one per portrait) are the fighters of the underground ladder
+const CLUB_FOES = (() => {
+  const seen = new Map();
+  for (const t of Object.values(MISSIONS)) for (const s of t.stories) if (s.foe && s.foe.art && !seen.has(s.foe.art)) seen.set(s.foe.art, s.foe);
+  return [...seen.values()];
+})();
 
 // offline play keeps the save in the browser
 const localStore = {
@@ -303,7 +309,7 @@ export class SimServer {
 
   // features that open with level (CONFIG.unlock): the level still missing for it, 0 when open
   locked(feature) { const L = CONFIG.unlock[feature] || 0; return this.p.level < L ? L : 0; }
-  lockedFail(feature, what) { return fail(what + ' sa odomyká na úrovni ' + this.locked(feature) + '.'); }
+  lockedFail(feature, what, plural) { return fail(what + (plural ? ' sa odomykajú' : ' sa odomyká') + ' na úrovni ' + this.locked(feature) + '.'); }
 
   blackMarketOpen() {
     if (this.state.settings.blackMarket) return true;
@@ -892,7 +898,7 @@ export class SimServer {
   }
 
   // offline there is nobody else: the hall lists only you (online the server answers these from the database)
-  hallOfFame() { return ok({ list: [{ id: 'me', name: this.p.name, level: this.p.level, cls: this.p.cls, points: this.state.pvp.points, me: true }] }); }
+  hallOfFame() { return ok({ list: [{ id: 'me', name: this.p.name, level: this.p.level, cls: this.p.cls, points: this.state.pvp.points, club: this.clubState().floor, me: true }] }); }
   playerProfile() { return ok({ profile: this.publicProfile() }); }
   gangHall() { const g = this.gang(); return ok({ list: g ? [{ id: this.myGangId(), name: g.name, tag: g.tag, color: g.color, wins: g.wins || 0, members: g.members.length, leaderName: this.p.name }] : [], mine: this.myGangId() }); }
   gangInbox() { return { requests: [], invites: [] }; }
@@ -953,6 +959,68 @@ export class SimServer {
       this.p.cash += res.cash;
       res.levelUps = this.addXp(res.xp);
       if (info.reward.bars) { res.bars = info.reward.bars; this.p.chains += res.bars; }
+    }
+    this.save();
+    return ok({ fight, a: me, b: info.fighter, result: res });
+  }
+
+  // ---------------------------------------------------------------- Podzemné zápasy
+  // a ladder of CONFIG.clubFloors fighters, each stronger; one fight every clubCooldownMin, won or lost.
+  // A floor's fighter comes from the floor number alone (seeded), so the server, ?mock and the online
+  // mirror all show and fight the same one.
+  clubState() { return this.state.club || (this.state.club = { floor: 0, nextAt: 0 }); }
+
+  clubFighter(n) {
+    const rng = mulberry32(n * 7919 + 17);
+    const foe = CLUB_FOES[(n * 17) % CLUB_FOES.length];
+    const L = F.clubLevel(n);
+    const base = F.bossStat(L);
+    const prof = {};
+    STATS.forEach((s) => { prof[s] = 0.7 + rng() * 0.8; });
+    const cls = Object.keys(CLASSES).reduce((best, c) => (prof[CLASSES[c].stat] > prof[CLASSES[best].stat] ? c : best), 'svalovec');
+    const stats = {};
+    STATS.forEach((s) => { stats[s] = Math.round(base * prof[s]); });
+    const gear = F.itemPower(L, CONFIG.bossGearMult);
+    return makeFighter(foe.name, L, stats, gear * CONFIG.weaponDmgMult, { hpMult: CONFIG.clubHpMult, portrait: foe.art, title: foe.title, cls, armor: gear * 5 });
+  }
+
+  clubInfo() {
+    const c = this.clubState();
+    const n = c.floor + 1;
+    if (n > CONFIG.clubFloors) return { done: true, floor: c.floor, total: CONFIG.clubFloors };
+    const L = this.p.level, ev = this.ev();
+    return {
+      done: false, floor: n, total: CONFIG.clubFloors, fighter: this.clubFighter(n), nextAt: c.nextAt, ready: Date.now() >= c.nextAt,
+      reward: {
+        cash: Math.round(F.cashPerMin(L) * CONFIG.clubCashMin * ev.cash), xp: Math.round(F.xpNext(L) * CONFIG.clubXpShare * ev.xp),
+        bars: n % CONFIG.clubBarsEvery === 0 ? CONFIG.clubBars : 0,
+        item: n === CONFIG.clubFloors ? 'legendarny' : n % CONFIG.clubEpicEvery === 0 ? 'epicky' : null,
+      },
+    };
+  }
+
+  fightClub() {
+    if (this.locked('club')) return this.lockedFail('club', 'Podzemné zápasy', true);
+    const info = this.clubInfo();
+    if (info.done) return fail('Porazil si všetkých ' + CONFIG.clubFloors + ' súperov.');
+    if (!info.ready) return fail('Ďalší zápas ešte nie je. Organizátor zháňa súpera.');
+    const c = this.clubState();
+    c.nextAt = Date.now() + this.gameMs(CONFIG.clubCooldownMin);
+    const me = this.playerFighter();
+    const fight = simulate(me, info.fighter, seed());
+    const win = fight.winner === 0;
+    const res = { win, floor: info.floor, cash: 0, xp: 0, bars: 0, item: null, levelUps: 0 };
+    if (win) {
+      // floors never repeat, so the milestone rewards are paid once
+      c.floor = info.floor;
+      res.cash = info.reward.cash;
+      res.xp = info.reward.xp;
+      this.p.cash += res.cash;
+      if (info.reward.bars) { res.bars = info.reward.bars; this.p.chains += res.bars; }
+      if (info.reward.item === 'legendarny') res.item = this.legendaryItem();
+      else if (info.reward.item === 'epicky') res.item = this.randomItem(this.p.level, 'blackmarket');
+      if (res.item) this.giveItem(res.item);
+      res.levelUps = this.addXp(res.xp);
     }
     this.save();
     return ok({ fight, a: me, b: info.fighter, result: res });

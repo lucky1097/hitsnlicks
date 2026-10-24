@@ -77,8 +77,9 @@ const db = {
     return rows.map((r) => ({ id: r.id, name: r.name, points: r.pvp_points }));
   },
   async hall(n: number) {
-    const rows = must(await admin.from('players').select('id, name, level, cls, pvp_points').order('level', { ascending: false }).order('pvp_points', { ascending: false }).limit(n)) as any[];
-    return rows.map((r) => ({ id: r.id, name: r.name, level: r.level, cls: r.cls, points: r.pvp_points }));
+    // only the Podzemné zápasy floor out of the state, not the whole save
+    const rows = must(await admin.from('players').select('id, name, level, cls, pvp_points, club:state->club->floor').order('level', { ascending: false }).order('pvp_points', { ascending: false }).limit(n)) as any[];
+    return rows.map((r) => ({ id: r.id, name: r.name, level: r.level, cls: r.cls, points: r.pvp_points, club: Number(r.club) || 0 }));
   },
   async addPoints(id: string, delta: number) { must(await admin.rpc('add_pvp_points', { p_id: id, p_delta: delta })); },
   async deletePlayer(id: string) { must(await admin.from('players').delete().eq('id', id)); },

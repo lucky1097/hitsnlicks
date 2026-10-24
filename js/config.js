@@ -120,7 +120,16 @@ export const CONFIG = {
   lifeMult: 3, // longer fights = less luck in who wins
   maxUpgrade: 5,
   autoUnlockLevel: 20,
-  unlock: { arena: 5, gang: 10, blackMarket: 15 }, // features open step by step, so a new player is not flooded
+  unlock: { arena: 5, club: 8, gang: 10, blackMarket: 15 },
+  // Podzemné zápasy: an endless-feeling ladder for when the bosses are done; fighters grow with F.clubLevel
+  clubFloors: 100,
+  clubCooldownMin: 60, // one fight an hour, won or lost
+  clubHpMult: 1.2,
+  clubCashMin: 15, // cash per win = this many minutes of mission cash at your level
+  clubXpShare: 0.08, // XP per win = this share of your current level
+  clubBarsEvery: 10, // every 10th floor pays clubBars gold bars
+  clubBars: 10,
+  clubEpicEvery: 25, // every 25th floor an epic piece; the last floor a legendary one // features open step by step, so a new player is not flooded
 
   // where rarities come from: shops and missions common, the Black Market (Friday evening) only epic,
   // bosses drop legendary with this chance, else epic with bossEpicChance, else a common item
@@ -211,6 +220,7 @@ export const F = {
   upgradeCost: (item) => Math.round(item.price * 0.35 * (item.upgrade + 1)),
   bossLevel: (k) => Math.round(6 + (k - 1) * 1.8), // 25 bosses of Mesto 1: level 6 … 49
   // grows like a player who also buys stats: a level-30 player is about even with a level-29 boss
+  clubLevel: (n) => Math.round(5 + 0.75 * (n - 1)), // Podzemné zápasy floor 1 … 100: level 5 … 79
   bossStat: (Lb) => 10 + 2.5 * Lb + 0.25 * Lb * Lb,
   npcStat: (L) => 10 + 2.2 * L,
 };
