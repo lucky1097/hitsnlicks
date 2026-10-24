@@ -1,14 +1,15 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024134926';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024134926';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024134926';
-import { DAILY_TYPES } from './daily.js?v=20261024134926';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024134926';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024154006';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024154006';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024154006';
+import { DAILY_TYPES } from './daily.js?v=20261024154006';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024154006';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
 const money = (n) => '$ ' + fmt(n);
 const pct = (x) => Math.round(x * 100) + ' %';
+const hours = (min) => { const n = Math.round(min / 60); return n + (n === 1 ? ' hodina' : n < 5 ? ' hodiny' : ' hodín'); };
 const art = (n) => 'assets/art/' + n + (/^(photo_|w_|x_)/.test(n) ? '.jpg' : '.png');
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pad = (n) => String(n).padStart(2, '0');
@@ -59,6 +60,7 @@ const MENU = [
   { id: 'missions', name: 'Misie', desc: 'Aktívna misia a kde nájdeš zadávateľov.' },
   { id: 'daily', name: 'Denné misie', desc: 'Tri úlohy na mape každý deň a 15-dňový kalendár odmien.' },
   { id: 'events', name: 'Víkendové eventy', desc: 'Každý víkend dva eventy naraz: čo platí teraz a čo príde.' },
+  { id: 'policehelp', name: 'Polícia a heat', desc: 'Heat, hviezdy, kontrola, basa, právnička a skrýša na jednom mieste.' },
   { id: 'arena', name: 'Aréna', desc: 'Súboje s inými hráčmi a rebríček.' },
   { id: 'boss', name: 'Boss fights', desc: 'Línia bossov Mesta 1. Kladivo čaká v uličke za obchodmi.' },
   { id: 'gang', name: 'Gang', desc: 'Tvoj gang, pokladnica, členovia a boje o územie.' },
@@ -244,6 +246,8 @@ export class UI {
     }
     this.dailyHud();
     this.hideHud();
+    // tabs of features the player has not reached yet look dim (the screen says from which level)
+    for (const f of ['arena', 'gang']) $('.tabs [data-arg="' + f + '"]').classList.toggle('locked', !!this.s.locked(f) && !(f === 'gang' && g));
     // wanted stars (0–5): only while the police are interested
     const ws = this.s.wantedStars(), wel = $('#hud-wanted');
     wel.hidden = !ws;
@@ -551,12 +555,12 @@ export class UI {
   police() {
     if (this.paused() || !this.s.hasSave()) return;
     const v = this.s.view();
-    // an officer is down: no bribe, no running; all your cash, or a day without missions
+    // an officer is down: no bribe, no running; half your cash, or a while without missions
     if (this.s.copKills() > 0) {
       this.modal('<h2 class="lose">Zatknutý</h2><p class="sub">Zložil si policajta. Tentoraz sa to nedá vybaviť pokutou.</p>' +
         '<div class="acts">' +
-        '<button class="btn wide" data-act="police-killer" data-arg="peniaze">Prísť o všetky peniaze · ' + money(this.s.p.cash) + '</button>' +
-        '<button class="btn wide" data-act="police-killer" data-arg="basa">' + Math.round(CONFIG.killJailMin / 60) + ' hodín bez misií od Dona a Dílera</button>' +
+        '<button class="btn wide" data-act="police-killer" data-arg="peniaze">Prísť o ' + Math.round(CONFIG.killCashShare * 100) + ' % peňazí · ' + money(this.s.killCashLoss()) + '</button>' +
+        '<button class="btn wide" data-act="police-killer" data-arg="basa">' + hours(CONFIG.killJailMin) + ' bez misií od Dona a Dílera</button>' +
         '</div><p class="sub" style="font-size:15px;color:#9b968b">Denné misie môžeš robiť aj v base.</p>');
       return;
     }
@@ -691,7 +695,7 @@ export class UI {
         if (!this.check(r)) return;
         this.closeModal();
         const x = r.result;
-        this.toast(x.type === 'cash' ? 'Zobrali ti všetky peniaze: ' + money(x.lost) + '.' : Math.round(x.minutes / 60) + ' hodín bez misií od Dona a Dílera.', true);
+        this.toast(x.type === 'cash' ? 'Zobrali ti ' + money(x.lost) + '.' : hours(x.minutes) + ' bez misií od Dona a Dílera.', true);
       },
       async 'test-mode'() { await this.s.setTestMode(!this.s.state.settings.testMode); this.render(); },
       async 'test-bm'() { await this.s.setBlackMarket(!this.s.state.settings.blackMarket); this.render(); },
@@ -837,7 +841,11 @@ export class UI {
         '<div class="pause">' +
         '<svg width="300" height="26" viewBox="0 0 330 26" aria-hidden="true"><path d="M0 13 H128" stroke="#e9e4d8" stroke-opacity=".4"/><path d="M202 13 H330" stroke="#e9e4d8" stroke-opacity=".4"/><path d="M128 13 C136 4 146 4 150 13 C146 22 136 22 128 13 Z M202 13 C194 4 184 4 180 13 C184 22 194 22 202 13 Z M165 3 L175 13 L165 23 L155 13 Z" fill="none" stroke="#c9a24a"/><circle cx="165" cy="13" r="2.2" fill="#c9a24a"/></svg>' +
         '<h2 class="sc" style="margin:8px 0 6px;font-weight:500;font-size:18px;letter-spacing:4px;color:#b9b4a8">Menu</h2>' +
-        '<div class="menu">' + MENU.map((m, i) => '<button class="' + (i === 0 ? 'sel' : '') + (m.locked ? ' locked' : '') + '" data-act="menu-go" data-arg="' + m.id + '" data-desc="' + esc(m.desc) + '">' + m.name + (m.locked ? ' <small style="font-size:14px;font-style:italic">· od verzie 2</small>' : '') + '</button>').join('') + '</div>' +
+        '<div class="menu">' + MENU.map((m, i) => {
+          const lv = (m.id === 'arena' || (m.id === 'gang' && !this.s.gang())) ? this.s.locked(m.id) : 0;
+          const note = m.locked ? 'od verzie 2' : lv ? 'od úrovne ' + lv : '';
+          return '<button class="' + (i === 0 ? 'sel' : '') + (m.locked || lv ? ' locked' : '') + '" data-act="menu-go" data-arg="' + m.id + '" data-desc="' + esc(m.desc) + '">' + m.name + (note ? ' <small style="font-size:14px;font-style:italic">· ' + note + '</small>' : '') + '</button>';
+        }).join('') + '</div>' +
         '<p class="desc" id="menu-desc">' + MENU[0].desc + '</p>' +
         '<div class="hints"><span><i class="dot"></i>Ťukni: vybrať</span><span><i class="dot o"></i>Späť: zavrieť</span></div>' +
         '<button class="btn" style="margin-top:16px" data-act="back">Zavrieť</button></div>',
@@ -1036,7 +1044,7 @@ export class UI {
     h += '<p class="p" style="font-style:italic">„' + sh.blurb + '“</p>';
     h += sh.list.map((it) => row(it)).join('');
     if (!sh.list.length) h += '<p class="p">Všetko vypredané.</p>';
-    if (!sh.bm && sh.hasBm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, len epické kusy. Každý stojí peniaze a ' + CONFIG.bmEpicChains + ' zlatých tehličiek.</p>';
+    if (!sh.bm && sh.hasBm) h += '<p class="note" style="color:#ff6aa8">Čierny trh: v piatok od ' + CONFIG.blackMarketFromHour + ':00, len epické kusy. Každý stojí peniaze a ' + CONFIG.bmEpicChains + ' zlatých tehličiek.' + (this.s.locked('blackMarket') ? ' Odomyká sa na úrovni ' + this.s.locked('blackMarket') + '.' : '') + '</p>';
     const rc = this.s.rerollCost();
     h += '<button class="btn wide" data-act="shop-reroll" data-arg="' + shopId + '"' + (p.chains < rc ? ' disabled' : '') + '>Nový tovar hneď · ' + (rc ? rc + ' zlatá tehlička' : 'zadarmo') + '</button>';
     h += '<p class="note">Nový tovar o <span data-until="' + (Date.now() + sh.refreshIn) + '"></span> alebo po novej úrovni.</p>';
@@ -1045,7 +1053,7 @@ export class UI {
 
   scr_upgrade() {
     const p = this.s.p;
-    let h = '<button class="card" data-act="open-shop" data-arg="autobazar"><img src="' + art('x_car_hatch') + '" alt=""><span class="mid"><span class="t">Autobazár</span><span class="s">Auto znižuje heat zo všetkého aj čas misií. Jazdiť môžeš od úrovne ' + CONFIG.autoUnlockLevel + '.</span></span></button>';
+    let h = '<button class="card" data-act="open-shop" data-arg="autobazar"><img src="' + art('x_car_hatch') + '" alt=""><span class="mid"><span class="t">Autobazár</span><span class="s">Auto znižuje heat zo všetkého aj čas misií. Nasadiť ho môžeš od úrovne ' + CONFIG.autoUnlockLevel + '.</span></span></button>';
     h += '<p class="p">Mechanik vylepší tvoje nasadené veci. Každé vylepšenie pridá 10 % bonusu, najviac +' + CONFIG.maxUpgrade + '. Garáž drží tvoj gang.</p>';
     let any = false;
     for (const s of SLOTS) {
@@ -1091,13 +1099,38 @@ export class UI {
     h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · predmet: ' + Math.round(CONFIG.bossEpicChance * 100) + ' % epický, ' + legendPct + ' % legendárny</p>';
     h += info.hunt ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · Hon na bossov, bez čakania</button>'
       : info.free ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · pokus zadarmo</button>'
-      : '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať za ' + CONFIG.bossRetryChains + ' zlatých tehličiek</button><p class="note">Ďalší pokus zadarmo o <span data-until="' + info.freeAt + '"></span></p>';
+      : '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight"' + (info.paidLeft ? '' : ' disabled') + '>Bojovať za ' + CONFIG.bossRetryChains + ' zlatých tehličiek</button><p class="note">' +
+        (info.paidLeft ? 'Platené pokusy dnes: ' + info.paidLeft + ' / ' + CONFIG.bossPaidPerDay + '. ' : 'Platené pokusy sú na dnes minuté. ') + 'Ďalší pokus zadarmo o <span data-until="' + info.freeAt + '"></span></p>';
     h += '<div class="sec sc">Línia bossov Mesta 1</div><div class="boss-list">' + BOSSES.map((b, i) => '<span class="' + (i < info.index ? 'done' : i === info.index ? 'now' : '') + '">' + (i <= info.index ? b.name : '?') + '</span>').join('') + '</div>';
     h += '<p class="note">Do tímu si môžeš zobrať 1–2 členov gangu (príde s gangmi).</p></div>';
     return { html: this.hdr('Boss fights', money(this.s.p.cash)) + h };
   }
 
+  // every police term on one screen (a tap on the heat bar or the stars opens it)
+  scr_policehelp() {
+    const C = CONFIG;
+    const row = (t, s) => '<div><b>' + t + '</b><span>' + s + '</span></div>';
+    const h = '<p class="p">Polícia má dve strany: <b class="gold">heat</b> sleduje tvoje misie počas dňa, <b class="gold">hviezdy</b> sú naháňačka na ulici práve teraz.</p>' +
+      '<div class="help-list">' +
+      row('Heat', 'Denný limit na misie. Každá misia ho zdvihne, násilie na ulici tiež. Keď je plný, misie od Dona a Dílera na dnes končia. O polnoci spadne na nulu. Auto ho znižuje.') +
+      row('Razia', 'Od ' + C.raidFrom + ' % heatu ťa po misii môže čakať razia: pokuta ' + pct(C.raidFinePct) + ' peňazí alebo ' + C.jailMinutes + ' minút v base.') +
+      row('Právnička', 'Zníži heat o ' + C.lawyerHeat + ' %, najviac ' + C.lawyerPerDay + '-krát za deň. Platí sa peniazmi.') +
+      row('Hviezdy', 'Hľadanosť na ulici. Pribúdajú za streľbu, bitku, autá a výbuchy, pri vyššom heate rýchlejšie. Od ' + C.wantedChase + ' hviezd ťa naháňajú policajti. Keď ťa nevidia, každých ' + C.wantedLoseSec + ' s stratíš hviezdu.') +
+      row('Kontrola', 'Keď ťa policajt chytí, vyberieš si: utiecť (šanca podľa Obratnosti), podplatiť (Charizma zlacňuje) alebo sa vzdať (' + C.jailMinutes + ' minút bez misií). Potom máš ' + Math.round(C.caughtPeaceSec / 60) + ' minút pokoj.') +
+      row('Zložený policajt', 'Každý zložený policajt zdvojnásobí, koľko ich po tebe ide. Môže z neho padnúť epický predmet (' + pct(C.copEpicChance) + ', najviac ' + C.copEpicPerDay + ' za deň). Ak ťa potom chytia, prídeš o ' + pct(C.killCashShare) + ' peňazí alebo máš ' + hours(C.killJailMin) + ' bez misií.') +
+      row('Basa', 'Kým si v base, nedostaneš misie od Dona a Dílera. Denné misie na mape robiť môžeš.') +
+      row('Skrýša a tieň', 'Keď ťa hľadajú, schovaj sa v skrýši na ' + C.hideMin + ' minút. Hviezdy zmiznú a ďalších ' + C.shadowMin + ' minút si v tieni: polícia ťa nenaháňa.') +
+      '</div>';
+    return { html: this.hdr('Ako funguje polícia') + '<div class="body">' + h + '</div>' };
+  }
+
+  // a feature the player has not reached yet: what it is and from which level
+  lockedScr(title, feature, text) {
+    return { html: this.hdr(title) + '<div class="body"><div class="locked-scr"><span class="sc">Zamknuté</span><span class="bl">Od úrovne ' + this.s.locked(feature) + '</span><p>' + text + '</p><p class="note">Teraz máš úroveň ' + this.s.p.level + '. Úrovne získaš za misie, denné misie a bossov.</p></div></div>' };
+  }
+
   scr_arena() {
+    if (this.s.locked('arena')) return this.lockedScr('Aréna', 'arena', 'V aréne sa biješ s inými hráčmi o body v rebríčku. Najprv sa trochu otrkaj na misiách.');
     const a = this.s.arena();
     let h = '<p class="p num">Súboje prebehnú automaticky podľa statov a výbavy. Zadarmo ešte <span class="gold">' + a.freeLeft + ' z ' + CONFIG.pvpFreePerHour + '</span>' + (a.freeLeft < CONFIG.pvpFreePerHour ? ', obnova o <span data-until="' + a.windowEnds + '"></span>' : '') + '. ' + (this.s.online ? 'Súperi s hviezdičkou sú skutoční hráči.' : 'Súperi sú zatiaľ počítačoví.') + '</p>';
     a.opponents.forEach((o, i) => {
@@ -1131,8 +1164,9 @@ export class UI {
       '<div class="item rar-epicky"><img src="' + art('x_elixir_bm') + '" alt=""><div class="mid"><div class="t">Elixír Čierneho trhu</div>' +
       '<div class="s">Na ' + CONFIG.elixirHours + ' hodín ti otvorí Čierny trh vo všetkých obchodoch. Epické kusy ťa čakajú hocikedy, nielen v piatok večer.</div>' +
       (left > 0 ? '<div class="s gold">Účinkuje ešte <b data-until="' + (Date.now() + left) + '"></b>. Ďalší elixír čas predĺži.</div>' : '') +
+      (this.s.locked('blackMarket') ? '<div class="s red">Čierny trh sa odomyká na úrovni ' + this.s.locked('blackMarket') + '.</div>' : '') +
       '<div class="desc">Čierny ako noc, zapečatený pešiakom. Kto sa napije, nájde dvere, ktoré ostatní nevidia.</div></div>' +
-      '<div class="acts"><button class="btn small gold num" data-act="buy-elixir"' + (p.chains < CONFIG.elixirChains ? ' disabled' : '') + '>' + CONFIG.elixirChains + ' tehličiek</button></div></div>';
+      '<div class="acts"><button class="btn small gold num" data-act="buy-elixir"' + (p.chains < CONFIG.elixirChains || this.s.locked('blackMarket') ? ' disabled' : '') + '>' + CONFIG.elixirChains + ' tehličiek</button></div></div>';
     return { html: this.hdr('Wexler', '<span class="gold">' + fmt(p.chains) + '</span> tehličiek') + top + '<div class="body">' + h + '</div>' };
   }
 
@@ -1222,6 +1256,7 @@ export class UI {
   // the gang: without one, found a gang or ask to join one; in one, members, requests, treasury, upgrades, city
   scr_gang() {
     const g = this.s.gang(), p = this.s.p;
+    if (!g && this.s.locked('gang')) return this.lockedScr('Gang', 'gang', 'Gang je tvoj cech: s ostatnými hráčmi držíte objekty v meste a bojujete o územie. Do gangu sa dá vstúpiť alebo ho založiť, keď ťa už v meste poznajú.');
     const turf = this.s.turfView();
     const turfList = '<div class="sec sc">Územie Mesta 1</div>' + turf.map((v) => this.turfCard(v)).join('');
     if (!g) {

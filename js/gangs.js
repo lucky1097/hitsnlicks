@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261024134926';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261024134926';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024134926';
+import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261024154006';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261024154006';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024154006';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -168,6 +168,7 @@ export const GangMixin = {
 
   createGang(name, tag, colorId) {
     if (this.gang()) return fail('Už máš gang.');
+    if (this.locked('gang')) return this.lockedFail('gang', 'Gang');
     name = String(name || '').trim().slice(0, 20);
     tag = String(tag || '').trim().toUpperCase().replace(/[^A-Z0-9ÁČĎÉÍĽĹŇÓÔŔŠŤÚÝŽ]/g, '').slice(0, 4);
     if (name.length < 3) return fail('Meno gangu musí mať aspoň 3 znaky.');
@@ -210,6 +211,7 @@ export const GangMixin = {
   requestJoin(gangId) {
     if (!this.ctx) return fail(ONLINE_ONLY);
     if (this.gang()) return fail('Už si v gangu.');
+    if (this.locked('gang')) return this.lockedFail('gang', 'Gang');
     const t = this.targetGang(gangId);
     if (!t) return fail('Taký gang už neexistuje.');
     const me = this.selfId();
@@ -231,6 +233,7 @@ export const GangMixin = {
   acceptInvite(gangId) {
     if (!this.ctx) return fail(ONLINE_ONLY);
     if (this.gang()) return fail('Už si v gangu.');
+    if (this.locked('gang')) return this.lockedFail('gang', 'Gang');
     const t = this.targetGang(gangId);
     const me = this.selfId();
     if (!t || !t.data.invites.some((i) => i.id === me)) return fail('Pozvánka už neplatí.');

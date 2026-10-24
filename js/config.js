@@ -63,8 +63,8 @@ export const CONFIG = {
   dailyBars: { 5: 20, 10: 35, 15: 50 },
   dailyCourierSec: 120,
   // police on foot (heat >= raidFrom): every officer you put down doubles how many chase you, up to copMax;
-  // an officer may drop an epic item (copEpicChance, at most copEpicPerDay a day); caught after a kill = lose all cash or
-  // killJailMin without Don / Díler missions
+  // an officer may drop an epic item (copEpicChance, at most copEpicPerDay a day); caught after a kill = lose
+  // killCashShare of your cash or killJailMin without Don / Díler missions
   copMax: 8,
   // wanted level (stars): what each street crime adds (×(1 + heat/100)), chase from wantedChase stars,
   // a star lost every wantedLoseSec out of the officers' sight (and on its own after wantedIdleSec of quiet),
@@ -84,7 +84,8 @@ export const CONFIG = {
   copKillGapMs: 250,
   heatCopHit: 4,
   heatCopKill: 15,
-  killJailMin: 1440,
+  killJailMin: 120,
+  killCashShare: 0.5,
   // cars on the street: heat for a hit and for a blown-up car
   heatCarHit: 1,
   heatBlast: 10,
@@ -104,6 +105,7 @@ export const CONFIG = {
 
   bossCooldownMin: 240,
   bossRetryChains: 10,
+  bossPaidPerDay: 3, // attempts for gold bars a day; the free one every bossCooldownMin comes on top
   bossHpMult: 1.5,
 
   pvpFreePerHour: 5,
@@ -118,6 +120,7 @@ export const CONFIG = {
   lifeMult: 3, // longer fights = less luck in who wins
   maxUpgrade: 5,
   autoUnlockLevel: 20,
+  unlock: { arena: 5, gang: 10, blackMarket: 15 }, // features open step by step, so a new player is not flooded
 
   // where rarities come from: shops and missions common, the Black Market (Friday evening) only epic,
   // bosses drop legendary with this chance, else epic with bossEpicChance, else a common item

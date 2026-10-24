@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700;900&amp;family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20261024134926">
+<link rel="stylesheet" href="css/style.css?v=20261024154006">
 <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 </head>
 <body>
@@ -39,12 +39,12 @@
     </div>
     <div class="hud-row">
       <div class="hud-left">
-        <div class="heat" id="hud-heat" title="Heat: denný limit na misie">
+        <div class="heat" id="hud-heat" title="Heat: denný limit na misie" data-act="open" data-arg="policehelp" role="button">
           <img class="px" src="assets/icons/i_heat.png" alt="">
           <span class="sc">Heat</span>
           <span class="hbar"><i id="hud-heatbar"></i></span><b class="num" id="hud-heatpct">0 %</b>
         </div>
-        <div class="wanted" id="hud-wanted" hidden title="Hľadanosť: polícia na ulici"></div>
+        <div class="wanted" id="hud-wanted" hidden title="Hľadanosť: polícia na ulici" data-act="open" data-arg="policehelp" role="button"></div>
         <div class="buffs" id="hud-buffs" hidden></div>
       </div>
       <div class="hud-right">
@@ -77,6 +77,6 @@
   <div id="modal" hidden></div>
   <div id="toasts"></div>
 </div>
-<script type="module" src="js/main.js?v=20261024134926"></script>
+<script type="module" src="js/main.js?v=20261024154006"></script>
 </body>
 </html>

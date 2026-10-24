@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024134926';
-import { eventFx } from './events.js?v=20261024134926';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024134926';
-import { makeFighter, simulate } from './combat.js?v=20261024134926';
-import { GangMixin } from './gangs.js?v=20261024134926';
-import { DailyMixin } from './daily.js?v=20261024134926';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024154006';
+import { eventFx } from './events.js?v=20261024154006';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024154006';
+import { makeFighter, simulate } from './combat.js?v=20261024154006';
+import { GangMixin } from './gangs.js?v=20261024154006';
+import { DailyMixin } from './daily.js?v=20261024154006';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -301,8 +301,14 @@ export class SimServer {
     return pool.length ? this.makeItem(pick(pool), this.p.level, 'legendarny') : null;
   }
 
+  // features that open with level (CONFIG.unlock): the level still missing for it, 0 when open
+  locked(feature) { const L = CONFIG.unlock[feature] || 0; return this.p.level < L ? L : 0; }
+  lockedFail(feature, what) { return fail(what + ' sa odomyká na úrovni ' + this.locked(feature) + '.'); }
+
   blackMarketOpen() {
-    if (this.state.settings.blackMarket || this.elixirLeft() > 0 || this.ev().bmAll) return true;
+    if (this.state.settings.blackMarket) return true;
+    if (this.locked('blackMarket')) return false;
+    if (this.elixirLeft() > 0 || this.ev().bmAll) return true;
     const l = localParts();
     return l.weekday === CONFIG.blackMarketDay && l.hour >= CONFIG.blackMarketFromHour;
   }
@@ -689,17 +695,19 @@ export class SimServer {
     return ok({ kills: c.kills, wanted: this.copsWanted(), item, daily });
   }
 
-  // caught after putting an officer down: all your cash, or a day without Don's and the Díler's missions
+  // caught after putting an officer down: a share of your cash, or a while without Don's and the Díler's missions
   policeKiller(choice) {
     if (!this.copKills()) return fail('Nie je za čo.');
     this.dailyCaught();
     let out;
-    if (choice === 'peniaze') { out = { type: 'cash', lost: this.p.cash }; this.p.cash = 0; }
+    if (choice === 'peniaze') { const lost = this.killCashLoss(); out = { type: 'cash', lost }; this.p.cash -= lost; }
     else { this.state.jailUntil = Date.now() + this.gameMs(CONFIG.killJailMin); out = { type: 'jail', minutes: CONFIG.killJailMin }; }
     this.clearWanted();
     this.save();
     return ok({ result: out });
   }
+
+  killCashLoss() { return Math.floor(this.p.cash * CONFIG.killCashShare); }
 
   policeCheck(choice) {
     let out;
@@ -733,6 +741,7 @@ export class SimServer {
   elixirLeft() { return Math.max(0, (this.state.bmUntil || 0) - Date.now()); }
 
   buyElixir() {
+    if (this.locked('blackMarket')) return this.lockedFail('blackMarket', 'Čierny trh');
     if (this.p.chains < CONFIG.elixirChains) return fail('Elixír stojí ' + CONFIG.elixirChains + ' zlatých tehličiek.');
     this.p.chains -= CONFIG.elixirChains;
     this.state.bmUntil = Date.now() + this.elixirLeft() + CONFIG.elixirHours * 3600000;
@@ -913,6 +922,7 @@ export class SimServer {
     return {
       done: false, index: i, total: BOSSES.length, boss: BOSSES[i], fighter: f,
       freeAt: this.state.boss.nextFreeAt, free: ev.bossFree || Date.now() >= this.state.boss.nextFreeAt, hunt: !!ev.bossFree,
+      paidLeft: Math.max(0, CONFIG.bossPaidPerDay - (this.daily().bossPaid || 0)),
       reward: { cash: Math.round(F.cashPerMin(L) * 30 * ev.cash), xp: Math.round(F.xpNext(L) * 0.25 * ev.xp), bars: ev.bossBars || 0 },
     };
   }
@@ -921,8 +931,12 @@ export class SimServer {
     const info = this.bossInfo();
     if (info.done) return fail('Všetci bossovia Mesta 1 sú porazení.');
     if (!info.free) {
+      // paid attempts are capped per day, so gold bars cannot buy the whole boss line in one evening
+      if (!info.paidLeft) return fail('Dnes už si použil všetky ' + CONFIG.bossPaidPerDay + ' platené pokusy. Počkaj na pokus zadarmo.');
       if (this.p.chains < CONFIG.bossRetryChains) return fail('Nemáš dosť zlatých tehličiek.');
       this.p.chains -= CONFIG.bossRetryChains;
+      const day = this.daily();
+      day.bossPaid = (day.bossPaid || 0) + 1;
     } else if (!info.hunt) { // Hon na bossov: no cooldown at all
       this.state.boss.nextFreeAt = Date.now() + this.gameMs(CONFIG.bossCooldownMin);
     }
@@ -978,6 +992,7 @@ export class SimServer {
   }
 
   fightArena(index) {
+    if (this.locked('arena')) return this.lockedFail('arena', 'Aréna');
     const v = this.pvpWindow();
     const opp = v.opponents && v.opponents[index];
     if (!opp) return fail('Súper už odišiel.');
