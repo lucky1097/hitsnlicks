@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024134431';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024134431';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024134431';
-import { DAILY_TYPES } from './daily.js?v=20261024134431';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024134431';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024134926';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024134926';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024134926';
+import { DAILY_TYPES } from './daily.js?v=20261024134926';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024134926';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -35,6 +35,9 @@ const PILL_ICON = {
   blue: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="5" width="14" height="7" rx="3.5" fill="#f2ece0"/><path d="M4.5 5H8v7H4.5a3.5 3.5 0 0 1 0-7z" fill="#2f6fe0"/></svg>',
   green: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14 2 8a3.3 3.3 0 0 1 6-4 3.3 3.3 0 0 1 6 4z" fill="#3ccf4e"/></svg>',
 };
+// a hooded silhouette (in the shadows) and a small chest (daily missions) for the buff row
+const SHADOW_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5C5 1.5 3.6 4 3.6 6.6V9L2 14.5h12L12.4 9V6.6C12.4 4 11 1.5 8 1.5z" fill="#2a2826" stroke="#b9b4a8" stroke-width="1"/><path d="M5.6 7.6h4.8" stroke="#e9e4d8" stroke-width="1" opacity=".7"/></svg>';
+const CHEST_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7C1.5 3.5 4 2.5 8 2.5S14.5 3.5 14.5 7z" fill="#5a3d1f" stroke="#f0c95a" stroke-width="1"/><rect x="1.5" y="7" width="13" height="7" fill="#6b4a26" stroke="#f0c95a" stroke-width="1"/><rect x="6.6" y="7.8" width="2.8" height="3.2" fill="#f0c95a"/></svg>';
 const pillName = (kind, cls) => ({ red: 'Červená pilulka', blue: 'Modrá pilulka', green: 'Zelené srdce' }[kind]);
 const pillEffect = (kind, cls) => ({ red: STAT_NAMES.stastie, blue: STAT_NAMES[CLASSES[cls].stat], green: 'Životy' }[kind]);
 
@@ -241,7 +244,6 @@ export class UI {
     }
     this.dailyHud();
     this.hideHud();
-    this.eventHud();
     // wanted stars (0–5): only while the police are interested
     const ws = this.s.wantedStars(), wel = $('#hud-wanted');
     wel.hidden = !ws;
@@ -258,17 +260,6 @@ export class UI {
   }
 
   // ---------------------------------------------------------------- weekend events
-  // HUD chip while a weekend runs: both events and the time left; a tap opens the events screen
-  eventHud() {
-    const a = activeEvents(), el = $('#hud-event');
-    el.hidden = !a;
-    if (!a) return;
-    const left = a.until - Date.now(), H = 3600000;
-    const time = left >= 24 * H ? 'ešte ' + Math.floor(left / (24 * H)) + ' d ' + Math.floor((left % (24 * H)) / H) + ' h' : 'ešte ' + clock(left);
-    const html = a.ids.map((id) => '<span>' + EVENTS[id].icon + ' ' + EVENTS[id].name + '</span>').join('') + '<b>' + time + '</b>';
-    if (el.dataset.html !== html) { el.innerHTML = html; el.dataset.html = html; }
-  }
-
   evCard(id, on) {
     const e = EVENTS[id];
     return '<div class="evcard ' + e.tier + (on ? ' on' : '') + '"><span class="ic">' + e.icon + '</span><span class="mid"><span class="t">' + e.name + ' <small>' + (e.tier === 'lepsi' ? 'hlavný' : 'bonus') + '</small></span><span class="s">' + e.desc + '</span></span></div>';
@@ -290,14 +281,12 @@ export class UI {
   }
 
   // ---------------------------------------------------------------- hideout
-  // HUD chip while in the shadows; the hiding time is up (or you walked out of the screen): settle it
+  // a buff chip while in the shadows; the hiding time is up (or you walked out of the screen): settle it
   hideHud() {
     const h = this.s.hideState();
     if (h.since && !this.hideBusy && (this.s.hidingLeft() <= 0 || (this.name !== 'hideout' && this.name !== 'title'))) this.hideFinish();
     const left = this.s.shadowLeft();
-    const el = $('#hud-shadow');
-    el.hidden = !left;
-    if (left) el.innerHTML = 'V tieni · polícia ťa nehľadá · <b>' + clock(left) + '</b>';
+    this.shadowChip = left ? '<span class="buff shadow" title="V tieni: polícia ťa nehľadá">' + SHADOW_ICON + '<small>' + clock(left) + '</small></span>' : '';
   }
 
   async hideFinish() {
@@ -335,35 +324,28 @@ export class UI {
   }
 
   // ---------------------------------------------------------------- daily missions
-  // HUD chip: progress of the day and what to do next (distance to the nearest target, courier or escape clock)
+  // the chest next to the money: how many of today's tasks are done (a tap opens them); while a timed step
+  // runs (courier, escape, following, spraying) its clock shows as a buff chip under the heat bar
   dailyHud() {
-    const el = $('#hud-daily');
+    const el = $('#hud-chest');
     const v = this.s.dailyMap();
+    this.dailyChip = '';
     if (!v.tasks.length) { el.hidden = true; return; }
     el.hidden = false;
     const doneN = v.tasks.filter((t) => t.done).length;
     el.classList.toggle('ready', v.done);
-    $('#hud-dly-label').textContent = 'Denné misie · ' + doneN + ' / ' + v.tasks.length;
-    if (v.done) {
-      $('#hud-dly-name').textContent = 'Hotovo na dnes';
-      $('#hud-dly-sub').textContent = 'nové o ' + clock(this.s.nextDayAt() - Date.now());
-      return;
-    }
+    const badge = v.done ? '✓' : doneN + '/' + v.tasks.length;
+    if ($('#hud-chest-n').textContent !== badge) $('#hud-chest-n').textContent = badge;
+    if (v.done) return;
     const w = this.dailyWorld ? this.dailyWorld() : null;
-    const hint = w && w.hint;
-    const t = (hint && v.tasks[hint.task]) || v.tasks.find((x) => !x.done);
-    const T = DAILY_TYPES[t.type];
-    $('#hud-dly-name').textContent = T.name + ' ' + t.got.length + '/' + T.need;
-    let sub = hint && hint.task === t.i ? Math.max(1, Math.round(hint.dist / 2)) + ' m' : '';
-    if (t.type === 'courier' && t.got.length) sub = 'zostáva ' + clock(Math.max(0, t.data.pickedAt + v.courierSec * 1000 - Date.now())) + (sub ? ' · ' + sub : '');
-    const fleeing = w && w.esc > 0 ? 'útek ' + Math.min(v.escapeSec, Math.floor(w.esc)) + ' / ' + v.escapeSec + ' s' : '';
-    if (t.type === 'escape') sub = fleeing || 'čaká na policajta';
-    if (t.type === 'razia') sub = t.got.length < 2 ? 'zlož policajtov ' + t.got.length + ' / 2' : fleeing || 'teraz ujdi';
-    if (t.type === 'vypalne' && sub) sub = 'auto ' + sub;
-    if (t.type === 'sledovanie' && w && w.follow > 0) sub = 'sleduješ ' + Math.min(v.followSec, Math.floor(w.follow)) + ' / ' + v.followSec + ' s';
-    if (t.type === 'graffiti' && w && w.spray > 0) sub = 'sprej ' + Math.min(v.spraySec, Math.floor(w.spray)) + ' / ' + v.spraySec + ' s';
-    if (t.type === 'runner') sub = 'bežec alebo Ripper na mape';
-    $('#hud-dly-sub').textContent = sub;
+    const live = [];
+    for (const t of v.tasks.filter((x) => !x.done)) {
+      if (t.type === 'courier' && t.got.length) live.push('kuriér ' + clock(Math.max(0, t.data.pickedAt + v.courierSec * 1000 - Date.now())));
+      if ((t.type === 'escape' || t.type === 'razia') && w && w.esc > 0) live.push('útek ' + Math.min(v.escapeSec, Math.floor(w.esc)) + '/' + v.escapeSec + ' s');
+      if (t.type === 'sledovanie' && w && w.follow > 0) live.push('sleduješ ' + Math.min(v.followSec, Math.floor(w.follow)) + '/' + v.followSec + ' s');
+      if (t.type === 'graffiti' && w && w.spray > 0) live.push('sprej ' + Math.min(v.spraySec, Math.floor(w.spray)) + '/' + v.spraySec + ' s');
+    }
+    if (live.length) this.dailyChip = '<span class="buff daily" title="Denná misia">' + CHEST_ICON + '<small>' + [...new Set(live)].join(' · ') + '</small></span>';
   }
 
   // the map stepped on a target / picked a parcel / survived the escape
@@ -432,7 +414,7 @@ export class UI {
   // one chip per pill colour: icon, stacks, time until the next stack runs out
   buffChips() {
     const b = this.s.buffs(), cls = this.s.p.cls, now = Date.now();
-    return ['red', 'blue', 'green'].filter((k) => b[k].length).map((k) => {
+    return (this.dailyChip || '') + (this.shadowChip || '') + ['red', 'blue', 'green'].filter((k) => b[k].length).map((k) => {
       const n = b[k].length;
       return '<span class="buff ' + k + '" title="' + pillName(k) + ': +' + pct(CONFIG.pillBoost * n) + ' ' + pillEffect(k, cls) + '">' + PILL_ICON[k] +
         '<b>+' + Math.round(CONFIG.pillBoost * n * 100) + ' %</b><small>' + clock(Math.min(...b[k]) - now) + '</small></span>';
@@ -820,7 +802,7 @@ export class UI {
     // the poster carries the logo, so the title shows only the tagline under it
     let inner = '<h1 class="logo sr">Hits &amp; Licks</h1><p class="tag">Od pešiaka po bossa mesta</p>';
     const evNow = activeEvents();
-    if (evNow) inner += '<div class="ev-banner">' + evNow.ids.map((id) => EVENTS[id].icon + ' ' + EVENTS[id].name).join(' · ') + '<small>Víkendový event · ešte <span data-until="' + evNow.until + '"></span></small></div>';
+    if (evNow) inner += '<div class="ev-banner">' + evNow.ids.map((id) => EVENTS[id].icon + ' ' + EVENTS[id].name).join(' · ') + '<small>Víkendový event</small></div>';
     if (this.s.online && !this.s.loggedIn()) {
       const mode = this.sel.authMode || 'in';
       inner += '<div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" value="' + esc(this.sel.authEmail || '') + '"></div>';
@@ -983,6 +965,7 @@ export class UI {
       const dn = dv.tasks.filter((t) => t.done).length;
       let h = '<button class="card daily-card" data-act="open" data-arg="daily"><span class="dbadge">D</span><span class="mid"><span class="t">Denné misie</span><span class="s">' +
         (dv.done ? 'Dnes hotovo · nové o polnoci' : dn + ' / ' + dv.tasks.length + ' splnené · úlohy na mape') + '</span></span><span class="end"><span class="s">deň ' + this.s.dailyDayNow() + ' / 15</span></span></button>' +
+        (() => { const a = activeEvents(); return a ? '<button class="card" data-act="open" data-arg="events"><span class="dbadge" style="color:#e8c873;border-color:#e8c873">' + EVENTS[a.ids[0]].icon + '</span><span class="mid"><span class="t">Víkendový event</span><span class="s">' + a.ids.map((id) => EVENTS[id].name).join(' · ') + '</span></span><span class="end"><span class="s">ešte <span data-until="' + a.until + '"></span></span></span></button>' : ''; })() +
         '<p class="p">Misie zadávajú postavy v meste. Hľadaj bielu bublinu „!“ nad hlavou. Každá misia sa končí súbojom.</p>' +
         '<div class="card" style="cursor:default"><img class="ph" src="' + art('photo_don') + '" alt=""><div class="mid"><span class="t">Don</span><span class="s">Park v strede štvrte, pri fontáne</span></div></div>' +
         '<div class="card" style="cursor:default"><img class="ph" src="' + art('photo_diler') + '" alt=""><div class="mid"><span class="t">Díler</span><span class="s">Chodník pri corneri, západ štvrte</span></div></div>';
