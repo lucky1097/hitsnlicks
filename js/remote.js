@@ -1,10 +1,10 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261024160412';
-import { NET } from './net.js?v=20261024160412';
-import { CONFIG } from './config.js?v=20261024160412';
-import { SHOPS } from './data.js?v=20261024160412';
+import { SimServer } from './server.js?v=20261025001323';
+import { NET } from './net.js?v=20261025001323';
+import { CONFIG } from './config.js?v=20261025001323';
+import { SHOPS } from './data.js?v=20261025001323';
 
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 
@@ -31,7 +31,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261024160412');
+    const { handle, memoryDb } = await import('./api.js?v=20261025001323');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };

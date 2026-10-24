@@ -7,3 +7,7 @@ supabase/.temp/
 *.log
 # source art (PSD, Procreate, big originals) stays on this PC only
 zdroj_art/
+# database backups (tools/backup.ps1): player saves and emails, never public
+zalohy/
+# temporary exports of a player's save for balance tests
+*.tmp.json
