@@ -149,7 +149,7 @@ export const SHOPS = {
 // minutes = nominal length; below level CONFIG.fastUntil missions run much shorter (see F.durationFactor).
 // story.foe.art: portrait shown in the fight; story.hit: the line that opens the fight.
 export const MISSIONS = {
-  sledovanie: { name: 'Sledovanie', minutes: 2, minLevel: 1, heat: 3, art: 'it_watch', stories: [
+  sledovanie: { name: 'Sledovanie', minutes: 2, minLevel: 1, heat: 3, art: 'x_mis_sledovanie', stories: [
     { text: 'Don chce vedieť, s kým sa stretáva majiteľ práčovne. Sadni si na lavičku, tvár sa, že čítaš noviny, a pozeraj. Len si daj pozor, aby niekto nesledoval teba.',
       hit: 'Chlapík so semienkami sedí na vedľajšej lavičke celý deň. Videl ťa a pľuje šupky rovno pred teba.', foe: { name: 'Semienko', title: 'Gopník zo sídliska', art: 'photo_n_semienko' } },
     { text: 'Nový chlapík na corneri chodí každý večer tou istou cestou. Zisti kam. Tieň za tebou ale nemusí byť len tvoj.',
@@ -163,7 +163,7 @@ export const MISSIONS = {
     { text: 'Pod mostom sa zhromažďujú ľudia, ktorí vidia všetko a nik ich nevidí. Don chce vedieť, čo videl jeden z nich.',
       hit: 'Bezdomovec pri sude sa usmieva. Za informáciu chce viac, ako máš, a vie, že ho sleduješ.', foe: { name: 'Starý Lojzo', title: 'Kráľ spod mosta', art: 'photo_n_bezdomovec' } },
   ] },
-  dorucenie: { name: 'Doručenie zásielky', minutes: 4, minLevel: 1, heat: 5, art: 'it_package', stories: [
+  dorucenie: { name: 'Doručenie zásielky', minutes: 4, minLevel: 1, heat: 5, art: 'x_mis_dorucenie', stories: [
     { text: 'Balík, adresa, žiadne otázky. Čo je vnútri, ťa nezaujíma. Na druhej strane štvrte ťa už ale niekto čaká a nie je to adresát.',
       hit: 'Vreckárka v baretke ti už jednu peňaženku vytiahla. Balík nedostane.', foe: { name: 'Vreckárka', title: 'Prsty ako hodváb', art: 'photo_n_vreckarka' } },
     { text: 'Zásielka pre kamaráta z garáže. Cesta vedie cez park, kde sa večer motajú tí, čo nemajú čo stratiť.',
@@ -177,7 +177,7 @@ export const MISSIONS = {
     { text: 'Zásielku odovzdáš rozvozárovi pred kaviarňou. Do batohu sa zmestí viac ako pizza. Len či je to ten správny rozvozár.',
       hit: 'Rozvozár zložil batoh. Jedlo neprivezie, privezie päste.', foe: { name: 'Rozvozár', title: 'Doručí aj to, čo nemá', art: 'photo_n_rozvozar' } },
   ] },
-  predaj: { name: 'Predaj tovaru', minutes: 6, minLevel: 1, heat: 6, art: 'it_duffel', stories: [
+  predaj: { name: 'Predaj tovaru', minutes: 6, minLevel: 1, heat: 6, art: 'x_mis_predaj', stories: [
     { text: 'Dostal si tašku. Do večera musí zmiznúť. Kto vie, čo v nej je. Pozor, ihrisko na sídlisku má svoju šéfku a tá nemá rada cudzí tovar.',
       hit: 'Kobra si zapla bundu. Na jej ihrisku sa nepredáva bez jej súhlasu.', foe: { name: 'Kobra', title: 'Šéfka ihriska', art: 'photo_n_kobra' } },
     { text: 'Kupec chce tovar hneď a za hotové. Lenže kupci, ktorí platia hneď, zvyknú mať v rukáve aj niečo iné.',
@@ -193,7 +193,7 @@ export const MISSIONS = {
     { text: 'Na ihrisku v uličke sa predáva všeličo. Chlapík v bielom klobúku tam rozhoduje, kto smie.',
       hit: 'Klobúk zahodil cigaretu a odložil loptu. Toto je jeho ihrisko.', foe: { name: 'Klobúk', title: 'Šéf ihriska v uličke', art: 'photo_n_klobuk' } },
   ] },
-  vymahanie: { name: 'Vymáhanie dlhu', minutes: 9, minLevel: 3, heat: 10, art: 'it_bat', stories: [
+  vymahanie: { name: 'Vymáhanie dlhu', minutes: 9, minLevel: 3, heat: 10, art: 'x_mis_vymahanie', stories: [
     { text: 'Mladý motorkár si od Dona požičal na novú mašinu. Splátky nechodia, mašina áno. Pripomeň mu, komu patrí.',
       hit: 'Nováčik sa len usmieva. Myslí si, že ho chlapi z klubu kryjú.', foe: { name: 'Nováčik', title: 'Motorkár na skúšku', art: 'photo_n_novacik' } },
     { text: 'Majiteľ večierky zabudol na mesačnú platbu. Pripomenutie musí byť zdvorilé. Prvýkrát.',
@@ -211,7 +211,7 @@ export const MISSIONS = {
     { text: 'Krupiér z kasína vypláca výhry len tým, ktorí mu dávajú podiel. Don nedostal nič.',
       hit: 'Krupiér zložil žetóny. Banka dnes vyhrá, myslí si.', foe: { name: 'Krupiér', title: 'Banka vždy vyhrá', art: 'photo_n_krupier' } },
   ] },
-  kradez_auta: { name: 'Krádež auta', minutes: 8, minLevel: 4, heat: 10, art: 'it_keys', stories: [
+  kradez_auta: { name: 'Krádež auta', minutes: 8, minLevel: 4, heat: 10, art: 'x_mis_kradez_auta', stories: [
     { text: 'Pred hotelom stojí čierne auto, ktoré už nepatrí svojmu majiteľovi. Kľúče máš, stačí ho odviezť do garáže. Šofér však nespí.',
       hit: 'Šofér si naťahuje čierne rukavice. Tento muž nie je obyčajný šofér.', foe: { name: 'Čistič', title: 'Muž z izby 29', art: 'photo_n_cistic' } },
     { text: 'Autobazár dostal nový kúsok. Don ho chce skôr, než ho niekto kúpi. Nočná zmena by mala spať.',
@@ -225,7 +225,7 @@ export const MISSIONS = {
     { text: 'Pred bytom influencerky stojí nové kupé. Kľúče nechala na stolíku pri okne. Lenže ona práve natáča.',
       hit: 'Influencerka ťa má na videu naživo. Telefón nepustí a nechty má ostré.', foe: { name: 'Bibi', title: 'Milión sledovateľov', art: 'photo_n_influencerka' } },
   ] },
-  prepadnutie: { name: 'Prepadnutie rivala', minutes: 10, minLevel: 6, heat: 12, art: 'it_bat', stories: [
+  prepadnutie: { name: 'Prepadnutie rivala', minutes: 10, minLevel: 6, heat: 12, art: 'x_mis_prepadnutie', stories: [
     { text: 'Červení si myslia, že im patrí corner. Prejdi okolo a ukáž im, že sa mýlia.',
       hit: 'Z uličky vyšiel chlap so šatkou cez tvár. Červení si poslali svojho najhoršieho.', foe: { name: 'Maska', title: 'Červený gang', art: 'photo_n_maska' } },
     { text: 'Kuriér rivalov nosí každý piatok obálku. Dnes ju donesie nám.',
@@ -237,7 +237,7 @@ export const MISSIONS = {
     { text: 'Rivali majú v uličke vlastného vymáhača. Vždy v tej istej mikine, vždy s tou istou reťazou.',
       hit: 'Chlap v kapucni vyšiel z tmy. Nič nepovie, rovno udrie.', foe: { name: 'Kapucňa', title: 'Vymáhač červených', art: 'photo_n_kapucna' } },
   ] },
-  ochrana: { name: 'Ochrana podniku', minutes: 12, minLevel: 8, heat: 6, art: 'it_pistol', stories: [
+  ochrana: { name: 'Ochrana podniku', minutes: 12, minLevel: 8, heat: 6, art: 'x_mis_ochrana', stories: [
     { text: 'Postráž bar, kým sa nezotmie. Nikto nesmie robiť problémy. Jeden to aj tak skúsi.',
       hit: 'Chuligán po zápase rozbil pohár a pozerá rovno na teba.', foe: { name: 'Chuligán', title: 'Hosť bez pozvania', art: 'photo_n_chuligan' } },
     { text: 'Majiteľ klubu platí za pokoj. Dnes večer príde niekto, kto pokoj nemá rád.',
@@ -251,7 +251,7 @@ export const MISSIONS = {
     { text: 'Nonstop pri klube patrí pod Donovu ochranu. Nočná predavačka ale dnes pustila dnu niekoho, kto platiť nechce.',
       hit: 'Predavačka nafúkla bublinu a vytiahla spod pultu basebalku.', foe: { name: 'Pokladníčka', title: 'Nočná zmena v nonstope', art: 'photo_n_predavacka' } },
   ] },
-  kradez_sklad: { name: 'Krádež zo skladu', minutes: 15, minLevel: 10, heat: 12, art: 'it_duffel', stories: [
+  kradez_sklad: { name: 'Krádež zo skladu', minutes: 15, minLevel: 10, heat: 12, art: 'x_mis_kradez_sklad', stories: [
     { text: 'Sklad pri klube je dnes v noci prázdny. Skoro. Jeden strážnik zostal a nemá dobrú náladu.',
       hit: 'Strážnik skladu zhasol svetlo na schodisku a navliekol si boxer.', foe: { name: 'Boxer', title: 'Strážnik skladu', art: 'photo_n_boxer' } },
     { text: 'V sklade rivalov leží hotovosť za tisíce. Dvere sú otvorené, pes nie je. Zato je tam niekto horší.',

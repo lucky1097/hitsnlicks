@@ -2,7 +2,7 @@
 // a better one and a weaker one, following a 6-weekend rotation. Server and client compute them from the date,
 // so every player has the same weekend. fx() merges what the active events change; the game reads it where
 // rewards, prices and timers are worked out.
-import { localParts } from './config.js?v=20261024133746';
+import { localParts } from './config.js?v=20261024134431';
 
 const DAY = 86400000;
 

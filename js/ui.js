@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024133746';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024133746';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024133746';
-import { DAILY_TYPES } from './daily.js?v=20261024133746';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024133746';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024134431';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024134431';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024134431';
+import { DAILY_TYPES } from './daily.js?v=20261024134431';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024134431';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
