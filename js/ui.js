@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024115302';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024115302';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024115302';
-import { DAILY_TYPES } from './daily.js?v=20261024115302';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024115302';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261024133746';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261024133746';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261024133746';
+import { DAILY_TYPES } from './daily.js?v=20261024133746';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261024133746';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -851,7 +851,8 @@ export class UI {
   scr_menu() {
     return {
       overlay: true,
-      html: '<div class="pause">' +
+      html: '<button class="menu-x" data-act="back" aria-label="Zavrieť menu">' + BACK + '<span>Späť</span></button>' +
+        '<div class="pause">' +
         '<svg width="300" height="26" viewBox="0 0 330 26" aria-hidden="true"><path d="M0 13 H128" stroke="#e9e4d8" stroke-opacity=".4"/><path d="M202 13 H330" stroke="#e9e4d8" stroke-opacity=".4"/><path d="M128 13 C136 4 146 4 150 13 C146 22 136 22 128 13 Z M202 13 C194 4 184 4 180 13 C184 22 194 22 202 13 Z M165 3 L175 13 L165 23 L155 13 Z" fill="none" stroke="#c9a24a"/><circle cx="165" cy="13" r="2.2" fill="#c9a24a"/></svg>' +
         '<h2 class="sc" style="margin:8px 0 6px;font-weight:500;font-size:18px;letter-spacing:4px;color:#b9b4a8">Menu</h2>' +
         '<div class="menu">' + MENU.map((m, i) => '<button class="' + (i === 0 ? 'sel' : '') + (m.locked ? ' locked' : '') + '" data-act="menu-go" data-arg="' + m.id + '" data-desc="' + esc(m.desc) + '">' + m.name + (m.locked ? ' <small style="font-size:14px;font-style:italic">· od verzie 2</small>' : '') + '</button>').join('') + '</div>' +

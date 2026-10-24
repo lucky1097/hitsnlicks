@@ -411,7 +411,9 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 @keyframes tin { from { opacity: 0; transform: translateY(-8px); } }
 
 /* pause menu */
-.pause { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 30px; }
+.pause { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 56px 30px 24px; }
+/* always-visible way out of the menu, even when the list is taller than the screen */
+.menu-x { position: absolute; z-index: 2; top: calc(10px + env(safe-area-inset-top)); left: 10px; display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px; background: rgba(7,7,7,.85); border: 1px solid rgba(233,228,216,.25); color: #e9e4d8; font: inherit; font-size: 16px; cursor: pointer; }
 .pause .menu { width: 100%; max-width: 320px; }
 .pause .desc { margin: 12px 0 0; min-height: 44px; text-align: center; font-size: 17px; color: #d8d3c7; }
 .pause .hints { display: flex; gap: 18px; margin-top: 8px; font-size: 14px; color: #8a857a; }
