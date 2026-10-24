@@ -124,7 +124,7 @@ export const CONFIG = {
   // Podzemné zápasy: an endless-feeling ladder for when the bosses are done; fighters grow with F.clubLevel
   clubFloors: 100,
   clubCooldownMin: 60, // one fight an hour, won or lost
-  clubHpMult: 1.2,
+  clubHpMult: 1.2, // from floor 31 on (F.clubRamp); floor 1 starts at 1
   clubCashMin: 15, // cash per win = this many minutes of mission cash at your level
   clubXpShare: 0.08, // XP per win = this share of your current level
   clubBarsEvery: 10, // every 10th floor pays clubBars gold bars
@@ -220,7 +220,8 @@ export const F = {
   upgradeCost: (item) => Math.round(item.price * 0.35 * (item.upgrade + 1)),
   bossLevel: (k) => Math.round(6 + (k - 1) * 1.8), // 25 bosses of Mesto 1: level 6 … 49
   // grows like a player who also buys stats: a level-30 player is about even with a level-29 boss
-  clubLevel: (n) => Math.round(5 + 0.75 * (n - 1)), // Podzemné zápasy floor 1 … 100: level 5 … 79
+  clubLevel: (n) => Math.max(1, Math.round(2 + 0.85 * (n - 1))), // Podzemné zápasy floor 1 … 100: level 2 … 86
+  clubRamp: (n) => Math.min(1, (n - 1) / 30), // early floors: common-strength gear and plain life, full strength from floor 31
   bossStat: (Lb) => 10 + 2.5 * Lb + 0.25 * Lb * Lb,
   npcStat: (L) => 10 + 2.2 * L,
 };

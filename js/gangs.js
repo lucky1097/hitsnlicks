@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261024160009';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261024160009';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024160009';
+import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261024160412';
+import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261024160412';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024160412';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });

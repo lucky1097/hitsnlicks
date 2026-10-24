@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024160009';
-import { eventFx } from './events.js?v=20261024160009';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024160009';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024160009';
-import { GangMixin } from './gangs.js?v=20261024160009';
-import { DailyMixin } from './daily.js?v=20261024160009';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261024160412';
+import { eventFx } from './events.js?v=20261024160412';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261024160412';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261024160412';
+import { GangMixin } from './gangs.js?v=20261024160412';
+import { DailyMixin } from './daily.js?v=20261024160412';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -972,7 +972,7 @@ export class SimServer {
 
   clubFighter(n) {
     const rng = mulberry32(n * 7919 + 17);
-    const foe = CLUB_FOES[(n * 17) % CLUB_FOES.length];
+    const foe = CLUB_FOES[Math.floor(rng() * CLUB_FOES.length)];
     const L = F.clubLevel(n);
     const base = F.bossStat(L);
     const prof = {};
@@ -980,8 +980,9 @@ export class SimServer {
     const cls = Object.keys(CLASSES).reduce((best, c) => (prof[CLASSES[c].stat] > prof[CLASSES[best].stat] ? c : best), 'svalovec');
     const stats = {};
     STATS.forEach((s) => { stats[s] = Math.round(base * prof[s]); });
-    const gear = F.itemPower(L, CONFIG.bossGearMult);
-    return makeFighter(foe.name, L, stats, gear * CONFIG.weaponDmgMult, { hpMult: CONFIG.clubHpMult, portrait: foe.art, title: foe.title, cls, armor: gear * 5 });
+    const ramp = F.clubRamp(n);
+    const gear = F.itemPower(L, 1 + (CONFIG.bossGearMult - 1) * ramp);
+    return makeFighter(foe.name, L, stats, gear * CONFIG.weaponDmgMult, { hpMult: 1 + (CONFIG.clubHpMult - 1) * ramp, portrait: foe.art, title: foe.title, cls, armor: gear * 5 });
   }
 
   clubInfo() {
