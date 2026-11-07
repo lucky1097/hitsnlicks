@@ -120,7 +120,7 @@ export const CONFIG = {
   lifeMult: 3, // longer fights = less luck in who wins
   maxUpgrade: 5,
   autoUnlockLevel: 20,
-  unlock: { arena: 5, club: 8, gang: 10, blackMarket: 15 },
+  unlock: { arena: 5, club: 8, gang: 10, blackMarket: 15, mesto2: 50 }, // Mesto 2 also needs every boss of Mesto 1
   // Podzemné zápasy: an endless-feeling ladder for when the bosses are done; fighters grow with F.clubLevel
   clubFloors: 100,
   clubCooldownMin: 60, // one fight an hour, won or lost

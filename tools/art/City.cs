@@ -9,13 +9,16 @@ using System.Globalization;
 // under it, straight and diagonal streets, perimeter blocks with courtyards. Only straight street segments,
 // so the street graph is exact: nodes sit on real crossings and cars/walkers never jump.
 // Outputs: map_base.png (pixel art), city.json (collision grid, street graph, buildings).
-public static class City
+// Cur picks the city: 1 = this file's Düsseldorf slice, 2 = Prague's Old Town (City2.cs). The Mesto 2 extras
+// (river, bridges, cobbles, tiled roofs, tower, boats) only run for Cur == 2, so Mesto 1 stays byte for byte the same.
+public static partial class City
 {
     public const int W = 1200, H = 960, SW = 14, CELL = 4;
+    public static int Cur = 1;
     // ground kinds
     const byte LAND = 0, WATER = 1, PARK = 2, WALK = 3, PLAZA = 4, ROAD = 5, BUILD = 6, YARD = 7, PATH = 8;
 
-    class Road { public string name; public List<double[]> pts; public int w; public bool car, lines, trees, path; }
+    class Road { public string name; public List<double[]> pts; public int w; public bool car, lines, trees, path, tram, pier; }
     public class Mark { public string id; public int x0, y0, x1, y1; public string roof; public string icon; public int frame; public char door; public int dx, dy, rx, ry; public int lot; }
     class Node { public double x, y, r; public HashSet<int> roads = new HashSet<int>(); }
 
@@ -51,6 +54,14 @@ public static class City
     static void Network()
     {
         roads.Clear();
+        if (Cur == 2) Streets2(); else Streets1();
+
+        // snap street ends onto the street they touch
+        Connect();
+    }
+
+    static void Streets1()
+    {
         // streets run 40 px past the edge, so cars turn around out of sight
         Add("Grabenská", 38, true, true, false, P(-40, 40), P(1240, 40));
         Add("Haroldova", 52, true, true, true, P(-40, 372), P(380, 462), P(1240, 522));
@@ -72,8 +83,10 @@ public static class City
             new[] { P(370, 90), P(800, 90) }, new[] { P(800, 90), P(800, 428) }, new[] { P(370, 90), P(370, 428) },
             new[] { P(370, 428), P(800, 428) }, new[] { P(370, 272), P(800, 272) } })
         { Add("cesta", 10, false, false, false, p); roads[roads.Count - 1].path = true; }
+    }
 
-        // snap street ends onto the street they touch
+    static void Connect()
+    {
         for (int ri = 0; ri < roads.Count; ri++)
             foreach (int end in new[] { 0, roads[ri].pts.Count - 1 })
             {
@@ -173,15 +186,20 @@ public static class City
         K = new byte[W * H]; SOLIDX = new bool[W * H]; LOT = new int[W * H]; NEARNODE = new bool[W * H];
         for (int i = 0; i < LOT.Length; i++) LOT[i] = -1;
         Network();
+        if (Cur == 2) GroundBefore2(); // the river goes in first: bridges and the embankment are painted over it
         //            land water park walk plaza road build yard path
         var rank = new byte[] { 0, 0, 1, 3, 4, 5, 0, 0, 2 };
         foreach (var r in roads) if (!r.path) Paint(r, r.car ? ROAD : PLAZA, r.car ? r.w / 2.0 + SW : r.w / 2.0, rank);
-        // the square by the church (Don's corner)
-        Blob(700, 760, 70, 34, PLAZA);
-        // the park: the block between Grabenská, Vodná, Haroldova and Alžbetina
-        Flood(600, 250, LAND, PARK);
-        Blob(560, 165, 130, 62, WATER); Blob(650, 190, 80, 48, WATER);
-        Blob(620, 350, 110, 52, WATER); Blob(712, 330, 66, 44, WATER);
+        if (Cur == 2) GroundAfter2();
+        else
+        {
+            // the square by the church (Don's corner)
+            Blob(700, 760, 70, 34, PLAZA);
+            // the park: the block between Grabenská, Vodná, Haroldova and Alžbetina
+            Flood(600, 250, LAND, PARK);
+            Blob(560, 165, 130, 62, WATER); Blob(650, 190, 80, 48, WATER);
+            Blob(620, 350, 110, 52, WATER); Blob(712, 330, 66, 44, WATER);
+        }
         foreach (var r in roads) if (r.path) Paint(r, PATH, r.w / 2.0, new byte[] { 0, 0, 1, 3, 4, 5, 0, 0, 2 });
         // markings stay out of crossings
         foreach (var n in nodes)
@@ -219,6 +237,7 @@ public static class City
     // ------------------------------------------------------------ blocks and lots
     static string[] RoofsFor(int x, int y)
     {
+        if (Cur == 2) return RoofsFor2(x, y);
         if (y < 430 && x > 860) return new[] { "glass", "white", "metal", "slate" };       // offices east of the park
         if (y < 600 && x < 330) return new[] { "slate", "brick", "tar", "gravel" };        // old houses west
         if (y > 700) return new[] { "brick", "brick", "slate", "tar", "gravel" };          // the quiet south
@@ -237,6 +256,11 @@ public static class City
             case "brick": return Cl.H("7a4636");
             case "slate": return Cl.H("4b5058");
             case "glass": return Cl.H("41586a");
+            case "tile": return Cl.H("8f4a33");   // Mesto 2: red clay tiles
+            case "tile2": return Cl.H("7d4532");
+            case "copper": return Cl.H("5e8a78"); // green copper of the gallery
+            case "tower": return Cl.H("6a6258");
+            case "church": return Cl.H("4b5058");
             default: return Cl.H("8e887c");
         }
     }
@@ -249,12 +273,12 @@ public static class City
         foreach (var m in marks)
         {
             m.lot = lotRoof.Count;
-            lotRoof.Add(RoofColor(m.roof)); lotH.Add(m.roof == "glass" ? 10 : 7); lotKind.Add(m.roof);
+            lotRoof.Add(RoofColor(m.roof)); lotH.Add(m.roof == "glass" ? 10 : m.roof == "tower" ? 20 : m.roof == "church" ? 14 : 7); lotKind.Add(m.roof);
         }
-        // landmarks inside the park (the museum) are built on the grass
+        // landmarks inside the park (the museum) are built on the grass; in Mesto 2 the town hall stands on the square
         foreach (var m in marks)
             for (int y = m.y0; y <= m.y1; y++) for (int x = m.x0; x <= m.x1; x++)
-                    if (In(x, y) && K[I(x, y)] == PARK) { K[I(x, y)] = BUILD; LOT[I(x, y)] = m.lot; }
+                    if (In(x, y) && (K[I(x, y)] == PARK || (Cur == 2 && m.roof == "tower" && K[I(x, y)] == PLAZA))) { K[I(x, y)] = BUILD; LOT[I(x, y)] = m.lot; }
         for (int sy = 0; sy < H; sy++) for (int sx = 0; sx < W; sx++)
             {
                 int si = I(sx, sy);
@@ -276,7 +300,7 @@ public static class City
                 }
                 if (n < 220) { for (int k = 0; k < n; k++) K[I(qx[k], qy[k])] = WALK; continue; }
                 var roofs = RoofsFor((bx0 + bx1) / 2, (by0 + by1) / 2);
-                int spacing = 54;
+                int spacing = Cur == 2 ? 40 : 54; // the old town has smaller houses
                 var seeds = new List<int[]>();
                 for (int y = by0 + spacing / 2; y <= by1; y += spacing)
                     for (int x = bx0 + spacing / 2; x <= bx1; x += spacing)
@@ -343,6 +367,7 @@ public static class City
 
     static void Lamp(Img im, int x, int y)
     {
+        if (Cur == 2) { Lantern(im, x, y); return; }
         post.Add(() => { im.Ellipse(x + 1, y + 1, 16, 13, Cl.A(Cl.H("ffb04a"), 22)); im.Ellipse(x + 1, y + 1, 8, 7, Cl.A(Cl.H("ffc46a"), 24)); });
         im.Fill(x + 1, y + 1, 3, 3, Cl.A(Cl.H("000000"), 90));
         im.Fill(x, y, 2, 2, Cl.H("2c2e33"));
@@ -391,7 +416,7 @@ public static class City
     // ------------------------------------------------------------ the map
     public static Img Build(bool debug)
     {
-        rnd = new Random(23);
+        rnd = new Random(Cur == 2 ? 31 : 23);
         Masks();
         Lots();
         var im = new Img(W, H);
@@ -409,6 +434,7 @@ public static class City
                         if (x % 12 == 0 || y % 12 == 0) im.Set(x, y, Cl.A(Cl.Dk(sidewalk, 0.5), 60));
                         break;
                     case PLAZA:
+                        if (Cur == 2) { Cobble(im, x, y); break; }
                         Noise(im, x, y, plaza, 0.07);
                         if ((x + (y / 6 % 2) * 4) % 8 == 0 || y % 6 == 0) im.Set(x, y, Cl.A(Cl.Dk(plaza, 0.45), 70));
                         break;
@@ -422,6 +448,9 @@ public static class City
                             if (kind == "slate" && (y % 4 == 0 || (x + (y / 4) * 3) % 9 == 0)) im.Set(x, y, Cl.A(Cl.Dk(c, 0.35), 110));
                             if (kind == "brick" && y % 5 == 0) im.Set(x, y, Cl.A(Cl.Dk(c, 0.3), 90));
                             if (kind == "glass" && (x % 10 == 0 || y % 10 == 0)) im.Set(x, y, Cl.A(Cl.Lt(c, 0.35), 120));
+                            if ((kind == "tile" || kind == "tile2") && (y % 3 == 0 || (x + (y / 3) * 2) % 5 == 0)) im.Set(x, y, Cl.A(Cl.Dk(c, 0.35), 110));
+                            if (kind == "copper" && x % 6 == 0) im.Set(x, y, Cl.A(Cl.Lt(c, 0.25), 110));
+                            if (kind == "tower" && (x % 5 == 0 || y % 5 == 0)) im.Set(x, y, Cl.A(Cl.Dk(c, 0.3), 100));
                             break;
                         }
                     default: Noise(im, x, y, land, 0.06); break;
@@ -435,8 +464,9 @@ public static class City
             if (n % 3 == 0) { for (int k = 0; k < 10 + rnd.Next(14); k++) { if (In(x, y) && K[I(x, y)] == ROAD) im.Put(x, y, Cl.H("232428")); x += rnd.Next(3) - 1; y += rnd.Next(3) - 1; } }
             else im.Ellipse(x, y, 3 + rnd.Next(6), 2 + rnd.Next(4), Cl.A(rnd.Next(2) == 0 ? Cl.H("2e2f33") : Cl.H("45464b"), 70));
         }
-        // pond ripples and lily pads
-        for (int n = 0; n < 500; n++)
+        // pond ripples and lily pads (Mesto 2: the river gets its own current and boats)
+        if (Cur == 2) River2(im);
+        else for (int n = 0; n < 500; n++)
         {
             int x = rnd.Next(W), y = rnd.Next(H);
             if (K[I(x, y)] != WATER) continue;
@@ -451,6 +481,8 @@ public static class City
                 if (k == WALK && (up == ROAD || dn == ROAD || lf == ROAD || rt == ROAD)) im.Put(x, y, Cl.H("b3afa4"));
                 if (k == ROAD && (up == WALK || dn == WALK || lf == WALK || rt == WALK)) im.Put(x, y, Cl.H("26272b"));
                 if (k == WATER && (up != WATER || dn != WATER || lf != WATER || rt != WATER)) im.Put(x, y, Cl.H("6b675e"));
+                // Mesto 2: stone railing where a sidewalk or the bridge meets the river
+                if (Cur == 2 && (k == WALK || k == ROAD) && (up == WATER || dn == WATER || lf == WATER || rt == WATER)) im.Put(x, y, Cl.H("a39e92"));
                 if (k == BUILD)
                 {
                     int lot = LOT[i], c = lotRoof[lot];
@@ -564,6 +596,7 @@ public static class City
             int lx = (int)Math.Round(x - dy * off), ly = (int)Math.Round(y + dx * off);
             if (In(lx, ly) && K[I(lx, ly)] == WALK && !NearSolid(lx, ly, 8)) Lamp(im, lx, ly);
         });
+        if (Cur == 2) Decor2(im);
         // landmark decorations
         foreach (var m in marks)
         {
@@ -577,6 +610,7 @@ public static class City
                             if ((x == mm.x0 + 5 || x == mm.x1 - 5 || y == mm.y0 + 5 || y == mm.y1 - 5) && In(x, y) && K[I(x, y)] == BUILD) im.Put(x, y, neon);
                 });
             }
+            if (m.roof == "tower") post.Add(() => Landmark2(im, mm)); // the church is drawn with the city (Decor2)
             if (m.icon != null) post.Add(() => Signs.Plate(im, mm.rx, mm.ry, mm.icon, mm.frame));
             post.Add(() => Signs.Door(im, mm.dx, mm.dy));
         }
@@ -651,6 +685,7 @@ public static class City
     public static void Layout()
     {
         marks.Clear();
+        if (Cur == 2) { Layout2(); return; }
         // the museum in the park is the arena
         AddMark("arena", 388, 296, 488, 410, "glass", null, null, 'N');
         // shops facing the boulevard

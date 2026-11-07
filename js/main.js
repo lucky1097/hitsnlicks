@@ -1,9 +1,9 @@
-import { SimServer } from './server.js?v=20261025001323';
-import { RemoteServer } from './remote.js?v=20261025001323';
-import { ONLINE } from './net.js?v=20261025001323';
-import { CONFIG } from './config.js?v=20261025001323';
-import { UI } from './ui.js?v=20261025001323';
-import { createWorld } from './world.js?v=20261025001323';
+import { SimServer } from './server.js?v=20261107210956';
+import { RemoteServer } from './remote.js?v=20261107210956';
+import { ONLINE } from './net.js?v=20261107210956';
+import { CONFIG } from './config.js?v=20261107210956';
+import { UI } from './ui.js?v=20261107210956';
+import { createWorld } from './world.js?v=20261107210956';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -48,6 +48,7 @@ const game = createWorld(document.getElementById('game'), {
   daily: () => (server.hasSave() ? server.dailyMap() : null),
   onDailyStep: (task, step) => ui.dailyStep(task, step),
   onDailyFail: (msg) => ui.toast(msg, true),
+  cityId: () => (server.hasSave() ? server.city() : 'mesto1'),
 });
 
 // what the map knows about the daily task (nearest target, escape clock) for the HUD

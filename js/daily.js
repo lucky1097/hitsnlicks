@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261025001323';
-import { ITEM_BASES, POIS, TURF } from './data.js?v=20261025001323';
+import { CONFIG, F } from './config.js?v=20261107210956';
+import { ITEM_BASES, TURF, DAILY_SPOT_IDS, CITIES } from './data.js?v=20261107210956';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -11,23 +11,19 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const seed = () => Math.floor(Math.random() * 2 ** 31);
 const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-// places a task can send you: building doors (city.json marks) of shops, services and gang turf
-export const DAILY_SPOTS = [
-  ...POIS.filter((p) => p.at && p.at !== 'kladivo').map((p) => ({ id: p.at, name: p.name.split(' · ')[0] })),
-  ...TURF.map((t) => ({ id: t.id, name: t.name })),
-];
-const spotName = (id) => (DAILY_SPOTS.find((s) => s.id === id) || { name: id }).name;
+// places a task can send you: building doors (city.json marks) both cities have, named the way the city you are in calls them
+const spotIn = (city) => (id) => ((CITIES[city] || CITIES.mesto1).names[id] || id);
 
 // what each task type is: group (easy / action / hard), how many steps, a title and its text
 export const DAILY_TYPES = {
-  scout: { group: 'easy', name: 'Prieskum', need: 3, text: (d) => 'Obehni tri miesta: ' + d.spots.map(spotName).join(', ') + '.' },
+  scout: { group: 'easy', name: 'Prieskum', need: 3, text: (d, spotName) => 'Obehni tri miesta: ' + d.spots.map(spotName).join(', ') + '.' },
   stash: { group: 'easy', name: 'Skrýše', need: 5, text: () => 'Pozbieraj 5 balíčkov schovaných po uliciach štvrte.' },
-  courier: { group: 'easy', name: 'Kuriér', need: 2, text: (d) => 'Vyzdvihni balík: ' + spotName(d.from) + '. Dones ho do ' + CONFIG.dailyCourierSec / 60 + ' minút: ' + spotName(d.to) + '.' },
+  courier: { group: 'easy', name: 'Kuriér', need: 2, text: (d, spotName) => 'Vyzdvihni balík: ' + spotName(d.from) + '. Dones ho do ' + CONFIG.dailyCourierSec / 60 + ' minút: ' + spotName(d.to) + '.' },
   runner: { group: 'action', name: 'Bežec alebo Ripper', need: 1, text: () => 'Zraz šťastného bežca alebo chyť Rippera, ktorý okradol Wexlera.' },
   dlznik: { group: 'action', name: 'Dlžník', need: 1, text: () => 'Dlžník chodí po štvrti a pred tebou uteká. Zbi ho tromi údermi, alebo mu vyhoď do vzduchu auto (obe sú označené).' },
   vreckar: { group: 'action', name: 'Vreckár', need: 1, text: () => 'Chodec s plnou taškou sa prechádza po chodníku. Keď sa priblížiš, dá sa na útek. Dobehni ho a tašku mu vytrhni.' },
   sledovanie: { group: 'action', name: 'Sledovanie', need: 1, text: () => 'Choď ' + CONFIG.dailyFollowSec + ' sekúnd za označeným cieľom. Nepribližuj sa príliš, inak si ťa všimne, a nestrať ho z dohľadu.' },
-  graffiti: { group: 'hard', name: 'Graffiti', need: 1, text: (d) => 'Nastriekaj značku na objekt rivalov: ' + spotName(d.spot) + '. Postoj ' + CONFIG.dailySpraySec + ' sekundy pri dverách. Rivali si to všimnú, heat stúpne.' },
+  graffiti: { group: 'hard', name: 'Graffiti', need: 1, text: (d, spotName) => 'Nastriekaj značku na objekt rivalov: ' + spotName(d.spot) + '. Postoj ' + CONFIG.dailySpraySec + ' sekundy pri dverách. Rivali si to všimnú, heat stúpne.' },
   vypalne: { group: 'action', name: 'Výpalné', need: 1, text: () => 'Majiteľ podniku neplatí. Jeho auto je na mape označené zlatým kruhom. Rozbi ho, kým nezačne horieť a nevybuchne.' },
   escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Urob si na ulici problémy (aspoň ' + CONFIG.wantedChase + ' hviezdičky hľadanosti). Keď ťa naháňa polícia pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
   razia: { group: 'hard', name: 'Policajná razia', need: 3, text: () => 'Keď ťa naháňa polícia (od ' + CONFIG.wantedChase + ' hviezdičiek), zlož 2 policajtov a potom sa ' + CONFIG.dailyEscapeSec + ' sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.' },
@@ -52,9 +48,9 @@ export const DailyMixin = {
   },
 
   dailyData(type) {
-    if (type === 'scout') return { spots: shuffle(DAILY_SPOTS.map((s) => s.id)).slice(0, 3) };
+    if (type === 'scout') return { spots: shuffle(DAILY_SPOT_IDS).slice(0, 3) };
     if (type === 'stash') return { seed: seed() };
-    if (type === 'courier') { const [from, to] = shuffle(DAILY_SPOTS.map((s) => s.id)); return { from, to, pickedAt: 0 }; }
+    if (type === 'courier') { const [from, to] = shuffle(DAILY_SPOT_IDS); return { from, to, pickedAt: 0 }; }
     if (type === 'escape' || type === 'razia') return { startedAt: 0 };
     if (type === 'vypalne' || type === 'dlznik' || type === 'vreckar' || type === 'sledovanie') return { seed: seed(), startedAt: 0 }; // where the person starts / which car
     if (type === 'graffiti') { // a building of a rival gang (any turf when you hold them all)
@@ -84,7 +80,7 @@ export const DailyMixin = {
       nextAt: this.nextDayAt(),
       tasks: q.tasks.map((t, i) => {
         const T = DAILY_TYPES[t.type];
-        return { i, type: t.type, name: T.name, group: T.group, text: T.text(t.data), have: t.have.length, need: T.need, done: t.have.length >= T.need, data: t.data };
+        return { i, type: t.type, name: T.name, group: T.group, text: T.text(t.data, spotIn(this.city())), have: t.have.length, need: T.need, done: t.have.length >= T.need, data: t.data };
       }),
       calendar: Array.from({ length: 15 }, (_, k) => this.dailyReward(k + 1)),
     };

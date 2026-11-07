@@ -344,6 +344,7 @@ export const POIS = [
   { id: 'pravnicka', name: 'Právnička', verb: 'Hovoriť', action: 'lawyer', at: 'pravnicka', r: 22 },
   { id: 'skrysa', name: 'Skrýša', verb: 'Skryť sa', action: 'hideout', x: 200, y: 390, r: 16 },
   { id: 'lekarka', name: 'Lekárka', verb: 'Hovoriť', action: 'soon', arg: 'Liečenie po súbojoch príde spolu s gangmi.', at: 'lekarka', r: 22 },
+  { id: 'stanica', name: 'Taxi', verb: 'Cestovať', action: 'travel', x: 760, y: 800, r: 16 },
 ];
 
 // ---------------------------------------------------------------- Gang Wars
@@ -425,9 +426,87 @@ export const LABELS = [
   { text: 'Wexler', x: 746, y: 764, dy: -22, kind: 'mine' },
   { text: 'Mechanik', at: 'mechanik', dy: -16, kind: 'dim', minZoom: 2 },
   { text: 'Skrýša', x: 200, y: 390, dy: -16, kind: 'service' },
+  { text: 'Taxi', x: 760, y: 800, dy: -16, kind: 'service' },
 ];
 // street life (they move on the street graph from city.json)
 export const TRAFFIC_CARS = ['car_sedan_blue', 'car_taxi', 'car_sedan_red', 'car_van', 'car_sedan_white', 'car_pickup', 'car_sedan_green', 'car_taxi', 'car_sedan_blue', 'car_van'];
 export const POLICE_CARS = 2;
 export const WALKER_SPRITES = ['p_chodkyna', 'p_chodec', 'p_chodec', 'p_chodkyna', 'p_svalovec', 'p_dealer', 'p_zlodej'];
 export const WALKER_COUNT = 22;
+
+// ---------------------------------------------------------------- cities
+// Each city: its map (map_base.png + city.json from tools/mapa.ps1), where you arrive, its people, places, labels,
+// gang turf and how busy its streets are. Mesto 1 is the objects above. Daily tasks only send you to buildings both
+// cities have (DAILY_SPOT_IDS), each named the way its city calls it.
+export const DAILY_SPOT_IDS = ['zbrane', 'oblecenie', 'sperky', 'pravnicka', 'mechanik', 'arena', ...TURF.map((t) => t.id)];
+
+// Mesto 2, after Prague's Old Town (tools/art/City2.cs): cars only on the edges, Parížska and Dlhá; the square and the
+// cobbled lanes are for walkers. Its givers, bosses and turf come with their pictures; until then they wait.
+const SOON_GIVER = 'Má pre teba prácu, ale ešte si ju premýšľa. Misie v Meste 2 prídu čoskoro, dovtedy ich dávajú Don a Díler v Meste 1.';
+const M2_NAMES = {
+  zbrane: 'Zbrane', oblecenie: 'Oblečenie', sperky: 'Šperky', pravnicka: 'Právnička', mechanik: 'Mechanik', arena: 'Aréna',
+  corner1: 'Corner na Valentínskej', corner2: 'Corner na Žateckej', corner3: 'Corner na Karlovej', corner4: 'Corner na Kozej',
+  corner5: 'Corner na Melantrichovej', garaz1: 'Garáž na 17. novembra', garaz2: 'Garáž na Revolučnej', garaz3: 'Garáž na Kaprovej',
+  sklad1: 'Sklad na Dušnej', sklad2: 'Sklad na Haštalskej', klub1: 'Klub na Celetnej', klub2: 'Pivnica pri námestí',
+};
+const M1_NAMES = Object.fromEntries([...POIS.filter((p) => p.at).map((p) => [p.at, p.name.split(' · ')[0]]), ...TURF.map((t) => [t.id, t.name])]);
+
+export const CITIES = {
+  mesto1: {
+    name: 'Mesto 1', dir: 'assets/world/', spawn: SPAWN, npcs: NPCS, pois: POIS, labels: LABELS, turf: TURF,
+    traffic: TRAFFIC_CARS, police: POLICE_CARS, walkers: WALKER_COUNT, names: M1_NAMES,
+    blurb: 'Štvrť pri jazierkach, kde si začínal. Don, Díler a 25 bossov.',
+  },
+  mesto2: {
+    name: 'Mesto 2 · Staré Mesto', dir: 'assets/world/mesto2/', spawn: { x: 330, y: 287 },
+    blurb: 'Staré Mesto pri rieke: Parížska, námestie s orlojom a uličky, kam auto nevojde.',
+    npcs: [
+      { id: 'wexler', sprite: 'p_dealer', at: 'hotel', angle: 0, bubble: 'bubble_gold' },
+      { id: 'alchymista', sprite: 'p_diler', at: 'alchymista', angle: 90 },
+      { id: 'prievoznik', sprite: 'p_chodec', x: 204, y: 296, angle: 135 },
+      { id: 'veza', sprite: 'p_boss', at: 'veza', angle: -90 },
+      { id: 'mechanik', sprite: 'p_mechanik', at: 'mechanik', angle: 90 },
+      { id: 'pravnicka', sprite: 'p_pravnicka', at: 'pravnicka', angle: 180 },
+    ],
+    pois: [
+      { id: 'stanica', name: 'Zastávka električky', verb: 'Cestovať', action: 'travel', x: 330, y: 287, r: 16 },
+      { id: 'wexler', name: 'Wexler · zlaté tehličky', verb: 'Hovoriť', action: 'wexler', at: 'hotel', r: 22 },
+      { id: 'zbrane', name: 'Zbrane', verb: 'Vstúpiť', action: 'shop', arg: 'zbrane', at: 'zbrane', r: 16 },
+      { id: 'oblecenie', name: 'Oblečenie', verb: 'Vstúpiť', action: 'shop', arg: 'oblecenie', at: 'oblecenie', r: 16 },
+      { id: 'sperky', name: 'Šperky', verb: 'Vstúpiť', action: 'shop', arg: 'sperky', at: 'sperky', r: 16 },
+      { id: 'pravnicka', name: 'Právnička', verb: 'Hovoriť', action: 'lawyer', at: 'pravnicka', r: 22 },
+      { id: 'mechanik', name: 'Garáž · mechanik', verb: 'Vylepšiť', action: 'upgrade', at: 'mechanik', r: 22 },
+      { id: 'arena', name: 'Aréna', verb: 'Vstúpiť', action: 'arena', at: 'arena', r: 20 },
+      { id: 'skrysa', name: 'Skrýša', verb: 'Skryť sa', action: 'hideout', at: 'skrysa', r: 16 },
+      { id: 'alchymista', name: 'Alchymista', verb: 'Hovoriť', action: 'soon', arg: SOON_GIVER, at: 'alchymista', r: 22 },
+      { id: 'prievoznik', name: 'Prievozník', verb: 'Hovoriť', action: 'soon', arg: SOON_GIVER, x: 204, y: 296, r: 20 },
+      { id: 'veza', name: 'Radničná veža', verb: 'Vstúpiť', action: 'soon', arg: 'Na vrchole veže sedia bossovia Mesta 2. Prídu čoskoro.', at: 'veza', r: 22 },
+    ],
+    labels: [
+      { text: 'Rieka', x: 150, y: 110, kind: 'district', maxZoom: 1.6 },
+      { text: 'Nábrežie', x: 470, y: 120, kind: 'district', maxZoom: 1.6 },
+      { text: 'Parížska', x: 470, y: 400, kind: 'district', maxZoom: 1.6 },
+      { text: 'Staromestské námestie', x: 735, y: 660, kind: 'district', maxZoom: 1.6 },
+      { text: 'Uličky', x: 330, y: 880, kind: 'district', maxZoom: 1.6 },
+      { text: 'Záhrada', x: 245, y: 405, kind: 'district', maxZoom: 1.6 },
+      { text: 'Sever', x: 880, y: 110, kind: 'district', maxZoom: 1.6 },
+      { text: 'Zbrane', roof: 'zbrane', dy: -30, kind: 'shop', minZoom: 1.6 },
+      { text: 'Oblečenie', roof: 'oblecenie', dy: -34, kind: 'shop', minZoom: 1.6 },
+      { text: 'Šperky', roof: 'sperky', dy: -34, kind: 'shop', minZoom: 1.6 },
+      { text: 'Obchody', x: 650, y: 392, kind: 'shop', maxZoom: 1.6 },
+      { text: 'Aréna', roof: 'arena', kind: 'arena' },
+      { text: 'Grand hotel', roof: 'hotel', kind: 'service' },
+      { text: 'Právnička', roof: 'pravnicka', dy: -34, kind: 'service' },
+      { text: 'Orloj', roof: 'veza', dy: -30, kind: 'boss' },
+      { text: 'Wexler', at: 'hotel', dy: -22, kind: 'mine' },
+      { text: 'Alchymista', at: 'alchymista', dy: -22, kind: 'dim' },
+      { text: 'Prievozník', x: 204, y: 296, dy: -18, kind: 'dim' },
+      { text: 'Mechanik', at: 'mechanik', dy: -16, kind: 'dim', minZoom: 2 },
+      { text: 'Skrýša', at: 'skrysa', dy: -16, kind: 'service' },
+      { text: 'Zastávka', x: 330, y: 287, dy: -16, kind: 'service' },
+    ],
+    turf: [],
+    traffic: ['car_sedan_blue', 'car_taxi', 'car_sedan_red', 'car_van', 'car_sedan_white', 'car_taxi'],
+    police: 1, walkers: 30, names: M2_NAMES,
+  },
+};

@@ -1,8 +1,8 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
-// The city (Mesto 1) comes from assets/world/city.json, made by tools/art/City.cs: a collision grid,
+// A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { NPCS, POIS, SPAWN, LABELS, TURF, TRAFFIC_CARS, POLICE_CARS, WALKER_SPRITES, WALKER_COUNT } from './data.js?v=20261025001323';
-import { mulberry32 } from './combat.js?v=20261025001323'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261107210956';
+import { mulberry32 } from './combat.js?v=20261107210956'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -21,16 +21,23 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 // hooks: { input:{x,y,fire}, labelLayer:HTMLElement, paused():bool, police():{stars,chase,wanted,arrestSec,loseSec,sightPx,peaceSec}, onWantedLose(), readyGiver():string|null,
 //          weapon():{attack,cooldown,auto}|null, onCrime('shot'|'hitGun'|'hitMelee'), onPill('red'|'blue'|'green'), onPoi(poi|null), onAction(), onPolice(),
 //          daily():{done,escapeSec,tasks:[{i,type,got,data,done}]}|null, onDailyStep(task, step),
-//          onCopDown() }
+//          onCopDown(), cityId():string (the city the player is in; the scene restarts into another one) }
 export function createWorld(parent, hooks) {
   class City extends Phaser.Scene {
     constructor() { super('city'); }
 
+    // which city this run of the scene shows (CITIES key); a change of city restarts the scene
+    init(data) {
+      this.cityId = data && CITIES[data.city] ? data.city : 'mesto1';
+      this.C = CITIES[this.cityId];
+    }
+
     preload() {
       // the same ?v= stamp as this module, so a phone never mixes an old map picture with new map data
       const v = new URL(import.meta.url).search;
-      this.load.image('map', 'assets/world/map_base.png' + v);
-      this.load.json('city', 'assets/world/city.json' + v);
+      // keyed per city: Phaser keeps a key it already has, so a shared key would show the old city again
+      this.load.image('map_' + this.cityId, this.C.dir + 'map_base.png' + v);
+      this.load.json('city_' + this.cityId, this.C.dir + 'city.json' + v);
       PEOPLE.forEach((n) => this.load.image('p_' + n, 'assets/world/p_' + n + '.png'));
       CARS.forEach((n) => this.load.image('car_' + n, 'assets/world/car_' + n + '.png'));
       this.load.image('bubble', 'assets/world/bubble.png');
@@ -38,11 +45,15 @@ export function createWorld(parent, hooks) {
     }
 
     create() {
-      const city = this.cache.json.get('city');
+      const city = this.cache.json.get('city_' + this.cityId);
+      const C = this.C;
+      // DOM bits this run adds to the label layer go away when the scene stops (a trip to another city)
+      this.domEls = [];
+      this.events.once('shutdown', () => { this.domEls.forEach((el) => el.remove()); this.domEls = []; });
       this.city = city;
       this.W = city.w;
       this.H = city.h;
-      this.add.image(0, 0, 'map').setOrigin(0, 0).setDepth(0);
+      this.add.image(0, 0, 'map_' + this.cityId).setOrigin(0, 0).setDepth(0);
       this.physics.world.setBounds(0, 0, city.w, city.h);
       this.buildGrid(city);
       this.buildGraph(city);
@@ -53,11 +64,11 @@ export function createWorld(parent, hooks) {
         const p = o.at ? mark(o.at) : o.roof ? mark(o.roof, true) : null;
         if (p) { o.x = p.x; o.y = p.y; }
       };
-      NPCS.forEach(place); POIS.forEach(place); LABELS.forEach(place);
+      C.npcs.forEach(place); C.pois.forEach(place); C.labels.forEach(place);
 
       // static NPCs
       this.solids = this.physics.add.staticGroup();
-      NPCS.forEach((n) => {
+      C.npcs.forEach((n) => {
         this.add.image(n.x, n.y, n.sprite).setAngle(n.angle).setDepth(5);
         const z = this.add.zone(n.x, n.y, 8, 8);
         this.physics.add.existing(z, true);
@@ -70,7 +81,7 @@ export function createWorld(parent, hooks) {
 
       // player
       this.ring = this.add.graphics().setDepth(4);
-      this.player = this.physics.add.sprite(SPAWN.x, SPAWN.y, 'p_hrac').setDepth(10);
+      this.player = this.physics.add.sprite(C.spawn.x, C.spawn.y, 'p_hrac').setDepth(10);
       this.player.body.setCircle(4, 4, 4);
       this.player.setCollideWorldBounds(true);
       this.physics.add.collider(this.player, this.solids);
@@ -85,19 +96,19 @@ export function createWorld(parent, hooks) {
 
       // pedestrians on the sidewalks, cars and police in the right-hand lane
       this.walkers = [];
-      for (let i = 0; i < WALKER_COUNT; i++) {
+      for (let i = 0; i < C.walkers; i++) {
         const a = this.spawnAgent('walk', 11 + Math.random() * 5);
         a.s = this.add.image(0, 0, WALKER_SPRITES[i % WALKER_SPRITES.length]).setDepth(6);
         a.flipT = 0; a.down = 0;
         this.walkers.push(a);
       }
-      this.cars = TRAFFIC_CARS.map((sprite) => {
+      this.cars = C.traffic.map((sprite) => {
         const a = this.spawnAgent('car', 30 + Math.random() * 14);
         a.s = this.add.image(0, 0, sprite).setDepth(8);
         return a;
       });
       this.policeCars = [];
-      for (let i = 0; i < POLICE_CARS; i++) {
+      for (let i = 0; i < C.police; i++) {
         const a = this.spawnAgent('car', 34);
         a.s = this.add.image(0, 0, 'car_police').setDepth(8);
         a.light = this.add.graphics().setDepth(9);
@@ -137,6 +148,7 @@ export function createWorld(parent, hooks) {
       this.dailyArrow.hidden = true;
       this.dailyArrow.innerHTML = '<i></i><b>D</b>';
       hooks.labelLayer.appendChild(this.dailyArrow);
+      this.domEls.push(this.dailyArrow);
 
       // camera: we place it ourselves so the whole map can be shown when zoomed out
       this.cameras.main.setRoundPixels(true);
@@ -152,12 +164,12 @@ export function createWorld(parent, hooks) {
       });
 
       // map labels (DOM, so text stays crisp at any zoom)
-      this.labels = LABELS.map((l) => this.makeLabel(l));
+      this.labels = C.labels.map((l) => this.makeLabel(l));
       this.labels.push(this.makeLabel({ text: 'Ty', kind: 'me', follow: true, maxZoom: 1.6, dy: -16 }));
       this.labels.push(this.makeLabel({ text: 'Ripper', kind: 'boss', reaper: true, dy: -16 }));
 
       // gang turf: owner graffiti on the roof + a label in the owner's colour
-      this.turf = TURF.map((d) => {
+      this.turf = C.turf.map((d) => {
         const m = city.marks[d.id];
         const gx = m[2], gy = m[3] + 16;
         const g = this.add.graphics().setDepth(1);
@@ -312,6 +324,7 @@ export function createWorld(parent, hooks) {
       el.innerHTML = (l.npc || l.kind === 'boss' ? '<b>!</b>' : '') + l.text;
       el.hidden = true;
       hooks.labelLayer.appendChild(el);
+      this.domEls.push(el);
       return { ...l, el, shown: false };
     }
 
@@ -319,6 +332,8 @@ export function createWorld(parent, hooks) {
     // Read straight from the touch events, and the browser's own page zoom is blocked
     // (iOS Safari ignores user-scalable=no and would otherwise zoom the whole page instead).
     bindPinch() {
+      if (this.pinchBound) return; // the scene object outlives a restart; its listeners are bound once
+      this.pinchBound = true;
       const el = this.game.canvas;
       const dist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
       el.addEventListener('touchstart', (e) => {
@@ -676,7 +691,7 @@ export function createWorld(parent, hooks) {
       const st = hooks.reaper();
       const rp = this.rp;
       if (st && st.active && !rp.on) {
-        const wex = NPCS.find((n) => n.id === 'wexler');
+        const wex = this.C.npcs.find((n) => n.id === 'wexler') || this.C.spawn;
         rp.on = true; rp.down = 0; rp.prev = null;
         rp.s.setPosition(wex.x, wex.y + 10).setVisible(true).clearTint();
         rp.to = this.nearestNode(wex.x, wex.y);
@@ -889,7 +904,13 @@ export function createWorld(parent, hooks) {
     }
 
     // a building's door from city.json
-    spot(id) { const m = this.city.marks[id]; return m ? { x: m[0], y: m[1] } : { x: -999, y: -999 }; }
+    // a building's door; a place this city lacks (a task rolled before a trip) falls back to one it has
+    spot(id) {
+      let m = this.city.marks[id];
+      const ids = Object.keys(this.city.marks);
+      if (!m && ids.length) m = this.city.marks[ids[[...String(id)].reduce((a, c) => a + c.charCodeAt(0), 0) % ids.length]];
+      return m ? { x: m[0], y: m[1] } : { x: -999, y: -999 };
+    }
 
     // five parcels on sidewalks, at least 120 px apart, from the task's seed (the same on every device)
     stashSpots(seedV) {
@@ -1211,6 +1232,9 @@ export function createWorld(parent, hooks) {
     }
 
     update(time, deltaMs) {
+      // the player is in another city now (after logging in, or a trip): load that one
+      const want = hooks.cityId ? hooks.cityId() : 'mesto1';
+      if (want !== this.cityId && CITIES[want]) { this.scene.restart({ city: want }); return; }
       const dt = Math.min(0.05, deltaMs / 1000);
       const paused = hooks.paused();
 
@@ -1254,7 +1278,7 @@ export function createWorld(parent, hooks) {
 
       // --- points of interest
       let best = null, bestD = 1e9;
-      for (const poi of POIS) {
+      for (const poi of this.C.pois) {
         const d = Math.hypot(poi.x - px, poi.y - py);
         if (d < poi.r && d < bestD) { best = poi; bestD = d; }
       }

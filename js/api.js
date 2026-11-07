@@ -24,8 +24,8 @@
 //   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261025001323';
-import { GIVERS, SHOPS } from './data.js?v=20261025001323';
+import { SimServer } from './server.js?v=20261107210956';
+import { GIVERS, SHOPS } from './data.js?v=20261107210956';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -55,6 +55,7 @@ const ACTIONS = {
   dailyStep: (s, [i, step]) => s.dailyStep(i, step),
   copDown: (s) => s.copDown(),
   hideStart: (s) => s.hideStart(),
+  travel: (s, [to]) => s.travel(String(to || '')),
   hideEnd: (s) => s.hideEnd(),
   policeKiller: (s, [choice]) => s.policeKiller(choice),
   catchRipper: (s) => s.catchRipper(),

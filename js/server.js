@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261025001323';
-import { eventFx } from './events.js?v=20261025001323';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS } from './data.js?v=20261025001323';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261025001323';
-import { GangMixin } from './gangs.js?v=20261025001323';
-import { DailyMixin } from './daily.js?v=20261025001323';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261107210956';
+import { eventFx } from './events.js?v=20261107210956';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261107210956';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261107210956';
+import { GangMixin } from './gangs.js?v=20261107210956';
+import { DailyMixin } from './daily.js?v=20261107210956';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -636,6 +636,32 @@ export class SimServer {
 
   // ---------------------------------------------------------------- hideout
   // { since } while you sit in the hideout; { shadowUntil } = no police on foot until then
+  // ---------------------------------------------------------------- cities
+  // where you are (old saves: Mesto 1); travel only by the station, never in the middle of a chase or a hideout
+  city() { return CITIES[this.state.city] ? this.state.city : 'mesto1'; }
+
+  // why a city is still closed to you ('' = open)
+  travelLock(to) {
+    if (to !== 'mesto2') return '';
+    if (this.state.unlocks && this.state.unlocks[to]) return ''; // opened by hand for one player (testing)
+    if (this.state.boss.defeated < BOSSES.length) return 'Najprv poraz všetkých ' + BOSSES.length + ' bossov Mesta 1.';
+    if (this.p.level < CONFIG.unlock.mesto2) return 'Mesto 2 sa odomyká na úrovni ' + CONFIG.unlock.mesto2 + '.';
+    return '';
+  }
+
+  travel(to) {
+    to = String(to || '');
+    if (!CITIES[to]) return fail('Také mesto nepoznáme.');
+    if (to === this.city()) return fail('Tu už si.');
+    const lock = this.travelLock(to);
+    if (lock) return fail(lock);
+    if (this.wantedStars() >= CONFIG.wantedChase) return fail('Naháňa ťa polícia. Najprv sa jej zbav.');
+    if (this.hideState().since) return fail('Najprv vyjdi zo skrýše.');
+    this.state.city = to;
+    this.save();
+    return ok({ city: to });
+  }
+
   hideState() { return this.state.hide || (this.state.hide = { since: 0, shadowUntil: 0 }); }
   shadowLeft() { return Math.max(0, this.hideState().shadowUntil - Date.now()); }
   hidingLeft() { const h = this.hideState(); return h.since ? Math.max(0, h.since + this.gameMs(CONFIG.hideMin) - Date.now()) : 0; }

@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261025001323';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES } from './data.js?v=20261025001323';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261025001323';
-import { DAILY_TYPES } from './daily.js?v=20261025001323';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261025001323';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261107210956';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261107210956';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261107210956';
+import { DAILY_TYPES } from './daily.js?v=20261107210956';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261107210956';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -467,6 +467,7 @@ export class UI {
     else if (p.action === 'wexler') this.open('wexler');
     else if (p.action === 'turf') this.open('turf', p.arg);
     else if (p.action === 'hideout') this.open('hideout');
+    else if (p.action === 'travel') this.open('travel');
     else this.info(p.name, p.arg);
   }
 
@@ -670,6 +671,12 @@ export class UI {
         if (!this.check(r)) return;
         const b = this.s.bossInfo();
         this.open('fight', { kind: 'boss', ...r, artB: r.b.portrait || 'kladivo', silhouette: !r.b.portrait, title: r.b.name, subtitle: r.b.title, next: b }, true);
+      },
+      async travel(a) {
+        const r = await this.s.travel(a);
+        if (!this.check(r)) return;
+        this.close();
+        this.toast('Vitaj: ' + CITIES[a].name + '.');
       },
       async 'club-fight'() {
         const r = await this.s.fightClub();
@@ -888,7 +895,7 @@ export class UI {
       html: this.hdr('Postava', 'Úroveň <span class="gold">' + p.level + '</span> · ' + CLASSES[p.cls].name) +
         '<div class="body"><div class="char">' +
         '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
-        '<div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="Tvoja postava">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">Vzhľad</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">Pešiak · Mesto 1</span></div></div>' +
+        '<div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="Tvoja postava">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">Vzhľad</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">Pešiak · ' + CITIES[this.s.city()].name + '</span></div></div>' +
         '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
         '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:15px;color:#9b968b" class="num"><span>Skúsenosti</span><span style="color:#e9e4d8">' + fmt(v.xp) + ' / ' + fmt(v.xpNext) + '</span></div><div class="bar" style="height:8px;margin-top:4px"><i style="width:' + Math.min(100, (v.xp / v.xpNext) * 100) + '%"></i></div></div>' +
         '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">Životy ' + fmt(this.s.maxHp()) + ' · úder ' + Math.round(hb * 0.85) + '–' + Math.round(hb * 1.15) + ' · krit ' + pct(F.crit(ts.stastie, p.level)) + ' · brnenie ' + pct(F.reduction(ts.armor, p.level, p.cls)) + ' (max ' + pct(c.armorCap) + ')' + special + '</p>' +
@@ -1118,6 +1125,20 @@ export class UI {
     h += '<div class="sec sc">Línia bossov Mesta 1</div><div class="boss-list">' + BOSSES.map((b, i) => '<span class="' + (i < info.index ? 'done' : i === info.index ? 'now' : '') + '">' + (i <= info.index ? b.name : '?') + '</span>').join('') + '</div>';
     h += '<p class="note">Do tímu si môžeš zobrať 1–2 členov gangu (príde s gangmi).</p></div>';
     return { html: this.hdr('Boss fights', money(this.s.p.cash)) + h };
+  }
+
+  // the station: every city, where you are, what still keeps one closed
+  scr_travel() {
+    const here = this.s.city();
+    let h = '<p class="p">Taxík alebo električka ťa odvezie do iného mesta. Kým ťa naháňa polícia alebo sedíš v skrýši, nikam sa nejde.</p>';
+    for (const [id, c] of Object.entries(CITIES)) {
+      const lock = this.s.travelLock(id);
+      const act = id === here ? '<span class="s gold">Tu si</span>'
+        : lock ? '<span class="s red">Zamknuté</span>'
+          : '<button class="btn small gold" data-act="travel" data-arg="' + id + '">Cestovať</button>';
+      h += '<div class="grow"><span class="mid"><span class="t">' + c.name + '</span><span class="s">' + c.blurb + '</span>' + (lock && id !== here ? '<span class="s red">' + lock + '</span>' : '') + '</span>' + act + '</div>';
+    }
+    return { html: this.hdr('Cestovať') + '<div class="body">' + h + '</div>' };
   }
 
   // Podzemné zápasy: the next fighter of the ladder, the clock to the next fight, milestones ahead
