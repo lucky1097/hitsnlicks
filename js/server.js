@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261107221132';
-import { eventFx } from './events.js?v=20261107221132';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261107221132';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261107221132';
-import { GangMixin } from './gangs.js?v=20261107221132';
-import { DailyMixin } from './daily.js?v=20261107221132';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261108005124';
+import { eventFx } from './events.js?v=20261108005124';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261108005124';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261108005124';
+import { GangMixin } from './gangs.js?v=20261108005124';
+import { DailyMixin } from './daily.js?v=20261108005124';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -934,9 +934,17 @@ export class SimServer {
     return makeFighter(this.p.name, this.p.level, ts, this.weaponDmg(), { portrait: 'maska', cls: this.p.cls, armor: ts.armor, hpMult: this.hpBuffMult() });
   }
 
-  bossFighter(index) {
-    const b = BOSSES[index];
-    const Lb = F.bossLevel(index + 1);
+  // the boss line of the city you stand in: Mesto 1 keeps state.boss, Radničná veža in Mesto 2 state.boss2
+  bossLine() {
+    if (this.city() === 'mesto2') return { list: BOSSES2, key: 'boss2', level: F.boss2Level, name: 'Radničnej veže' };
+    return { list: BOSSES, key: 'boss', level: F.bossLevel, name: 'Mesta 1' };
+  }
+
+  bossState(line = this.bossLine()) { return this.state[line.key] || { defeated: 0, nextFreeAt: 0 }; }
+
+  bossFighter(index, line = this.bossLine()) {
+    const b = line.list[index];
+    const Lb = line.level(index + 1);
     const base = F.bossStat(Lb);
     const stats = {};
     STATS.forEach((s) => { stats[s] = Math.round(base * b.profile[s]); });
@@ -946,14 +954,15 @@ export class SimServer {
   }
 
   bossInfo() {
-    const i = this.state.boss.defeated;
-    if (i >= BOSSES.length) return { done: true, total: BOSSES.length };
-    const f = this.bossFighter(i);
+    const line = this.bossLine(), st = this.bossState(line);
+    const i = st.defeated;
+    if (i >= line.list.length) return { done: true, total: line.list.length, line: line.list, lineName: line.name };
+    const f = this.bossFighter(i, line);
     const L = this.p.level;
     const ev = this.ev();
     return {
-      done: false, index: i, total: BOSSES.length, boss: BOSSES[i], fighter: f,
-      freeAt: this.state.boss.nextFreeAt, free: ev.bossFree || Date.now() >= this.state.boss.nextFreeAt, hunt: !!ev.bossFree,
+      done: false, index: i, total: line.list.length, boss: line.list[i], fighter: f, line: line.list, lineName: line.name,
+      freeAt: st.nextFreeAt, free: ev.bossFree || Date.now() >= st.nextFreeAt, hunt: !!ev.bossFree,
       paidLeft: Math.max(0, CONFIG.bossPaidPerDay - (this.daily().bossPaid || 0)),
       reward: { cash: Math.round(F.cashPerMin(L) * 30 * ev.cash), xp: Math.round(F.xpNext(L) * 0.25 * ev.xp), bars: ev.bossBars || 0 },
     };
@@ -961,7 +970,8 @@ export class SimServer {
 
   fightBoss() {
     const info = this.bossInfo();
-    if (info.done) return fail('Všetci bossovia Mesta 1 sú porazení.');
+    if (info.done) return fail('Všetci bossovia ' + info.lineName + ' sú porazení.');
+    const st = this.state[this.bossLine().key] = this.bossState();
     if (!info.free) {
       // paid attempts are capped per day, so gold bars cannot buy the whole boss line in one evening
       if (!info.paidLeft) return fail('Dnes už si použil všetky ' + CONFIG.bossPaidPerDay + ' platené pokusy. Počkaj na pokus zadarmo.');
@@ -970,14 +980,14 @@ export class SimServer {
       const day = this.daily();
       day.bossPaid = (day.bossPaid || 0) + 1;
     } else if (!info.hunt) { // Hon na bossov: no cooldown at all
-      this.state.boss.nextFreeAt = Date.now() + this.gameMs(CONFIG.bossCooldownMin);
+      st.nextFreeAt = Date.now() + this.gameMs(CONFIG.bossCooldownMin);
     }
     const me = this.playerFighter();
     const fight = simulate(me, info.fighter, seed());
     const win = fight.winner === 0;
     const res = { win, cash: 0, xp: 0, item: null, levelUps: 0 };
     if (win) {
-      this.state.boss.defeated += 1;
+      st.defeated += 1;
       res.cash = info.reward.cash;
       res.xp = info.reward.xp;
       res.item = this.randomItem(this.p.level, 'boss');

@@ -219,6 +219,7 @@ export const F = {
   itemPrice: (L, rarityMult) => Math.round(F.cashPerMin(L) * 6 * rarityMult * rarityMult),
   upgradeCost: (item) => Math.round(item.price * 0.35 * (item.upgrade + 1)),
   bossLevel: (k) => Math.round(6 + (k - 1) * 1.8), // 25 bosses of Mesto 1: level 6 … 49
+  boss2Level: (k) => Math.round(50 + (k - 1) * 49 / 24), // 25 bosses of Mesto 2 (Radničná veža): level 50 … 99
   // grows like a player who also buys stats: a level-30 player is about even with a level-29 boss
   clubLevel: (n) => Math.max(1, Math.round(2 + 0.85 * (n - 1))), // Podzemné zápasy floor 1 … 100: level 2 … 86
   clubRamp: (n) => Math.min(1, (n - 1) / 30), // early floors: common-strength gear and plain life, full strength from floor 31

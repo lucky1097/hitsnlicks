@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261107221132';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261107221132';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261107221132';
-import { DAILY_TYPES } from './daily.js?v=20261107221132';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261107221132';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261108005124';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261108005124';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261108005124';
+import { DAILY_TYPES } from './daily.js?v=20261108005124';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261108005124';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -63,7 +63,7 @@ const MENU = [
   { id: 'policehelp', name: 'Polícia a heat', desc: 'Heat, hviezdy, kontrola, basa, právnička a skrýša na jednom mieste.' },
   { id: 'arena', name: 'Aréna', desc: 'Súboje s inými hráčmi a rebríček.' },
   { id: 'club', name: 'Podzemné zápasy', desc: 'Sto súperov v pivnici pod klubom, každý silnejší. Jeden zápas za hodinu.' },
-  { id: 'boss', name: 'Boss fights', desc: 'Línia bossov Mesta 1. Kladivo čaká v uličke za obchodmi.' },
+  { id: 'boss', name: 'Boss fights', desc: 'Bossovia mesta, v ktorom si: Kladivo v Meste 1, Radničná veža v Meste 2.' },
   { id: 'gang', name: 'Gang', desc: 'Tvoj gang, pokladnica, členovia a boje o územie.' },
   { id: 'hall', name: 'Sieň slávy', desc: 'Všetci registrovaní hráči. Klikni na hráča a uvidíš jeho staty a výbavu.' },
   { id: 'settings', name: 'Nastavenia', desc: 'Testovací režim a uložená hra.' },
@@ -1111,7 +1111,7 @@ export class UI {
 
   scr_boss() {
     const info = this.s.bossInfo();
-    if (info.done) return { html: this.hdr('Boss fights') + '<div class="body"><p class="p">Všetci bossovia Mesta 1 sú porazení. Ďalšie mesto príde vo verzii 3.</p></div>' };
+    if (info.done) return { html: this.hdr('Boss fights') + '<div class="body"><p class="p">Všetci bossovia ' + info.lineName + ' sú porazení. ' + (this.s.city() === 'mesto1' ? 'Zo stanice sa dá odísť do Mesta 2, ak máš úroveň ' + CONFIG.unlock.mesto2 + '.' : 'Ďalšie mesto príde neskôr.') + '</p></div>' };
     const f = info.fighter, me = this.s.playerFighter();
     const b = info.boss;
     let scene;
@@ -1129,7 +1129,7 @@ export class UI {
       : info.free ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · pokus zadarmo</button>'
       : '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight"' + (info.paidLeft ? '' : ' disabled') + '>Bojovať za ' + CONFIG.bossRetryChains + ' zlatých tehličiek</button><p class="note">' +
         (info.paidLeft ? 'Platené pokusy dnes: ' + info.paidLeft + ' / ' + CONFIG.bossPaidPerDay + '. ' : 'Platené pokusy sú na dnes minuté. ') + 'Ďalší pokus zadarmo o <span data-until="' + info.freeAt + '"></span></p>';
-    h += '<div class="sec sc">Línia bossov Mesta 1</div><div class="boss-list">' + BOSSES.map((b, i) => '<span class="' + (i < info.index ? 'done' : i === info.index ? 'now' : '') + '">' + (i <= info.index ? b.name : '?') + '</span>').join('') + '</div>';
+    h += '<div class="sec sc">Línia bossov ' + info.lineName + '</div><div class="boss-list">' + info.line.map((b, i) => '<span class="' + (i < info.index ? 'done' : i === info.index ? 'now' : '') + '">' + (i <= info.index ? b.name : '?') + '</span>').join('') + '</div>';
     h += '<p class="note">Do tímu si môžeš zobrať 1–2 členov gangu (príde s gangmi).</p></div>';
     return { html: this.hdr('Boss fights', money(this.s.p.cash)) + h };
   }

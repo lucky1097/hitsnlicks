@@ -24,8 +24,8 @@
 //   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261107221132';
-import { GIVERS, SHOPS } from './data.js?v=20261107221132';
+import { SimServer } from './server.js?v=20261108005124';
+import { GIVERS, SHOPS } from './data.js?v=20261108005124';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
