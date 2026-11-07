@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261107210956';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261107210956';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261107210956';
-import { DAILY_TYPES } from './daily.js?v=20261107210956';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261107210956';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261107221132';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261107221132';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261107221132';
+import { DAILY_TYPES } from './daily.js?v=20261107221132';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261107221132';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -996,8 +996,8 @@ export class UI {
         (dv.done ? 'Dnes hotovo · nové o polnoci' : dn + ' / ' + dv.tasks.length + ' splnené · úlohy na mape') + '</span></span><span class="end"><span class="s">deň ' + this.s.dailyDayNow() + ' / 15</span></span></button>' +
         (() => { const a = activeEvents(); return a ? '<button class="card" data-act="open" data-arg="events"><span class="dbadge" style="color:#e8c873;border-color:#e8c873">' + EVENTS[a.ids[0]].icon + '</span><span class="mid"><span class="t">Víkendový event</span><span class="s">' + a.ids.map((id) => EVENTS[id].name).join(' · ') + '</span></span><span class="end"><span class="s">ešte <span data-until="' + a.until + '"></span></span></span></button>' : ''; })() +
         '<p class="p">Misie zadávajú postavy v meste. Hľadaj bielu bublinu „!“ nad hlavou. Každá misia sa končí súbojom.</p>' +
-        '<div class="card" style="cursor:default"><img class="ph" src="' + art('photo_don') + '" alt=""><div class="mid"><span class="t">Don</span><span class="s">Park v strede štvrte, pri fontáne</span></div></div>' +
-        '<div class="card" style="cursor:default"><img class="ph" src="' + art('photo_diler') + '" alt=""><div class="mid"><span class="t">Díler</span><span class="s">Chodník pri corneri, západ štvrte</span></div></div>';
+        // the givers of the city you are in
+        Object.values(GIVERS).filter((g) => g.city === this.s.city()).map((g) => '<div class="card" style="cursor:default"><img class="ph" src="' + art(g.portrait) + '" alt=""><div class="mid"><span class="t">' + g.name + '</span><span class="s">' + g.where + '</span></div></div>').join('');
       if (v.jailLeft > 0) h += '<p class="warn" style="padding:8px 10px;border:1px solid rgba(168,35,28,.6);color:#e6a49c">Si zatknutý. Misie až o <b data-until="' + this.s.state.jailUntil + '"></b>.</p>';
       return { html: this.hdr('Misie', money(v.cash)) + '<div class="body">' + h + '</div>' };
     }
@@ -1019,6 +1019,13 @@ export class UI {
       return { html: h + '</div>' };
     }
     const offers = this.s.offers(giverId);
+    // a giver of a later city may have nothing for you yet: say from which level
+    if (!offers.length) {
+      const first = Math.min(...g.pool.map((id) => MISSIONS[id].minLevel));
+      h += '<p class="story">Zatiaľ pre teba nemám nič, na čo by si stačil. Vráť sa, keď budeš mať úroveň ' + first + '.</p>' +
+        '<p class="note">Neskôr: ' + g.pool.map((id) => MISSIONS[id].name + ' (úr. ' + MISSIONS[id].minLevel + ')').join(' · ') + '</p>';
+      return { html: h + '</div>' };
+    }
     if (!offers.some((o) => o.tpl === this.sel.offer)) this.sel.offer = offers[0].tpl;
     const sel = offers.find((o) => o.tpl === this.sel.offer);
     for (const o of offers) {

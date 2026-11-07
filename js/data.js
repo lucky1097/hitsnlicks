@@ -270,12 +270,64 @@ export const MISSIONS = {
       hit: 'Strážnik s vysielačkou ťa zbadal. Spotený, ale odhodlaný.', foe: { name: 'Strážnik SBS', title: 'Nočná zmena v obchodnom centre', art: 'photo_n_sbs' } },
     { text: 'Hotovosť zo skladu sa ráno ukladá v banke. Pokladníčka pozná kód od trezoru. Strach jej dodáva odvahu.',
       hit: 'Pokladníčka za sklom stlačila tlačidlo. Potom zdvihla ťažkú pečiatku.', foe: { name: 'Pokladníčka z banky', title: 'Za nepriestrelným sklom', art: 'photo_n_pokladnicka' } },
-  ] },};
+  ] },
+  // ---------------------------------------------------------------- Mesto 2: the Alchymista (cellar by Kozia) and the boatman (the pier)
+  elixir: { name: 'Dodávka elixíru', minutes: 6, minLevel: 50, heat: 6, art: 'x_mis_elixir', stories: [
+    { text: 'Alchymista ti podá drevenú krabičku a v nej fľaštičku zapečatenú voskom. Hosť v Grand hoteli čaká v izbe na štvrtom poschodí a nechce, aby ho videl personál.',
+      hit: 'Vrátnik ti zastúpi cestu. Bez kľúča od izby sa ďalej nejde a bez úplatku tiež nie. Ty nemáš ani jedno.', foe: { name: 'Vrátnik', title: 'Kľúče od všetkých dverí Grand hotela', art: 'photo_n_vratnik_hotel' } },
+    { text: 'Ďalšia zásielka do hotela. Tentoraz si ju preberie dáma v bare. Lenže od pivnice za tebou ide niekto s fotoaparátom.',
+      hit: 'Ryšavá detektívka zahasí cigaretu a zastaví ťa pri výťahu. Fotky už má, teraz chce aj krabičku.', foe: { name: 'Detektívka', title: 'Fotí za peniaze manželiek', art: 'photo_n_detektivka_hotel' } },
+  ] },
+  prisady: { name: 'Zháňanie prísad', minutes: 8, minLevel: 53, heat: 9, art: 'x_mis_prisady', stories: [
+    { text: 'Alchymistovi došla prísada, ktorá sa dá kúpiť len na recept. Nočná lekáreň na Dlhej má plný sklad a jedného unaveného lekárnika.',
+      hit: 'Lekárnik spod pultu vytiahol bejzbalku. Trasie sa, ale drží ju pevne.', foe: { name: 'Nočný lekárnik', title: 'Na službe sám, no nie bezbranný', art: 'photo_n_nocny_lekarnik' } },
+    { text: 'Drogéria pri námestí má v sklade sudy rozpúšťadla. Alchymista ich chce do rána. Strážnik vraj spí.',
+      hit: 'Strážnik nespí. Baterkou ti svieti do očí a obušok už drží v ruke.', foe: { name: 'Strážnik drogérie', title: 'Dvanásť hodín na nohách', art: 'photo_n_straznik_drogerie' } },
+  ] },
+  laboratorium: { name: 'Stráž laboratória', minutes: 12, minLevel: 57, heat: 7, art: 'x_mis_laboratorium', stories: [
+    { text: 'V pivnici sa varí niečo, čo nesmie vychladnúť. Alchymista musí odísť a ty postrážiš dvere, kým sa nevráti.',
+      hit: 'Dverami vojde postava v plynovej maske. Konkurencia prišla po recept aj s vlastnou chémiou.', foe: { name: 'Konkurenčný chemik', title: 'Varí to isté, len horšie', art: 'photo_n_konkurencny_chemik' } },
+    { text: 'Niekto vynáša Alchymistove recepty. Sadni si do tmy medzi police a čakaj, kto si po ne príde.',
+      hit: 'Chudý chlapík so zápisníkom pod pazuchou si dá prst na pery. Myslí si, že sa dohodnete.', foe: { name: 'Zlodej receptov', title: 'Predá všetko, čo prečíta', art: 'photo_n_zlodej_receptov' } },
+  ] },
+  absint: { name: 'Falošný absint', minutes: 14, minLevel: 62, heat: 12, art: 'x_mis_absint', stories: [
+    { text: 'Alchymista namiešal zelený absint, ktorý chutí ako pravý a stojí desatinu. Bary na Kozej ho majú kúpiť. Prvý barman sa ale presvedčiť nedá.',
+      hit: 'Fúzatý barman ochutnal, odpľul si a rozbil fľašu o pult. Teraz ju drží za hrdlo.', foe: { name: 'Barman z Kozej', title: 'Za tento pult sa nechodí', art: 'photo_n_barman_kozia' } },
+    { text: 'Absint mieri do starého baru pri rieke. V kúte sedí stály hosť, ktorý pozná každú fľašu.',
+      hit: 'Tulák so zelenými perami spozná, že je to falošné, a začne kričať na celý bar. Musíš ho umlčať.', foe: { name: 'Absintový tulák', title: 'Maliar, čo prepil všetky obrazy', art: 'photo_n_absint_tulak' } },
+  ] },
+  pasovanie: { name: 'Pašovanie po rieke', minutes: 6, minLevel: 51, heat: 7, art: 'x_mis_pasovanie', stories: [
+    { text: 'Prievozník má loďku s nákladom pod plachtou. Preveslovať popod most, vyložiť na druhom brehu a žiadne otázky.',
+      hit: 'Z rákosia sa vynorí starý rybár s harpúnou. Toto je jeho rieka a nik mu za ňu nezaplatil.', foe: { name: 'Rybár s harpúnou', title: 'Rieka patrí jemu', art: 'photo_n_rybar_harpuna' } },
+    { text: 'Dnes v noci ide dvakrát väčší náklad. Hmla je hustá, a to je dobre. Aj zle.',
+      hit: 'Z hmly ti do tváre zasvieti baterka. Riečna hliadka má dnes službu a nemá rada prekvapenia.', foe: { name: 'Riečna hliadka', title: 'Dvadsať rokov na rieke', art: 'photo_n_riecna_hliadka' } },
+  ] },
+  vykladanie: { name: 'Nočné vykladanie', minutes: 9, minLevel: 55, heat: 10, art: 'x_mis_vykladanie', stories: [
+    { text: 'K mólu pripláva čln s debnami. Vyložiť ich treba skôr, ako ráno prídu prístavní robotníci.',
+      hit: 'Jeden robotník prišiel skôr. Obor v roztrhanom tielku si prehadzuje hák z ruky do ruky.', foe: { name: 'Prístavný nosič', title: 'Debny nosí aj s ľuďmi', art: 'photo_n_pristavny_nosic' } },
+    { text: 'Debny musia do skladu pri nábreží. Na móle však sedí starý rybár a nehýbe sa.',
+      hit: 'Rybár vstane, prehodí si sieť cez plece a zdvihne trojzubec. Videl, čo je v debnách.', foe: { name: 'Rybár z móla', title: 'Nespí, len tak vyzerá', art: 'photo_n_rybar_molo' } },
+  ] },
+  myto: { name: 'Mýto na moste', minutes: 12, minLevel: 59, heat: 8, art: 'x_mis_myto', stories: [
+    { text: 'Výletné lode pod mostom platia Prievozníkovi za pokoj na vode. Jedna loď mešká s platbou už tretí týždeň.',
+      hit: 'Majiteľ lode sa usmieva cez dym cigary. Biele sako, zlatá reťaz a dvaja chlapi za chrbtom.', foe: { name: 'Majiteľ lode', title: 'Zarába na turistoch aj na tichu', art: 'photo_n_majitel_lode' } },
+    { text: 'Na moste hrajú muzikanti a každý odvádza podiel. Ten s harmonikou zabudol, komu.',
+      hit: 'Hudobník dohrá skladbu a vytiahne z topánky nôž. Na moste sa vraj nevyberá.', foe: { name: 'Hudobník z mosta', title: 'Hrá za drobné aj o krk', art: 'photo_n_hudobnik_most' } },
+  ] },
+  dokazy: { name: 'Potopiť dôkazy', minutes: 15, minLevel: 65, heat: 12, art: 'x_mis_dokazy', stories: [
+    { text: 'Kovový kufrík s papiermi, ktoré nikto nesmie vidieť, musí skončiť na dne rieky aj s kotvou. V noci a ďaleko od brehu.',
+      hit: 'Pri móle sa z vody vynorí potápač. Hľadá presne tento kufrík a nôž má pripravený.', foe: { name: 'Potápač', title: 'Na dne nájde všetko', art: 'photo_n_potapac' } },
+    { text: 'Kufrík ide do vody pod nábrežím. Okná nad riekou sú tmavé. Takmer všetky.',
+      hit: 'V okne stojí muž v pyžame a všetko videl. Zbehol dolu a kričí, že zavolá políciu.', foe: { name: 'Svedok z nábrežia', title: 'Videl, čo nemal', art: 'photo_n_svedok_nabrezie' } },
+  ] },
+};
 
-// photo: wide header image + focus (CSS object-position)
+// photo: wide header image + focus (CSS object-position); city: where the giver stands, where: how to find them
 export const GIVERS = {
-  don: { name: 'Don', title: 'Zadávateľ misií', portrait: 'photo_don', photo: 'photo_don_wide', focus: '78% 30%', quote: 'Mám pre teba robotu. Rýchlu, čistú a dobre zaplatenú.', pool: ['sledovanie', 'dorucenie', 'predaj', 'vymahanie', 'ochrana', 'prepadnutie', 'kradez_sklad'] },
-  diler: { name: 'Díler', title: 'Pouličný obchod', portrait: 'photo_diler', photo: 'photo_diler_wide', focus: '40% 20%', quote: 'Tovar je, ľudia sú. Chýbaš mi len ty.', pool: ['sledovanie', 'dorucenie', 'predaj', 'kradez_auta'] },
+  don: { name: 'Don', title: 'Zadávateľ misií', portrait: 'photo_don', photo: 'photo_don_wide', focus: '78% 30%', quote: 'Mám pre teba robotu. Rýchlu, čistú a dobre zaplatenú.', pool: ['sledovanie', 'dorucenie', 'predaj', 'vymahanie', 'ochrana', 'prepadnutie', 'kradez_sklad'], city: 'mesto1', where: 'Park v strede štvrte, pri fontáne' },
+  diler: { name: 'Díler', title: 'Pouličný obchod', portrait: 'photo_diler', photo: 'photo_diler_wide', focus: '40% 20%', quote: 'Tovar je, ľudia sú. Chýbaš mi len ty.', pool: ['sledovanie', 'dorucenie', 'predaj', 'kradez_auta'], city: 'mesto1', where: 'Chodník pri corneri, západ štvrte' },
+  alchymista: { name: 'Alchymista', title: 'Dielňa v gotickej pivnici', portrait: 'photo_alchymista', photo: 'photo_alchymista_wide', focus: '55% 30%', quote: 'Každá látka je jed. Záleží len na dávke a na cene.', pool: ['elixir', 'prisady', 'laboratorium', 'absint'], city: 'mesto2', where: 'Pivnica pri Kozej, sever Starého Mesta' },
+  prievoznik: { name: 'Prievozník', title: 'Mólo na rieke', portrait: 'photo_prievoznik', photo: 'photo_prievoznik_wide', focus: '66% 35%', quote: 'Rieka nekladie otázky. Ja tiež nie.', pool: ['pasovanie', 'vykladanie', 'myto', 'dokazy'], city: 'mesto2', where: 'Mólo na nábreží, pri zastávke električky' },
 };
 
 // art: portrait in fights (transparent bust or photo_*); wide: big illustration for the boss screen;
@@ -441,8 +493,7 @@ export const WALKER_COUNT = 22;
 export const DAILY_SPOT_IDS = ['zbrane', 'oblecenie', 'sperky', 'pravnicka', 'mechanik', 'arena', ...TURF.map((t) => t.id)];
 
 // Mesto 2, after Prague's Old Town (tools/art/City2.cs): cars only on the edges, Parížska and Dlhá; the square and the
-// cobbled lanes are for walkers. Its givers, bosses and turf come with their pictures; until then they wait.
-const SOON_GIVER = 'Má pre teba prácu, ale ešte si ju premýšľa. Misie v Meste 2 prídu čoskoro, dovtedy ich dávajú Don a Díler v Meste 1.';
+// cobbled lanes are for walkers. Its bosses and turf come with their pictures; until then the tower waits.
 const M2_NAMES = {
   zbrane: 'Zbrane', oblecenie: 'Oblečenie', sperky: 'Šperky', pravnicka: 'Právnička', mechanik: 'Mechanik', arena: 'Aréna',
   corner1: 'Corner na Valentínskej', corner2: 'Corner na Žateckej', corner3: 'Corner na Karlovej', corner4: 'Corner na Kozej',
@@ -462,8 +513,8 @@ export const CITIES = {
     blurb: 'Staré Mesto pri rieke: Parížska, námestie s orlojom a uličky, kam auto nevojde.',
     npcs: [
       { id: 'wexler', sprite: 'p_dealer', at: 'hotel', angle: 0, bubble: 'bubble_gold' },
-      { id: 'alchymista', sprite: 'p_diler', at: 'alchymista', angle: 90 },
-      { id: 'prievoznik', sprite: 'p_chodec', x: 204, y: 296, angle: 135 },
+      { id: 'alchymista', sprite: 'p_diler', at: 'alchymista', angle: 90, bubble: 'bubble' },
+      { id: 'prievoznik', sprite: 'p_chodec', x: 204, y: 296, angle: 135, bubble: 'bubble' },
       { id: 'veza', sprite: 'p_boss', at: 'veza', angle: -90 },
       { id: 'mechanik', sprite: 'p_mechanik', at: 'mechanik', angle: 90 },
       { id: 'pravnicka', sprite: 'p_pravnicka', at: 'pravnicka', angle: 180 },
@@ -478,8 +529,8 @@ export const CITIES = {
       { id: 'mechanik', name: 'Garáž · mechanik', verb: 'Vylepšiť', action: 'upgrade', at: 'mechanik', r: 22 },
       { id: 'arena', name: 'Aréna', verb: 'Vstúpiť', action: 'arena', at: 'arena', r: 20 },
       { id: 'skrysa', name: 'Skrýša', verb: 'Skryť sa', action: 'hideout', at: 'skrysa', r: 16 },
-      { id: 'alchymista', name: 'Alchymista', verb: 'Hovoriť', action: 'soon', arg: SOON_GIVER, at: 'alchymista', r: 22 },
-      { id: 'prievoznik', name: 'Prievozník', verb: 'Hovoriť', action: 'soon', arg: SOON_GIVER, x: 204, y: 296, r: 20 },
+      { id: 'alchymista', name: 'Alchymista', verb: 'Hovoriť', action: 'missions', arg: 'alchymista', at: 'alchymista', r: 22 },
+      { id: 'prievoznik', name: 'Prievozník', verb: 'Hovoriť', action: 'missions', arg: 'prievoznik', x: 204, y: 296, r: 20 },
       { id: 'veza', name: 'Radničná veža', verb: 'Vstúpiť', action: 'soon', arg: 'Na vrchole veže sedia bossovia Mesta 2. Prídu čoskoro.', at: 'veza', r: 22 },
     ],
     labels: [
@@ -499,8 +550,8 @@ export const CITIES = {
       { text: 'Právnička', roof: 'pravnicka', dy: -34, kind: 'service' },
       { text: 'Orloj', roof: 'veza', dy: -30, kind: 'boss' },
       { text: 'Wexler', at: 'hotel', dy: -22, kind: 'mine' },
-      { text: 'Alchymista', at: 'alchymista', dy: -22, kind: 'dim' },
-      { text: 'Prievozník', x: 204, y: 296, dy: -18, kind: 'dim' },
+      { text: 'Alchymista', npc: 'alchymista', at: 'alchymista', dy: -22, kind: 'npc' },
+      { text: 'Prievozník', npc: 'prievoznik', x: 204, y: 296, dy: -22, kind: 'npc' },
       { text: 'Mechanik', at: 'mechanik', dy: -16, kind: 'dim', minZoom: 2 },
       { text: 'Skrýša', at: 'skrysa', dy: -16, kind: 'service' },
       { text: 'Zastávka', x: 330, y: 287, dy: -16, kind: 'service' },
