@@ -362,7 +362,7 @@ export const BOSSES = [
   { name: 'Kráľ', title: 'Celé mesto pod jeho oknom', art: 'photo_b_kral', wide: 'photo_b_kral', focus: '55% 15%', profile: { sila: 1.5, odolnost: 1.5, obratnost: 1.4, charizma: 1.6, stastie: 1.4 } },
 ];
 
-// Mesto 2: the bosses of Radničná veža, one floor higher each (levels 50 … 99); no art yet = silhouette
+// Mesto 2: the bosses of Radničná veža, one floor higher each (levels 50 … 99)
 export const BOSSES2 = [
   { name: 'Kominár', title: 'Cesty po strechách', art: 'photo_b_kominar', wide: 'photo_b_kominar', focus: '50% 18%', profile: { sila: 0.8, odolnost: 0.9, obratnost: 1.6, charizma: 0.8, stastie: 1.3 } },
   { name: 'Barónka', title: 'Hostinec U zlatého kľúča', art: 'photo_b_baronka', wide: 'photo_b_baronka', focus: '45% 20%', profile: { sila: 0.7, odolnost: 1.1, obratnost: 0.9, charizma: 1.6, stastie: 1.3 } },
@@ -380,15 +380,15 @@ export const BOSSES2 = [
   { name: 'Kat', title: 'Popravisko na námestí', art: 'photo_b_kat', wide: 'photo_b_kat', focus: '50% 18%', profile: { sila: 1.7, odolnost: 1.5, obratnost: 0.7, charizma: 0.7, stastie: 1.0 } },
   { name: 'Ludvík Kladivo', title: 'Boxer z pivnice', art: 'photo_b_ludvik', wide: 'photo_b_ludvik', focus: '50% 18%', profile: { sila: 1.6, odolnost: 1.4, obratnost: 1.3, charizma: 0.7, stastie: 1.0 } },
   { name: 'Grófka', title: 'Palác na Parížskej', art: 'photo_b_grofka', wide: 'photo_b_grofka', focus: '50% 15%', profile: { sila: 0.9, odolnost: 1.2, obratnost: 1.3, charizma: 1.8, stastie: 1.3 } },
-  { name: 'Krtko', title: 'Chodby pod mestom', profile: { sila: 1.4, odolnost: 1.5, obratnost: 1.0, charizma: 0.8, stastie: 1.2 } },
-  { name: 'Bratia Šimkovci', title: 'Dvojica z Dlhej', profile: { sila: 1.5, odolnost: 1.3, obratnost: 1.5, charizma: 0.9, stastie: 1.0 } },
-  { name: 'Tetovač', title: 'Salón na Dlhej', profile: { sila: 1.2, odolnost: 1.3, obratnost: 1.4, charizma: 1.2, stastie: 1.1 } },
-  { name: 'Vrchný', title: 'Kaviareň Imperiál', profile: { sila: 1.0, odolnost: 1.2, obratnost: 1.6, charizma: 1.5, stastie: 1.2 } },
-  { name: 'Generál', title: 'Pancierový sklad', profile: { sila: 1.5, odolnost: 1.6, obratnost: 1.0, charizma: 1.3, stastie: 1.0 } },
-  { name: 'Kráľovná nábrežia', title: 'Nočné kluby pri rieke', profile: { sila: 1.0, odolnost: 1.3, obratnost: 1.4, charizma: 1.8, stastie: 1.3 } },
-  { name: 'Notár', title: 'Podpisy a pečate', profile: { sila: 1.0, odolnost: 1.5, obratnost: 1.2, charizma: 1.6, stastie: 1.5 } },
-  { name: 'Veľmajster', title: 'Tajná lóža', profile: { sila: 1.3, odolnost: 1.4, obratnost: 1.5, charizma: 1.7, stastie: 1.4 } },
-  { name: 'Pán veže', title: 'Vládca Starého Mesta', profile: { sila: 1.6, odolnost: 1.6, obratnost: 1.4, charizma: 1.7, stastie: 1.4 } },
+  { name: 'Krtko', title: 'Chodby pod mestom', art: 'photo_b_krtko', wide: 'photo_b_krtko', focus: '50% 20%', profile: { sila: 1.4, odolnost: 1.5, obratnost: 1.0, charizma: 0.8, stastie: 1.2 } },
+  { name: 'Bratia Šimkovci', title: 'Dvojica z Dlhej', art: 'photo_b_simkovci', wide: 'photo_b_simkovci', focus: '50% 22%', profile: { sila: 1.5, odolnost: 1.3, obratnost: 1.5, charizma: 0.9, stastie: 1.0 } },
+  { name: 'Tetovač', title: 'Salón na Dlhej', art: 'photo_b_tetovac', wide: 'photo_b_tetovac', focus: '50% 15%', profile: { sila: 1.2, odolnost: 1.3, obratnost: 1.4, charizma: 1.2, stastie: 1.1 } },
+  { name: 'Vrchný', title: 'Kaviareň Imperiál', art: 'photo_b_vrchny', wide: 'photo_b_vrchny', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.2, obratnost: 1.6, charizma: 1.5, stastie: 1.2 } },
+  { name: 'Generál', title: 'Pancierový sklad', art: 'photo_b_general', wide: 'photo_b_general', focus: '50% 15%', profile: { sila: 1.5, odolnost: 1.6, obratnost: 1.0, charizma: 1.3, stastie: 1.0 } },
+  { name: 'Kráľovná nábrežia', title: 'Nočné kluby pri rieke', art: 'photo_b_kralovna', wide: 'photo_b_kralovna', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.3, obratnost: 1.4, charizma: 1.8, stastie: 1.3 } },
+  { name: 'Notár', title: 'Podpisy a pečate', art: 'photo_b_notar', wide: 'photo_b_notar', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.5, obratnost: 1.2, charizma: 1.6, stastie: 1.5 } },
+  { name: 'Veľmajster', title: 'Tajná lóža', art: 'photo_b_velmajster', wide: 'photo_b_velmajster', focus: '50% 18%', profile: { sila: 1.3, odolnost: 1.4, obratnost: 1.5, charizma: 1.7, stastie: 1.4 } },
+  { name: 'Pán veže', title: 'Vládca Starého Mesta', art: 'photo_b_pan_veze', wide: 'photo_b_pan_veze', focus: '50% 25%', profile: { sila: 1.6, odolnost: 1.6, obratnost: 1.4, charizma: 1.7, stastie: 1.4 } },
 ];
 
 export const BOT_NAMES = ['Šakal', 'Vrana', 'Malý Jano', 'Zub', 'Betónko', 'Sivý', 'Fero Nôž', 'Lord', 'Duch', 'Roxor', 'Kobra', 'Miro Klinec', 'Tichý', 'Bárny', 'Zlatko', 'Krtko', 'Doga', 'Rambo z Petržalky'];
