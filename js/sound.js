@@ -2,7 +2,7 @@
 // sound.play(name, { delay, vol }) plays one effect; sound.weapon(base) / sound.equip(base) pick the
 // effect that fits an item. On/off is per device (localStorage), off by default only if the player turned it off.
 // Browsers start audio muted until the first touch or key, so nothing plays before that.
-import { ITEM_BASES } from './data.js?v=20261109233410';
+import { ITEM_BASES } from './data.js?v=20261109233638';
 
 const KEY = 'hl_sound';
 let enabled = true;

@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261109233410';
-import { eventFx } from './events.js?v=20261109233410';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261109233410';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261109233410';
-import { GangMixin } from './gangs.js?v=20261109233410';
-import { DailyMixin } from './daily.js?v=20261109233410';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261109233638';
+import { eventFx } from './events.js?v=20261109233638';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261109233638';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261109233638';
+import { GangMixin } from './gangs.js?v=20261109233638';
+import { DailyMixin } from './daily.js?v=20261109233638';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -281,7 +281,7 @@ export class SimServer {
   basesFor(rarity, from = Object.keys(ITEM_BASES)) {
     return from.filter((id) => {
       const b = ITEM_BASES[id];
-      return !b.legacy && (!b.rarity || b.rarity === rarity);
+      return !b.legacy && (!b.minLevel || this.p.level >= b.minLevel) && (!b.rarity || b.rarity === rarity);
     });
   }
 
@@ -303,7 +303,7 @@ export class SimServer {
 
   // a random legendary piece of any slot (never one of the cars sold only in the Autobazár)
   legendaryItem() {
-    const pool = Object.keys(ITEM_BASES).filter((id) => ITEM_BASES[id].rarity === 'legendarny' && !ITEM_BASES[id].shopOnly);
+    const pool = Object.keys(ITEM_BASES).filter((id) => ITEM_BASES[id].rarity === 'legendarny' && !ITEM_BASES[id].shopOnly && (!ITEM_BASES[id].minLevel || this.p.level >= ITEM_BASES[id].minLevel));
     return pool.length ? this.makeItem(pick(pool), this.p.level, 'legendarny') : null;
   }
 
