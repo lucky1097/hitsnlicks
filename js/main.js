@@ -1,9 +1,10 @@
-import { SimServer } from './server.js?v=20261109130050';
-import { RemoteServer } from './remote.js?v=20261109130050';
-import { ONLINE } from './net.js?v=20261109130050';
-import { CONFIG } from './config.js?v=20261109130050';
-import { UI } from './ui.js?v=20261109130050';
-import { createWorld } from './world.js?v=20261109130050';
+import { SimServer } from './server.js?v=20261109224642';
+import { RemoteServer } from './remote.js?v=20261109224642';
+import { ONLINE } from './net.js?v=20261109224642';
+import { CONFIG } from './config.js?v=20261109224642';
+import { UI } from './ui.js?v=20261109224642';
+import { createWorld } from './world.js?v=20261109224642';
+import { sound } from './sound.js?v=20261109224642';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -70,4 +71,4 @@ ui.open('title');
 setInterval(() => ui.tick(), 250);
 
 // handy in the browser console while testing
-window.hl = { server, ui, game };
+window.hl = { server, ui, game, sound };

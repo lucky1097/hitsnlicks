@@ -1,8 +1,9 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { CITIES, WALKER_SPRITES } from './data.js?v=20261109130050';
-import { mulberry32 } from './combat.js?v=20261109130050'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261109224642';
+import { mulberry32 } from './combat.js?v=20261109224642'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { sound } from './sound.js?v=20261109224642';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -373,9 +374,11 @@ export function createWorld(parent, hooks) {
         this.bullets.push({ x: px + f.x * 9, y: py + f.y * 9, vx: f.x * 300, vy: f.y * 300, life: 0.55 });
         const flash = this.add.circle(px + f.x * 10, py + f.y * 10, 4, 0xffe2a0, 0.95).setDepth(13);
         this.tweens.add({ targets: flash, alpha: 0, scale: 1.8, duration: 90, onComplete: () => flash.destroy() });
+        sound.play(sound.weaponSfx(w.base), { vol: 0.7 });
         hooks.onCrime('shot');
         return;
       }
+      sound.play('swing', { vol: 0.8 });
       // melee: a white arc in front of the player, hits anyone close inside the arc
       const g = this.add.graphics().setDepth(13);
       g.lineStyle(2, 0xf0e6cc, 0.95);
@@ -387,14 +390,16 @@ export function createWorld(parent, hooks) {
       g.arc(px, py, 10, a - 0.8, a + 0.8);
       g.strokePath();
       this.tweens.add({ targets: g, alpha: 0, duration: 160, onComplete: () => g.destroy() });
+      let struck = false;
       for (const wk of this.targets()) {
         if (wk.down > 0) continue;
         const dx = wk.s.x - px, dy = wk.s.y - py, d = Math.hypot(dx, dy);
         if (d > 20) continue;
         let diff = Math.abs(Math.atan2(dy, dx) - a);
         if (diff > Math.PI) diff = 2 * Math.PI - diff;
-        if (diff < 1.25) this.knock(wk, 'hitMelee');
+        if (diff < 1.25) { struck = true; this.knock(wk, 'hitMelee'); }
       }
+      if (struck) sound.play(sound.weaponSfx(w.base), { vol: 0.8 });
       // and a car right in front of you
       const reach = { x: px + f.x * 12, y: py + f.y * 12 };
       for (const c of this.allCars()) if (!c.state && this.carHit(c, reach.x, reach.y, 6)) { this.hitCar(c); break; }
@@ -411,6 +416,7 @@ export function createWorld(parent, hooks) {
     }
 
     knock(wk, kind) {
+      if (kind === 'hitGun') sound.play('body', { vol: 0.7 });
       if (wk.cop) { this.hitCop(wk); return; }
       if (wk.special) { this.hitDebtor(wk); return; }
       if (wk === this.rn) { // the lucky runner vanishes in a burst of sparkles
@@ -422,6 +428,7 @@ export function createWorld(parent, hooks) {
           const st = this.add.image(wk.s.x, wk.s.y, 'fx_star').setDepth(14).setTint(i % 2 ? 0xffffff : 0xf0d27a);
           this.tweens.add({ targets: st, x: wk.s.x + Math.cos(a) * 18, y: wk.s.y + Math.sin(a) * 18, alpha: 0, scale: 0.4, angle: 180, duration: 600, ease: 'Cubic.out', onComplete: () => st.destroy() });
         }
+        sound.play('sparkle');
         hooks.onRunnerHit();
         return;
       }
@@ -512,7 +519,7 @@ export function createWorld(parent, hooks) {
       this.pills = this.pills.filter((p) => {
         p.ttl -= dt; p.ready -= dt;
         const take = !paused && p.ready <= 0 && Math.hypot(p.x - px, p.y - py) < 9;
-        if (take) hooks.onPill(p.kind);
+        if (take) { sound.play('pill'); hooks.onPill(p.kind); }
         if (take || p.ttl <= 0) {
           this.tweens.killTweensOf([p.s, p.glow]);
           this.tweens.add({ targets: [p.s, p.glow], alpha: 0, scale: take ? 2.2 : 0.5, y: p.y - (take ? 10 : 0), duration: 260, onComplete: () => { p.s.destroy(); p.glow.destroy(); } });
@@ -983,6 +990,7 @@ export function createWorld(parent, hooks) {
     hitCar(c) {
       if (c.state) return; // already burning or a wreck
       c.hp -= 1;
+      sound.play('carhit', { vol: 0.8 });
       c.s.setTint(0xffc0b0);
       this.time.delayedCall(80, () => { if (!c.state) c.s.clearTint(); });
       hooks.onCrime('car');
@@ -993,6 +1001,7 @@ export function createWorld(parent, hooks) {
       if (c.state) return;
       c.state = 'fire';
       c.fireT = FIRE_SEC;
+      sound.play('ignite');
       c.s.setTint(0xb07858);
       // the driver jumps out and runs away from you
       const dx = c.s.x - this.player.x, dy = c.s.y - this.player.y, d = Math.hypot(dx, dy) || 1;
@@ -1020,6 +1029,9 @@ export function createWorld(parent, hooks) {
       const scorch = this.add.circle(x, y, 20, 0x0c0a08, 0.55).setDepth(1.5);
       this.tweens.add({ targets: scorch, alpha: 0, delay: 30000, duration: 4000, onComplete: () => scorch.destroy() });
       this.cameras.main.shake(260, 0.006);
+      // far from the player the blast is quieter (a chain of burning cars across the street)
+      const far = Math.hypot(x - this.player.x, y - this.player.y);
+      sound.play('boom', { vol: Math.max(0.25, 1 - far / 400) });
       hooks.onCrime('blast');
       // the blast knocks down people and officers around, and sets nearby cars on fire
       const near = (s, r) => Math.hypot(s.x - x, s.y - y) < r;
@@ -1301,6 +1313,13 @@ export function createWorld(parent, hooks) {
       // --- traffic and police in the right-hand lane
       const police = hooks.police();
       const lights = police.stars >= 1, on = Math.floor(time / 250) % 2 === 0;
+      // the siren: whenever the stars go up, and again now and then while officers chase you
+      this.sirenT = (this.sirenT || 0) - dt;
+      if (!paused && (police.stars > (this.sirenStars || 0) || (police.chase && this.sirenT <= 0))) {
+        sound.play('siren', { vol: police.chase ? 1 : 0.7 });
+        this.sirenT = 14;
+      }
+      this.sirenStars = police.stars;
       for (const c of this.allCars()) {
         this.updateCarFx(c, dt);
         if (c.state) continue; // burning or a wreck: it stays where it is

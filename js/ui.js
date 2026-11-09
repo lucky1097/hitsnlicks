@@ -1,9 +1,10 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261109130050';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261109130050';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261109130050';
-import { DAILY_TYPES } from './daily.js?v=20261109130050';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261109130050';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261109224642';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261109224642';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261109224642';
+import { DAILY_TYPES } from './daily.js?v=20261109224642';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261109224642';
+import { sound } from './sound.js?v=20261109224642';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -94,6 +95,7 @@ export class UI {
     $('#app').addEventListener('click', (e) => {
       const t = e.target.closest('[data-act]');
       if (!t || t.disabled) return;
+      sound.play(t.dataset.act === 'back' || t.dataset.act === 'modal-close' ? 'back' : 'click');
       const fn = this.acts[t.dataset.act];
       if (fn) fn.call(this, t.dataset.arg, t);
     });
@@ -102,7 +104,7 @@ export class UI {
       const d = $('#menu-desc');
       if (t && d) d.textContent = t.dataset.desc;
     });
-    this.el.action.addEventListener('click', () => this.action());
+    this.el.action.addEventListener('click', () => { sound.play('click'); this.action(); });
   }
 
   bindJoystick() {
@@ -228,6 +230,7 @@ export class UI {
       $('#hud-trk-time').textContent = v.mission.ready ? 'odmena čaká' : clock(v.mission.left);
       if (v.mission.ready && !this.readyNotified) {
         this.readyNotified = true;
+        sound.play('ready');
         this.toast('Misia „' + v.mission.name + '“ je hotová. Vyzdvihni si odmenu.');
         if (this.name === 'missions') this.render();
       }
@@ -388,6 +391,7 @@ export class UI {
 
   dailyRewardModal(rw) {
     if (this.modalOpen) { this.pendingDaily = rw; return; } // after the window that is open now
+    sound.play('reward');
     this.modal('<h2 class="win">Denné misie splnené</h2><p class="sub">Deň ' + rw.day + ' z 15</p>' +
       '<div class="rew"><span class="gold">' + this.dailyRewardText(rw) + '</span></div>' + (rw.item ? this.lootHtml(rw.item) : '') + this.levelUpText(rw.levelUps || 0) +
       '<p class="sub" style="font-size:16px;color:#9b968b">Nové úlohy o polnoci.</p><div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
@@ -474,6 +478,7 @@ export class UI {
   async reaperCaught() {
     const r = await this.s.catchRipper();
     if (!this.check(r)) return;
+    sound.play('bars');
     this.modal('<h2 class="win">Chytil si ho</h2><p class="sub">Ripper ležal na zemi a tehličku pustil.</p><div class="rew"><span class="gold">+1 zlatá tehlička</span></div>' +
       '<p class="sub" style="font-style:italic;font-size:17px;color:#d8d3c7">Wexler: „Dobrá práca. Nechaj si ju, zaslúžil si si ju.“</p>' +
       '<div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
@@ -503,6 +508,7 @@ export class UI {
     const t = document.createElement('div');
     t.className = 'toast' + (bad ? ' bad' : '');
     t.textContent = msg;
+    if (bad) sound.play('error');
     this.el.toasts.appendChild(t);
     setTimeout(() => t.remove(), 3200);
   }
@@ -556,6 +562,7 @@ export class UI {
 
   police() {
     if (this.paused() || !this.s.hasSave()) return;
+    sound.play('whistle');
     const v = this.s.view();
     // an officer is down: no bribe, no running; half your cash, or a while without missions
     if (this.s.copKills() > 0) {
@@ -576,7 +583,9 @@ export class UI {
     );
   }
 
+  // (both are only shown as a reward, so showing one also plays its sound, after the win fanfare)
   levelUpText(n) {
+    if (n > 0) sound.play('levelup', { delay: 1.1 });
     return n > 0 ? '<p class="sub gold" style="font-size:18px">Nová úroveň ' + this.s.p.level + '! +' + n * CONFIG.pointsPerLevel + ' voľné body.</p>' : '';
   }
 
@@ -596,6 +605,7 @@ export class UI {
 
   lootHtml(it) {
     const r = rar(it.rarity);
+    sound.play('loot_' + r.id, { delay: 0.6 });
     return '<div class="loot rar-' + it.rarity + '"><img src="' + art(ITEM_BASES[it.base].art) + '" alt=""><div><div style="font-size:18px">' + this.itemName(it) + '</div><div style="font-size:14px;color:' + r.color + '">' + r.name + ' · ' + this.bonusText(it) + '</div>' + this.descHtml(it) + '</div></div>';
   }
 
@@ -634,23 +644,26 @@ export class UI {
         this.info('Vitaj v Meste 1', 'Choď za Donom do parku (biela bublina „!“) a vezmi si prvú misiu. Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.');
       },
       async continue() { this.close(); },
-      async spend(a) { if (this.check(await this.s.spendPoint(a))) this.render(); },
-      async 'buy-stat'(a) { if (this.check(await this.s.buyStat(a))) this.render(); },
+      async spend(a) { if (this.check(await this.s.spendPoint(a))) { sound.play('up'); this.render(); } },
+      async 'buy-stat'(a) { if (this.check(await this.s.buyStat(a))) { sound.play('up'); this.render(); } },
       async slot(a) {
         if (a === 'auto' && this.s.p.level < CONFIG.autoUnlockLevel) { this.toast('Auto sa odomyká na úrovni ' + CONFIG.autoUnlockLevel + '.'); return; }
         this.open('inventory', a, true);
       },
-      async equip(a) { if (this.check(await this.s.equip(a))) this.render(); },
-      async unequip(a) { if (this.check(await this.s.unequip(a))) this.render(); },
+      async equip(a) {
+        const it = this.s.item(a);
+        if (this.check(await this.s.equip(a))) { if (it) sound.equip(it.base); this.render(); }
+      },
+      async unequip(a) { if (this.check(await this.s.unequip(a))) { sound.play('cloth', { vol: 0.6 }); this.render(); } },
       async sell(a) {
         const r = await this.s.sellItem(a);
-        if (this.check(r)) { this.toast('Predané za ' + money(r.gain) + '.'); this.render(); }
+        if (this.check(r)) { sound.play('cash'); this.toast('Predané za ' + money(r.gain) + '.'); this.render(); }
       },
-      async upgrade(a) { const r = await this.s.upgradeItem(a); if (this.check(r)) { this.toast('Vylepšené za ' + money(r.cost) + '.'); this.render(); } },
+      async upgrade(a) { const r = await this.s.upgradeItem(a); if (this.check(r)) { sound.play('anvil'); this.toast('Vylepšené za ' + money(r.cost) + '.'); this.render(); } },
       async offer(a) { this.sel.offer = a; this.render(); },
       async accept() {
         const r = await this.s.startMission(this.arg, this.sel.offer);
-        if (this.check(r)) { this.readyNotified = false; this.toast('Misia beží. Medzitým sa môžeš túlať mestom.'); this.close(); }
+        if (this.check(r)) { sound.play('go'); this.readyNotified = false; this.toast('Misia beží. Medzitým sa môžeš túlať mestom.'); this.close(); }
       },
       async skip() { const r = await this.s.skipMission(); if (this.check(r)) { this.render(); } },
       async claim() {
@@ -659,13 +672,13 @@ export class UI {
         this.readyNotified = false;
         this.open('fight', { kind: 'mission', ...r, artB: r.b.portrait, title: r.b.name, subtitle: r.b.title, intro: r.story.hit }, true);
       },
-      async 'buy-elixir'() { if (this.check(await this.s.buyElixir())) { this.toast('Čierny trh je otvorený na ' + CONFIG.elixirHours + ' hodín.'); this.render(); } },
+      async 'buy-elixir'() { if (this.check(await this.s.buyElixir())) { sound.play('bars'); this.toast('Čierny trh je otvorený na ' + CONFIG.elixirHours + ' hodín.'); this.render(); } },
       async 'shop-reroll'(a) { if (this.check(await this.s.rerollShop(a))) { this.toast('Nový tovar je v obchode.'); this.render(); } },
       async 'buy-item'(a) {
         const r = await this.s.buyItem(this.arg, a);
-        if (this.check(r)) { this.toast('Kúpené: ' + this.itemName(r.item) + '.'); this.render(); }
+        if (this.check(r)) { sound.play(ITEM_BASES[r.item.base].car ? 'engine' : 'cash'); this.toast('Kúpené: ' + this.itemName(r.item) + '.'); this.render(); }
       },
-      async lawyer() { const r = await this.s.lawyer(); if (this.check(r)) { this.toast('Heat znížený o ' + CONFIG.lawyerHeat + ' %. Dnes ešte ' + this.s.lawyerLeft() + '×.'); this.render(); } },
+      async lawyer() { const r = await this.s.lawyer(); if (this.check(r)) { sound.play('cash'); this.toast('Heat znížený o ' + CONFIG.lawyerHeat + ' %. Dnes ešte ' + this.s.lawyerLeft() + '×.'); this.render(); } },
       async 'boss-fight'() {
         const r = await this.s.fightBoss();
         if (!this.check(r)) return;
@@ -675,6 +688,7 @@ export class UI {
       async travel(a) {
         const r = await this.s.travel(a);
         if (!this.check(r)) return;
+        sound.play(a === 'mesto2' ? 'tram' : 'horn'); // the tram stop in the Old Town, a taxi back home
         this.close();
         this.toast('Vitaj: ' + CITIES[a].name + '.');
       },
@@ -697,6 +711,7 @@ export class UI {
         const r = await this.s.policeCheck(a);
         if (!this.check(r)) return;
         const x = r.result;
+        if (x.type === 'escaped') sound.play('whiff'); else if (x.type === 'bribed') sound.play('cash');
         const msg = { escaped: 'Ušiel si. Heat +5.', caught: 'Chytili ťa. Pokuta ' + money(x.fine || 0) + ' a ' + CONFIG.jailMinutes + ' min bez misií.', bribed: 'Policajt zobral ' + money(x.cost || 0) + ' a odišiel.', jail: 'Vzdal si sa. ' + CONFIG.jailMinutes + ' min bez misií.' }[x.type];
         this.closeModal();
         this.toast(msg, x.type === 'caught' || x.type === 'jail');
@@ -710,11 +725,12 @@ export class UI {
         const x = r.result;
         this.toast(x.type === 'cash' ? 'Zobrali ti ' + money(x.lost) + '.' : hours(x.minutes) + ' bez misií od Dona a Dílera.', true);
       },
+      async 'sound-toggle'() { sound.set(!sound.on); setTimeout(() => sound.play('cash'), 80); this.render(); },
       async 'test-mode'() { await this.s.setTestMode(!this.s.state.settings.testMode); this.render(); },
       async 'test-bm'() { await this.s.setBlackMarket(!this.s.state.settings.blackMarket); this.render(); },
       async 'buy-bars'(a) {
         const r = await this.s.buyBars(Number(a));
-        if (this.check(r)) { this.toast('+' + r.bars + ' zlatých tehličiek (testovacia kúpa).'); this.render(); }
+        if (this.check(r)) { sound.play('bars'); this.toast('+' + r.bars + ' zlatých tehličiek (testovacia kúpa).'); this.render(); }
       },
       // gangs
       // character creator
@@ -740,9 +756,9 @@ export class UI {
       async 'gang-color'(a) { this.sel.gangName = $('#gang-name').value; this.sel.gangTag = $('#gang-tag').value; this.sel.gangColor = a; this.render(); },
       async 'gang-create'() {
         const r = await this.s.createGang($('#gang-name').value, $('#gang-tag').value, this.sel.gangColor || 'gold');
-        if (this.check(r)) { this.toast('Gang založený za ' + money(r.cost) + '.'); this.render(); }
+        if (this.check(r)) { sound.play('cash'); this.toast('Gang založený za ' + money(r.cost) + '.'); this.render(); }
       },
-      async deposit(a) { const r = await this.s.deposit(Number(a)); if (this.check(r)) { this.toast('Vložené do pokladnice: ' + money(r.amount) + '.'); this.render(); } },
+      async deposit(a) { const r = await this.s.deposit(Number(a)); if (this.check(r)) { sound.play('cash'); this.toast('Vložené do pokladnice: ' + money(r.amount) + '.'); this.render(); } },
       async 'gang-ask'(a) { if (this.check(await this.s.requestJoin(a))) { this.toast('Žiadosť odoslaná. Počkaj, kým ju šéf schváli.'); this.render(); } },
       async 'gang-unask'(a) { if (this.check(await this.s.cancelRequest(a))) this.render(); },
       async 'gang-accept'(a) { const r = await this.s.acceptInvite(a); if (this.check(r)) { this.toast('Si v gangu ' + r.name + '.'); this.render(); } },
@@ -788,7 +804,7 @@ export class UI {
       async 'turf-attack'() {
         const r = await this.s.attackTurf(this.arg);
         if (!this.check(r)) return;
-        if (!r.D.length) { this.toast(r.turf.name + ' je váš. ' + money(r.result.cash) + ', +' + fmt(r.result.xp) + ' XP.'); this.render(); return; }
+        if (!r.D.length) { sound.play('win'); this.toast(r.turf.name + ' je váš. ' + money(r.result.cash) + ', +' + fmt(r.result.xp) + ' XP.'); this.render(); return; }
         this.open('war', r, true);
       },
       // online account
@@ -1243,7 +1259,7 @@ export class UI {
 
   scr_settings() {
     const on = this.s.hasSave() && this.s.state.settings.testMode;
-    let h = '';
+    let h = '<div class="switch"><span>Zvuk<br><small class="muted" style="font-size:14px">Údery, výstrely, peniaze, korisť. Platí pre toto zariadenie.</small></span><button class="btn small ' + (sound.on ? 'gold' : '') + '" data-act="sound-toggle">' + (sound.on ? 'Zapnutý' : 'Vypnutý') + '</button></div>';
     if (this.s.online) {
       if (this.s.loggedIn()) h += '<div class="switch"><span>Účet<br><small class="muted" style="font-size:14px">' + esc(this.s.email()) + '</small></span><button class="btn small" data-act="logout">Odhlásiť</button></div>';
       if (this.s.hasSave()) h += '<div class="switch"><span>Postava<br><small class="muted" style="font-size:14px">Uložená na serveri.</small></span><button class="btn small" data-act="reset">Zmazať</button></div>';
@@ -1607,6 +1623,7 @@ export class UI {
     const sk = $('#fskip');
     if (sk) sk.remove();
     const r = w.d.result;
+    sound.play(r.win ? 'win' : 'lose');
     let h = r.win ? '<h2 class="win">Územie je vaše</h2>' : '<h2 class="lose">Útok zlyhal</h2>';
     h += '<p class="sub">' + (r.win ? esc(r.name) + ' teraz drží tvoj gang. Bojovníci ostali na mieste ako obrancovia.' : (r.prev ? esc(r.prev.name) : 'Obrancovia') + ' ' + esc(r.name) + ' udržali. Ďalší pokus o ' + CONFIG.gangRetryMin + ' min.') + '</p>';
     if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span><span class="red">heat +' + CONFIG.gangAttackHeat + '</span></div>';
@@ -1655,7 +1672,11 @@ export class UI {
     const dir = att === 0 ? 1 : -1;
     from.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + 16 * dir + 'px)', offset: 0.5 }, { transform: 'translateX(0)' }], { duration: dur, easing: 'ease-out' });
     const base = baseId && ITEM_BASES[baseId];
+    // the blow that lands (hitMark) sounds like this weapon: a gun's bullet just hits, a blade cuts, a bat thuds
+    const sfx = sound.weaponSfx(base ? baseId : null);
+    this.blowSfx = base && base.attack === 'gun' ? 'hit' : sfx;
     if (!base) { setTimeout(onHit, dur * 0.5); return; }
+    if (base.attack !== 'gun') setTimeout(() => sound.play('swing', { vol: 0.7 }), dur * 0.3);
     const sr = stage.getBoundingClientRect(), fr = from.getBoundingClientRect(), tr = to.getBoundingClientRect();
     const size = Math.round(base.attack === 'gun' ? Math.min(130, fr.width * 0.9) : Math.min(110, fr.width * 0.75));
     const img = document.createElement('img');
@@ -1686,6 +1707,7 @@ export class UI {
       const shots = base.auto ? 3 : 1;
       for (let k = 0; k < shots; k++) {
         setTimeout(() => {
+          sound.play(sfx, { vol: 0.7 });
           const fl = document.createElement('span');
           fl.className = 'mflash';
           fl.style.left = mx + 'px';
@@ -1761,6 +1783,9 @@ export class UI {
     const target = $(att === 0 ? '#fb' : '#fa');
     const stage = $('#stage');
     if (!target || !stage) return;
+    if (text === 'blok') sound.play('clang');
+    else if (miss) sound.play('whiff');
+    else { sound.play(this.blowSfx || 'hit'); if (crit) sound.play('crit'); }
     target.classList.remove('hit');
     void target.offsetWidth;
     if (!miss) target.classList.add('hit');
@@ -1787,6 +1812,7 @@ export class UI {
     const sk = $('#fskip');
     if (sk) sk.remove();
     const r = f.d.result, d = f.d;
+    sound.play(r.win ? 'win' : 'lose');
     let h;
     if (d.kind === 'mission') {
       h = r.win ? '<h2 class="win">Misia splnená</h2>' : '<h2 class="lose">Misia zlyhala</h2>';
