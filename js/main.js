@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261109224642';
-import { RemoteServer } from './remote.js?v=20261109224642';
-import { ONLINE } from './net.js?v=20261109224642';
-import { CONFIG } from './config.js?v=20261109224642';
-import { UI } from './ui.js?v=20261109224642';
-import { createWorld } from './world.js?v=20261109224642';
-import { sound } from './sound.js?v=20261109224642';
+import { SimServer } from './server.js?v=20261109233410';
+import { RemoteServer } from './remote.js?v=20261109233410';
+import { ONLINE } from './net.js?v=20261109233410';
+import { CONFIG } from './config.js?v=20261109233410';
+import { UI } from './ui.js?v=20261109233410';
+import { createWorld } from './world.js?v=20261109233410';
+import { sound } from './sound.js?v=20261109233410';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']

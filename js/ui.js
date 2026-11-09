@@ -1,10 +1,10 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261109224642';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261109224642';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261109224642';
-import { DAILY_TYPES } from './daily.js?v=20261109224642';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261109224642';
-import { sound } from './sound.js?v=20261109224642';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261109233410';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261109233410';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261109233410';
+import { DAILY_TYPES } from './daily.js?v=20261109233410';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261109233410';
+import { sound } from './sound.js?v=20261109233410';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -25,7 +25,7 @@ const FX_MUZZLE_LEFT = new Set(['w_deagle', 'w_glock', 'w_gold1911', 'w_kalach',
 // melee pictures are drawn diagonally; the swing expects the handle down-left and the striking end up-right
 // (bat, katana, crowbar, bike chain), these have the handle up-right; they are mirrored across the diagonal
 // (not turned round), so the cutting edge keeps leading the swing
-const FX_TIP_DOWN_LEFT = new Set(['w_knife', 'w_machete', 'w_hockey', 'w_bottle']);
+const FX_TIP_DOWN_LEFT = new Set(['w_knife', 'w_machete', 'w_hockey', 'w_bottle', 'w_oar', 'w_cane_sword']);
 const CLASS_WEAPON = { svalovec: 'bat', zlodej: 'knife', dealer: 'glock' };
 const fxArt = (n) => 'assets/fx/' + n + '.png';
 // class artwork shown when picking a class (more classes as their art arrives)
