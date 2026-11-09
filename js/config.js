@@ -223,7 +223,12 @@ export const F = {
   // grows like a player who also buys stats: a level-30 player is about even with a level-29 boss
   clubLevel: (n) => Math.max(1, Math.round(2 + 0.85 * (n - 1))), // Podzemné zápasy floor 1 … 100: level 2 … 86
   clubRamp: (n) => Math.min(1, (n - 1) / 30), // early floors: common-strength gear and plain life, full strength from floor 31
-  bossStat: (Lb) => 10 + 2.5 * Lb + 0.25 * Lb * Lb,
+  // past level 33 the quadratic part would outrun every player, so it bends into a slow line there (same value at 33)
+  bossStat: (Lb) => Math.min(F.clubStat(Lb), 300 + 2 * Lb),
+  clubStat: (L) => 10 + 2.5 * L + 0.25 * L * L, // Podzemné zápasy keep the steep curve: the top floors stay out of reach
+  // Radničná veža: the quadratic curve outruns players past 50 (they grow almost linearly); simulated against Lucky's
+  // save carried up to each level, a player one level above a tower boss wins about half the fights
+  boss2Stat: (Lb) => 230 + 4.6 * Lb,
   npcStat: (L) => 10 + 2.2 * L,
 };
 

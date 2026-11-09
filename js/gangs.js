@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261108005453';
-import { TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261108005453';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261108005453';
+import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261109130050';
+import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261109130050';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261109130050';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -62,13 +62,13 @@ export const GangMixin = {
     let t = this.ctx ? this.ctx.world : this.state.turf;
     if (!t) {
       t = { objects: {}, nextRaidAt: Date.now() + this.wMs(CONFIG.gangRaidEveryMin) };
-      TURF.forEach((o) => { t.objects[o.id] = this.freshObj(o.start); });
+      ALL_TURF.forEach((o) => { t.objects[o.id] = this.freshObj(o.start); });
       if (this.ctx) this.ctx.world = t; else this.state.turf = t;
     }
     // the map changed (new or removed objects): saves follow the current list
-    const ids = new Set(TURF.map((o) => o.id));
+    const ids = new Set(ALL_TURF.map((o) => o.id));
     for (const id of Object.keys(t.objects)) if (!ids.has(id)) delete t.objects[id];
-    TURF.forEach((o) => { if (!t.objects[o.id]) t.objects[o.id] = this.freshObj(o.start); });
+    ALL_TURF.forEach((o) => { if (!t.objects[o.id]) t.objects[o.id] = this.freshObj(o.start); });
     // saves from the single-player gangs: owner 'player', one retry time
     for (const o of Object.values(t.objects)) {
       if (o.owner === 'player') o.owner = this.myGangId() || null;
@@ -100,7 +100,7 @@ export const GangMixin = {
   turfView() {
     this.gangTick();
     const gid = this.myGangId();
-    return TURF.map((d) => {
+    return ALL_TURF.map((d) => {
       const o = this.turfObj(d.id);
       return { ...d, kindInfo: TURF_KINDS[d.kind], owner: this.ownerInfo(o), strength: this.strengthNow(o), defenders: o.defenders, retryAt: (gid && o.retry[gid]) || 0, safeUntil: o.safeUntil };
     });
@@ -444,7 +444,7 @@ export const GangMixin = {
     if (!g) return b;
     this.gangTick();
     const gid = this.myGangId();
-    for (const d of TURF) {
+    for (const d of ALL_TURF) {
       if (this.turfObj(d.id).owner !== gid) continue;
       for (const [k, v] of Object.entries(TURF_KINDS[d.kind].bonus)) b[k] += v;
     }
@@ -480,7 +480,7 @@ export const GangMixin = {
     memberId = memberId || this.selfId();
     if (!g || !o || o.owner !== gid) return fail('Tento objekt nedržíte.');
     if (!g.members.some((m) => m.id === memberId)) return fail('Taký člen nie je.');
-    const d = TURF.find((x) => x.id === id);
+    const d = ALL_TURF.find((x) => x.id === id);
     if (o.defenders.includes(memberId)) {
       if (memberId !== this.selfId() && !this.can('kick')) return fail('Iného člena z obrany stiahne len šéf.');
       o.defenders = o.defenders.filter((x) => x !== memberId);
@@ -508,9 +508,10 @@ export const GangMixin = {
     const g = this.gang();
     if (!g) return fail('Na boj o územie potrebuješ gang.');
     if (!this.can('attack')) return fail('Nováčik ešte na územie útočiť nemôže. Šéf ti musí dať hodnosť.');
-    const d = TURF.find((x) => x.id === id);
+    const d = ALL_TURF.find((x) => x.id === id);
     const o = this.turfObj(id);
     if (!d) return fail('Neznámy objekt.');
+    if (d.city !== this.city()) return fail('Na objekt v inom meste sa útočí len na mieste. Najprv tam odcestuj.');
     this.gangTick();
     const gid = this.myGangId();
     if (o.owner === gid) return fail('Tento objekt už držíte.');
@@ -567,13 +568,13 @@ export const GangMixin = {
     if (changed) this.save();
   },
 
-  // the computer rivals raid objects held by players' gangs and shuffle the rest among themselves
+  // the computer rivals raid objects held by players' gangs and shuffle the rest among themselves, each in its own city
   gangHour() {
-    const rivals = Object.keys(RIVAL_GANGS);
     const now = Date.now();
     const keep = this.ev().noDecay;
-    for (const d of TURF) {
+    for (const d of ALL_TURF) {
       const o = this.turfObj(d.id);
+      const rivals = Object.keys(RIVAL_GANGS).filter((r) => RIVAL_GANGS[r].city === d.city);
       if (keep) o.at = now; // the weekend's hours won't count once the decay is back
       if (o.owner && !RIVAL_GANGS[o.owner]) {
         if (now < o.safeUntil || Math.random() >= CONFIG.gangRaidChance) continue;

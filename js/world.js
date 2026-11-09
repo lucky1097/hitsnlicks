@@ -1,8 +1,8 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { CITIES, WALKER_SPRITES } from './data.js?v=20261108005453';
-import { mulberry32 } from './combat.js?v=20261108005453'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261109130050';
+import { mulberry32 } from './combat.js?v=20261109130050'; // the server's generator: a task's seed hides its packages on the same corners everywhere
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -170,7 +170,7 @@ export function createWorld(parent, hooks) {
 
       // gang turf: owner graffiti on the roof + a label in the owner's colour
       this.turf = C.turf.map((d) => {
-        const m = city.marks[d.id];
+        const m = city.marks[d.at];
         const gx = m[2], gy = m[3] + 16;
         const g = this.add.graphics().setDepth(1);
         const t = this.add.text(gx, gy + 9, '', { fontFamily: 'Georgia, serif', fontStyle: 'bold italic', fontSize: '9px', color: '#fff' }).setOrigin(0.5).setDepth(1).setResolution(4).setAlpha(0.9);

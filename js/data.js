@@ -366,10 +366,10 @@ export const BOSSES = [
 export const BOSSES2 = [
   { name: 'Kominár', title: 'Cesty po strechách', art: 'photo_b_kominar', wide: 'photo_b_kominar', focus: '50% 18%', profile: { sila: 0.8, odolnost: 0.9, obratnost: 1.6, charizma: 0.8, stastie: 1.3 } },
   { name: 'Barónka', title: 'Hostinec U zlatého kľúča', art: 'photo_b_baronka', wide: 'photo_b_baronka', focus: '45% 20%', profile: { sila: 0.7, odolnost: 1.1, obratnost: 0.9, charizma: 1.6, stastie: 1.3 } },
-  { name: 'Kováč', title: 'Dielňa pod mostom', art: 'photo_b_kovac', wide: 'photo_b_kovac', focus: '50% 15%', profile: { sila: 1.6, odolnost: 1.5, obratnost: 0.6, charizma: 0.6, stastie: 0.9 } },
+  { name: 'Kováč', title: 'Dielňa pod mostom', art: 'photo_b_kovac', wide: 'photo_b_kovac', focus: '50% 15%', profile: { sila: 1.4, odolnost: 1.3, obratnost: 0.6, charizma: 0.6, stastie: 0.9 } },
   { name: 'Sprievodca', title: 'Prehliadky, z ktorých sa nevracia', art: 'photo_b_sprievodca', wide: 'photo_b_sprievodca', focus: '55% 22%', profile: { sila: 0.9, odolnost: 0.9, obratnost: 1.2, charizma: 1.5, stastie: 1.2 } },
   { name: 'Kockár', title: 'Kasíno v pivnici', art: 'photo_b_kockar', wide: 'photo_b_kockar', focus: '50% 18%', profile: { sila: 0.8, odolnost: 1.0, obratnost: 1.1, charizma: 1.2, stastie: 1.7 } },
-  { name: 'Pivovarník', title: 'Varňa za rohom', art: 'photo_b_pivovarnik', wide: 'photo_b_pivovarnik', focus: '50% 15%', profile: { sila: 1.5, odolnost: 1.6, obratnost: 0.5, charizma: 0.9, stastie: 0.9 } },
+  { name: 'Pivovarník', title: 'Varňa za rohom', art: 'photo_b_pivovarnik', wide: 'photo_b_pivovarnik', focus: '50% 15%', profile: { sila: 1.35, odolnost: 1.35, obratnost: 0.5, charizma: 0.9, stastie: 0.9 } },
   { name: 'Fiakristka', title: 'Kone a kočiar na námestí', art: 'photo_b_fiakristka', wide: 'photo_b_fiakristka', focus: '45% 20%', profile: { sila: 1.0, odolnost: 1.0, obratnost: 1.5, charizma: 1.2, stastie: 1.1 } },
   { name: 'Bábkar', title: 'Divadlo na Celetnej', art: 'photo_b_babkar', wide: 'photo_b_babkar', focus: '50% 18%', profile: { sila: 0.8, odolnost: 1.0, obratnost: 1.2, charizma: 1.7, stastie: 1.2 } },
   { name: 'Sklár', title: 'Huta za riekou', art: 'photo_b_sklar', wide: 'photo_b_sklar', focus: '50% 15%', profile: { sila: 1.4, odolnost: 1.3, obratnost: 1.0, charizma: 0.7, stastie: 1.0 } },
@@ -377,7 +377,7 @@ export const BOSSES2 = [
   { name: 'Zelená hodinka', title: 'Absintový bar', art: 'photo_b_zelena', wide: 'photo_b_zelena', focus: '50% 18%', profile: { sila: 0.8, odolnost: 1.0, obratnost: 1.3, charizma: 1.7, stastie: 1.3 } },
   { name: 'Kapitán', title: 'Výletná loď, ktorá nikam nepláva', art: 'photo_b_kapitan', wide: 'photo_b_kapitan', focus: '50% 15%', profile: { sila: 1.4, odolnost: 1.4, obratnost: 0.9, charizma: 1.0, stastie: 1.0 } },
   { name: 'Bankár z Parížskej', title: 'Banka bez mena', art: 'photo_b_bankar', wide: 'photo_b_bankar', focus: '50% 15%', profile: { sila: 0.8, odolnost: 1.4, obratnost: 1.0, charizma: 1.5, stastie: 1.5 } },
-  { name: 'Kat', title: 'Popravisko na námestí', art: 'photo_b_kat', wide: 'photo_b_kat', focus: '50% 18%', profile: { sila: 1.7, odolnost: 1.5, obratnost: 0.7, charizma: 0.7, stastie: 1.0 } },
+  { name: 'Kat', title: 'Popravisko na námestí', art: 'photo_b_kat', wide: 'photo_b_kat', focus: '50% 18%', profile: { sila: 1.5, odolnost: 1.35, obratnost: 0.7, charizma: 0.7, stastie: 1.0 } },
   { name: 'Ludvík Kladivo', title: 'Boxer z pivnice', art: 'photo_b_ludvik', wide: 'photo_b_ludvik', focus: '50% 18%', profile: { sila: 1.6, odolnost: 1.4, obratnost: 1.3, charizma: 0.7, stastie: 1.0 } },
   { name: 'Grófka', title: 'Palác na Parížskej', art: 'photo_b_grofka', wide: 'photo_b_grofka', focus: '50% 15%', profile: { sila: 0.9, odolnost: 1.2, obratnost: 1.3, charizma: 1.8, stastie: 1.3 } },
   { name: 'Krtko', title: 'Chodby pod mestom', art: 'photo_b_krtko', wide: 'photo_b_krtko', focus: '50% 20%', profile: { sila: 1.4, odolnost: 1.5, obratnost: 1.0, charizma: 0.8, stastie: 1.2 } },
@@ -385,7 +385,7 @@ export const BOSSES2 = [
   { name: 'Tetovač', title: 'Salón na Dlhej', art: 'photo_b_tetovac', wide: 'photo_b_tetovac', focus: '50% 15%', profile: { sila: 1.2, odolnost: 1.3, obratnost: 1.4, charizma: 1.2, stastie: 1.1 } },
   { name: 'Vrchný', title: 'Kaviareň Imperiál', art: 'photo_b_vrchny', wide: 'photo_b_vrchny', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.2, obratnost: 1.6, charizma: 1.5, stastie: 1.2 } },
   { name: 'Generál', title: 'Pancierový sklad', art: 'photo_b_general', wide: 'photo_b_general', focus: '50% 15%', profile: { sila: 1.5, odolnost: 1.6, obratnost: 1.0, charizma: 1.3, stastie: 1.0 } },
-  { name: 'Kráľovná nábrežia', title: 'Nočné kluby pri rieke', art: 'photo_b_kralovna', wide: 'photo_b_kralovna', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.3, obratnost: 1.4, charizma: 1.8, stastie: 1.3 } },
+  { name: 'Kráľovná nábrežia', title: 'Nočné kluby pri rieke', art: 'photo_b_kralovna', wide: 'photo_b_kralovna', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.3, obratnost: 1.4, charizma: 1.6, stastie: 1.3 } },
   { name: 'Notár', title: 'Podpisy a pečate', art: 'photo_b_notar', wide: 'photo_b_notar', focus: '50% 15%', profile: { sila: 1.0, odolnost: 1.5, obratnost: 1.2, charizma: 1.6, stastie: 1.5 } },
   { name: 'Veľmajster', title: 'Tajná lóža', art: 'photo_b_velmajster', wide: 'photo_b_velmajster', focus: '50% 18%', profile: { sila: 1.3, odolnost: 1.4, obratnost: 1.5, charizma: 1.7, stastie: 1.4 } },
   { name: 'Pán veže', title: 'Vládca Starého Mesta', art: 'photo_b_pan_veze', wide: 'photo_b_pan_veze', focus: '50% 25%', profile: { sila: 1.6, odolnost: 1.6, obratnost: 1.4, charizma: 1.7, stastie: 1.4 } },
@@ -452,15 +452,18 @@ export const TURF = [
   { id: 'sklad2', kind: 'sklad', name: 'Severný sklad', start: 'hadi' },
   { id: 'klub1', kind: 'klub', name: 'Klub na Bilkerskej', start: 'cerveni' },
   { id: 'klub2', kind: 'klub', name: 'Klub na Alžbetinej', start: 'kostlivci' },
-];
+].map((t) => ({ ...t, city: 'mesto1', at: t.id }));
 
 POIS.push(...TURF.map((t) => ({ id: t.id, name: t.name, verb: 'Pozrieť', action: 'turf', arg: t.id, at: t.id, r: 18 })));
 
-// computer-run rival gangs of Mesto 1 (never purple)
+// computer-run rival gangs, each in its own city (never purple)
 export const RIVAL_GANGS = {
-  cerveni: { name: 'Červení', tag: 'CRV', color: '#c8342a' },
-  kostlivci: { name: 'Kostlivci', tag: 'KST', color: '#e9e4d8' },
-  hadi: { name: 'Modrí hadi', tag: 'HAD', color: '#2f74c0' },
+  cerveni: { name: 'Červení', tag: 'CRV', color: '#c8342a', city: 'mesto1' },
+  kostlivci: { name: 'Kostlivci', tag: 'KST', color: '#e9e4d8', city: 'mesto1' },
+  hadi: { name: 'Modrí hadi', tag: 'HAD', color: '#2f74c0', city: 'mesto1' },
+  potkani: { name: 'Riečni potkani', tag: 'RPT', color: '#8aa0ae', city: 'mesto2' },
+  kovaci: { name: 'Kováči', tag: 'KOV', color: '#b08850', city: 'mesto2' },
+  loza: { name: 'Krvavá lóža', tag: 'LOZ', color: '#9c2a24', city: 'mesto2' },
 };
 
 export const GANG_COLORS = [
@@ -522,13 +525,19 @@ export const WALKER_COUNT = 22;
 export const DAILY_SPOT_IDS = ['zbrane', 'oblecenie', 'sperky', 'pravnicka', 'mechanik', 'arena', ...TURF.map((t) => t.id)];
 
 // Mesto 2, after Prague's Old Town (tools/art/City2.cs): cars only on the edges, Parížska and Dlhá; the square and the
-// cobbled lanes are for walkers. Its bosses and turf come with their pictures; until then the tower waits.
+// cobbled lanes are for walkers.
 const M2_NAMES = {
   zbrane: 'Zbrane', oblecenie: 'Oblečenie', sperky: 'Šperky', pravnicka: 'Právnička', mechanik: 'Mechanik', arena: 'Aréna',
   corner1: 'Corner na Valentínskej', corner2: 'Corner na Žateckej', corner3: 'Corner na Karlovej', corner4: 'Corner na Kozej',
   corner5: 'Corner na Melantrichovej', garaz1: 'Garáž na 17. novembra', garaz2: 'Garáž na Revolučnej', garaz3: 'Garáž na Kaprovej',
   sklad1: 'Sklad na Dušnej', sklad2: 'Sklad na Haštalskej', klub1: 'Klub na Celetnej', klub2: 'Pivnica pri námestí',
 };
+// 12 objects of Mesto 2: own ids in the shared city row, at = the building of the same name in mesto2/city.json
+const M2_TURF_START = { corner1: 'potkani', corner2: null, corner3: 'loza', corner4: 'kovaci', corner5: null, garaz1: 'potkani', garaz2: 'kovaci',
+  garaz3: null, sklad1: 'potkani', sklad2: 'kovaci', klub1: 'loza', klub2: 'loza' };
+export const TURF2 = Object.entries(M2_TURF_START).map(([at, start]) => ({ id: 'm2_' + at, kind: at.replace(/\d$/, ''), name: M2_NAMES[at], start, city: 'mesto2', at }));
+export const ALL_TURF = [...TURF, ...TURF2];
+
 const M1_NAMES = Object.fromEntries([...POIS.filter((p) => p.at).map((p) => [p.at, p.name.split(' · ')[0]]), ...TURF.map((t) => [t.id, t.name])]);
 
 export const CITIES = {
@@ -561,6 +570,7 @@ export const CITIES = {
       { id: 'alchymista', name: 'Alchymista', verb: 'Hovoriť', action: 'missions', arg: 'alchymista', at: 'alchymista', r: 22 },
       { id: 'prievoznik', name: 'Prievozník', verb: 'Hovoriť', action: 'missions', arg: 'prievoznik', x: 204, y: 296, r: 20 },
       { id: 'veza', name: 'Radničná veža', verb: 'Vstúpiť', action: 'boss', at: 'veza', r: 22 },
+      ...TURF2.map((t) => ({ id: t.id, name: t.name, verb: 'Pozrieť', action: 'turf', arg: t.id, at: t.at, r: 18 })),
     ],
     labels: [
       { text: 'Rieka', x: 150, y: 110, kind: 'district', maxZoom: 1.6 },
@@ -585,7 +595,7 @@ export const CITIES = {
       { text: 'Skrýša', at: 'skrysa', dy: -16, kind: 'service' },
       { text: 'Zastávka', x: 330, y: 287, dy: -16, kind: 'service' },
     ],
-    turf: [],
+    turf: TURF2,
     traffic: ['car_sedan_blue', 'car_taxi', 'car_sedan_red', 'car_van', 'car_sedan_white', 'car_taxi'],
     police: 1, walkers: 30, names: M2_NAMES,
   },

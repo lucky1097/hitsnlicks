@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261108005453';
-import { eventFx } from './events.js?v=20261108005453';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261108005453';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261108005453';
-import { GangMixin } from './gangs.js?v=20261108005453';
-import { DailyMixin } from './daily.js?v=20261108005453';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261109130050';
+import { eventFx } from './events.js?v=20261109130050';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261109130050';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261109130050';
+import { GangMixin } from './gangs.js?v=20261109130050';
+import { DailyMixin } from './daily.js?v=20261109130050';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -936,8 +936,8 @@ export class SimServer {
 
   // the boss line of the city you stand in: Mesto 1 keeps state.boss, Radničná veža in Mesto 2 state.boss2
   bossLine() {
-    if (this.city() === 'mesto2') return { list: BOSSES2, key: 'boss2', level: F.boss2Level, name: 'Radničnej veže' };
-    return { list: BOSSES, key: 'boss', level: F.bossLevel, name: 'Mesta 1' };
+    if (this.city() === 'mesto2') return { list: BOSSES2, key: 'boss2', level: F.boss2Level, stat: F.boss2Stat, name: 'Radničnej veže' };
+    return { list: BOSSES, key: 'boss', level: F.bossLevel, stat: F.bossStat, name: 'Mesta 1' };
   }
 
   bossState(line = this.bossLine()) { return this.state[line.key] || { defeated: 0, nextFreeAt: 0 }; }
@@ -945,7 +945,7 @@ export class SimServer {
   bossFighter(index, line = this.bossLine()) {
     const b = line.list[index];
     const Lb = line.level(index + 1);
-    const base = F.bossStat(Lb);
+    const base = line.stat(Lb);
     const stats = {};
     STATS.forEach((s) => { stats[s] = Math.round(base * b.profile[s]); });
     // a boss fights like the class whose stat his profile favours most
@@ -1010,7 +1010,7 @@ export class SimServer {
     const rng = mulberry32(n * 7919 + 17);
     const foe = CLUB_FOES[Math.floor(rng() * CLUB_FOES.length)];
     const L = F.clubLevel(n);
-    const base = F.bossStat(L);
+    const base = F.clubStat(L);
     const prof = {};
     STATS.forEach((s) => { prof[s] = 0.7 + rng() * 0.8; });
     const cls = Object.keys(CLASSES).reduce((best, c) => (prof[CLASSES[c].stat] > prof[CLASSES[best].stat] ? c : best), 'svalovec');

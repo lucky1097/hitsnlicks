@@ -1,9 +1,9 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261108005453';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261108005453';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261108005453';
-import { DAILY_TYPES } from './daily.js?v=20261108005453';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261108005453';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261109130050';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261109130050';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261109130050';
+import { DAILY_TYPES } from './daily.js?v=20261109130050';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261109130050';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -1329,7 +1329,9 @@ export class UI {
     const g = this.s.gang(), p = this.s.p;
     if (!g && this.s.locked('gang')) return this.lockedScr('Gang', 'gang', 'Gang je tvoj cech: s ostatnými hráčmi držíte objekty v meste a bojujete o územie. Do gangu sa dá vstúpiť alebo ho založiť, keď ťa už v meste poznajú.');
     const turf = this.s.turfView();
-    const turfList = '<div class="sec sc">Územie Mesta 1</div>' + turf.map((v) => this.turfCard(v)).join('');
+    const here = this.s.city();
+    const turfList = '<div class="sec sc">Územie: ' + CITIES[here].name + '</div>' + turf.filter((v) => v.city === here).map((v) => this.turfCard(v)).join('') +
+      turf.filter((v) => v.city !== here && v.owner && v.owner.mine).map((v, i) => (i ? '' : '<div class="sec sc">Držíte aj inde</div>') + this.turfCard(v)).join('');
     if (!g) {
       const cost = this.s.gangCreateCost();
       const col = this.sel.gangColor || 'gold';
@@ -1479,6 +1481,7 @@ export class UI {
       if (o) h += '<div class="sec sc">Tvoj tím</div>' + this.s.attackSquad().map((f) => this.fighterRow(f)).join('');
       if (now < v.retryAt) h += '<p class="note">Ďalší útok o <span data-until="' + v.retryAt + '"></span>.</p>';
       else if (now < v.safeUntil) h += '<p class="note">Objekt bol práve obsadený. Pod ochranou ešte <span data-until="' + v.safeUntil + '"></span>.</p>';
+      else if (v.city !== this.s.city()) h += '<p class="note">Objekt je v inom meste (' + CITIES[v.city].name + '). Zaútočiť sa dá len na mieste.</p>';
       else if (!this.s.can('attack')) h += '<p class="note">Ako nováčik ešte útočiť nemôžeš. Hodnosť vojaka ti dá šéf.</p>';
       else h += '<button class="btn gold wide" style="margin-top:12px" data-act="turf-attack">' + (o ? 'Zaútočiť' : 'Obsadiť') + '</button>' + (o ? '<p class="note">Útok zvýši heat o ' + CONFIG.gangAttackHeat + '. S tebou idú najsilnejší ďalší členovia gangu (aj keď nie sú online).</p>' : '');
     }
