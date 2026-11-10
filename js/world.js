@@ -1,9 +1,9 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { CITIES, WALKER_SPRITES } from './data.js?v=20261110075444';
-import { mulberry32 } from './combat.js?v=20261110075444'; // the server's generator: a task's seed hides its packages on the same corners everywhere
-import { sound } from './sound.js?v=20261110075444';
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261110075818';
+import { mulberry32 } from './combat.js?v=20261110075818'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { sound } from './sound.js?v=20261110075818';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];

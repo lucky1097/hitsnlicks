@@ -1,10 +1,10 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110075444';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110075444';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110075444';
-import { DAILY_TYPES } from './daily.js?v=20261110075444';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110075444';
-import { sound } from './sound.js?v=20261110075444';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110075818';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110075818';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110075818';
+import { DAILY_TYPES } from './daily.js?v=20261110075818';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110075818';
+import { sound } from './sound.js?v=20261110075818';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
