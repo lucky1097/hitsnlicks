@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261110074303';
-import { eventFx } from './events.js?v=20261110074303';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261110074303';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110074303';
-import { GangMixin } from './gangs.js?v=20261110074303';
-import { DailyMixin } from './daily.js?v=20261110074303';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261110075444';
+import { eventFx } from './events.js?v=20261110075444';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261110075444';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110075444';
+import { GangMixin } from './gangs.js?v=20261110075444';
+import { DailyMixin } from './daily.js?v=20261110075444';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -295,7 +295,7 @@ export class SimServer {
       rarity = r < legend ? 'legendarny' : r < legend + CONFIG.bossEpicChance ? 'epicky' : 'bezny';
     }
     else rarity = 'bezny';
-    let pool = this.basesFor(rarity, bases).filter((id) => !ITEM_BASES[id].shopOnly);
+    let pool = this.basesFor(rarity, bases).filter((id) => source === 'shop' || !ITEM_BASES[id].shopOnly); // shopOnly pieces stock a shop but never drop
     if (rarity === 'legendarny') pool = pool.filter((id) => ITEM_BASES[id].rarity === 'legendarny');
     if (!pool.length) return null;
     return this.makeItem(pick(pool), level, rarity);
@@ -371,8 +371,10 @@ export class SimServer {
     const expired = !st || Date.now() - st.at > this.gameMs(CONFIG.shopRefreshMin) || st.level !== this.p.level;
     if (expired) st = this.restock(shopId);
     // premium pieces (Autobazár): always all of them, made for your level; a bought one comes back with the restock
-    if (s.premium && (!st.premium || st.premiumLevel !== this.p.level)) {
-      st.premium = s.premium.map((b) => this.makeItem(b, this.p.level, ITEM_BASES[b].rarity));
+    // (only those open at your level; a row saved before new premium cars came is made again)
+    const prem = s.premium && s.premium.filter((b) => !ITEM_BASES[b].minLevel || this.p.level >= ITEM_BASES[b].minLevel);
+    if (prem && (!st.premium || st.premiumLevel !== this.p.level || st.premium.map((i) => i.base).join() !== prem.join())) {
+      st.premium = prem.map((b) => this.makeItem(b, this.p.level, ITEM_BASES[b].rarity));
       st.premiumLevel = this.p.level;
       this.save();
     }
