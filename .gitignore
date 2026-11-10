@@ -4,6 +4,9 @@ tools/bin/
 supabase/functions/game/game/
 supabase/.temp/
 .claude/
+# orchestrator notes (CLAUDE.md, progress, decisions, known issues) stay on this PC
+CLAUDE.md
+docs/
 *.log
 # source art (PSD, Procreate, big originals) stays on this PC only
 zdroj_art/
