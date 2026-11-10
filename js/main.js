@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261110075818';
-import { RemoteServer } from './remote.js?v=20261110075818';
-import { ONLINE } from './net.js?v=20261110075818';
-import { CONFIG } from './config.js?v=20261110075818';
-import { UI } from './ui.js?v=20261110075818';
-import { createWorld } from './world.js?v=20261110075818';
-import { sound } from './sound.js?v=20261110075818';
+import { SimServer } from './server.js?v=20261110082619';
+import { RemoteServer } from './remote.js?v=20261110082619';
+import { ONLINE } from './net.js?v=20261110082619';
+import { CONFIG } from './config.js?v=20261110082619';
+import { UI } from './ui.js?v=20261110082619';
+import { createWorld } from './world.js?v=20261110082619';
+import { sound } from './sound.js?v=20261110082619';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -50,6 +50,14 @@ const game = createWorld(document.getElementById('game'), {
   onDailyStep: (task, step) => ui.dailyStep(task, step),
   onDailyFail: (msg) => ui.toast(msg, true),
   cityId: () => (server.hasSave() ? server.city() : 'mesto1'),
+  // the place the tutorial sends you to (a POI id of this city), or null
+  tutorialTarget: () => {
+    const t = server.hasSave() && server.tutorial ? server.tutorial() : null;
+    if (!t) return null;
+    if (t.id === 'don' || (t.id === 'claim' && t.missionReady)) return 'don';
+    if (t.id === 'buy') return 'zbrane';
+    return null;
+  },
 });
 
 // what the map knows about the daily task (nearest target, escape clock) for the HUD

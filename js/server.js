@@ -1,11 +1,11 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261110075818';
-import { eventFx } from './events.js?v=20261110075818';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261110075818';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110075818';
-import { GangMixin } from './gangs.js?v=20261110075818';
-import { DailyMixin } from './daily.js?v=20261110075818';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261110082619';
+import { eventFx } from './events.js?v=20261110082619';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261110082619';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110082619';
+import { GangMixin } from './gangs.js?v=20261110082619';
+import { DailyMixin } from './daily.js?v=20261110082619';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -93,6 +93,7 @@ export class SimServer {
       boss: { defeated: 0, nextFreeAt: 0 },
       pvp: { points: CONFIG.pvpStartPoints, windowStart: now, used: 0, opponents: null, ladder: null, wins: 0, losses: 0 },
       counters: { missions: 0, fails: 0, raids: 0 },
+      tutorial: { flags: {} }, // new characters only; old saves have none and never see it
     };
     const bat = this.makeItem('bat', 1, 'bezny');
     const sneaker = this.makeItem('sneaker_black', 1, 'bezny');
@@ -451,9 +452,48 @@ export class SimServer {
     if (inBm) st.bm = st.bm.filter((i) => i.id !== itemId);
     else if (inPremium) st.premium = st.premium.map((i) => (i.id === itemId ? this.makeItem(i.base, this.p.level, i.rarity) : i)); // another one waits there
     else st.list = st.list.filter((i) => i.id !== itemId);
+    if (this.state.tutorial) this.state.tutorial.flags.buy = it.id;
     this.giveItem(it);
     this.save();
     return ok({ item: it });
+  }
+
+  // ---------------------------------------------------------------- new-player tutorial
+  // the first step not done yet: 'don', 'claim', 'stat', 'buy', 'equip', then 'finish' (the reward waits);
+  // null for old saves and once it is finished or skipped
+  tutorial() {
+    const t = this.state && this.state.tutorial;
+    if (!t || t.done) return null;
+    const c = this.state.counters, m = this.state.mission, f = t.flags || {};
+    const claimed = c.missions + c.fails > 0;
+    const steps = [
+      ['don', !!m || claimed],
+      ['claim', claimed],
+      ['stat', !!f.stat],
+      ['buy', !!f.buy],
+      ['equip', !!f.buy && Object.values(this.p.equipment).includes(f.buy)],
+    ];
+    const k = steps.findIndex(([, done]) => !done);
+    return { id: k < 0 ? 'finish' : steps[k][0], step: k < 0 ? steps.length : k, total: steps.length, missionReady: !!m && Date.now() >= m.endsAt };
+  }
+
+  tutorialFinish() {
+    const t = this.tutorial();
+    if (!t || t.id !== 'finish') return fail('Návod ešte nie je hotový.');
+    const r = CONFIG.tutorialReward;
+    this.p.cash += r.cash;
+    this.p.chains += r.bars;
+    this.state.tutorial.done = true;
+    this.save();
+    return ok({ cash: r.cash, bars: r.bars });
+  }
+
+  tutorialSkip() {
+    if (!this.state.tutorial || this.state.tutorial.done) return fail('Návod už nebeží.');
+    this.state.tutorial.done = true;
+    this.state.tutorial.skipped = true;
+    this.save();
+    return ok();
   }
 
   // ---------------------------------------------------------------- stats
@@ -478,6 +518,7 @@ export class SimServer {
     if (this.p.points <= 0) return fail('Nemáš voľné body.');
     this.p.points -= 1;
     this.p.stats[stat] += 1;
+    if (this.state.tutorial) this.state.tutorial.flags.stat = true;
     this.save();
     return ok();
   }
@@ -489,6 +530,7 @@ export class SimServer {
     this.p.cash -= cost;
     this.p.stats[stat] += 1;
     this.p.bought[stat] += 1;
+    if (this.state.tutorial) this.state.tutorial.flags.stat = true;
     this.save();
     return ok({ cost });
   }

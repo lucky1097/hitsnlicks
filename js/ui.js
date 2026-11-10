@@ -1,10 +1,10 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110075818';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110075818';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110075818';
-import { DAILY_TYPES } from './daily.js?v=20261110075818';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110075818';
-import { sound } from './sound.js?v=20261110075818';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110082619';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110082619';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110082619';
+import { DAILY_TYPES } from './daily.js?v=20261110082619';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110082619';
+import { sound } from './sound.js?v=20261110082619';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -42,6 +42,14 @@ const SHADOW_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5
 const CHEST_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 7C1.5 3.5 4 2.5 8 2.5S14.5 3.5 14.5 7z" fill="#5a3d1f" stroke="#f0c95a" stroke-width="1"/><rect x="1.5" y="7" width="13" height="7" fill="#6b4a26" stroke="#f0c95a" stroke-width="1"/><rect x="6.6" y="7.8" width="2.8" height="3.2" fill="#f0c95a"/></svg>';
 const pillName = (kind, cls) => ({ red: 'Červená pilulka', blue: 'Modrá pilulka', green: 'Zelené srdce' }[kind]);
 const pillEffect = (kind, cls) => ({ red: STAT_NAMES.stastie, blue: STAT_NAMES[CLASSES[cls].stat], green: 'Životy' }[kind]);
+// new-player tutorial (server: SimServer.tutorial): what each step asks; go = [button label, screen it opens]
+const TUT = {
+  don: { text: 'Choď za Donom do parku (zlatý kruh, biela „!“) a vezmi si misiu.' },
+  claim: { text: (t) => (t.missionReady ? 'Misia je hotová. Vráť sa za Donom a vyzdvihni si odmenu.' : 'Misia beží. Kým skončí, prejdi sa po meste.') },
+  stat: { text: 'Otvor Postavu a zvýš si niektorý stat.', go: ['Postava', 'character'] },
+  buy: { text: 'Choď do obchodu Zbrane (zlatý kruh) a kúp si novú zbraň.' },
+  equip: { text: 'V Postave ťukni na zbraň a nasaď si tú novú.', go: ['Postava', 'character'] },
+};
 
 function dur(ms) {
   const s = Math.max(1, Math.round(ms / 1000));
@@ -249,6 +257,7 @@ export class UI {
       this.lastGangLog = g.log[0].at;
     }
     this.dailyHud();
+    this.tutHud();
     this.hideHud();
     // tabs of features the player has not reached yet look dim (the screen says from which level)
     for (const f of ['arena', 'gang']) $('.tabs [data-arg="' + f + '"]').classList.toggle('locked', !!this.s.locked(f) && !(f === 'gang' && g));
@@ -329,6 +338,34 @@ export class UI {
         (stars < 1 ? '<p style="font-size:15px">Polícia ťa teraz nehľadá, nie je pred kým sa skrývať.</p>' : '');
     }
     return { html: this.hdr('Skrýša') + '<div class="body" style="padding:0"><div class="hide-scr">' + inner + '</div></div>' };
+  }
+
+  // new-player tutorial: one line under the HUD, a gold ring + edge arrow on the map (world.js), the reward at the end
+  tutHud() {
+    const el = $('#hud-tut');
+    const t = this.s.tutorial ? this.s.tutorial() : null;
+    el.hidden = !t || t.id === 'finish';
+    if (!t) return;
+    if (this.tutStep !== undefined && t.step > this.tutStep) sound.play('go');
+    this.tutStep = t.step;
+    if (t.id === 'finish') {
+      if (!this.modalOpen && !this.name && !this.tutShown) { this.tutShown = true; this.tutFinishModal(); }
+      return;
+    }
+    const st = TUT[t.id];
+    const text = typeof st.text === 'function' ? st.text(t) : st.text;
+    $('#hud-tut-n').textContent = 'Návod ' + (t.step + 1) + '/' + t.total;
+    if ($('#hud-tut-text').textContent !== text) $('#hud-tut-text').textContent = text;
+    const go = $('#hud-tut-go');
+    go.hidden = !st.go;
+    if (st.go) { go.textContent = st.go[0]; go.dataset.arg = st.go[1]; }
+  }
+
+  tutFinishModal() {
+    const r = CONFIG.tutorialReward, u = CONFIG.unlock;
+    this.modal('<h2 class="win">Návod hotový</h2><p class="sub">Základy máš. Ďalej ťa čakajú denné misie (truhlica hore), Aréna od úrovne ' + u.arena + ', Podzemné zápasy od úrovne ' + u.club + ' a gang od úrovne ' + u.gang + '.</p>' +
+      '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span class="gold">+' + r.bars + ' tehl.</span></div>' +
+      '<div class="acts"><button class="btn gold" data-act="tut-finish">Vyzdvihnúť</button></div>');
   }
 
   // ---------------------------------------------------------------- daily missions
@@ -640,8 +677,9 @@ export class UI {
         if (!this.check(await this.s.newGame(name, this.sel.cls))) return;
         this.sel.newGame = false;
         this.readyNotified = false;
+        this.tutShown = false; this.tutStep = undefined; // a new character gets the tutorial (and its reward window) again
         this.close();
-        this.info('Vitaj v Meste 1', 'Choď za Donom do parku (biela bublina „!“) a vezmi si prvú misiu. Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.');
+        this.info('Vitaj v Meste 1', 'Návod hore na obrazovke ťa prevedie prvými krokmi. Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.');
       },
       async continue() { this.close(); },
       async spend(a) { if (this.check(await this.s.spendPoint(a))) { sound.play('up'); this.render(); } },
@@ -724,6 +762,18 @@ export class UI {
         this.closeModal();
         const x = r.result;
         this.toast(x.type === 'cash' ? 'Zobrali ti ' + money(x.lost) + '.' : hours(x.minutes) + ' bez misií od Dona a Dílera.', true);
+      },
+      async 'tut-go'(a) { this.open(a, null, true); },
+      async 'tut-skip'() {
+        this.modal('<h2>Preskočiť návod?</h2><p class="sub">Odmenu za návod potom nedostaneš.</p><div class="acts"><button class="btn" data-act="modal-close">Pokračovať v návode</button><button class="btn gold" data-act="tut-skip-yes">Preskočiť</button></div>');
+      },
+      async 'tut-skip-yes'() { if (this.check(await this.s.tutorialSkip())) { this.closeModal(); this.toast('Návod preskočený.'); } },
+      async 'tut-finish'() {
+        const r = await this.s.tutorialFinish();
+        if (!this.check(r)) return;
+        sound.play('reward');
+        this.closeModal();
+        this.toast('Odmena za návod: ' + money(r.cash) + ' a ' + r.bars + ' tehličiek.');
       },
       async 'sound-toggle'() { sound.set(!sound.on); setTimeout(() => sound.play('cash'), 80); this.render(); },
       async 'test-mode'() { await this.s.setTestMode(!this.s.state.settings.testMode); this.render(); },

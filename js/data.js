@@ -448,7 +448,6 @@ export const NPCS = [
   { id: 'kladivo', sprite: 'p_boss', at: 'kladivo', angle: -90, bubble: 'bubble_gold' },
   { id: 'mechanik', sprite: 'p_mechanik', at: 'mechanik', angle: -90 },
   { id: 'pravnicka', sprite: 'p_pravnicka', at: 'pravnicka', angle: 90 },
-  { id: 'lekarka', sprite: 'p_lekarka', at: 'lekarka', angle: 0 },
   { id: 'wexler', sprite: 'p_dealer', x: 746, y: 764, angle: 90, bubble: 'bubble_gold' },
 ];
 
@@ -461,13 +460,11 @@ export const POIS = [
   { id: 'zbrane', name: 'Zbrane', verb: 'Vstúpiť', action: 'shop', arg: 'zbrane', at: 'zbrane', r: 16 },
   { id: 'oblecenie', name: 'Oblečenie', verb: 'Vstúpiť', action: 'shop', arg: 'oblecenie', at: 'oblecenie', r: 16 },
   { id: 'sperky', name: 'Šperky', verb: 'Vstúpiť', action: 'shop', arg: 'sperky', at: 'sperky', r: 16 },
-  { id: 'tetovanie', name: 'Tetovanie', verb: 'Vstúpiť', action: 'soon', arg: 'Tetovací salón (kozmetika) príde neskôr.', at: 'tetovanie', r: 16 },
   { id: 'posilnovna', name: 'Posilňovňa', verb: 'Trénovať', action: 'character', at: 'posilnovna', r: 20 },
   { id: 'arena', name: 'Aréna', verb: 'Vstúpiť', action: 'arena', at: 'arena', r: 20 },
   { id: 'mechanik', name: 'Garáž · mechanik', verb: 'Vylepšiť', action: 'upgrade', at: 'mechanik', r: 22 },
   { id: 'pravnicka', name: 'Právnička', verb: 'Hovoriť', action: 'lawyer', at: 'pravnicka', r: 22 },
   { id: 'skrysa', name: 'Skrýša', verb: 'Skryť sa', action: 'hideout', x: 200, y: 390, r: 16 },
-  { id: 'lekarka', name: 'Lekárka', verb: 'Hovoriť', action: 'soon', arg: 'Liečenie po súbojoch príde spolu s gangmi.', at: 'lekarka', r: 22 },
   { id: 'stanica', name: 'Taxi', verb: 'Cestovať', action: 'travel', x: 760, y: 800, r: 16 },
 ];
 
@@ -541,11 +538,9 @@ export const LABELS = [
   { text: 'Zbrane', roof: 'zbrane', dy: -34, kind: 'shop', minZoom: 1.6 },
   { text: 'Oblečenie', roof: 'oblecenie', dy: -34, kind: 'shop', minZoom: 1.6 },
   { text: 'Šperky', roof: 'sperky', dy: -34, kind: 'shop', minZoom: 1.6 },
-  { text: 'Tetovanie', roof: 'tetovanie', dy: -34, kind: 'shop', minZoom: 1.6 },
   { text: 'Obchody', x: 720, y: 600, kind: 'shop', maxZoom: 1.6 },
   { text: 'Aréna', roof: 'arena', kind: 'arena' },
   { text: 'Posilňovňa', roof: 'posilnovna', dy: -36, kind: 'service' },
-  { text: 'Lekárka', roof: 'lekarka', kind: 'service' },
   { text: 'Právnička', roof: 'pravnicka', dy: -36, kind: 'service' },
   { text: 'Don', npc: 'don', x: 664, y: 764, dy: -22, kind: 'npc' },
   { text: 'Díler', npc: 'diler', at: 'diler', dy: -22, kind: 'npc' },

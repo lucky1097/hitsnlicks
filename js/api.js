@@ -24,8 +24,8 @@
 //   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261110075818';
-import { GIVERS, SHOPS } from './data.js?v=20261110075818';
+import { SimServer } from './server.js?v=20261110082619';
+import { GIVERS, SHOPS } from './data.js?v=20261110082619';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -85,6 +85,8 @@ const ACTIONS = {
   refillTurf: (s, [id]) => s.refillTurf(id),
   toggleDefender: (s, [id, member]) => s.toggleDefender(id, member),
   attackTurf: (s, [id]) => s.attackTurf(id),
+  tutorialFinish: (s) => s.tutorialFinish(),
+  tutorialSkip: (s) => s.tutorialSkip(),
 };
 
 // actions about another gang: it is loaded too (args[0] = its id)

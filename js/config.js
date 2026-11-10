@@ -30,6 +30,7 @@ export const RARITIES = [
 export const CONFIG = {
   startCash: 300,
   startChains: 20,
+  tutorialReward: { cash: 500, bars: 5 }, // new-player tutorial, paid once at its end
   startStat: 10,
   classStatBonus: 5,
   pointsPerLevel: 3,

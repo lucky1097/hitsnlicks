@@ -1,9 +1,9 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { CITIES, WALKER_SPRITES } from './data.js?v=20261110075818';
-import { mulberry32 } from './combat.js?v=20261110075818'; // the server's generator: a task's seed hides its packages on the same corners everywhere
-import { sound } from './sound.js?v=20261110075818';
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261110082619';
+import { mulberry32 } from './combat.js?v=20261110082619'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { sound } from './sound.js?v=20261110082619';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -803,6 +803,14 @@ export function createWorld(parent, hooks) {
         if (!paused && d < tg.r) this.dailyReport(tg.task, tg.step);
       }
       this.dailyHint = best ? { x: best.x, y: best.y, dist: bd, task: best.task } : null;
+      // the tutorial's place wins the edge arrow (a ring like the daily ones, a bit bigger)
+      const tid = hooks.tutorialTarget ? hooks.tutorialTarget() : null;
+      const tp = tid && this.C.pois.find((p) => p.id === tid);
+      if (tp) {
+        g.fillStyle(0xf0c95a, 0.16).fillCircle(tp.x, tp.y, 14 + pulse * 3);
+        g.lineStyle(2, 0xf0c95a, 0.95).strokeCircle(tp.x, tp.y, 11 + pulse * 2);
+        this.dailyHint = { x: tp.x, y: tp.y, dist: Math.hypot(tp.x - px, tp.y - py), task: -1, tut: true };
+      }
       this.updateEscape(esc, v ? v.escapeSec : 30, dt, paused);
       this.updateSpray(spray, v ? v.spraySec : 3, dt, paused);
       // people of finished tasks: a beaten debtor stays down a few seconds, the rest leave at once
@@ -1237,6 +1245,8 @@ export function createWorld(parent, hooks) {
           const k = Math.min((sw / 2 - m) / Math.max(1e-6, Math.abs(Math.cos(ang))), ((bottom - top) / 2) / Math.max(1e-6, Math.abs(Math.sin(ang))));
           ar.style.transform = 'translate(' + Math.round(cx + Math.cos(ang) * k) + 'px,' + Math.round(cy + Math.sin(ang) * k) + 'px) translate(-50%,-50%)';
           ar.firstChild.style.transform = 'rotate(' + Math.round(deg(ang)) + 'deg)';
+          const letter = h.tut ? '!' : 'D';
+          if (ar.lastChild.textContent !== letter) ar.lastChild.textContent = letter;
           showA = true;
         }
       }

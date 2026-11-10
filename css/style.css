@@ -450,3 +450,10 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .boss-list span.now { color: var(--red-l); border-color: rgba(208,71,61,.6); }
 .cls-art { display: block; width: 100%; height: 150px; object-fit: cover; margin: 0 0 8px; border: 1px solid var(--line2); }
 .desc { margin-top: 3px; font-size: 14px; font-style: italic; line-height: 1.3; color: #8f8a80; }
+/* new-player tutorial: one line under the HUD */
+.tut { position: absolute; left: 12px; right: 68px; top: calc(150px + env(safe-area-inset-top)); z-index: 2; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(8,8,8,.82); border: 1px solid rgba(201,162,74,.45); border-left: 3px solid var(--gold); box-shadow: 0 0 16px rgba(201,162,74,.18); }
+.tut[hidden] { display: none; }
+.tut .sc { flex: none; font-size: 12px; color: var(--gold-l); }
+.tut-text { flex: 1; font-size: 15px; line-height: 1.2; color: var(--bone); }
+.tut-acts { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.tut-x { background: none; border: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 2px; }
