@@ -1,10 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110082619';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110082619';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110082619';
-import { DAILY_TYPES } from './daily.js?v=20261110082619';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110082619';
-import { sound } from './sound.js?v=20261110082619';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110083959';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110083959';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110083959';
+import { DAILY_TYPES } from './daily.js?v=20261110083959';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110083959';
+import { sound } from './sound.js?v=20261110083959';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261110083959';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -258,6 +259,7 @@ export class UI {
     }
     this.dailyHud();
     this.tutHud();
+    this.medalCheck();
     this.hideHud();
     // tabs of features the player has not reached yet look dim (the screen says from which level)
     for (const f of ['arena', 'gang']) $('.tabs [data-arg="' + f + '"]').classList.toggle('locked', !!this.s.locked(f) && !(f === 'gang' && g));
@@ -338,6 +340,38 @@ export class UI {
         (stars < 1 ? '<p style="font-size:15px">Polícia ťa teraz nehľadá, nie je pred kým sa skrývať.</p>' : '');
     }
     return { html: this.hdr('Skrýša') + '<div class="body" style="padding:0"><div class="hide-scr">' + inner + '</div></div>' };
+  }
+
+  // the 8 medals under the portrait (yours can be tapped for their progress) and how many of the 24 there are
+  medalRow(tiers, mine) {
+    const n = medalTotal(tiers);
+    return '<div class="medals-wrap"><div class="medals">' + MEDALS.map((m) => {
+      const t = tiers[m.id] || 0;
+      const label = m.name + (t ? ' · ' + MEDAL_TIERS[t - 1].name : '');
+      return mine ? '<button class="medal-b" data-act="medal" data-arg="' + m.id + '" aria-label="' + esc(label) + '">' + medalSvg(m.id, t, 34) + '</button>'
+        : '<span class="medal-b" title="' + esc(label) + '">' + medalSvg(m.id, t, 34) + '</span>';
+    }).join('') + '</div><div class="medals-cap"><span class="sc">Medaily</span><span class="num">' + n + ' / ' + MEDAL_COUNT + '</span></div></div>';
+  }
+
+  // new medals are paid as soon as you are on the map with nothing open: one window for all of them
+  async medalCheck() {
+    if (this.medalBusy || this.modalOpen || this.name || !this.s.medals) return;
+    const v = this.s.medals();
+    if (!v || !v.unpaid) return;
+    this.medalBusy = true;
+    try {
+      const r = await this.s.claimMedals();
+      if (!r.ok) return;
+      sound.play('loot_legendarny');
+      const items = r.got.map((g) => {
+        const m = MEDALS.find((x) => x.id === g.id);
+        return '<div class="mgot">' + medalSvg(g.id, g.tier, 48) + '<span>' + esc(m.name) + '<br><small>' + MEDAL_TIERS[g.tier - 1].name + '</small></span></div>';
+      }).join('');
+      this.modal('<h2 class="win">' + (r.got.length > 1 ? 'Nové medaily' : 'Nová medaila') + '</h2><div class="mgots">' + items + '</div>' +
+        '<div class="rew"><span class="gold">+' + r.bars + ' tehl.</span></div>' +
+        '<p class="sub" style="font-size:15px;color:#9b968b">Zlatý rám na profile: ' + r.total + ' / ' + MEDAL_COUNT + ' medailí.</p>' +
+        '<div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
+    } finally { this.medalBusy = false; }
   }
 
   // new-player tutorial: one line under the HUD, a gold ring + edge arrow on the map (world.js), the reward at the end
@@ -763,6 +797,15 @@ export class UI {
         const x = r.result;
         this.toast(x.type === 'cash' ? 'Zobrali ti ' + money(x.lost) + '.' : hours(x.minutes) + ' bez misií od Dona a Dílera.', true);
       },
+      async medal(a) {
+        const v = this.s.medals ? this.s.medals() : null;
+        const m = v && v.list.find((x) => x.id === a);
+        if (!m) return;
+        const steps = m.tiers.map((need, k) => '<div class="mstep' + (m.tier > k ? ' on' : '') + '">' + medalSvg(m.id, k + 1, 30) + '<span>' + MEDAL_TIERS[k].name + ' · ' + fmt(need) + '</span><span class="gold">+' + MEDAL_TIERS[k].bars + ' tehl.</span></div>').join('');
+        this.modal('<div style="text-align:center">' + medalSvg(m.id, m.tier, 64) + '</div><h2>' + esc(m.name) + '</h2>' +
+          '<p class="sub">' + (m.next ? 'Máš ' + fmt(m.have) + ' / ' + fmt(m.next) + ' (' + m.unit + ').' : 'Všetky tri stupne máš (' + m.unit + ': ' + fmt(m.have) + ').') + '</p>' +
+          '<div class="msteps">' + steps + '</div><div class="acts"><button class="btn gold" data-act="modal-close">Zavrieť</button></div>');
+      },
       async 'tut-go'(a) { this.open(a, null, true); },
       async 'tut-skip'() {
         this.modal('<h2>Preskočiť návod?</h2><p class="sub">Odmenu za návod potom nedostaneš.</p><div class="acts"><button class="btn" data-act="modal-close">Pokračovať v návode</button><button class="btn gold" data-act="tut-skip-yes">Preskočiť</button></div>');
@@ -933,6 +976,7 @@ export class UI {
 
   scr_character() {
     const p = this.s.p, v = this.s.view(), ts = this.s.totalStats();
+    const md = this.s.medals ? this.s.medals() : null, myTiers = md ? Object.fromEntries(md.list.map((m) => [m.id, m.tier])) : {};
     const slotHtml = (id) => {
       const s = SLOTS.find((x) => x.id === id);
       const it = p.equipment[id] && this.s.item(p.equipment[id]);
@@ -961,8 +1005,9 @@ export class UI {
       html: this.hdr('Postava', 'Úroveň <span class="gold">' + p.level + '</span> · ' + CLASSES[p.cls].name) +
         '<div class="body"><div class="char">' +
         '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
-        '<div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="Tvoja postava">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">Vzhľad</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">Pešiak · ' + CITIES[this.s.city()].name + '</span></div></div>' +
+        '<div class="pframe"><div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="Tvoja postava">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">Vzhľad</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">Pešiak · ' + CITIES[this.s.city()].name + '</span></div></div>' + frameHtml(medalTotal(myTiers)) + '</div>' +
         '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
+        this.medalRow(myTiers, true) +
         '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:15px;color:#9b968b" class="num"><span>Skúsenosti</span><span style="color:#e9e4d8">' + fmt(v.xp) + ' / ' + fmt(v.xpNext) + '</span></div><div class="bar" style="height:8px;margin-top:4px"><i style="width:' + Math.min(100, (v.xp / v.xpNext) * 100) + '%"></i></div></div>' +
         '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">Životy ' + fmt(this.s.maxHp()) + ' · úder ' + Math.round(hb * 0.85) + '–' + Math.round(hb * 1.15) + ' · krit ' + pct(F.crit(ts.stastie, p.level)) + ' · brnenie ' + pct(F.reduction(ts.armor, p.level, p.cls)) + ' (max ' + pct(c.armorCap) + ')' + special + '</p>' +
         (this.buffChips() ? '<div class="buffs-list">' + this.buffChips() + '</div>' : '') +
@@ -1025,8 +1070,9 @@ export class UI {
       html: this.hdr(esc(pr.name), 'Úroveň <span class="gold">' + pr.level + '</span> · ' + (c ? c.name : '')) +
         '<div class="body"><div class="char">' +
         '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
-        '<div class="portrait">' + (LOOK_BASE ? this.lookHtml(pr.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="">') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(pr.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + (c ? c.name : '') + ' · úroveň ' + pr.level + '</span></div></div>' +
+        '<div class="pframe"><div class="portrait">' + (LOOK_BASE ? this.lookHtml(pr.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="">') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(pr.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + (c ? c.name : '') + ' · úroveň ' + pr.level + '</span></div></div>' + frameHtml(medalTotal(pr.medals || {})) + '</div>' +
         '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
+        this.medalRow(pr.medals || {}, false) +
         '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">Životy ' + fmt(pr.hp) + ' · zbraň ' + fmt(pr.weapon) + ' · brnenie ' + fmt(pr.armor) + '</p>' +
         '<div style="margin-top:8px;border-top:1px solid var(--line)">' + stats + '</div>' +
         '<div class="sec sc">Výbava</div>' + (items || '<p class="p">Nemá nasadenú žiadnu výbavu.</p>') +

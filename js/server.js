@@ -1,11 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261110082619';
-import { eventFx } from './events.js?v=20261110082619';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261110082619';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110082619';
-import { GangMixin } from './gangs.js?v=20261110082619';
-import { DailyMixin } from './daily.js?v=20261110082619';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261110083959';
+import { eventFx } from './events.js?v=20261110083959';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261110083959';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110083959';
+import { GangMixin } from './gangs.js?v=20261110083959';
+import { DailyMixin } from './daily.js?v=20261110083959';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261110083959';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -458,6 +459,30 @@ export class SimServer {
     return ok({ item: it });
   }
 
+  // ---------------------------------------------------------------- medals (js/medals.js)
+  // every kind with its progress, the tier reached and the tier already paid (state.medals)
+  medals() {
+    const p = medalProgress(this.state), reached = medalTiers(this.state), paid = this.state.medals || {};
+    const list = MEDALS.map((m) => ({ id: m.id, name: m.name, unit: m.unit, tiers: m.tiers, have: p[m.id], tier: reached[m.id], paid: Math.min(paid[m.id] || 0, reached[m.id]), next: m.tiers[reached[m.id]] || null }));
+    return { list, total: medalTotal(reached), unpaid: list.reduce((s, m) => s + m.tier - m.paid, 0) };
+  }
+
+  // pays (gold bars) every medal reached and not paid yet; returns the new ones
+  claimMedals() {
+    const v = this.medals();
+    if (!v.unpaid) return fail('Žiadna nová medaila.');
+    const paid = this.state.medals || (this.state.medals = {});
+    const got = [];
+    let bars = 0;
+    for (const m of v.list) {
+      for (let t = m.paid + 1; t <= m.tier; t++) { got.push({ id: m.id, tier: t }); bars += MEDAL_TIERS[t - 1].bars; }
+      paid[m.id] = m.tier;
+    }
+    this.p.chains += bars;
+    this.save();
+    return ok({ got, bars, total: v.total });
+  }
+
   // ---------------------------------------------------------------- new-player tutorial
   // the first step not done yet: 'don', 'claim', 'stat', 'buy', 'equip', then 'finish' (the reward waits);
   // null for old saves and once it is finished or skipped
@@ -759,6 +784,7 @@ export class SimServer {
     c.lastAt = now;
     this.addWanted(CONFIG.wantedGain.copKill);
     c.kills += 1;
+    this.state.counters.cops = (this.state.counters.cops || 0) + 1; // medals (Ulica)
     this.addHeat(CONFIG.heatCopKill);
     const day = this.daily();
     let item = null;
@@ -964,7 +990,7 @@ export class SimServer {
       const it = id && this.item(id);
       if (it) gear[slot] = { base: it.base, rarity: it.rarity, level: it.level, upgrade: it.upgrade, bonus: this.itemBonus(it) };
     }
-    return { name: this.p.name, cls: this.p.cls, level: this.p.level, look: this.p.look || null, stats, armor: ts.armor, weapon: this.weaponDmg(), hp: this.maxHp(), gear };
+    return { name: this.p.name, cls: this.p.cls, level: this.p.level, look: this.p.look || null, stats, armor: ts.armor, weapon: this.weaponDmg(), hp: this.maxHp(), gear, medals: medalTiers(this.state) };
   }
 
   // offline there is nobody else: the hall lists only you (online the server answers these from the database)

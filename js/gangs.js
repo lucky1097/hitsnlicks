@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261110082619';
-import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261110082619';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110082619';
+import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261110083959';
+import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261110083959';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261110083959';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -527,6 +527,7 @@ export const GangMixin = {
     const res = { win: battle.win, cash: 0, xp: 0, levelUps: 0, prev: prevInfo, name: d.name };
     this.addHeat(CONFIG.gangAttackHeat);
     if (battle.win) {
+      this.state.counters.turf = (this.state.counters.turf || 0) + 1; // medals (Gang Wars)
       if (prev && !RIVAL_GANGS[prev]) this.logTo(prev, 'Gang ' + g.name + ' [' + g.tag + '] vám prebral ' + d.name + '.', true);
       o.owner = gid;
       o.og = { name: g.name, tag: g.tag, color: g.color };

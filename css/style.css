@@ -457,3 +457,33 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .tut-text { flex: 1; font-size: 15px; line-height: 1.2; color: var(--bone); }
 .tut-acts { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .tut-x { background: none; border: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 2px; }
+
+/* medals and the gold portrait frame (js/medals.js) */
+.mframe { position: absolute; inset: 0; z-index: 3; pointer-events: none; border: 1px solid #3a3530; --w: 2px; }
+.mframe.st2, .mframe.st3, .mframe.st4 { --w: 3px; }
+.mframe.st5 { --w: 4px; animation: mfglow 2.4s ease-in-out infinite alternate; }
+.mframe.st4 { box-shadow: 0 0 12px rgba(232,200,115,.22); }
+.mframe i { position: absolute; }
+.mframe .h { height: var(--w); width: var(--len); background: linear-gradient(90deg, #8a6218, #f3d98a 50%, #b88f34); }
+.mframe .v { width: var(--w); height: var(--len); background: linear-gradient(180deg, #8a6218, #f3d98a 50%, #b88f34); }
+.mframe .tl { top: -1px; left: -1px; } .mframe .tr { top: -1px; right: -1px; }
+.mframe .bl { bottom: -1px; left: -1px; } .mframe .br { bottom: -1px; right: -1px; }
+.mframe b { display: none; position: absolute; width: 11px; height: 11px; transform: rotate(45deg); background: linear-gradient(135deg, #fff3bf, #e2b648 55%, #7a5410); border: 1px solid #2a1d06; }
+.mframe.st3 b, .mframe.st4 b, .mframe.st5 b { display: block; }
+.mframe b.tl { top: -7px; left: -7px; } .mframe b.tr { top: -7px; right: -7px; }
+.mframe b.bl { bottom: -7px; left: -7px; } .mframe b.br { bottom: -7px; right: -7px; }
+.mframe.st4::after, .mframe.st5::after { content: ''; position: absolute; inset: 6px; border: 1px solid rgba(232,200,115,.5); }
+@keyframes mfglow { from { box-shadow: 0 0 12px rgba(232,200,115,.3), inset 0 0 8px rgba(232,200,115,.15); } to { box-shadow: 0 0 26px rgba(232,200,115,.55), inset 0 0 16px rgba(232,200,115,.3); } }
+.pframe { position: relative; min-width: 0; }
+.medals-wrap { margin-top: 12px; }
+.medals { display: flex; justify-content: space-between; gap: 2px; }
+.medal-b { background: none; border: none; padding: 0; cursor: pointer; line-height: 0; }
+.medal-b .medal { width: 34px; height: auto; }
+.medals-cap { display: flex; justify-content: space-between; margin-top: 4px; font-size: 13px; color: var(--muted); }
+.msteps { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.mstep { display: flex; align-items: center; gap: 10px; opacity: .55; font-size: 16px; }
+.mstep.on { opacity: 1; }
+.mstep span:nth-child(2) { flex: 1; text-align: left; }
+.mgots { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 8px 0; }
+.mgot { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 84px; font-size: 14px; text-align: center; }
+.mgot small { color: var(--muted); }
