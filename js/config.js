@@ -42,8 +42,9 @@ export const CONFIG = {
   foeWeaponMult: 0.5,
   itemDropChance: 0.15,
 
-  // heat is the daily mission budget (like Thirst in S&F): missions fill it, it resets at midnight,
-  // the lawyer can lower it only a few times a day; it never drops on its own
+  // heat is the daily mission budget (like Thirst in S&F): only missions fill it, it resets at midnight,
+  // the lawyer can lower it only a few times a day; it never drops on its own. Nothing done on the street
+  // touches it: that adds wanted stars (wantedGain below), and stars never depend on heat.
   heatMax: 100,
   heatPerMissionMin: 1, // heat per nominal mission minute (less during the fast start)
   raidFrom: 80,
@@ -63,37 +64,32 @@ export const CONFIG = {
   dailyCashMin: 30,
   dailyBars: { 5: 20, 10: 35, 15: 50 },
   dailyCourierSec: 120,
-  // police on foot (heat >= raidFrom): every officer you put down doubles how many chase you, up to copMax;
+  // police on foot (from wantedChase stars): every officer you put down doubles how many chase you, up to copMax;
   // an officer may drop an epic item (copEpicChance, at most copEpicPerDay a day); caught after a kill = lose
   // killCashShare of your cash or killJailMin without Don / Díler missions
   copMax: 8,
-  // wanted level (stars): what each street crime adds (×(1 + heat/100)), chase from wantedChase stars,
+  // wanted level (stars): what everything outside missions adds (street crimes, officers, graffiti, a gang attack,
+  // running from a police check), chase from wantedChase stars,
   // a star lost every wantedLoseSec out of the officers' sight (and on its own after wantedIdleSec of quiet),
   // the officer must hold you arrestSec to arrest you, then peace for caughtPeaceSec
-  wantedGain: { shot: 0.25, hitMelee: 0.6, hitGun: 0.8, car: 0.15, blast: 1, copHit: 0.5, copKill: 1, spray: 1 },
+  wantedGain: { shot: 0.25, hitMelee: 0.6, hitGun: 0.8, car: 0.15, blast: 1, copHit: 0.5, copKill: 1, spray: 1, gangAttack: 1, escape: 1 },
   wantedChase: 2,
   wantedLoseSec: 20,
   wantedIdleSec: 120,
   wantedSightPx: 150,
   arrestSec: 2.5,
   caughtPeaceSec: 300,
-  // hideout: stay hideMin minutes and the police on foot leave you alone for shadowMin, even at high heat
+  // hideout: stay hideMin minutes and the police on foot leave you alone for shadowMin, even with stars
   hideMin: 5,
   shadowMin: 20,
   copEpicChance: 0.1, // per officer put down
   copEpicPerDay: 5, // cap per day: it also limits what a modified client could farm
   copKillGapMs: 250,
-  heatCopHit: 4,
-  heatCopKill: 15,
   killJailMin: 120,
   killCashShare: 0.5,
-  // cars on the street: heat for a hit and for a blown-up car
-  heatCarHit: 1,
-  heatBlast: 10,
   dailyEscapeSec: 30,
   dailyFollowSec: 45, // tracking: stay behind the target this long
   dailySpraySec: 3, // graffiti: stand at the rival's door this long
-  dailySprayHeat: 8,
   // premium cars in the Autobazár: epic = cash + bars, legendary = bars only
   carBars: { epicky: 100, legendarny: 500 },
   elixirChains: 100, // Wexler's elixir: opens the Black Market for one player
@@ -137,10 +133,6 @@ export const CONFIG = {
   legendaryBossChance: 0.01,
   bossEpicChance: 0.2,
   bossGearMult: 1.7, // a boss's weapon and armour are as strong as epic gear of his level
-  // street violence raises heat
-  heatShot: 1,
-  heatHitGun: 5,
-  heatHitMelee: 3,
 
   // a knocked-down pedestrian drops one pill: red = Šťastie, blue = class stat, green = life
   pillBoost: 0.2, // +20 % per stack
@@ -176,7 +168,6 @@ export const CONFIG = {
   gangUpgradeMax: 5,
   gangBonusCap: 0.5,
   gangAttackSize: 5, // you + up to 4 other members (their saved arena form)
-  gangAttackHeat: 8,
   gangRetryMin: 30, // after a lost attack on an object
   gangSafeMin: 60, // a freshly taken object can't be attacked for this long
   gangRaidEveryMin: 60, // rival gangs make their moves once an hour

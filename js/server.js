@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261117212314';
-import { eventFx } from './events.js?v=20261117212314';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261117212314';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261117212314';
-import { GangMixin } from './gangs.js?v=20261117212314';
-import { DailyMixin } from './daily.js?v=20261117212314';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261117212314';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261117214521';
+import { eventFx } from './events.js?v=20261117214521';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261117214521';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261117214521';
+import { GangMixin } from './gangs.js?v=20261117214521';
+import { DailyMixin } from './daily.js?v=20261117214521';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261117214521';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -16,6 +16,8 @@ const fail = (error) => ({ ok: false, error });
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const seed = () => Math.floor(Math.random() * 2 ** 31);
 const PILLS = ['red', 'blue', 'green'];
+// what the map reports through crime(); other wantedGain kinds come only from their own server actions
+const STREET_CRIMES = ['shot', 'hitGun', 'hitMelee', 'car', 'blast', 'copHit'];
 // Podzemné zápasy: the mission foes (one per portrait) are the fighters of the underground ladder
 const CLUB_FOES = (() => {
   const seen = new Map();
@@ -208,10 +210,10 @@ export class SimServer {
   // what this weekend's events change (js/events.js); all ones on a normal day
   ev() { return eventFx(); }
 
-  // new heat from anything is cut by the car; pre = already cut (a mission's own preview)
-  addHeat(v, pre = false) {
+  // heat comes only from missions (their preview already has the car's cut) and goes down only by the lawyer
+  // and at midnight; everything done on the street adds wanted stars instead
+  addHeat(v) {
     this.daily();
-    if (v > 0 && !pre) v *= 1 - this.carBonus().heat;
     this.state.heat.value = clamp(this.state.heat.value + v, 0, CONFIG.heatMax);
     this.state.heat.at = Date.now();
   }
@@ -234,7 +236,6 @@ export class SimServer {
       chains: p.chains,
       points: p.points,
       heat,
-      stars: Math.min(5, Math.floor(heat / 20) + (heat > 0 && heat % 20 > 0 ? 1 : 0)),
       jailLeft: this.jailLeft(),
       mission: m ? { ...m, name: MISSIONS[m.tpl].name, left: Math.max(0, m.endsAt - Date.now()), ready: Date.now() >= m.endsAt } : null,
       testMode: this.state.settings.testMode,
@@ -605,7 +606,7 @@ export class SimServer {
     if (!offer) return fail('Táto misia už neplatí.');
     const pv = this.preview(tplId, offer.v);
     if (this.heatNow() + pv.heat > CONFIG.heatMax) return fail('Heat je takmer plný. Polícia ťa sleduje, na dnes stačilo. Skús právničku alebo počkaj do polnoci.');
-    this.addHeat(pv.heat, true); // the day's budget is spent when the job starts (the car is already in pv.heat)
+    this.addHeat(pv.heat); // the day's budget is spent when the job starts (the car is already in pv.heat)
     const now = Date.now();
     this.state.mission = { giver: giverId, ...pv, startedAt: now, endsAt: now + pv.durationMs };
     this.save();
@@ -785,7 +786,6 @@ export class SimServer {
     this.addWanted(CONFIG.wantedGain.copKill);
     c.kills += 1;
     this.state.counters.cops = (this.state.counters.cops || 0) + 1; // medals (Ulica)
-    this.addHeat(CONFIG.heatCopKill);
     const day = this.daily();
     let item = null;
     if ((day.copEpic || 0) < CONFIG.copEpicPerDay && Math.random() < CONFIG.copEpicChance) {
@@ -817,7 +817,7 @@ export class SimServer {
     this.dailyCaught();
     this.clearWanted(); // caught: whatever comes next, this chase is over
     if (choice === 'utiect') {
-      if (Math.random() < this.policeRunChance()) { this.addHeat(5); out = { type: 'escaped' }; }
+      if (Math.random() < this.policeRunChance()) { this.addWanted(CONFIG.wantedGain.escape); out = { type: 'escaped' }; }
       else {
         const fine = Math.round(this.p.cash * CONFIG.raidFinePct);
         this.p.cash -= fine;
@@ -911,15 +911,15 @@ export class SimServer {
     return { base: it.base, attack: b.attack || 'melee', cooldown: b.cooldown || 0.4, auto: !!b.auto };
   }
 
-  // shooting or hitting people on the street: heat for the day, stars for the police (kind = what they saw)
-  crime(heat, kind) {
-    this.addHeat(heat);
-    if (CONFIG.wantedGain[kind]) this.addWanted(CONFIG.wantedGain[kind]);
+  // shooting, hitting people or cars on the street: stars for the police (kind = what they saw), never heat
+  crime(kind) {
+    if (STREET_CRIMES.includes(kind)) this.addWanted(CONFIG.wantedGain[kind]);
     this.save();
   }
 
   // ---------------------------------------------------------------- wanted level (police stars, 0–5)
-  // Rises only from street crimes, a little faster at high heat. Falls one star for every wantedLoseSec the
+  // Rises from everything you do outside missions (street crimes, officers, graffiti, gang attacks, running
+  // from a check); heat plays no part. Falls one star for every wantedLoseSec the
   // police lose sight of you (the map reports it), on its own after wantedIdleSec without new trouble,
   // and to zero when you are caught or come out of the hideout.
   wanted() {
@@ -937,7 +937,7 @@ export class SimServer {
 
   addWanted(v) {
     const w = this.wanted();
-    w.stars = Math.min(5, w.stars + v * (1 + this.heatNow() / 100) * this.ev().wanted);
+    w.stars = Math.min(5, w.stars + v * this.ev().wanted);
     w.at = Date.now();
   }
 

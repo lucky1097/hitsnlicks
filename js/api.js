@@ -24,8 +24,8 @@
 //   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261117212314';
-import { GIVERS, SHOPS } from './data.js?v=20261117212314';
+import { SimServer } from './server.js?v=20261117214521';
+import { GIVERS, SHOPS } from './data.js?v=20261117214521';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -61,7 +61,8 @@ const ACTIONS = {
   catchRipper: (s) => s.catchRipper(),
   takePill: (s, [kind]) => s.takePill(kind),
   hitRunner: (s) => s.hitRunner(),
-  crime: (s, [heat, kind]) => { s.crime(Math.max(0, Math.min(10, Number(heat) || 0)), String(kind || '')); return { ok: true }; },
+  // the kind is the last argument (an old client still sends (heat, kind); heat is ignored)
+  crime: (s, args) => { s.crime(String(args[args.length - 1] || '')); return { ok: true }; },
   wantedLose: (s) => s.wantedLose(),
   fightBoss: (s) => s.fightBoss(),
   fightClub: (s) => s.fightClub(),

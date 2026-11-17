@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261117212314';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261117212314';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261117212314';
-import { DAILY_TYPES } from './daily.js?v=20261117212314';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261117212314';
-import { sound } from './sound.js?v=20261117212314';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261117212314';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261117214521';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261117214521';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261117214521';
+import { DAILY_TYPES } from './daily.js?v=20261117214521';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261117214521';
+import { sound } from './sound.js?v=20261117214521';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261117214521';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -325,12 +325,12 @@ export class UI {
     if (h.since) {
       inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Skrývaš sa v tieni</span>' +
         '<span class="clock" data-until="' + (Date.now() + this.s.hidingLeft()) + '"></span>' +
-        '<p>Vonku hliadkuje polícia. Vydrž tu ' + CONFIG.hideMin + ' minút a potom ťa ' + CONFIG.shadowMin + ' minút nebude nikto naháňať, ani pri vysokom heate.</p>' +
+        '<p>Vonku hliadkuje polícia. Vydrž tu ' + CONFIG.hideMin + ' minút a potom ťa ' + CONFIG.shadowMin + ' minút nebude nikto naháňať, ani keď budeš mať hviezdy.</p>' +
         '<button class="btn wide" data-act="hide-leave">Odísť skôr (bez ochrany)</button>';
     } else if (this.s.shadowLeft() > 0) {
       inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Si v tieni</span>' +
         '<span class="clock" data-until="' + (Date.now() + this.s.shadowLeft()) + '"></span>' +
-        '<p>Polícia ťa teraz nehľadá. Keď čas vyprší, pri vysokom heate ťa začnú znova naháňať.</p>' +
+        '<p>Polícia ťa teraz nehľadá. Keď čas vyprší a budeš mať hviezdy, začnú ťa znova naháňať.</p>' +
         '<button class="btn gold wide" data-act="back">Vyjsť von</button>';
     } else {
       inner = '<span class="sc" style="color:#9b968b">Skrýša</span><span class="bl">Zadný vchod</span>' +
@@ -784,7 +784,7 @@ export class UI {
         if (!this.check(r)) return;
         const x = r.result;
         if (x.type === 'escaped') sound.play('whiff'); else if (x.type === 'bribed') sound.play('cash');
-        const msg = { escaped: 'Ušiel si. Heat +5.', caught: 'Chytili ťa. Pokuta ' + money(x.fine || 0) + ' a ' + CONFIG.jailMinutes + ' min bez misií.', bribed: 'Policajt zobral ' + money(x.cost || 0) + ' a odišiel.', jail: 'Vzdal si sa. ' + CONFIG.jailMinutes + ' min bez misií.' }[x.type];
+        const msg = { escaped: 'Ušiel si, ale polícia si ťa zapamätala: +1 hviezda.', caught: 'Chytili ťa. Pokuta ' + money(x.fine || 0) + ' a ' + CONFIG.jailMinutes + ' min bez misií.', bribed: 'Policajt zobral ' + money(x.cost || 0) + ' a odišiel.', jail: 'Vzdal si sa. ' + CONFIG.jailMinutes + ' min bez misií.' }[x.type];
         this.closeModal();
         this.toast(msg, x.type === 'caught' || x.type === 'jail');
       },
@@ -1193,7 +1193,7 @@ export class UI {
 
   scr_upgrade() {
     const p = this.s.p;
-    let h = '<button class="card" data-act="open-shop" data-arg="autobazar"><img src="' + art('x_car_hatch') + '" alt=""><span class="mid"><span class="t">Autobazár</span><span class="s">Auto znižuje heat zo všetkého aj čas misií. Nasadiť ho môžeš od úrovne ' + CONFIG.autoUnlockLevel + '.</span></span></button>';
+    let h = '<button class="card" data-act="open-shop" data-arg="autobazar"><img src="' + art('x_car_hatch') + '" alt=""><span class="mid"><span class="t">Autobazár</span><span class="s">Auto znižuje heat z misií aj ich čas. Nasadiť ho môžeš od úrovne ' + CONFIG.autoUnlockLevel + '.</span></span></button>';
     h += '<p class="p">Mechanik vylepší tvoje nasadené veci. Každé vylepšenie pridá 10 % bonusu, najviac +' + CONFIG.maxUpgrade + '. Garáž drží tvoj gang.</p>';
     let any = false;
     for (const s of SLOTS) {
@@ -1293,12 +1293,12 @@ export class UI {
   scr_policehelp() {
     const C = CONFIG;
     const row = (t, s) => '<div><b>' + t + '</b><span>' + s + '</span></div>';
-    const h = '<p class="p">Polícia má dve strany: <b class="gold">heat</b> sleduje tvoje misie počas dňa, <b class="gold">hviezdy</b> sú naháňačka na ulici práve teraz.</p>' +
+    const h = '<p class="p">Polícia má dve oddelené strany: <b class="gold">heat</b> sleduje len tvoje misie počas dňa, <b class="gold">hviezdy</b> sú naháňačka na ulici za všetko ostatné. Jedno druhé neovplyvňuje.</p>' +
       '<div class="help-list">' +
-      row('Heat', 'Denný limit na misie. Každá misia ho zdvihne, násilie na ulici tiež. Keď je plný, misie od Dona a Dílera na dnes končia. O polnoci spadne na nulu. Auto ho znižuje.') +
+      row('Heat', 'Denný limit na misie. Zdvihne ho iba misia, nič na ulici. Keď je plný, misie od Dona a Dílera na dnes končia. O polnoci spadne na nulu. Auto ho znižuje.') +
       row('Razia', 'Od ' + C.raidFrom + ' % heatu ťa po misii môže čakať razia: pokuta ' + pct(C.raidFinePct) + ' peňazí alebo ' + C.jailMinutes + ' minút v base.') +
       row('Právnička', 'Zníži heat o ' + C.lawyerHeat + ' %, najviac ' + C.lawyerPerDay + '-krát za deň. Platí sa peniazmi.') +
-      row('Hviezdy', 'Hľadanosť na ulici. Pribúdajú za streľbu, bitku, autá a výbuchy, pri vyššom heate rýchlejšie. Od ' + C.wantedChase + ' hviezd ťa naháňajú policajti. Keď ťa nevidia, každých ' + C.wantedLoseSec + ' s stratíš hviezdu.') +
+      row('Hviezdy', 'Hľadanosť na ulici. Pribúdajú za všetko mimo misií: streľbu, bitku, autá, výbuchy, policajtov, graffiti, útok gangu aj útek z kontroly. Od ' + C.wantedChase + ' hviezd ťa naháňajú policajti. Keď ťa nevidia, každých ' + C.wantedLoseSec + ' s stratíš hviezdu.') +
       row('Kontrola', 'Keď ťa policajt chytí, vyberieš si: utiecť (šanca podľa Obratnosti), podplatiť (Charizma zlacňuje) alebo sa vzdať (' + C.jailMinutes + ' minút bez misií). Potom máš ' + Math.round(C.caughtPeaceSec / 60) + ' minút pokoj.') +
       row('Zložený policajt', 'Každý zložený policajt zdvojnásobí, koľko ich po tebe ide. Môže z neho padnúť epický predmet (' + pct(C.copEpicChance) + ', najviac ' + C.copEpicPerDay + ' za deň). Ak ťa potom chytia, prídeš o ' + pct(C.killCashShare) + ' peňazí alebo máš ' + hours(C.killJailMin) + ' bez misií.') +
       row('Basa', 'Kým si v base, nedostaneš misie od Dona a Dílera. Denné misie na mape robiť môžeš.') +
@@ -1595,7 +1595,7 @@ export class UI {
       else if (now < v.safeUntil) h += '<p class="note">Objekt bol práve obsadený. Pod ochranou ešte <span data-until="' + v.safeUntil + '"></span>.</p>';
       else if (v.city !== this.s.city()) h += '<p class="note">Objekt je v inom meste (' + CITIES[v.city].name + '). Zaútočiť sa dá len na mieste.</p>';
       else if (!this.s.can('attack')) h += '<p class="note">Ako nováčik ešte útočiť nemôžeš. Hodnosť vojaka ti dá šéf.</p>';
-      else h += '<button class="btn gold wide" style="margin-top:12px" data-act="turf-attack">' + (o ? 'Zaútočiť' : 'Obsadiť') + '</button>' + (o ? '<p class="note">Útok zvýši heat o ' + CONFIG.gangAttackHeat + '. S tebou idú najsilnejší ďalší členovia gangu (aj keď nie sú online).</p>' : '');
+      else h += '<button class="btn gold wide" style="margin-top:12px" data-act="turf-attack">' + (o ? 'Zaútočiť' : 'Obsadiť') + '</button>' + (o ? '<p class="note">Po útoku ťa bude hľadať polícia: +1 hviezda. S tebou idú najsilnejší ďalší členovia gangu (aj keď nie sú online).</p>' : '');
     }
     return { html: this.hdr(v.kindInfo.name, g ? '<span class="gold">' + money(g.treasury) + '</span>' : '') + '<div class="body">' + h + '</div>' };
   }
@@ -1722,8 +1722,8 @@ export class UI {
     sound.play(r.win ? 'win' : 'lose');
     let h = r.win ? '<h2 class="win">Územie je vaše</h2>' : '<h2 class="lose">Útok zlyhal</h2>';
     h += '<p class="sub">' + (r.win ? esc(r.name) + ' teraz drží tvoj gang. Bojovníci ostali na mieste ako obrancovia.' : (r.prev ? esc(r.prev.name) : 'Obrancovia') + ' ' + esc(r.name) + ' udržali. Ďalší pokus o ' + CONFIG.gangRetryMin + ' min.') + '</p>';
-    if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span><span class="red">heat +' + CONFIG.gangAttackHeat + '</span></div>';
-    else h += '<div class="rew"><span class="red">heat +' + CONFIG.gangAttackHeat + '</span></div>';
+    if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span><span class="red">+1 ★</span></div>';
+    else h += '<div class="rew"><span class="red">+1 ★</span></div>';
     h += this.levelUpText(r.levelUps || 0);
     h += '<div class="acts"><button class="btn gold" data-act="fight-done">Pokračovať</button></div>';
     this.modal(h);

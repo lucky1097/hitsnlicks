@@ -2,8 +2,8 @@
 // 15-day reward calendar (cash, a level, gold bars, a legendary item on day 15). A skipped day just waits.
 // The map reports progress (dailyStep); the server picks the places, counts and checks the timing.
 // Mixed into SimServer, so `this` is the server.
-import { CONFIG, F } from './config.js?v=20261117212314';
-import { ITEM_BASES, DAILY_SPOT_IDS, CITIES } from './data.js?v=20261117212314';
+import { CONFIG, F } from './config.js?v=20261117214521';
+import { ITEM_BASES, DAILY_SPOT_IDS, CITIES } from './data.js?v=20261117214521';
 
 const ok = (data = {}) => ({ ok: true, ...data });
 const fail = (error) => ({ ok: false, error });
@@ -23,7 +23,7 @@ export const DAILY_TYPES = {
   dlznik: { group: 'action', name: 'Dlžník', need: 1, text: () => 'Dlžník chodí po štvrti a pred tebou uteká. Zbi ho tromi údermi, alebo mu vyhoď do vzduchu auto (obe sú označené).' },
   vreckar: { group: 'action', name: 'Vreckár', need: 1, text: () => 'Chodec s plnou taškou sa prechádza po chodníku. Keď sa priblížiš, dá sa na útek. Dobehni ho a tašku mu vytrhni.' },
   sledovanie: { group: 'action', name: 'Sledovanie', need: 1, text: () => 'Choď ' + CONFIG.dailyFollowSec + ' sekúnd za označeným cieľom. Nepribližuj sa príliš, inak si ťa všimne, a nestrať ho z dohľadu.' },
-  graffiti: { group: 'hard', name: 'Graffiti', need: 1, text: (d, spotName) => 'Nastriekaj značku na objekt rivalov: ' + spotName(d.spot) + '. Postoj ' + CONFIG.dailySpraySec + ' sekundy pri dverách. Rivali si to všimnú, heat stúpne.' },
+  graffiti: { group: 'hard', name: 'Graffiti', need: 1, text: (d, spotName) => 'Nastriekaj značku na objekt rivalov: ' + spotName(d.spot) + '. Postoj ' + CONFIG.dailySpraySec + ' sekundy pri dverách. Rivali si to všimnú a polícia tiež: pribudne hviezda.' },
   vypalne: { group: 'action', name: 'Výpalné', need: 1, text: () => 'Majiteľ podniku neplatí. Jeho auto je na mape označené zlatým kruhom. Rozbi ho, kým nezačne horieť a nevybuchne.' },
   escape: { group: 'hard', name: 'Útek', need: 1, text: () => 'Urob si na ulici problémy (aspoň ' + CONFIG.wantedChase + ' hviezdičky hľadanosti). Keď ťa naháňa polícia pešo, vydrž ' + CONFIG.dailyEscapeSec + ' sekúnd, kým ťa nechytí.' },
   razia: { group: 'hard', name: 'Policajná razia', need: 3, text: () => 'Keď ťa naháňa polícia (od ' + CONFIG.wantedChase + ' hviezdičiek), zlož 2 policajtov a potom sa ' + CONFIG.dailyEscapeSec + ' sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.' },
@@ -140,7 +140,7 @@ export const DailyMixin = {
       if (step === 0) { t.data.startedAt = now; this.save(); return ok({ started: true }); }
       if (!t.data.startedAt || now - t.data.startedAt < (sec - 1.5) * 1000) return fail('Ešte nie.');
       t.have.push(1);
-      if (t.type === 'graffiti') { this.addHeat(CONFIG.dailySprayHeat); this.addWanted(CONFIG.wantedGain.spray); }
+      if (t.type === 'graffiti') this.addWanted(CONFIG.wantedGain.spray);
     } else {
       return fail('Túto úlohu splníš inak.');
     }

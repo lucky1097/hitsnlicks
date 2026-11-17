@@ -168,7 +168,7 @@ export const ITEM_BASES = {
   watch_sub_green: { slot: 'hodinky', name: 'Čierne keramické hodinky', art: 'x_watch_sub_green', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'epicky', desc: 'Celé čierne, len ručičky sú červené ako krv. Odpočítavajú čas, ktorý ti ostáva na splatenie dlhu.' },
   watch_diamond: { slot: 'hodinky', name: 'Ľadové hodinky', art: 'x_watch_diamond', stats: { charizma: 0.3, stastie: 0.3 }, rarity: 'legendarny', desc: 'Diamanty na lunete aj na každom článku remienka. Na zápästí nosíš celú ulicu. Vypadnú len z bossa.' },
 
-  // cars (slot 'auto', from level CONFIG.autoUnlockLevel): car = less heat from everything and shorter missions;
+  // cars (slot 'auto', from level CONFIG.autoUnlockLevel): car = less heat from missions and shorter missions;
   // every car is shopOnly: only the Autobazár sells them, nothing drops one
   car_sedan: { slot: 'auto', name: 'Strieborný japonský sedan', art: 'x_car_sedan', stats: { obratnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Znížený, na širokých diskoch, s motorom, čo znie ako tichá hrozba. Policajti si myslia, že je to len otec na nákupe.' },
   car_hatch: { slot: 'auto', name: 'Čierny kombík', art: 'x_car_hatch', stats: { obratnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Preliačina na dverách, plechové disky a kufor, do ktorého sa zmestí všeličo. Takých jazdí po meste sto a ani jeden si nikto nepamätá.' },
