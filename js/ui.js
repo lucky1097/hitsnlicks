@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261117214521';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261117214521';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261117214521';
-import { DAILY_TYPES } from './daily.js?v=20261117214521';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261117214521';
-import { sound } from './sound.js?v=20261117214521';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261117214521';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261117223454';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261117223454';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261117223454';
+import { DAILY_TYPES } from './daily.js?v=20261117223454';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261117223454';
+import { sound } from './sound.js?v=20261117223454';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261117223454';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
