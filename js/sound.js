@@ -2,7 +2,7 @@
 // sound.play(name, { delay, vol }) plays one effect; sound.weapon(base) / sound.equip(base) pick the
 // effect that fits an item. On/off is per device (localStorage), off by default only if the player turned it off.
 // Browsers start audio muted until the first touch or key, so nothing plays before that.
-import { ITEM_BASES } from './data.js?v=20261110083959';
+import { ITEM_BASES } from './data.js?v=20261117140319';
 
 const KEY = 'hl_sound';
 let enabled = true;
@@ -111,6 +111,7 @@ const S = {
   },
   // --- guns
   pistol: (t, v) => { hiss(t, { f: 1800, q: 0.8, vol: 0.75 * v, a: 0.001, d: 0.11 }); tone(t, { f: 180, f2: 50, vol: 0.55 * v, a: 0.001, d: 0.09 }); hiss(t, { filter: 'highpass', f: 6000, vol: 0.22 * v, a: 0.001, d: 0.03 }); },
+  silenced: (t, v) => { hiss(t, { f: 900, q: 0.7, vol: 0.4 * v, a: 0.002, d: 0.07 }); tone(t, { f: 140, f2: 60, vol: 0.18 * v, a: 0.001, d: 0.05 }); hiss(t, { filter: 'highpass', f: 5000, vol: 0.1 * v, a: 0.001, d: 0.02 }); },
   revolver: (t, v) => { hiss(t, { f: 1300, q: 0.8, vol: 0.8 * v, a: 0.001, d: 0.16 }); tone(t, { f: 150, f2: 45, vol: 0.6 * v, a: 0.001, d: 0.12 }); hiss(t + 0.02, { filter: 'lowpass', f: 700, vol: 0.15 * v, d: 0.3 }); },
   heavy: (t, v) => { hiss(t, { f: 1000, q: 0.7, vol: 0.9 * v, a: 0.001, d: 0.2 }); tone(t, { f: 120, f2: 35, vol: 0.8 * v, a: 0.001, d: 0.18 }); hiss(t + 0.02, { filter: 'lowpass', f: 600, vol: 0.22 * v, d: 0.4 }); },
   shotgun: (t, v) => { hiss(t, { filter: 'lowpass', f: 3200, f2: 380, vol: 0.95 * v, a: 0.001, d: 0.42 }); tone(t, { f: 95, f2: 30, vol: 0.85 * v, a: 0.001, d: 0.3 }); },
@@ -212,7 +213,7 @@ const S = {
 const WEAPON_SFX = {
   bat: 'thud', hockey: 'thud', crowbar: 'thud', knuckles: 'fist', bottle: 'glass', bikechain: 'chain',
   knife: 'slash', machete: 'slash', katana: 'slash',
-  glock: 'pistol', revolver: 'revolver', deagle: 'heavy', gold1911: 'heavy', sawnoff: 'shotgun',
+  glock: 'silenced', revolver: 'revolver', deagle: 'heavy', gold1911: 'heavy', sawnoff: 'shotgun',
   kalach: 'rifle', ak: 'rifle', kalash_wood: 'rifle', tommy_gold: 'smg',
 };
 const SLOT_SFX = { bunda: 'cloth', nohavice: 'cloth', topanky: 'steps', retiazka: 'jingle', prsten: 'ting', hodinky: 'tick', auto: 'engine' };

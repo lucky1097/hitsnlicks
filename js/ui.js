@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261110083959';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261110083959';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261110083959';
-import { DAILY_TYPES } from './daily.js?v=20261110083959';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261110083959';
-import { sound } from './sound.js?v=20261110083959';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261110083959';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261117140319';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261117140319';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261117140319';
+import { DAILY_TYPES } from './daily.js?v=20261117140319';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261117140319';
+import { sound } from './sound.js?v=20261117140319';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261117140319';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -22,11 +22,11 @@ const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'diler', dealer: 'photo_dl
 const BOT_FOCUS = { svalovec: '32% 7%' };
 // fight animation: weapon cut-outs live in assets/fx (tools/cutout.ps1); guns drawn pointing left get
 // flipped so the muzzle faces the foe; fighters without a known weapon carry their class's usual one
-const FX_MUZZLE_LEFT = new Set(['w_deagle', 'w_glock', 'w_gold1911', 'w_kalach', 'w_revolver', 'w_tommy_gold']);
+const FX_MUZZLE_LEFT = new Set(['w_deagle', 'w_gold1911', 'w_kalach', 'w_revolver', 'w_tommy_gold']);
 // melee pictures are drawn diagonally; the swing expects the handle down-left and the striking end up-right
 // (bat, katana, crowbar, bike chain), these have the handle up-right; they are mirrored across the diagonal
 // (not turned round), so the cutting edge keeps leading the swing
-const FX_TIP_DOWN_LEFT = new Set(['w_knife', 'w_machete', 'w_hockey', 'w_bottle', 'w_oar', 'w_cane_sword']);
+const FX_TIP_DOWN_LEFT = new Set(['w_knife', 'w_hockey', 'w_bottle', 'w_oar', 'w_cane_sword']);
 const CLASS_WEAPON = { svalovec: 'bat', zlodej: 'knife', dealer: 'glock' };
 const fxArt = (n) => 'assets/fx/' + n + '.png';
 // class artwork shown when picking a class (more classes as their art arrives)

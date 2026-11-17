@@ -20,9 +20,9 @@ export const ITEM_BASES = {
   // (cooldown in seconds, auto = keeps firing while held)
   bat: { slot: 'zbran', name: 'Hliníková pálka', art: 'w_bat', kind: 'dmg', mult: 0.95, rarity: 'bezny', attack: 'melee', cooldown: 0.5 },
   knuckles: { slot: 'zbran', name: 'Boxer', art: 'w_knuckles', kind: 'dmg', mult: 0.9, rarity: 'bezny', attack: 'melee', cooldown: 0.3 },
-  knife: { slot: 'zbran', name: 'Bojový nôž', art: 'w_knife', kind: 'dmg', mult: 1.0, rarity: 'bezny', attack: 'melee', cooldown: 0.35 },
-  machete: { slot: 'zbran', name: 'Mačeta', art: 'w_machete', kind: 'dmg', mult: 1.05, rarity: 'bezny', attack: 'melee', cooldown: 0.45 },
-  glock: { slot: 'zbran', name: 'Malá deviatka', art: 'w_glock', kind: 'dmg', mult: 1.1, rarity: 'epicky', attack: 'gun', cooldown: 0.3 },
+  knife: { slot: 'zbran', name: 'Vyskakovací nôž', art: 'w_knife', kind: 'dmg', mult: 1.0, rarity: 'bezny', desc: 'Cvak a je vonku. Vo vrecku nevyzerá ako nič, v ruke ako problém.', attack: 'melee', cooldown: 0.35 },
+  machete: { slot: 'zbran', name: 'Mäsiarsky sekáčik', art: 'w_machete', kind: 'dmg', mult: 1.05, rarity: 'bezny', desc: 'Z mäsiarstva na rohu. Mäsiar si dodnes myslí, že ho stratil.', attack: 'melee', cooldown: 0.45 },
+  glock: { slot: 'zbran', name: 'Tichá deviatka', art: 'w_glock', kind: 'dmg', mult: 1.1, rarity: 'epicky', desc: 'Tlmič na hlavni a zlatá spúšť. Susedia nič nepočuli, ráno sa len čudujú.', attack: 'gun', cooldown: 0.3 },
   gold1911: { slot: 'zbran', name: 'Zlatá 1911', art: 'w_gold1911', kind: 'dmg', mult: 1.2, rarity: 'legendarny', attack: 'gun', cooldown: 0.28 },
   katana: { slot: 'zbran', name: 'Katana', art: 'w_katana', kind: 'dmg', mult: 1.15, rarity: 'epicky', attack: 'melee', cooldown: 0.4 },
   kalach: { slot: 'zbran', name: 'Kalach', art: 'w_kalach', kind: 'dmg', mult: 1.2, rarity: 'epicky', attack: 'gun', cooldown: 0.14, auto: true },
@@ -108,20 +108,20 @@ export const ITEM_BASES = {
   biker_jacket: { slot: 'bunda', name: 'Motorkárska bunda', art: 'x_biker_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Šikmý zips, opasok a cvočky. Motorku nemáš, ale vyzeráš, že ťa niekde čaká.' },
   denim_jacket: { slot: 'bunda', name: 'Rifľová bunda', art: 'x_denim_jacket', stats: { armor: 3 }, rarity: 'bezny', desc: 'Vyblednutá od slnka aj od policajných svetiel. Klasika, ktorá nikdy nepýta otázky.' },
   coat_camel: { slot: 'bunda', name: 'Kabát z ťavej vlny', art: 'x_coat_camel', stats: { armor: 3 }, rarity: 'legendarny', desc: 'Dvojradový kabát, aký nosia muži, ktorí sa nikomu nemusia predstavovať. Vypadne len z bossa.' },
-  sneaker_black: { slot: 'topanky', name: 'Čierne tenisky', art: 'x_sneaker_black', stats: { obratnost: 0.6 }, rarity: 'bezny' },
+  sneaker_black: { slot: 'topanky', name: 'Čierne kožené tenisky', art: 'x_sneaker_black', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Čierne od podrážky po šnúrky, len očká sú zlaté. Krv na nich nevidno.' },
   // shoes: blue = common (Oblečenie), pink = epic (Black Market), gold = legendary (bosses)
   shoe_derby: { slot: 'topanky', name: 'Čierne poltopánky', art: 'x_shoe_derby', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Na pohreb, na súd aj na stretnutie s Donom. Do troch týždňov stihneš všetky tri.' },
-  shoe_white_low: { slot: 'topanky', name: 'Biele tenisky', art: 'x_shoe_white_low', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Biele ako nevinnosť. Vydržia presne do prvej mláky pri večierke.' },
-  shoe_air: { slot: 'topanky', name: 'Vzduchové tenisky', art: 'x_shoe_air', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Vzduchové bubliny v podrážke. Utekáš v nich, ako keby ťa niekto niesol.' },
+  shoe_white_low: { slot: 'topanky', name: 'Biele nazúvacie tenisky', art: 'x_shoe_white_low', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Biele ako nevinnosť. Vydržia presne do prvej mláky pri večierke.' },
+  shoe_air: { slot: 'topanky', name: 'Tenisky na suchý zips', art: 'x_shoe_air', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Žiadne šnúrky, o ktoré by sa dalo potknúť. Dva remienky na suchý zips a môžeš utekať.' },
   shoe_skate: { slot: 'topanky', name: 'Čierne skejtky', art: 'x_shoe_skate', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Hrubé šnúrky, plochá podrážka. Na skejt nevkročili, na plot pri parku každý deň.' },
   shoe_combat: { slot: 'topanky', name: 'Bojové čižmy', art: 'x_shoe_combat', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Osem dierok na šnúrky a oceľová špička. Dvere sa nimi otvárajú aj bez kľúča.' },
   shoe_canvas_high: { slot: 'topanky', name: 'Plátenné vysoké tenisky', art: 'x_shoe_canvas_high', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Klasika z každého koncertu a každej bitky po ňom.' },
-  shoe_slides: { slot: 'topanky', name: 'Šľapky s pásikmi', art: 'x_shoe_slides', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'S ponožkami, samozrejme. Ak musíš utekať, máš problém.' },
-  shoe_grey_runner: { slot: 'topanky', name: 'Sivé bežecké tenisky', art: 'x_shoe_grey_runner', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Nosia ich otcovia aj díleri. Polícia ich preto nevie od seba rozoznať.' },
+  shoe_slides: { slot: 'topanky', name: 'Šľapky s bielymi ponožkami', art: 'x_shoe_slides', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'S ponožkami, samozrejme. Ak musíš utekať, máš problém.' },
+  shoe_grey_runner: { slot: 'topanky', name: 'Sivé semišové členkové topánky', art: 'x_shoe_grey_runner', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Nosia ich otcovia aj díleri. Polícia ich preto nevie od seba rozoznať.' },
   shoe_work_boot: { slot: 'topanky', name: 'Pracovné čižmy', art: 'x_shoe_work_boot', stats: { obratnost: 0.6 }, rarity: 'bezny', desc: 'Žlté čižmy zo stavby. Na stavbe si nikdy nebol, ale všetci si to myslia.' },
-  shoe_hightop_red: { slot: 'topanky', name: 'Červeno-biele kotníkové tenisky', art: 'x_shoe_hightop_red', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Pár, za ktorý ľudia stoja v rade pred obchodom celú noc. Ty si v rade nestál.' },
+  shoe_hightop_red: { slot: 'topanky', name: 'Hadie kotníkové tenisky', art: 'x_shoe_hightop_red', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Pár, za ktorý ľudia stoja v rade pred obchodom celú noc. Ty si v rade nestál.' },
   shoe_chunky: { slot: 'topanky', name: 'Masívne módne tenisky', art: 'x_shoe_chunky', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Podrážka hrubá ako tehla. Vyzerajú ťažko, ale nakopnú lepšie ako čižmy.' },
-  shoe_loafer: { slot: 'topanky', name: 'Lakované mokasíny so zlatou prackou', art: 'x_shoe_loafer', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Zlatá pracka a lesk ako zrkadlo. V takých sa chodí len po kobercoch a po cudzích peniazoch.' },
+  shoe_loafer: { slot: 'topanky', name: 'Lakované mokasíny so strapcami', art: 'x_shoe_loafer', stats: { obratnost: 0.6 }, rarity: 'epicky', desc: 'Strapce so zlatými koncami a lesk ako zrkadlo. V takých sa chodí len po kobercoch a po cudzích peniazoch.' },
   shoe_gold: { slot: 'topanky', name: 'Zlaté tenisky s diamantmi', art: 'x_shoe_gold', stats: { obratnost: 0.6 }, rarity: 'legendarny', desc: 'Zlato po členky a diamanty v šnúrkach. Nikto nevie, kto ich vyrobil. Vypadnú len z bossa.' },
   ring_ruby: { slot: 'prsten', name: 'Rubínový prsteň', art: 'x_ring_ruby', stats: { stastie: 0.6 }, rarity: 'epicky' },
   // rings from the 3×3 sheet: all blue = common (Šperky)
@@ -171,14 +171,14 @@ export const ITEM_BASES = {
   // cars (slot 'auto', from level CONFIG.autoUnlockLevel): car = less heat from everything and shorter missions;
   // every car is shopOnly: only the Autobazár sells them, nothing drops one
   car_sedan: { slot: 'auto', name: 'Strieborný japonský sedan', art: 'x_car_sedan', stats: { obratnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Znížený, na širokých diskoch, s motorom, čo znie ako tichá hrozba. Policajti si myslia, že je to len otec na nákupe.' },
-  car_hatch: { slot: 'auto', name: 'Čierny hatchback', art: 'x_car_hatch', stats: { obratnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Štyri okrúhle svetlá, hrdza na blatníkoch, plechové disky. Takých jazdí po meste sto a ani jeden si nikto nepamätá.' },
+  car_hatch: { slot: 'auto', name: 'Čierny kombík', art: 'x_car_hatch', stats: { obratnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Preliačina na dverách, plechové disky a kufor, do ktorého sa zmestí všeličo. Takých jazdí po meste sto a ani jeden si nikto nepamätá.' },
   car_van: { slot: 'auto', name: 'Biela dodávka', art: 'x_car_van', stats: { odolnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Strešný nosič, tmavé okná, preliačiny na každom boku. Čo sa vezie vzadu, vie len ten, kto šoféruje.' },
-  car_lowrider: { slot: 'auto', name: 'Fialový lowrider', art: 'x_car_lowrider', stats: { charizma: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Zlaté drôtené kolesá a hydraulika, čo vyskočí na semafore. Nenápadné to nie je, ale na corneri ťa všetci rešpektujú.' },
+  car_lowrider: { slot: 'auto', name: 'Tmavočervený lowrider', art: 'x_car_lowrider', stats: { charizma: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Zlaté drôtené kolesá a hydraulika, čo vyskočí na semafore. Nenápadné to nie je, ale na corneri ťa všetci rešpektujú.' },
   car_ziguli: { slot: 'auto', name: 'Stará žiguli', art: 'x_car_ziguli', stats: { odolnost: 0.6 }, car: { heat: 0.15, time: 0.15 }, rarity: 'bezny', shopOnly: true, desc: 'Béžová, hrdzavá, s preliačinou na dverách. Naštartuje na tretí pokus, ale potom nezastaví nič.' },
   // premium cars: always on offer in the Autobazár (shopOnly: never dropped), price in gold bars (CONFIG.carBars)
-  car_super: { slot: 'auto', name: 'Zelený superšport', art: 'x_car_super', stats: { obratnost: 0.6 }, car: { heat: 0.3, time: 0.3 }, rarity: 'epicky', shopOnly: true, desc: 'Dvere hore, motor za chrbtom, kyselinovo zelený lak. Polícia ho síce vidí, ale nikdy nedobehne.' },
-  car_gwagon: { slot: 'auto', name: 'Čierny terénny tank', art: 'x_car_gwagon', stats: { odolnost: 0.6 }, car: { heat: 0.3, time: 0.3 }, rarity: 'epicky', shopOnly: true, desc: 'Hranatý, matný a ťažký ako bunker. Keď zastaví pred podnikom, platí sa bez reči.' },
-  car_royal: { slot: 'auto', name: 'Zlatá limuzína', art: 'x_car_royal', stats: { charizma: 0.6 }, car: { heat: 0.5, time: 0.5 }, rarity: 'legendarny', shopOnly: true, desc: 'Čierno-zlatý lak, hviezdy na strope a koruna na kapote. V takom aute sa nepáchajú zločiny, v takom sa o nich rozhoduje.' },
+  car_super: { slot: 'auto', name: 'Čierny športiak so zlatým pruhom', art: 'x_car_super', stats: { obratnost: 0.6 }, car: { heat: 0.3, time: 0.3 }, rarity: 'epicky', shopOnly: true, desc: 'Nízky, čierny, so zlatým pruhom a krídlom vzadu. Polícia ho síce vidí, ale nikdy nedobehne.' },
+  car_gwagon: { slot: 'auto', name: 'Obrnený čierny pick-up', art: 'x_car_gwagon', stats: { odolnost: 0.6 }, car: { heat: 0.3, time: 0.3 }, rarity: 'epicky', shopOnly: true, desc: 'Obrovské pneumatiky, oceľový nárazník a štyri svetlá na streche. Keď zastaví pred podnikom, platí sa bez reči.' },
+  car_royal: { slot: 'auto', name: 'Predĺžená limuzína', art: 'x_car_royal', stats: { charizma: 0.6 }, car: { heat: 0.5, time: 0.5 }, rarity: 'legendarny', shopOnly: true, desc: 'Šestoro dverí, zlaté disky a tmavé sklá. V takom aute sa nepáchajú zločiny, v takom sa o nich rozhoduje.' },
 };
 
 export const SHOPS = {
