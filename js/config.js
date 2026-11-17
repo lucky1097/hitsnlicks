@@ -101,6 +101,11 @@ export const CONFIG = {
   itemStatShare: { bezny: 0.6, epicky: 0.4 },
 
   bossCooldownMin: 240,
+  bossCooldownFastMin: 15, // during the fast start (below fastUntil) the next free try comes this soon
+  // the first bosses of Mesto 1 are what a new player meets in the first hour: they start with common-strength
+  // gear, plain life and softer stats (bossRampStat) and grow into full strength at boss bossRampTo
+  bossRampTo: 16,
+  bossRampStat: 0.7,
   bossRetryChains: 10,
   bossPaidPerDay: 3, // attempts for gold bars a day; the free one every bossCooldownMin comes on top
   bossHpMult: 1.5,
@@ -214,6 +219,7 @@ export const F = {
   boss2Level: (k) => Math.round(50 + (k - 1) * 49 / 24), // 25 bosses of Mesto 2 (Radničná veža): level 50 … 99
   // grows like a player who also buys stats: a level-30 player is about even with a level-29 boss
   clubLevel: (n) => Math.max(1, Math.round(2 + 0.85 * (n - 1))), // Podzemné zápasy floor 1 … 100: level 2 … 86
+  bossRamp: (k) => clamp((k - 1) / (CONFIG.bossRampTo - 1), 0, 1), // Mesto 1 boss k (1-based): 0 = softest, 1 = full
   clubRamp: (n) => Math.min(1, (n - 1) / 30), // early floors: common-strength gear and plain life, full strength from floor 31
   // past level 33 the quadratic part would outrun every player, so it bends into a slow line there (same value at 33)
   bossStat: (Lb) => Math.min(F.clubStat(Lb), 300 + 2 * Lb),

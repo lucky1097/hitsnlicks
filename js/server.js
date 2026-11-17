@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261117223454';
-import { eventFx } from './events.js?v=20261117223454';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261117223454';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261117223454';
-import { GangMixin } from './gangs.js?v=20261117223454';
-import { DailyMixin } from './daily.js?v=20261117223454';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261117223454';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261118003153';
+import { eventFx } from './events.js?v=20261118003153';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261118003153';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261118003153';
+import { GangMixin } from './gangs.js?v=20261118003153';
+import { DailyMixin } from './daily.js?v=20261118003153';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261118003153';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -1004,6 +1004,15 @@ export class SimServer {
     return makeFighter(this.p.name, this.p.level, ts, this.weaponDmg(), { portrait: 'maska', cls: this.p.cls, armor: ts.armor, hpMult: this.hpBuffMult() });
   }
 
+  // share of n fights with fixed seeds that the player would win against this fighter (shown before a boss fight);
+  // the seeds are fixed, so the same gear always shows the same number
+  winChance(foe, n = 200) {
+    const me = this.playerFighter();
+    let won = 0;
+    for (let i = 1; i <= n; i++) if (simulate(me, foe, Math.imul(i, 2654435761) >>> 0).winner === 0) won++;
+    return won / n;
+  }
+
   // the boss line of the city you stand in: Mesto 1 keeps state.boss, Radničná veža in Mesto 2 state.boss2
   bossLine() {
     if (this.city() === 'mesto2') return { list: BOSSES2, key: 'boss2', level: F.boss2Level, stat: F.boss2Stat, name: 'Radničnej veže' };
@@ -1015,12 +1024,14 @@ export class SimServer {
   bossFighter(index, line = this.bossLine()) {
     const b = line.list[index];
     const Lb = line.level(index + 1);
-    const base = line.stat(Lb);
+    const ramp = line.key === 'boss' ? F.bossRamp(index + 1) : 1; // only Mesto 1 starts soft
+    const base = line.stat(Lb) * (CONFIG.bossRampStat + (1 - CONFIG.bossRampStat) * ramp);
     const stats = {};
     STATS.forEach((s) => { stats[s] = Math.round(base * b.profile[s]); });
     // a boss fights like the class whose stat his profile favours most
     const cls = Object.keys(CLASSES).reduce((best, c) => (b.profile[CLASSES[c].stat] > b.profile[CLASSES[best].stat] ? c : best), 'svalovec');
-    return makeFighter(b.name, Lb, stats, F.itemPower(Lb, CONFIG.bossGearMult) * CONFIG.weaponDmgMult, { hpMult: CONFIG.bossHpMult, portrait: b.art || null, title: b.title, cls, armor: F.itemPower(Lb, CONFIG.bossGearMult) * 5 });
+    const gear = F.itemPower(Lb, 1 + (CONFIG.bossGearMult - 1) * ramp);
+    return makeFighter(b.name, Lb, stats, gear * CONFIG.weaponDmgMult, { hpMult: 1 + (CONFIG.bossHpMult - 1) * ramp, portrait: b.art || null, title: b.title, cls, armor: gear * 5 });
   }
 
   bossInfo() {
@@ -1050,7 +1061,7 @@ export class SimServer {
       const day = this.daily();
       day.bossPaid = (day.bossPaid || 0) + 1;
     } else if (!info.hunt) { // Hon na bossov: no cooldown at all
-      st.nextFreeAt = Date.now() + this.gameMs(CONFIG.bossCooldownMin);
+      st.nextFreeAt = Date.now() + this.gameMs(this.p.level < CONFIG.fastUntil ? CONFIG.bossCooldownFastMin : CONFIG.bossCooldownMin);
     }
     const me = this.playerFighter();
     const fight = simulate(me, info.fighter, seed());

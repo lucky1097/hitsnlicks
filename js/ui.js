@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261117223454';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261117223454';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261117223454';
-import { DAILY_TYPES } from './daily.js?v=20261117223454';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261117223454';
-import { sound } from './sound.js?v=20261117223454';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261117223454';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261118003153';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261118003153';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261118003153';
+import { DAILY_TYPES } from './daily.js?v=20261118003153';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261118003153';
+import { sound } from './sound.js?v=20261118003153';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261118003153';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -580,6 +580,10 @@ export class UI {
     t.className = 'toast' + (bad ? ' bad' : '');
     t.textContent = msg;
     if (bad) sound.play('error');
+    // on the map a toast goes just under the HUD column (heat, mission, tutorial), so it never covers it
+    const stack = !this.name && !this.el.hud.hidden && $('#hud-stack');
+    const r = stack && stack.getBoundingClientRect();
+    this.el.toasts.style.top = r && r.height ? Math.round(r.bottom - $('#app').getBoundingClientRect().top + 8) + 'px' : '';
     this.el.toasts.appendChild(t);
     setTimeout(() => t.remove(), 3200);
   }
@@ -1235,6 +1239,10 @@ export class UI {
     h += '<div class="body"><div class="hpgrid" style="padding:0">' +
       '<div><div class="top"><span class="bl">Ty</span><span class="num muted" style="font-size:14px">úr. ' + me.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(me.hp) + '<br>Úder ' + Math.round(F.hitOf(me)) + '</p></div>' +
       '<div><div class="top"><span class="bl">' + info.boss.name + '</span><span class="num muted" style="font-size:14px">úr. ' + f.level + '</span></div><p class="note num" style="text-align:left;margin:0">Životy ' + fmt(f.hp) + '<br>Úder ' + Math.round(F.hitOf(f)) + '</p></div></div>';
+    // how often you would win with what you wear now (200 test fights), so nobody walks into a hopeless fight
+    const chance = Math.round(this.s.winChance(f) * 20) * 5;
+    h += '<p class="chance num ' + (chance < 25 ? 'red' : 'gold') + '">Šanca na výhru: ' + (chance === 0 ? 'takmer žiadna' : chance === 100 ? 'takmer istá' : 'asi ' + chance + ' %') + '</p>' +
+      (chance < 25 ? '<p class="note">Najprv zosilnej: misie, body v Posilňovni a lepšia výbava v obchodoch.</p>' : '');
     const legendPct = Math.round(Math.max(CONFIG.legendaryBossChance, this.s.ev().legendBoss || 0) * 100);
     h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · predmet: ' + Math.round(CONFIG.bossEpicChance * 100) + ' % epický, ' + legendPct + ' % legendárny</p>';
     h += info.hunt ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · Hon na bossov, bez čakania</button>'
