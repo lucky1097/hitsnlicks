@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261119190204';
-import { eventFx } from './events.js?v=20261119190204';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261119190204';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261119190204';
-import { GangMixin } from './gangs.js?v=20261119190204';
-import { DailyMixin } from './daily.js?v=20261119190204';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261119190204';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261119191739';
+import { eventFx } from './events.js?v=20261119191739';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261119191739';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261119191739';
+import { GangMixin } from './gangs.js?v=20261119191739';
+import { DailyMixin } from './daily.js?v=20261119191739';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261119191739';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -603,7 +603,7 @@ export class SimServer {
   }
 
   // ---------------------------------------------------------------- missions
-  // offers are { tpl, v } where v picks one of the mission's story variants
+  // offers are { tpl, v, hot? } where v picks one of the mission's story variants and hot marks a harder job
   offers(giverId) {
     const g = GIVERS[giverId];
     let o = this.state.offers[giverId];
@@ -611,9 +611,12 @@ export class SimServer {
     if (stale) {
       const pool = g.pool.filter((id) => MISSIONS[id].minLevel <= this.p.level);
       const list = [];
+      const learning = this.state.tutorial && !this.state.tutorial.done; // no hard jobs in the tutorial
       while (list.length < 3 && pool.length) {
         const tpl = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-        list.push({ tpl, v: Math.floor(Math.random() * MISSIONS[tpl].stories.length) });
+        const offer = { tpl, v: Math.floor(Math.random() * MISSIONS[tpl].stories.length) };
+        if (!learning && Math.random() < CONFIG.hotChance) offer.hot = true;
+        list.push(offer);
       }
       list.sort((a, b) => MISSIONS[a.tpl].minutes - MISSIONS[b.tpl].minutes);
       o = { at: Date.now(), level: this.p.level, list };
@@ -623,7 +626,7 @@ export class SimServer {
     return o.list;
   }
 
-  preview(tplId, v = 0) {
+  preview(tplId, v = 0, hot = false) {
     const t = MISSIONS[tplId];
     const L = this.p.level;
     const story = t.stories[v] || t.stories[0];
@@ -633,8 +636,9 @@ export class SimServer {
     return {
       tpl: tplId, v, minutes: t.minutes,
       durationMs: Math.round(this.gameMs(t.minutes * F.durationFactor(L)) * (1 - gb.time) * (1 - car.time) * ev.missionTime),
-      cash: Math.round(F.missionCash(L, t.minutes) * (1 + gb.cash) * ev.cash),
-      xp: Math.round(F.missionXp(L, t.minutes) * (1 + gb.xp) * ev.xp),
+      cash: Math.round(F.missionCash(L, t.minutes) * (1 + gb.cash) * ev.cash * (hot ? CONFIG.hotReward : 1)),
+      xp: Math.round(F.missionXp(L, t.minutes) * (1 + gb.xp) * ev.xp * (hot ? CONFIG.hotReward : 1)),
+      hot: !!hot,
       heat: Math.max(1, Math.round(t.minutes * CONFIG.heatPerMissionMin * F.heatFactor(L) * (1 - car.heat) * ev.missionHeat)),
       foe: story.foe,
     };
@@ -645,7 +649,7 @@ export class SimServer {
     if (this.jailLeft() > 0) return fail('Si zavretý. Misie počkajú.');
     const offer = this.offers(giverId).find((o) => o.tpl === tplId);
     if (!offer) return fail('Táto misia už neplatí.');
-    const pv = this.preview(tplId, offer.v);
+    const pv = this.preview(tplId, offer.v, offer.hot);
     if (this.heatNow() + pv.heat > CONFIG.heatMax) return fail('Heat je takmer plný. Polícia ťa sleduje, na dnes stačilo. Skús právničku alebo počkaj do polnoci.');
     this.addHeat(pv.heat); // the day's budget is spent when the job starts (the car is already in pv.heat)
     const now = Date.now();
@@ -655,11 +659,13 @@ export class SimServer {
   }
 
   // the weak NPC at the end of a mission, scaled from the player's own numbers
-  missionFoe(story) {
+  // a hot job's rival is about as strong as you (CONFIG.hotFoe)
+  missionFoe(story, hot = false) {
     const me = this.totalStats(false); // pill boosts should help the player, not the foe
+    const k = hot ? CONFIG.hotFoe : { stat: CONFIG.foeStatMult, hp: CONFIG.foeHpMult, weapon: CONFIG.foeWeaponMult };
     const stats = {};
-    STATS.forEach((s) => { stats[s] = Math.max(3, Math.round(me[s] * CONFIG.foeStatMult)); });
-    return makeFighter(story.foe.name, this.p.level, stats, Math.round(this.weaponDmg() * CONFIG.foeWeaponMult), { hpMult: CONFIG.foeHpMult, portrait: story.foe.art, title: story.foe.title, cls: this.p.cls, armor: Math.round(me.armor * CONFIG.foeWeaponMult) });
+    STATS.forEach((s) => { stats[s] = Math.max(3, Math.round(me[s] * k.stat)); });
+    return makeFighter(story.foe.name, this.p.level, stats, Math.round(this.weaponDmg() * k.weapon), { hpMult: k.hp, portrait: story.foe.art, title: story.foe.title, cls: this.p.cls, armor: Math.round(me.armor * k.weapon) });
   }
 
   skipCost() {
@@ -688,10 +694,10 @@ export class SimServer {
     const t = MISSIONS[m.tpl];
     const story = t.stories[m.v || 0] || t.stories[0];
     const me = this.playerFighter();
-    const foe = this.missionFoe(story);
+    const foe = this.missionFoe(story, m.hot);
     const fight = simulate(me, foe, seed());
     const win = fight.winner === 0;
-    const res = { tpl: m.tpl, name: t.name, win, cash: 0, xp: 0, item: null, heat: m.heat || 0, raid: null, levelUps: 0 };
+    const res = { tpl: m.tpl, name: t.name, win, hot: !!m.hot, cash: 0, xp: 0, item: null, heat: m.heat || 0, raid: null, levelUps: 0 };
     if (win) {
       res.cash = m.cash;
       res.xp = m.xp;
@@ -1112,7 +1118,9 @@ export class SimServer {
       st.defeated += 1;
       res.cash = info.reward.cash;
       res.xp = info.reward.xp;
-      res.item = this.randomItem(this.p.level, 'boss');
+      // the very first boss of Mesto 1 always drops an epic piece: the first big loot of a new player
+      res.first = this.bossLine().key === 'boss' && st.defeated === 1;
+      res.item = this.randomItem(this.p.level, res.first ? 'blackmarket' : 'boss');
       if (res.item) this.giveItem(res.item);
       this.p.cash += res.cash;
       res.levelUps = this.addXp(res.xp);

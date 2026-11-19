@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261119190204';
-import { RemoteServer } from './remote.js?v=20261119190204';
-import { ONLINE } from './net.js?v=20261119190204';
-import { CONFIG } from './config.js?v=20261119190204';
-import { UI } from './ui.js?v=20261119190204';
-import { createWorld } from './world.js?v=20261119190204';
-import { sound } from './sound.js?v=20261119190204';
+import { SimServer } from './server.js?v=20261119191739';
+import { RemoteServer } from './remote.js?v=20261119191739';
+import { ONLINE } from './net.js?v=20261119191739';
+import { CONFIG } from './config.js?v=20261119191739';
+import { UI } from './ui.js?v=20261119191739';
+import { createWorld } from './world.js?v=20261119191739';
+import { sound } from './sound.js?v=20261119191739';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -55,6 +55,8 @@ const game = createWorld(document.getElementById('game'), {
   tutorialTarget: () => {
     const t = server.hasSave() && server.tutorial ? server.tutorial() : null;
     if (!t) {
+      // "Ukáž cestu" in an unlock window wins for a few minutes or until you get there
+      if (ui.guide && Date.now() < ui.guide.until && server.city() === 'mesto1') return ui.guide.poi;
       // after the tutorial: the place of the current first-hour goal (not once it is reached: the reward is in the HUD)
       const g = server.hasSave() && server.goal ? server.goal() : null;
       return g && !g.ready && g.at && server.city() === 'mesto1' ? g.at : null;

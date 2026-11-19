@@ -462,6 +462,11 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .tut-x { background: none; border: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 2px; }
 .tut.ready { border-color: var(--gold-l); box-shadow: 0 0 20px rgba(201,162,74,.45); }
 .tut.ready .tut-text { color: var(--gold-t); }
+/* hot mission offers: a harder rival for a double reward */
+.hot { display: inline-block; align-self: flex-start; margin: 2px 0 1px; padding: 1px 6px; border: 1px solid rgba(208,71,61,.8); color: #f0c8c0; font-size: 12px; letter-spacing: .04em; }
+.card.hotcard { border-color: rgba(208,71,61,.55); }
+.hotnote { color: #e6a49c; }
+.unlock-k { margin: 0 0 2px; text-align: center; font-size: 13px; letter-spacing: .12em; color: var(--gold-l); }
 
 /* medals and the gold portrait frame (js/medals.js) */
 .mframe { position: absolute; inset: 0; z-index: 3; pointer-events: none; border: 1px solid #3a3530; --w: 2px; }

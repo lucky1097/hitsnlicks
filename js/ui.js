@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261119190204';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261119190204';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261119190204';
-import { DAILY_TYPES } from './daily.js?v=20261119190204';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261119190204';
-import { sound } from './sound.js?v=20261119190204';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261119190204';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261119191739';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261119191739';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261119191739';
+import { DAILY_TYPES } from './daily.js?v=20261119191739';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261119191739';
+import { sound } from './sound.js?v=20261119191739';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261119191739';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -51,6 +51,15 @@ const TUT = {
   buy: { text: 'Choď do obchodu Zbrane (zlatý kruh) a kúp si novú zbraň.' },
   equip: { text: 'V Postave ťukni na zbraň a nasaď si tú novú.', go: ['Postava', 'character'] },
 };
+
+// what a new level opens (CONFIG.unlock): shown once in a big window when the level is reached while playing;
+// go = [button, 'guide' (map arrow to a POI) or 'open' (a screen), target]
+const UNLOCKS = [
+  { id: 'arena', name: 'Aréna', text: 'Bojuj s inými hráčmi o body a miesto v rebríčku. Päť zápasov za hodinu máš zadarmo.', go: ['Ukáž cestu', 'guide', 'arena'] },
+  { id: 'club', name: 'Podzemné zápasy', text: 'Sto súperov v pivnici pod klubom, každý silnejší ako ten pred ním. Jeden zápas za hodinu, každé desiate poschodie platí zlaté tehličky.', go: ['Otvoriť', 'open', 'club'] },
+  { id: 'gang', name: 'Gangy', text: 'Založ si vlastný gang alebo sa pridaj k inému. Spolu obsadíte objekty v meste a celý gang má z nich bonusy k misiám.', go: ['Otvoriť', 'open', 'gang'] },
+  { id: 'blackMarket', name: 'Čierny trh', text: 'Každý piatok od 18:00 majú obchody aj epické kúsky. U Wexlera si za tehličky kúpiš elixír, ktorý ti Čierny trh otvorí hocikedy na 24 hodín.', go: null },
+];
 
 function dur(ms) {
   const s = Math.max(1, Math.round(ms / 1000));
@@ -260,6 +269,7 @@ export class UI {
     this.dailyHud();
     this.tutHud();
     this.medalCheck();
+    this.unlockCheck();
     this.hideHud();
     // tabs of features the player has not reached yet look dim (the screen says from which level)
     for (const f of ['arena', 'gang']) $('.tabs [data-arg="' + f + '"]').classList.toggle('locked', !!this.s.locked(f) && !(f === 'gang' && g));
@@ -372,6 +382,22 @@ export class UI {
         '<p class="sub" style="font-size:15px;color:#9b968b">Zlatý rám na profile: ' + r.total + ' / ' + MEDAL_COUNT + ' medailí.</p>' +
         '<div class="acts"><button class="btn gold" data-act="modal-close">Pokračovať</button></div>');
     } finally { this.medalBusy = false; }
+  }
+
+  // a level that opens something (UNLOCKS) gets its own window on the map, after any result screen is closed
+  unlockCheck() {
+    const L = this.s.p.level;
+    if (this.seenLevel === undefined || L < this.seenLevel) { this.seenLevel = L; this.unlockQueue = []; return; }
+    if (L > this.seenLevel) {
+      for (const u of UNLOCKS) { const at = CONFIG.unlock[u.id]; if (at > this.seenLevel && at <= L) this.unlockQueue.push(u); }
+      this.seenLevel = L;
+    }
+    if (!this.unlockQueue.length || this.modalOpen || this.name || this.medalBusy) return;
+    const u = this.unlockQueue.shift();
+    sound.play('levelup');
+    this.modal('<p class="sc unlock-k">Úroveň ' + CONFIG.unlock[u.id] + '</p><h2 class="win">Odomknuté: ' + u.name + '</h2><p class="sub">' + u.text + '</p>' +
+      '<div class="acts">' + (u.go ? '<button class="btn" data-act="modal-close">Neskôr</button><button class="btn gold" data-act="unlock-go" data-arg="' + u.id + '">' + u.go[0] + '</button>'
+        : '<button class="btn gold" data-act="modal-close">Rozumiem</button>') + '</div>');
   }
 
   // new-player tutorial: one line under the HUD, a gold ring + edge arrow on the map (world.js), the reward at the end
@@ -542,7 +568,11 @@ export class UI {
     this.tick();
   }
 
-  setPoi(poi) { this.poi = poi; this.updateAction(); }
+  setPoi(poi) {
+    this.poi = poi;
+    if (poi && this.guide && poi.id === this.guide.poi) this.guide = null; // arrived where the unlock window sent you
+    this.updateAction();
+  }
 
   updateAction() {
     const show = !!this.poi && !this.paused() && this.s.hasSave();
@@ -847,6 +877,14 @@ export class UI {
       async 'tut-go'(a) { this.open(a, null, true); },
       async 'tut-skip'() {
         this.modal('<h2>Preskočiť návod?</h2><p class="sub">Odmenu za návod potom nedostaneš.</p><div class="acts"><button class="btn" data-act="modal-close">Pokračovať v návode</button><button class="btn gold" data-act="tut-skip-yes">Preskočiť</button></div>');
+      },
+      async 'unlock-go'(a) {
+        const u = UNLOCKS.find((x) => x.id === a);
+        this.closeModal();
+        if (!u || !u.go) return;
+        if (u.go[1] === 'open') { this.open(u.go[2], null, true); return; }
+        this.guide = { poi: u.go[2], until: Date.now() + 10 * 60000 }; // main.js tutorialTarget points the arrow there
+        this.toast('Šípka „!“ ťa dovedie: ' + u.name + '.');
       },
       async 'goal-claim'() {
         const r = await this.s.goalClaim();
@@ -1168,7 +1206,7 @@ export class UI {
       const t = MISSIONS[m.tpl];
       const ready = Date.now() >= m.endsAt;
       const story = t.stories[m.v || 0] || t.stories[0];
-      h += '<div class="card sel" style="cursor:default"><img src="' + art(t.art) + '" alt=""><div class="mid"><span class="t">' + t.name + '</span><span class="s">' + (m.giver !== giverId ? 'od: ' + GIVERS[m.giver].name + ' · ' : '') + 'na konci súboj: ' + esc(story.foe.name) + '</span></div><div class="end"><span class="gold" style="font-size:18px">' + money(m.cash) + '</span><span class="s">' + fmt(m.xp) + ' XP</span></div></div>';
+      h += '<div class="card sel" style="cursor:default"><img src="' + art(t.art) + '" alt=""><div class="mid"><span class="t">' + t.name + '</span>' + (m.hot ? '<span class="hot">Horúca · ' + CONFIG.hotReward + '× odmena</span>' : '') + '<span class="s">' + (m.giver !== giverId ? 'od: ' + GIVERS[m.giver].name + ' · ' : '') + 'na konci súboj: ' + esc(story.foe.name) + '</span></div><div class="end"><span class="gold" style="font-size:18px">' + money(m.cash) + '</span><span class="s">' + fmt(m.xp) + ' XP</span></div></div>';
       h += '<p class="story">' + story.text + '</p>';
       if (ready) {
         h += '<button class="btn gold wide" style="margin-top:6px" data-act="claim">Dokončiť misiu · súboj</button>';
@@ -1191,18 +1229,22 @@ export class UI {
     const sel = offers.find((o) => o.tpl === this.sel.offer);
     for (const o of offers) {
       const t = MISSIONS[o.tpl];
-      const pv = this.s.preview(o.tpl, o.v);
-      h += '<button class="card' + (o.tpl === this.sel.offer ? ' sel' : '') + '" data-act="offer" data-arg="' + o.tpl + '"><img src="' + art(t.art) + '" alt=""><span class="mid"><span class="t">' + t.name + '</span><span class="s num">' + dur(pv.durationMs) + ' · ' + '<span class="red">heat +' + pv.heat + ' %</span>' + '</span></span><span class="end"><span class="gold" style="font-size:18px">' + money(pv.cash) + '</span><span class="s">' + fmt(pv.xp) + ' XP</span></span></button>';
+      const pv = this.s.preview(o.tpl, o.v, o.hot);
+      h += '<button class="card' + (o.tpl === this.sel.offer ? ' sel' : '') + (o.hot ? ' hotcard' : '') + '" data-act="offer" data-arg="' + o.tpl + '"><img src="' + art(t.art) + '" alt=""><span class="mid"><span class="t">' + t.name + '</span>' + (o.hot ? '<span class="hot">Horúca · ' + CONFIG.hotReward + '× odmena</span>' : '') + '<span class="s num">' + dur(pv.durationMs) + ' · ' + '<span class="red">heat +' + pv.heat + ' %</span>' + '</span></span><span class="end"><span class="gold" style="font-size:18px">' + money(pv.cash) + '</span><span class="s">' + fmt(pv.xp) + ' XP</span></span></button>';
     }
     const story = MISSIONS[sel.tpl].stories[sel.v];
     h += '<p class="story">' + story.text + '</p>';
     h += '<div class="foe"><img class="ph" src="' + art(story.foe.art) + '" alt=""><span><span class="sc" style="font-size:12px;color:#8a857a">Na konci ťa čaká</span><br><b>' + esc(story.foe.name) + '</b> <span class="muted">· ' + esc(story.foe.title) + '</span></span></div>';
-    const selPv = this.s.preview(sel.tpl, sel.v);
+    if (sel.hot) {
+      const chance = Math.round(this.s.winChance(this.s.missionFoe(story, true)) * 20) * 5;
+      h += '<p class="note hotnote">Horúca misia: súper je zhruba rovnako silný ako ty, takže môžeš prehrať. Za výhru ' + CONFIG.hotReward + '× peniaze aj XP. Šanca na výhru: asi ' + chance + ' %.</p>';
+    }
+    const selPv = this.s.preview(sel.tpl, sel.v, sel.hot);
     const tooHot = v.heat + selPv.heat > CONFIG.heatMax;
     h += this.heatMeter(v.heat, selPv.heat);
     if (v.jailLeft > 0) h += '<p class="note red">Si zatknutý, misie až o <b data-until="' + this.s.state.jailUntil + '"></b>.</p>';
     if (tooHot) h += '<p class="note red">Na túto misiu máš dnes priveľký heat. Vyber kratšiu, zájdi za právničkou (dnes ešte ' + this.s.lawyerLeft() + '×) alebo počkaj do polnoci (<span data-until="' + this.s.nextDayAt() + '"></span>).</p>';
-    h += '<button class="btn gold wide" style="margin-top:12px" data-act="accept"' + (v.jailLeft > 0 || tooHot ? ' disabled' : '') + '>Prijať misiu</button>';
+    h += '<button class="btn gold wide" style="margin-top:12px" data-act="accept"' + (v.jailLeft > 0 || tooHot ? ' disabled' : '') + '>' + (sel.hot ? 'Prijať horúcu misiu' : 'Prijať misiu') + '</button>';
     h += '<p class="note">Heat je tvoj denný limit na misie. Dvíha sa už pri prijatí misie a o polnoci spadne na nulu.</p>';
     if (this.s.p.level < CONFIG.fastUntil) h += '<p class="note gold">Rýchly štart do úrovne ' + CONFIG.fastUntil + ': misie trvajú len chvíľu a dávajú viac XP.</p>';
     const locked = g.pool.filter((id) => MISSIONS[id].minLevel > this.s.p.level).sort((a, b) => MISSIONS[a].minLevel - MISSIONS[b].minLevel);
@@ -1289,7 +1331,7 @@ export class UI {
     h += '<p class="chance num ' + (chance < 25 ? 'red' : 'gold') + '">Šanca na výhru: ' + (chance === 0 ? 'takmer žiadna' : chance === 100 ? 'takmer istá' : 'asi ' + chance + ' %') + '</p>' +
       (chance < 25 ? '<p class="note">Najprv zosilnej: misie, body v Posilňovni a lepšia výbava v obchodoch.</p>' : '');
     const legendPct = Math.round(Math.max(CONFIG.legendaryBossChance, this.s.ev().legendBoss || 0) * 100);
-    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · predmet: ' + Math.round(CONFIG.bossEpicChance * 100) + ' % epický, ' + legendPct + ' % legendárny</p>';
+    h += '<p class="note num" style="color:#b9b4a8;font-size:15px">Odmena: <span class="gold">' + money(info.reward.cash) + ' · ' + fmt(info.reward.xp) + ' XP' + (info.reward.bars ? ' · ' + info.reward.bars + ' tehl.' : '') + '</span> · predmet: ' + (info.index === 0 && this.s.city() === 'mesto1' ? '<span style="color:#ff6aa8">istý epický</span> (prvý boss)' : Math.round(CONFIG.bossEpicChance * 100) + ' % epický, ' + legendPct + ' % legendárny') + '</p>';
     h += info.hunt ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · Hon na bossov, bez čakania</button>'
       : info.free ? '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight">Bojovať · pokus zadarmo</button>'
       : '<button class="btn gold wide" style="margin-top:10px" data-act="boss-fight"' + (info.paidLeft ? '' : ' disabled') + '>Bojovať za ' + CONFIG.bossRetryChains + ' zlatých tehličiek</button><p class="note">' +
@@ -1966,6 +2008,7 @@ export class UI {
     if (d.kind === 'mission') {
       h = r.win ? '<h2 class="win">Misia splnená</h2>' : '<h2 class="lose">Misia zlyhala</h2>';
       h += '<p class="sub">' + (r.win ? esc(d.b.name) + ' leží na zemi. ' + r.name + ' je hotová.' : esc(d.b.name) + ' ťa dnes premohol. Tentoraz bez odmeny.') + '</p>';
+      if (r.hot) h += '<p class="note hotnote">' + (r.win ? 'Horúca misia: ' + CONFIG.hotReward + '× odmena!' : 'Horúca misia nevyšla. Zosilnej a skús ďalšiu.') + '</p>';
       h += '<div class="rew">' + (r.win ? '<span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span>' : '') + (r.bars ? '<span class="gold">+' + r.bars + ' tehl.</span>' : '') + (r.heat > 0 ? '<span class="red">heat +' + r.heat + '</span>' : '') + '</div>';
       if (r.item) h += this.lootHtml(r.item);
       if (r.epic) h += '<p class="note" style="color:#ff6aa8">Sklad tvojho gangu: epický kúsok navyše!</p>' + this.lootHtml(r.epic);
@@ -1979,7 +2022,8 @@ export class UI {
     h = r.win ? '<h2 class="win">Víťazstvo</h2>' : '<h2 class="lose">Prehra</h2>';
     if (d.kind === 'boss') {
       h += '<p class="sub">' + (r.win ? esc(d.b.name) + ' je porazený.' + (d.next && !d.next.done ? ' Ďalší boss: ' + d.next.boss.name + '.' : '') : esc(d.b.name) + ' bol silnejší. Vylepši staty a výbavu a skús to znova.') + '</p>';
-      if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span>' + (r.bars ? '<span class="gold">+' + r.bars + ' tehl.</span>' : '') + '</div>' + (r.item ? this.lootHtml(r.item) : '');
+      if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span>' + (r.bars ? '<span class="gold">+' + r.bars + ' tehl.</span>' : '') + '</div>' +
+        (r.first ? '<p class="note" style="color:#ff6aa8">Prvý boss: istý epický kúsok!</p>' : '') + (r.item ? this.lootHtml(r.item) : '');
     } else if (d.kind === 'club') {
       h += '<p class="sub">' + (r.win ? 'Poschodie ' + r.floor + ' je tvoje.' + (r.floor < CONFIG.clubFloors ? ' Ďalší súper o hodinu.' : ' Porazil si všetkých.') : esc(d.b.name) + ' ťa poslal na zem. Ďalší pokus o hodinu.') + '</p>';
       if (r.win) h += '<div class="rew"><span class="gold">' + money(r.cash) + '</span><span>+' + fmt(r.xp) + ' XP</span>' + (r.bars ? '<span class="gold">+' + r.bars + ' tehl.</span>' : '') + '</div>' + (r.item ? this.lootHtml(r.item) : '');

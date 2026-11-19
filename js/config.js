@@ -41,6 +41,11 @@ export const CONFIG = {
   foeHpMult: 0.65,
   foeWeaponMult: 0.5,
   itemDropChance: 0.15,
+  // "hot" offers: now and then a job against a rival about as strong as you (hotFoe: share of your own stats, life
+  // and weapon) for hotReward times the cash and XP; the player wins about 7 fights in 10 (sim on the model player)
+  hotChance: 0.12, // per offer, never while the tutorial runs
+  hotReward: 2,
+  hotFoe: { stat: 1, hp: 0.95, weapon: 1 },
 
   // heat is the daily mission budget (like Thirst in S&F): only missions fill it, it resets at midnight,
   // the lawyer can lower it only a few times a day; it never drops on its own. Nothing done on the street
