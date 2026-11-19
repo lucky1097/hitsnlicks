@@ -460,6 +460,8 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .tut-text { flex: 1; font-size: 15px; line-height: 1.2; color: var(--bone); }
 .tut-acts { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .tut-x { background: none; border: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 2px; }
+.tut.ready { border-color: var(--gold-l); box-shadow: 0 0 20px rgba(201,162,74,.45); }
+.tut.ready .tut-text { color: var(--gold-t); }
 
 /* medals and the gold portrait frame (js/medals.js) */
 .mframe { position: absolute; inset: 0; z-index: 3; pointer-events: none; border: 1px solid #3a3530; --w: 2px; }

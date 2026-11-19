@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261118003153';
-import { RemoteServer } from './remote.js?v=20261118003153';
-import { ONLINE } from './net.js?v=20261118003153';
-import { CONFIG } from './config.js?v=20261118003153';
-import { UI } from './ui.js?v=20261118003153';
-import { createWorld } from './world.js?v=20261118003153';
-import { sound } from './sound.js?v=20261118003153';
+import { SimServer } from './server.js?v=20261119190204';
+import { RemoteServer } from './remote.js?v=20261119190204';
+import { ONLINE } from './net.js?v=20261119190204';
+import { CONFIG } from './config.js?v=20261119190204';
+import { UI } from './ui.js?v=20261119190204';
+import { createWorld } from './world.js?v=20261119190204';
+import { sound } from './sound.js?v=20261119190204';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -45,6 +45,7 @@ const game = createWorld(document.getElementById('game'), {
   turf: () => (server.hasSave() ? server.turfView() : null),
   onPoi: (poi) => ui.setPoi(poi),
   onAction: () => ui.action(),
+  hudBottom: () => ui.hudBottom(), // where the HUD column (heat, mission, tutorial or goal) ends, in px from the top
   onPolice: () => ui.police(),
   daily: () => (server.hasSave() ? server.dailyMap() : null),
   onDailyStep: (task, step) => ui.dailyStep(task, step),
@@ -53,7 +54,11 @@ const game = createWorld(document.getElementById('game'), {
   // the place the tutorial sends you to (a POI id of this city), or null
   tutorialTarget: () => {
     const t = server.hasSave() && server.tutorial ? server.tutorial() : null;
-    if (!t) return null;
+    if (!t) {
+      // after the tutorial: the place of the current first-hour goal (not once it is reached: the reward is in the HUD)
+      const g = server.hasSave() && server.goal ? server.goal() : null;
+      return g && !g.ready && g.at && server.city() === 'mesto1' ? g.at : null;
+    }
     if (t.id === 'don' || (t.id === 'claim' && t.missionReady)) return 'don';
     if (t.id === 'buy') return 'zbrane';
     return null;

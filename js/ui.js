@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261118003153';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261118003153';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261118003153';
-import { DAILY_TYPES } from './daily.js?v=20261118003153';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261118003153';
-import { sound } from './sound.js?v=20261118003153';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261118003153';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261119190204';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261119190204';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261119190204';
+import { DAILY_TYPES } from './daily.js?v=20261119190204';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261119190204';
+import { sound } from './sound.js?v=20261119190204';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261119190204';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -378,8 +378,11 @@ export class UI {
   tutHud() {
     const el = $('#hud-tut');
     const t = this.s.tutorial ? this.s.tutorial() : null;
-    el.hidden = !t || t.id === 'finish';
-    if (!t) return;
+    if (!t) { this.goalHud(el); return; }
+    el.classList.remove('goal', 'ready');
+    el.querySelector('.tut-x').hidden = false;
+    $('#hud-tut-go').dataset.act = 'tut-go';
+    el.hidden = t.id === 'finish';
     if (this.tutStep !== undefined && t.step > this.tutStep) sound.play('go');
     this.tutStep = t.step;
     if (t.id === 'finish') {
@@ -393,6 +396,37 @@ export class UI {
     const go = $('#hud-tut-go');
     go.hidden = !st.go;
     if (st.go) { go.textContent = st.go[0]; go.dataset.arg = st.go[1]; }
+  }
+
+  // bottom edge of the HUD column under the top bar (px from the top of the game), read at most every 300 ms
+  hudBottom() {
+    const now = Date.now();
+    if (!this.hudB || now - this.hudB.at > 300) {
+      const r = $('#hud-stack').getBoundingClientRect();
+      this.hudB = { at: now, v: r.height ? Math.round(r.bottom - $('#app').getBoundingClientRect().top) : 134 };
+    }
+    return this.hudB.v;
+  }
+
+  // after the tutorial the same card shows the current first-hour goal (data.js GOALS) and, once it is reached,
+  // a button for its reward; the map arrow points to the goal's place (main.js tutorialTarget)
+  goalHud(el) {
+    const g = this.s.goal ? this.s.goal() : null;
+    el.hidden = !g;
+    if (!g) return;
+    el.classList.add('goal');
+    el.classList.toggle('ready', g.ready);
+    if (g.ready && this.goalReady !== g.i) { this.goalReady = g.i; sound.play('go'); }
+    const rew = [g.reward.cash ? money(g.reward.cash) : '', g.reward.bars ? g.reward.bars + ' tehl.' : ''].filter(Boolean).join(' + ');
+    const text = g.ready ? 'Splnené! Odmena: ' + rew
+      : g.text + (g.n > 1 && g.kind !== 'level' ? ' (' + g.have + ' / ' + g.n + ')' : '');
+    $('#hud-tut-n').textContent = 'Cieľ ' + (g.i + 1) + '/' + g.total;
+    if ($('#hud-tut-text').textContent !== text) $('#hud-tut-text').textContent = text;
+    el.querySelector('.tut-x').hidden = true;
+    const go = $('#hud-tut-go');
+    const btn = g.ready ? ['Vyzdvihnúť', 'goal-claim', ''] : g.go ? [g.go[0], 'tut-go', g.go[1]] : null;
+    go.hidden = !btn;
+    if (btn) { go.textContent = btn[0]; go.dataset.act = btn[1]; go.dataset.arg = btn[2]; }
   }
 
   tutFinishModal() {
@@ -813,6 +847,17 @@ export class UI {
       async 'tut-go'(a) { this.open(a, null, true); },
       async 'tut-skip'() {
         this.modal('<h2>Preskočiť návod?</h2><p class="sub">Odmenu za návod potom nedostaneš.</p><div class="acts"><button class="btn" data-act="modal-close">Pokračovať v návode</button><button class="btn gold" data-act="tut-skip-yes">Preskočiť</button></div>');
+      },
+      async 'goal-claim'() {
+        const r = await this.s.goalClaim();
+        if (!this.check(r)) return;
+        sound.play('reward');
+        this.toast('Cieľ splnený: ' + [r.cash ? money(r.cash) : '', r.bars ? r.bars + ' tehličiek' : ''].filter(Boolean).join(' a ') + '.');
+        if (r.last) {
+          this.modal('<h2 class="win">Prvé ciele máš za sebou</h2><p class="sub">Si na nohách. Odteraz si ciele určuješ sám: každý deň denné misie, bossovia mesta, ' +
+            'Aréna a Podzemné zápasy, gang a jeho rajón. V piatok večer od úrovne ' + CONFIG.unlock.blackMarket + ' sa otvára Čierny trh.</p>' +
+            '<div class="acts"><button class="btn gold" data-act="modal-close">Rozumiem</button></div>');
+        }
       },
       async 'tut-skip-yes'() { if (this.check(await this.s.tutorialSkip())) { this.closeModal(); this.toast('Návod preskočený.'); } },
       async 'tut-finish'() {

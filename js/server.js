@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261118003153';
-import { eventFx } from './events.js?v=20261118003153';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES } from './data.js?v=20261118003153';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261118003153';
-import { GangMixin } from './gangs.js?v=20261118003153';
-import { DailyMixin } from './daily.js?v=20261118003153';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261118003153';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261119190204';
+import { eventFx } from './events.js?v=20261119190204';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261119190204';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261119190204';
+import { GangMixin } from './gangs.js?v=20261119190204';
+import { DailyMixin } from './daily.js?v=20261119190204';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261119190204';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -520,6 +520,47 @@ export class SimServer {
     this.state.tutorial.skipped = true;
     this.save();
     return ok();
+  }
+
+  // ---------------------------------------------------------------- first-hour goals (data.js GOALS)
+  // they follow the tutorial (finished or skipped), one at a time; old saves without a tutorial never see them
+  goalHave(kind) {
+    const s = this.state, p = this.p;
+    switch (kind) {
+      case 'level': return p.level;
+      case 'equip': return Object.values(p.equipment).filter(Boolean).length;
+      case 'daily': return this.dailyMap().tasks.filter((t) => t.done).length;
+      case 'arena': return (s.pvp && s.pvp.wins) || 0;
+      case 'stat': return Object.values(p.bought).reduce((a, b) => a + b, 0);
+      case 'boss': return (s.boss && s.boss.defeated) || 0;
+      case 'upgrade': return Math.max(0, ...p.inventory.map((it) => it.upgrade || 0));
+      case 'club': return (s.club && s.club.floor) || 0;
+      default: return 0;
+    }
+  }
+
+  goalReward(g) { return { cash: g.min ? Math.round(F.cashPerMin(this.p.level) * g.min) : 0, bars: g.bars || 0 }; }
+
+  // the goal to show now, or null
+  goal() {
+    const t = this.state && this.state.tutorial;
+    if (!t || !t.done) return null;
+    const i = (this.state.goals && this.state.goals.i) || 0;
+    const g = GOALS[i];
+    if (!g) return null;
+    const have = Math.min(g.n, this.goalHave(g.kind));
+    return { ...g, i, total: GOALS.length, have, ready: have >= g.n, reward: this.goalReward(g) };
+  }
+
+  goalClaim() {
+    const g = this.goal();
+    if (!g) return fail('Žiadny cieľ.');
+    if (!g.ready) return fail('Cieľ ešte nie je splnený.');
+    this.p.cash += g.reward.cash;
+    this.p.chains += g.reward.bars;
+    this.state.goals = { i: g.i + 1 };
+    this.save();
+    return ok({ cash: g.reward.cash, bars: g.reward.bars, last: !GOALS[g.i + 1] });
   }
 
   // ---------------------------------------------------------------- stats

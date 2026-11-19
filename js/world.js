@@ -1,9 +1,9 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { CITIES, WALKER_SPRITES } from './data.js?v=20261118003153';
-import { mulberry32 } from './combat.js?v=20261118003153'; // the server's generator: a task's seed hides its packages on the same corners everywhere
-import { sound } from './sound.js?v=20261118003153';
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261119190204';
+import { mulberry32 } from './combat.js?v=20261119190204'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { sound } from './sound.js?v=20261119190204';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -1239,7 +1239,7 @@ export function createWorld(parent, hooks) {
       let showA = false;
       if (h) {
         const hx = (h.x - this.camX) * z + sw / 2, hy = (h.y - this.camY) * z + sh / 2;
-        const m = 26, top = 160, bottom = Math.max(top + 60, sh - 250);
+        const m = 26, top = hooks.hudBottom ? hooks.hudBottom() + m : 160, bottom = Math.max(top + 60, sh - 250);
         if (hx < m || hx > sw - m || hy < top || hy > bottom) {
           const cx = sw / 2, cy = (top + bottom) / 2, ang = Math.atan2(hy - cy, hx - cx);
           const k = Math.min((sw / 2 - m) / Math.max(1e-6, Math.abs(Math.cos(ang))), ((bottom - top) / 2) / Math.max(1e-6, Math.abs(Math.sin(ang))));
