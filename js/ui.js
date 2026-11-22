@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261122223957';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261122223957';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261122223957';
-import { DAILY_TYPES } from './daily.js?v=20261122223957';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261122223957';
-import { sound } from './sound.js?v=20261122223957';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261122223957';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261122233957';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261122233957';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261122233957';
+import { DAILY_TYPES } from './daily.js?v=20261122233957';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261122233957';
+import { sound } from './sound.js?v=20261122233957';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261122233957';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -85,7 +85,7 @@ const MENU = [
   { id: 'boss', name: 'Boss fights', desc: 'Bossovia mesta, v ktorom si: Kladivo v Meste 1, Radničná veža v Meste 2.' },
   { id: 'gang', name: 'Gang', desc: 'Tvoj gang, pokladnica, členovia a boje o územie.' },
   { id: 'hall', name: 'Sieň slávy', desc: 'Všetci registrovaní hráči. Klikni na hráča a uvidíš jeho staty a výbavu.' },
-  { id: 'settings', name: 'Nastavenia', desc: 'Testovací režim a uložená hra.' },
+  { id: 'settings', name: 'Nastavenia', desc: 'Zvuk, účet a nahlásenie chyby.' },
   { id: 'title', name: 'Hlavné menu', desc: 'Späť na úvodnú obrazovku. Hra sa ukladá sama.' },
 ];
 
@@ -98,6 +98,10 @@ export class UI {
     this.stack = [];
     this.poi = null;
     this.sel = { cls: 'zlodej', approach: null, offer: null };
+    this.errors = []; // the last browser errors (sent with a bug report)
+    this.errorsOut = []; // waiting to be sent to the server
+    this.errorsSent = 0;
+    this.errorsAt = 0;
     this.modalOpen = false;
     this.readyNotified = false;
     this.fightTimer = null;
@@ -216,6 +220,7 @@ export class UI {
 
   // ---------------------------------------------------------------- HUD & ticking
   tick() {
+    this.flushErrors();
     const now = Date.now();
     if (this.s.online) this.s.maybeSync();
     document.querySelectorAll('[data-until]').forEach((e) => { e.textContent = clock(Number(e.dataset.until) - now); });
@@ -652,6 +657,31 @@ export class UI {
     setTimeout(() => t.remove(), 3200);
   }
 
+  // ---------------------------------------------------------------- beta: errors and bug reports
+  // one error line from the browser or a failed server call; the same line twice in a row counts once
+  logError(msg) {
+    msg = String(msg).slice(0, 300);
+    if (this.errors[this.errors.length - 1] === msg) return;
+    this.errors.push(msg);
+    if (this.errors.length > 20) this.errors.shift();
+    if (this.errorsSent + this.errorsOut.length < 20 && !this.errorsOut.includes(msg)) this.errorsOut.push(msg);
+  }
+
+  // waiting errors go to the server at most once a minute and 20 a session, so a loop of errors cannot flood it
+  flushErrors() {
+    if (!this.errorsOut.length || !this.s.hasSave() || this.s.busy || Date.now() - this.errorsAt < 60000) return;
+    this.errorsAt = Date.now();
+    const lines = this.errorsOut.splice(0);
+    this.errorsSent += lines.length;
+    Promise.resolve(this.s.logErrors(lines)).catch(() => {});
+  }
+
+  // what a bug report carries besides the player's words
+  bugInfo() {
+    const v = (import.meta.url.match(/v=(\d+)/) || [])[1] || 'dev';
+    return { v, screen: this.name || (this.modalOpen ? 'okno' : 'mapa'), size: innerWidth + 'x' + innerHeight, ua: navigator.userAgent, errors: this.errors.slice(-10) };
+  }
+
   check(res) {
     if (!res.ok) this.toast(res.error, true);
     return res.ok;
@@ -774,7 +804,7 @@ export class UI {
       async 'new-game'() { this.sel.newGame = true; this.render(); },
       async 'cancel-new'() { this.sel.newGame = false; this.render(); },
       async 'start-game'() {
-        const name = ($('#name-input') && $('#name-input').value.trim()) || (this.s.online ? '' : 'Ty');
+        const name = ($('#name-input') && $('#name-input').value.trim()) || (this.s.online ? '' : 'Hráč');
         if (this.s.hasSave() && !confirm('Naozaj začať odznova? Uložená hra sa zmaže.')) return;
         if (!this.check(await this.s.newGame(name, this.sel.cls))) return;
         this.sel.newGame = false;
@@ -1000,6 +1030,20 @@ export class UI {
       },
       async 'auth-mode'(a) { this.sel.authEmail = $('#auth-email') ? $('#auth-email').value : ''; this.sel.authMode = a; this.render(); },
       async logout() { await this.s.signOut(); this.open('title'); },
+      async 'bug-open'() {
+        this.modal('<h2>Nahlásiť chybu</h2><p class="sub" style="font-size:16px;color:#c9c4b8">Čo sa stalo a čo si práve robil? Každá chyba nám pomôže.</p>' +
+          '<div class="field"><textarea id="bug-text" maxlength="' + CONFIG.bugReportMax + '" rows="6" placeholder="Napríklad: v obchode Zbrane som kúpil nôž a peniaze sa odpočítali dvakrát."></textarea></div>' +
+          '<p class="note" style="text-align:left">Spolu s textom pošleme verziu hry, tvoju úroveň, obrazovku, typ zariadenia a posledné chyby hry.</p>' +
+          '<div class="acts"><button class="btn" data-act="modal-close">Zrušiť</button><button class="btn gold" data-act="bug-send">Odoslať</button></div>');
+        setTimeout(() => { const t = $('#bug-text'); if (t) t.focus(); }, 50);
+      },
+      async 'bug-send'() {
+        const t = $('#bug-text');
+        const r = await this.s.reportBug(t ? t.value : '', this.bugInfo());
+        if (!this.check(r)) return;
+        this.closeModal();
+        this.toast('Ďakujeme, hlásenie sme dostali.');
+      },
       async reset() {
         if (!confirm(this.s.online ? 'Naozaj zmazať postavu na serveri? Tento krok sa nedá vrátiť.' : 'Naozaj zmazať uloženú hru? Tento krok sa nedá vrátiť.')) return;
         if (this.s.online) await this.s.deleteCharacter(); else this.s.reset();
@@ -1450,7 +1494,8 @@ export class UI {
 
   scr_settings() {
     const on = this.s.hasSave() && this.s.state.settings.testMode;
-    let h = '<div class="switch"><span>Zvuk<br><small class="muted" style="font-size:14px">Údery, výstrely, peniaze, korisť. Platí pre toto zariadenie.</small></span><button class="btn small ' + (sound.on ? 'gold' : '') + '" data-act="sound-toggle">' + (sound.on ? 'Zapnutý' : 'Vypnutý') + '</button></div>';
+    let h = this.s.hasSave() ? '<div class="switch"><span>Nahlásiť chybu<br><small class="muted" style="font-size:14px">Niečo nefunguje alebo vyzerá zle? Napíš nám.</small></span><button class="btn small gold" data-act="bug-open">Nahlásiť</button></div>' : '';
+    h += '<div class="switch"><span>Zvuk<br><small class="muted" style="font-size:14px">Údery, výstrely, peniaze, korisť. Platí pre toto zariadenie.</small></span><button class="btn small ' + (sound.on ? 'gold' : '') + '" data-act="sound-toggle">' + (sound.on ? 'Zapnutý' : 'Vypnutý') + '</button></div>';
     if (this.s.online) {
       if (this.s.loggedIn()) h += '<div class="switch"><span>Účet<br><small class="muted" style="font-size:14px">' + esc(this.s.email()) + '</small></span><button class="btn small" data-act="logout">Odhlásiť</button></div>';
       if (this.s.hasSave()) h += '<div class="switch"><span>Postava<br><small class="muted" style="font-size:14px">Uložená na serveri.</small></span><button class="btn small" data-act="reset">Zmazať</button></div>';

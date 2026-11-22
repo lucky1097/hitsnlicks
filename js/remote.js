@@ -1,19 +1,25 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261122223957';
-import { NET } from './net.js?v=20261122223957';
-import { CONFIG } from './config.js?v=20261122223957';
-import { SHOPS } from './data.js?v=20261122223957';
+import { SimServer } from './server.js?v=20261122233957';
+import { NET } from './net.js?v=20261122233957';
+import { CONFIG } from './config.js?v=20261122233957';
+import { SHOPS } from './data.js?v=20261122233957';
 
-const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+// the official supabase-js UMD build, kept in the repo (js/vendor): no code from a CDN runs in the game
+const SUPABASE_JS = 'js/vendor/supabase-js-2.45.4.js';
+const loadScript = (src) => new Promise((done, failed) => {
+  const el = document.createElement('script');
+  el.src = src; el.onload = done; el.onerror = () => failed(new Error('cannot load ' + src));
+  document.head.appendChild(el);
+});
 
 // actions that change something: they run on the server and are async here
 const ACTIONS = ['newGame', 'setLook', 'spendPoint', 'buyStat', 'equip', 'unequip', 'sellItem', 'upgradeItem', 'buyItem', 'rerollShop',
   'startMission', 'skipMission', 'claimMission', 'policeCheck', 'lawyer', 'buyBars', 'buyElixir', 'dailyStep', 'copDown', 'policeKiller', 'hideStart', 'hideEnd', 'travel', 'wantedLose', 'catchRipper', 'takePill', 'hitRunner',
   'fightBoss', 'fightClub', 'fightArena', 'createGang', 'requestJoin', 'cancelRequest', 'acceptInvite', 'declineInvite', 'approveJoin', 'denyJoin',
   'invitePlayer', 'cancelInvite', 'kickMember', 'setRank', 'transferLead', 'leaveGang', 'disbandGang',
-  'deposit', 'buyGangUpgrade', 'refillTurf', 'toggleDefender', 'attackTurf', 'tutorialFinish', 'tutorialSkip', 'goalClaim', 'claimMedals'];
+  'deposit', 'buyGangUpgrade', 'refillTurf', 'toggleDefender', 'attackTurf', 'tutorialFinish', 'tutorialSkip', 'goalClaim', 'claimMedals', 'reportBug', 'logErrors'];
 
 const noStore = { load: () => null, save() {}, clear() {} };
 
@@ -27,17 +33,24 @@ export class RemoteServer extends SimServer {
     this.busy = false;
     this.lastSync = 0;
     this.onChange = () => {};
+    this.onError = () => {}; // a server failure the player met (logged for the beta, see ui.logError)
+  }
+
+  // server failures worth logging: a crash in the rules or an answer that was not JSON
+  noteError(action, out) {
+    if (action !== 'logErrors' && out && out.ok === false && /^(Chyba servera|Server neodpovedá)/.test(out.error || '')) this.onError('server ' + action + ': ' + out.error);
   }
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261122223957');
+    const { handle, memoryDb } = await import('./api.js?v=20261122233957');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };
     this.call = async (action, ...args) => {
       if (!this.session) return { ok: false, error: 'Nie si prihlásený.' };
       const out = await handle(db, this.session.user.id, action, args);
+      this.noteError(action, out);
       if ('state' in out) this.state = JSON.parse(JSON.stringify(out.state));
       this.lastSync = Date.now();
       this.onChange();
@@ -48,7 +61,8 @@ export class RemoteServer extends SimServer {
 
   async init() {
     if (/[?&]mock/.test(location.search)) return this.initMock();
-    const { createClient } = await import(SUPABASE_JS);
+    await loadScript(SUPABASE_JS);
+    const { createClient } = window.supabase;
     this.sb = createClient(NET.url, NET.anonKey);
     const { data } = await this.sb.auth.getSession();
     this.session = data.session;
@@ -92,6 +106,7 @@ export class RemoteServer extends SimServer {
         body: JSON.stringify({ action, args }),
       });
       const out = await res.json().catch(() => ({ ok: false, error: 'Server neodpovedá.' }));
+      this.noteError(action, out);
       if (out.auth) { this.session = null; this.state = null; }
       if ('state' in out) this.state = out.state;
       if (out.now) this.clockSkew = out.now - Date.now();

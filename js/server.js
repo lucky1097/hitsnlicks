@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261122223957';
-import { eventFx } from './events.js?v=20261122223957';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261122223957';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261122223957';
-import { GangMixin } from './gangs.js?v=20261122223957';
-import { DailyMixin } from './daily.js?v=20261122223957';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261122223957';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261122233957';
+import { eventFx } from './events.js?v=20261122233957';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261122233957';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261122233957';
+import { GangMixin } from './gangs.js?v=20261122233957';
+import { DailyMixin } from './daily.js?v=20261122233957';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261122233957';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -75,7 +75,9 @@ export class SimServer {
   setBlackMarket(on) { if (this.live) return fail('Len offline.'); this.state.settings.blackMarket = !!on; this.save(); return ok(); }
 
   newGame(name, cls) {
-    if (!CLASSES[cls]) return fail('Neznáma trieda.');
+    if (!Object.hasOwn(CLASSES, cls)) return fail('Neznáma trieda.');
+    const nm = cleanName(name, 16, 'Prezývka');
+    if (nm.error) return fail(nm.error);
     const now = Date.now();
     const stats = {}, bought = {};
     STATS.forEach((s) => { stats[s] = CONFIG.startStat; bought[s] = 0; });
@@ -87,7 +89,7 @@ export class SimServer {
       createdAt: now,
       settings: { testMode: false },
       nextId: 1,
-      player: { name: (name || 'Ty').slice(0, 16), cls, level: 1, xp: 0, cash: CONFIG.startCash, chains: CONFIG.startChains, points: 0, stats, bought, equipment, inventory: [] },
+      player: { name: nm.name, cls, level: 1, xp: 0, cash: CONFIG.startCash, chains: CONFIG.startChains, points: 0, stats, bought, equipment, inventory: [] },
       heat: { value: 0, at: now },
       jailUntil: 0,
       mission: null,
@@ -337,7 +339,12 @@ export class SimServer {
     return ok();
   }
 
-  unequip(slot) { this.p.equipment[slot] = null; this.save(); return ok(); }
+  unequip(slot) {
+    if (!SLOTS.some((s) => s.id === slot)) return fail('Neznámy slot.');
+    this.p.equipment[slot] = null;
+    this.save();
+    return ok();
+  }
 
   sellItem(id) {
     const it = this.item(id);
@@ -362,6 +369,33 @@ export class SimServer {
     it.upgrade += 1;
     this.save();
     return ok({ cost });
+  }
+
+  // ---------------------------------------------------------------- beta: bug reports and browser errors
+  // the player's own words + what the browser knows (version, screen, device, last errors); kept in the save
+  reportBug(text, info) {
+    text = String(text == null ? '' : text).replace(/\r/g, '').trim().slice(0, CONFIG.bugReportMax);
+    if (text.length < 5) return fail('Napíš aspoň pár slov, čo sa stalo.');
+    const list = (this.state.reports = this.state.reports || []);
+    const today = localParts().date;
+    if (list.filter((r) => localParts(r.at).date === today).length >= CONFIG.bugReportsPerDay) return fail('Dnes si už poslal dosť hlásení. Ďakujeme, pozrieme sa na ne.');
+    const i = info && typeof info === 'object' ? info : {};
+    const str = (v, n) => String(v == null ? '' : v).slice(0, n);
+    list.push({ at: Date.now(), text, level: this.p.level, city: this.city(), v: str(i.v, 20), screen: str(i.screen, 40), size: str(i.size, 20), ua: str(i.ua, 200),
+      errors: (Array.isArray(i.errors) ? i.errors : []).slice(-10).map((e) => str(e, 300)) });
+    while (list.length > CONFIG.bugReportsKept) list.shift();
+    this.save();
+    return ok();
+  }
+
+  // script errors and failed server calls the browser met; only the newest CONFIG.errorsKept short lines
+  logErrors(lines) {
+    if (!Array.isArray(lines)) return fail('Neplatné hlásenie.');
+    const list = (this.state.errors = this.state.errors || []);
+    for (const l of lines.slice(0, 10)) list.push({ at: Date.now(), msg: String(l).slice(0, 300) });
+    while (list.length > CONFIG.errorsKept) list.shift();
+    this.save();
+    return ok();
   }
 
   // ---------------------------------------------------------------- shops
@@ -647,6 +681,7 @@ export class SimServer {
   startMission(giverId, tplId) {
     if (this.state.mission) return fail('Už máš rozbehnutú misiu.');
     if (this.jailLeft() > 0) return fail('Si zavretý. Misie počkajú.');
+    if (!Object.hasOwn(GIVERS, giverId)) return fail('Táto misia už neplatí.');
     const offer = this.offers(giverId).find((o) => o.tpl === tplId);
     if (!offer) return fail('Táto misia už neplatí.');
     const pv = this.preview(tplId, offer.v, offer.hot);

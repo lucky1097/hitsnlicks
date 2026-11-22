@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES } from './config.js?v=20261122223957';
-import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261122223957';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261122223957';
+import { CONFIG, F, STATS, CLASSES, cleanName } from './config.js?v=20261122233957';
+import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261122233957';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261122233957';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -169,9 +169,10 @@ export const GangMixin = {
   createGang(name, tag, colorId) {
     if (this.gang()) return fail('Už máš gang.');
     if (this.locked('gang')) return this.lockedFail('gang', 'Gang');
-    name = String(name || '').trim().slice(0, 20);
+    const nm = cleanName(name, 20, 'Meno gangu');
+    if (nm.error) return fail(nm.error);
+    name = nm.name;
     tag = String(tag || '').trim().toUpperCase().replace(/[^A-Z0-9ÁČĎÉÍĽĹŇÓÔŔŠŤÚÝŽ]/g, '').slice(0, 4);
-    if (name.length < 3) return fail('Meno gangu musí mať aspoň 3 znaky.');
     if (tag.length < 2) return fail('Skratka musí mať 2 až 4 znaky.');
     if (Object.values(RIVAL_GANGS).some((r) => r.tag === tag) || (this.ctx && this.ctx.tagTaken)) return fail('Túto skratku už má iný gang.');
     const color = (GANG_COLORS.find((c) => c.id === colorId) || GANG_COLORS[0]).color;

@@ -24,8 +24,9 @@
 //   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261122223957';
-import { GIVERS, SHOPS } from './data.js?v=20261122223957';
+import { SimServer } from './server.js?v=20261122233957';
+import { cleanName } from './config.js?v=20261122233957';
+import { GIVERS, SHOPS } from './data.js?v=20261122233957';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -90,11 +91,36 @@ const ACTIONS = {
   tutorialSkip: (s) => s.tutorialSkip(),
   goalClaim: (s) => s.goalClaim(),
   claimMedals: (s) => s.claimMedals(),
+  reportBug: (s, [text, info]) => s.reportBug(text, info),
+  logErrors: (s, [lines]) => s.logErrors(lines),
 };
 
 // actions about another gang: it is loaded too (args[0] = its id)
 const TARGET_GANG = new Set(['requestJoin', 'cancelRequest', 'acceptInvite', 'declineInvite']);
 const isId = (v) => typeof v === 'string' && /^[\w-]{1,64}$/.test(v);
+
+// arguments may only be small plain values; no key or string may name a built-in object member (__proto__,
+// constructor, toString ...), so nothing a player sends can reach Object.prototype through a lookup
+const builtin = (v) => typeof v === 'string' && (v === 'prototype' || Object.prototype.hasOwnProperty.call(Object.prototype, v));
+function argsOk(v, depth = 0) {
+  if (v === null || typeof v === 'number' || typeof v === 'boolean') return true;
+  if (typeof v === 'string') return v.length <= 2000 && !builtin(v);
+  if (typeof v !== 'object' || depth > 3) return false;
+  const keys = Object.keys(v);
+  return keys.length <= 40 && keys.every((k) => !builtin(k) && argsOk(v[k], depth + 1));
+}
+
+// calls per player in a time window, counted in the memory of one server instance (the Edge Function uses it)
+export function makeLimiter(max, ms) {
+  const hits = new Map();
+  return (key, now = Date.now()) => {
+    let h = hits.get(key);
+    if (!h || now - h.start >= ms) { h = { start: now, n: 0 }; hits.set(key, h); }
+    h.n++;
+    if (hits.size > 5000) for (const [k, v] of hits) if (now - v.start >= ms) hits.delete(k);
+    return h.n <= max;
+  };
+}
 
 // lazily rolled content (offers, shop stock, timers) is created here, never on the client,
 // so every player sees exactly what the server decided
@@ -112,6 +138,7 @@ function refresh(s) {
 
 export async function handle(db, userId, action, args = []) {
   if (!userId) return fail('Nie si prihlásený.');
+  if (typeof action !== 'string' || !Array.isArray(args) || args.length > 6 || !argsOk(args)) return fail('Neplatná požiadavka.');
   if (action === 'deleteCharacter') {
     // out of the gang first, so it doesn't keep a member who no longer exists
     const row = await db.loadPlayer(userId);
@@ -132,18 +159,18 @@ export async function handle(db, userId, action, args = []) {
     if (!row) return fail('Hráč neexistuje.');
     return { ok: true, profile: new SimServer({ store: memStore, live: true, state: row.state }).publicProfile() };
   }
+  if (!Object.hasOwn(ACTIONS, action)) return fail('Neznáma akcia.');
   const fn = ACTIONS[action];
-  if (!fn) return fail('Neznáma akcia.');
-  if (!Array.isArray(args)) args = [];
 
   for (let attempt = 0; attempt < 3; attempt++) {
     const row = await db.loadPlayer(userId);
     if (!row && action !== 'newGame') return { ok: false, error: 'Nemáš postavu.', noCharacter: true, state: null };
     if (row && action === 'newGame') return { ok: false, error: 'Postavu už máš.', state: row.state };
     if (action === 'newGame') {
-      const name = String(args[0] || '').trim();
-      if (name.length < 3) return fail('Prezývka musí mať aspoň 3 znaky.');
-      if (await db.nameTaken(name, userId)) return fail('Túto prezývku už niekto má.');
+      const nm = cleanName(args[0], 16, 'Prezývka');
+      if (nm.error) return fail(nm.error);
+      if (await db.nameTaken(nm.name, userId)) return fail('Túto prezývku už niekto má.');
+      args = [nm.name, ...args.slice(1)];
     }
 
     const s = new SimServer({ store: memStore, live: true, state: row ? row.state : null });
@@ -189,7 +216,8 @@ export async function handle(db, userId, action, args = []) {
     const before = { gang: ctx.gang && json(ctx.gang.data), world: json(ctx.world), targets: Object.fromEntries(Object.values(ctx.targets).map((t) => [t.id, json(t.data)])) };
 
     let result;
-    try { result = fn(s, args); } catch (e) { return fail('Chyba servera: ' + (e && e.message)); }
+    // the details go to the server log only; the player sees a plain message
+    try { result = fn(s, args); } catch (e) { console.error('action failed:', action, e); return fail('Chyba servera.'); }
     if (!s.state) return result;
     if (result && result.ok === false) { // nothing to keep but the gang / city ticking on
       ctx.memberChanges = ctx.memberChanges.filter((m) => m.id === userId && m.gang === null);
@@ -214,6 +242,7 @@ export async function handle(db, userId, action, args = []) {
 
     // ---- what the client mirrors: the save plus its gang, the city and the gang inbox
     const out = JSON.parse(JSON.stringify(s.state));
+    delete out.reports; delete out.errors; // only for Lucky in the database, not sent back each call
     out.uid = userId;
     out.turf = ctx.world;
     const mine = g && !g.deleted && !ctx.gangLeft ? g : null;

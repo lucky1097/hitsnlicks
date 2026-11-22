@@ -1,7 +1,7 @@
 // Edge Function "game": the authoritative game server. POST { action, args } with the player's login token.
 // The rules are the same modules the browser uses (copied into ./game by tools/deploy.ps1).
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
-import { handle } from './game/api.js';
+import { handle, makeLimiter } from './game/api.js';
 
 const URL = Deno.env.get('SUPABASE_URL')!;
 const ANON = Deno.env.get('SUPABASE_ANON_KEY')!;
@@ -13,6 +13,8 @@ const CORS = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
+// at most 60 calls in 10 seconds per player on one server instance: a script cannot hammer the database
+const limit = makeLimiter(60, 10000);
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
 
 const must = <T>(r: { data: T; error: unknown }) => { if (r.error) throw r.error; return r.data; };
@@ -92,6 +94,7 @@ Deno.serve(async (req) => {
   const userClient = createClient(URL, ANON, { global: { headers: { Authorization: auth } }, auth: { persistSession: false } });
   const { data: { user } } = await userClient.auth.getUser();
   if (!user) return json({ ok: false, error: 'Nie si prihlásený.', auth: true }, 401);
+  if (!limit(user.id)) return json({ ok: false, error: 'Príliš veľa požiadaviek. Chvíľu počkaj.' }, 429);
   try {
     const body = await req.json();
     const out = await handle(db, user.id, String(body.action || ''), body.args || []);

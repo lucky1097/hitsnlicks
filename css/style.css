@@ -410,6 +410,8 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .field label { font-size: 14px; color: var(--muted); }
 .field input { height: 46px; padding: 0 12px; background: #0e0e0f; border: 1px solid var(--line2); color: var(--bone); font-family: var(--serif); font-size: 19px; }
 .field input:focus { outline: none; border-color: var(--gold); }
+.field textarea { min-height: 130px; padding: 10px 12px; background: #0e0e0f; border: 1px solid var(--line2); color: var(--bone); font-family: var(--serif); font-size: 18px; line-height: 1.35; resize: vertical; }
+.field textarea:focus { outline: none; border-color: var(--gold); }
 .classes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px; }
 .classes button { padding: 10px 4px; background: var(--panel); border: 1px solid var(--line); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .classes button .bl { font-size: 24px; color: #efe9dc; }

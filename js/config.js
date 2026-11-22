@@ -64,6 +64,8 @@ export const CONFIG = {
   shopRefreshMin: 30,
   shopStock: 6,
   shopRerollChains: 1, // new goods right away for one gold bar
+  // beta: "Nahlásiť chybu" (kept in the save, read by Lucky in the database) and the browser's error lines
+  bugReportMax: 1000, bugReportsPerDay: 5, bugReportsKept: 10, errorsKept: 20,
   // daily missions (js/daily.js): cash day = this many minutes of mission cash (day 14 pays twice day 1),
   // gold bars on days 5 / 10 / 15, courier and escape time limits in seconds
   dailyCashMin: 30,
@@ -246,4 +248,15 @@ export function localParts(t = Date.now()) {
 
 export function clamp(v, a, b) {
   return Math.max(a, Math.min(b, v));
+}
+
+// player and gang names: only Latin letters used in Slovak and Czech (plus ä ö ü), digits, single spaces and . _ -,
+// so nobody can pass for another player with look-alike letters of other scripts, invisible or right-to-left
+// characters. Returns { name } (cleaned) or { error } with the label in front ("Prezývka", "Meno gangu").
+const NAME_CHARS = /^[A-Za-z0-9ÁÄČĎÉĚÍĹĽŇÓÔÖŔŘŠŤÚŮÜÝŽáäčďéěíĺľňóôöŕřšťúůüýž ._-]+$/;
+export function cleanName(raw, max, label) {
+  const name = String(raw == null ? '' : raw).normalize('NFC').replace(/\s+/g, ' ').trim();
+  if (name.length < 3 || name.length > max) return { error: label + ' musí mať 3 až ' + max + ' znakov.' };
+  if (!NAME_CHARS.test(name) || !/[A-Za-z0-9À-ſ]/.test(name)) return { error: label + ' môže mať len písmená, číslice, medzeru a znaky . _ -' };
+  return { name };
 }

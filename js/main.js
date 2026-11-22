@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261122223957';
-import { RemoteServer } from './remote.js?v=20261122223957';
-import { ONLINE } from './net.js?v=20261122223957';
-import { CONFIG } from './config.js?v=20261122223957';
-import { UI } from './ui.js?v=20261122223957';
-import { createWorld } from './world.js?v=20261122223957';
-import { sound } from './sound.js?v=20261122223957';
+import { SimServer } from './server.js?v=20261122233957';
+import { RemoteServer } from './remote.js?v=20261122233957';
+import { ONLINE } from './net.js?v=20261122233957';
+import { CONFIG } from './config.js?v=20261122233957';
+import { UI } from './ui.js?v=20261122233957';
+import { createWorld } from './world.js?v=20261122233957';
+import { sound } from './sound.js?v=20261122233957';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -84,6 +84,11 @@ if (ONLINE) {
 }
 ui.open('title');
 setInterval(() => ui.tick(), 250);
+
+// beta: script errors, rejected promises and server failures are collected and sent to the server now and then
+window.addEventListener('error', (e) => ui.logError((e.message || 'error') + ' @ ' + String(e.filename || '').split('/').pop().split('?')[0] + ':' + (e.lineno || 0)));
+window.addEventListener('unhandledrejection', (e) => ui.logError('promise: ' + String((e.reason && (e.reason.message || e.reason)) || 'rejected')));
+server.onError = (msg) => ui.logError(msg);
 
 // handy in the browser console while testing
 window.hl = { server, ui, game, sound };
