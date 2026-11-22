@@ -24,9 +24,10 @@
 //   hall(n) -> [{ id, name, level, cls, points, club }]   (highest level first; club = Podzemné zápasy floor)
 //   addPoints(id, delta)
 //   deletePlayer(id)
-import { SimServer } from './server.js?v=20261122233957';
-import { cleanName } from './config.js?v=20261122233957';
-import { GIVERS, SHOPS } from './data.js?v=20261122233957';
+//   deleteUser(id)   (the login itself: email and password)
+import { SimServer } from './server.js?v=20261123000926';
+import { cleanName } from './config.js?v=20261123000926';
+import { GIVERS, SHOPS } from './data.js?v=20261123000926';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -139,11 +140,13 @@ function refresh(s) {
 export async function handle(db, userId, action, args = []) {
   if (!userId) return fail('Nie si prihlásený.');
   if (typeof action !== 'string' || !Array.isArray(args) || args.length > 6 || !argsOk(args)) return fail('Neplatná požiadavka.');
-  if (action === 'deleteCharacter') {
+  if (action === 'deleteCharacter' || action === 'deleteAccount') {
     // out of the gang first, so it doesn't keep a member who no longer exists
     const row = await db.loadPlayer(userId);
     if (row && row.gangId) await handle(db, userId, 'leaveGang', []);
     await db.deletePlayer(userId);
+    // the whole account (GDPR erasure): the login with the email address goes too
+    if (action === 'deleteAccount') await db.deleteUser(userId);
     return { ok: true, state: null };
   }
   // halls of fame: read-only, the caller's own state is neither loaded nor saved
@@ -338,5 +341,7 @@ export function memoryDb() {
     },
     async addPoints(id, delta) { const r = rows.get(id); if (r) r.points = Math.max(0, r.points + delta); },
     async deletePlayer(id) { rows.delete(id); },
+    deletedUsers: [],
+    async deleteUser(id) { this.deletedUsers.push(id); },
   };
 }

@@ -85,6 +85,7 @@ const db = {
   },
   async addPoints(id: string, delta: number) { must(await admin.rpc('add_pvp_points', { p_id: id, p_delta: delta })); },
   async deletePlayer(id: string) { must(await admin.from('players').delete().eq('id', id)); },
+  async deleteUser(id: string) { const { error } = await admin.auth.admin.deleteUser(id); if (error) throw error; },
 };
 
 Deno.serve(async (req) => {

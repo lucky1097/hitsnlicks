@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261122233957';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261122233957';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261122233957';
-import { DAILY_TYPES } from './daily.js?v=20261122233957';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261122233957';
-import { sound } from './sound.js?v=20261122233957';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261122233957';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123000926';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123000926';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123000926';
+import { DAILY_TYPES } from './daily.js?v=20261123000926';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123000926';
+import { sound } from './sound.js?v=20261123000926';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123000926';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -1022,6 +1022,7 @@ export class UI {
         const email = $('#auth-email').value.trim(), pass = $('#auth-pass') ? $('#auth-pass').value : '';
         this.sel.authEmail = email;
         if (!email) { this.toast('Zadaj email.', true); return; }
+        if (mode === 'up' && !($('#auth-agree') && $('#auth-agree').checked)) { this.toast('Potvrď, že máš aspoň 18 rokov a súhlasíš s podmienkami.', true); return; }
         if (mode === 'reset') { const r = await this.s.resetPassword(email); if (this.check(r)) this.info('Obnova hesla', 'Poslali sme ti email s odkazom na nové heslo.'); return; }
         const r = mode === 'up' ? await this.s.signUp(email, pass) : await this.s.signIn(email, pass);
         if (!this.check(r)) return;
@@ -1030,6 +1031,19 @@ export class UI {
       },
       async 'auth-mode'(a) { this.sel.authEmail = $('#auth-email') ? $('#auth-email').value : ''; this.sel.authMode = a; this.render(); },
       async logout() { await this.s.signOut(); this.open('title'); },
+      async 'account-delete'() {
+        this.modal('<h2>Zmazať účet?</h2><p class="sub" style="font-size:17px;color:#c9c4b8">Zmaže sa tvoja postava so všetkými vecami, miesto v gangu, e-mail aj heslo. Nedá sa to vrátiť.</p>' +
+          '<div class="acts"><button class="btn" data-act="modal-close">Nechať</button><button class="btn danger" data-act="account-delete-go">Zmazať navždy</button></div>');
+      },
+      async 'account-delete-go'() {
+        const r = await this.s.deleteAccount();
+        this.closeModal();
+        if (!this.check(r)) return;
+        this.sel.newGame = false;
+        this.sel.authMode = 'in';
+        this.open('title');
+        this.info('Účet je zmazaný', 'Tvoju postavu, e-mail aj heslo sme vymazali. Ďakujeme, že si hral.');
+      },
       async 'bug-open'() {
         this.modal('<h2>Nahlásiť chybu</h2><p class="sub" style="font-size:16px;color:#c9c4b8">Čo sa stalo a čo si práve robil? Každá chyba nám pomôže.</p>' +
           '<div class="field"><textarea id="bug-text" maxlength="' + CONFIG.bugReportMax + '" rows="6" placeholder="Napríklad: v obchode Zbrane som kúpil nôž a peniaze sa odpočítali dvakrát."></textarea></div>' +
@@ -1064,6 +1078,7 @@ export class UI {
       const mode = this.sel.authMode || 'in';
       inner += '<div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" value="' + esc(this.sel.authEmail || '') + '"></div>';
       if (mode !== 'reset') inner += '<div class="field"><label for="auth-pass">Heslo' + (mode === 'up' ? ' (aspoň 6 znakov)' : '') + '</label><input id="auth-pass" type="password" autocomplete="' + (mode === 'up' ? 'new-password' : 'current-password') + '"></div>';
+      if (mode === 'up') inner += '<label class="agree"><input type="checkbox" id="auth-agree"><span>Mám aspoň 18 rokov a súhlasím s <a href="podmienky.html" target="_blank" rel="noopener">podmienkami používania</a>. Ako chránime tvoje údaje: <a href="sukromie.html" target="_blank" rel="noopener">ochrana osobných údajov</a>.</span></label>';
       inner += '<button class="btn gold wide" data-act="login" data-arg="' + mode + '">' + { in: 'Prihlásiť sa', up: 'Vytvoriť účet', reset: 'Poslať odkaz na nové heslo' }[mode] + '</button>';
       inner += '<div class="menu" style="margin-top:6px">' + (mode !== 'in' ? '<button data-act="auth-mode" data-arg="in">Mám účet, prihlásiť sa</button>' : '<button data-act="auth-mode" data-arg="up">Nový hráč? Vytvoriť účet</button><button data-act="auth-mode" data-arg="reset">Zabudnuté heslo</button>') + '</div>';
     } else if (has && !this.sel.newGame) {
@@ -1083,7 +1098,7 @@ export class UI {
       if (has) inner += '<button class="btn wide" style="margin-top:8px" data-act="cancel-new">Späť</button>';
     }
     return {
-      html: '<div class="title-scr"><div class="poster"><img src="' + art('photo_title') + '" alt="Hits &amp; Licks: traja chlapi z gangu v nočnej ulici"></div><div class="inner">' + inner + '</div></div>',
+      html: '<div class="title-scr"><div class="poster"><img src="' + art('photo_title') + '" alt="Hits &amp; Licks: traja chlapi z gangu v nočnej ulici"></div><div class="inner">' + inner + '<p class="legal">Len pre dospelých (18+) · <a href="podmienky.html" target="_blank" rel="noopener">Podmienky používania</a> · <a href="sukromie.html" target="_blank" rel="noopener">Ochrana osobných údajov</a></p></div></div>',
     };
   }
 
@@ -1475,11 +1490,12 @@ export class UI {
       ? '<p class="warn" style="padding:8px 10px;border:1px solid rgba(208,71,61,.6);color:#e6a49c">Ripper mi práve ukradol tehličku! Chyť ho do <b data-until="' + rp.until + '"></b> a je tvoja.</p>'
       : '<p class="note" style="text-align:left">Ripper sa sem chodí kradnúť približne raz za hodinu. Ďalší pokus o <span data-until="' + rp.nextAt + '"></span>.</p>';
     h += '<div class="sec sc">Zlaté tehličky</div>';
-    CONFIG.barPacks.forEach((pk, i) => {
+    if (this.s.online) h += '<p class="note" style="text-align:left">Zlaté tehličky sa zatiaľ nepredávajú. Získaš ich v misiách, od bossov, za denné úlohy a za medaily.</p>';
+    else CONFIG.barPacks.forEach((pk, i) => {
       h += '<div class="item rar-legendarny"><img class="px" src="assets/icons/i_bar.png" alt="" style="width:48px;height:48px;margin:8px"><div class="mid"><div class="t num">' + pk.bars + ' zlatých tehličiek</div><div class="s">Skracovanie misií, ďalšie pokusy na bossov a v aréne</div></div>' +
         '<div class="acts"><button class="btn small gold num" data-act="buy-bars" data-arg="' + i + '">' + pk.price + '</button></div></div>';
     });
-    h += '<p class="note">Testovacia kúpa: tehličky sa pripíšu hneď. Skutočná platba cez Stripe príde neskôr.</p>';
+    if (!this.s.online) h += '<p class="note">Testovacia kúpa (len offline): tehličky sa pripíšu hneď.</p>';
     // the elixir: Black Market (epic goods) in every shop for elixirHours, only for this player
     const left = this.s.elixirLeft();
     h += '<div class="sec sc">Elixír Čierneho trhu</div>' +
@@ -1499,7 +1515,8 @@ export class UI {
     if (this.s.online) {
       if (this.s.loggedIn()) h += '<div class="switch"><span>Účet<br><small class="muted" style="font-size:14px">' + esc(this.s.email()) + '</small></span><button class="btn small" data-act="logout">Odhlásiť</button></div>';
       if (this.s.hasSave()) h += '<div class="switch"><span>Postava<br><small class="muted" style="font-size:14px">Uložená na serveri.</small></span><button class="btn small" data-act="reset">Zmazať</button></div>';
-      h += '<p class="note" style="margin-top:20px">Hits &amp; Licks · online</p>';
+      if (this.s.loggedIn()) h += '<div class="switch"><span>Zmazať účet<br><small class="muted" style="font-size:14px">Zmaže postavu, e-mail aj heslo. Nedá sa to vrátiť.</small></span><button class="btn small danger" data-act="account-delete">Zmazať účet</button></div>';
+      h += '<p class="note" style="margin-top:20px">Hits &amp; Licks · beta<br><a href="podmienky.html" target="_blank" rel="noopener">Podmienky používania</a> · <a href="sukromie.html" target="_blank" rel="noopener">Ochrana osobných údajov</a></p>';
       return { html: this.hdr('Nastavenia') + '<div class="body">' + h + '</div>' };
     }
     if (this.s.hasSave()) {
@@ -1508,7 +1525,7 @@ export class UI {
       h += '<div class="switch"><span>Čierny trh vždy otvorený<br><small class="muted" style="font-size:14px">Na testovanie. Normálne len v piatok od ' + CONFIG.blackMarketFromHour + ':00.</small></span><button class="btn small ' + (bm ? 'gold' : '') + '" data-act="test-bm">' + (bm ? 'Zapnutý' : 'Vypnutý') + '</button></div>';
       h += '<div class="switch"><span>Uložená hra<br><small class="muted" style="font-size:14px">Ukladá sa v tomto prehliadači.</small></span><button class="btn small" data-act="reset">Zmazať</button></div>';
     }
-    h += '<p class="note" style="margin-top:20px">Hits &amp; Licks · prototyp 0.1</p>';
+    h += '<p class="note" style="margin-top:20px">Hits &amp; Licks · beta (offline)<br><a href="podmienky.html" target="_blank" rel="noopener">Podmienky používania</a> · <a href="sukromie.html" target="_blank" rel="noopener">Ochrana osobných údajov</a></p>';
     return { html: this.hdr('Nastavenia') + '<div class="body">' + h + '</div>' };
   }
 
