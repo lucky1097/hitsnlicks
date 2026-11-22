@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261119191739';
-import { eventFx } from './events.js?v=20261119191739';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261119191739';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261119191739';
-import { GangMixin } from './gangs.js?v=20261119191739';
-import { DailyMixin } from './daily.js?v=20261119191739';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261119191739';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts } from './config.js?v=20261122223523';
+import { eventFx } from './events.js?v=20261122223523';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261122223523';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261122223523';
+import { GangMixin } from './gangs.js?v=20261122223523';
+import { DailyMixin } from './daily.js?v=20261122223523';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261122223523';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -428,7 +428,8 @@ export class SimServer {
     return ok();
   }
 
-  rerollCost() { return this.ev().freeReroll ? 0 : CONFIG.shopRerollChains; }
+  // new goods right away always cost bars; the free ones come with the 2-hour restock or a new level
+  rerollCost() { return CONFIG.shopRerollChains; }
 
   // what a piece costs right there: Black Market epics add bars, premium cars are bars (+ cash for the epic ones);
   // the Výpredaj weekend takes a share off the cash

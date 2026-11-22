@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261119191739';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261119191739';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261119191739';
-import { DAILY_TYPES } from './daily.js?v=20261119191739';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261119191739';
-import { sound } from './sound.js?v=20261119191739';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261119191739';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261122223523';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261122223523';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261122223523';
+import { DAILY_TYPES } from './daily.js?v=20261122223523';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261122223523';
+import { sound } from './sound.js?v=20261122223523';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261122223523';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -1264,7 +1264,7 @@ export class UI {
         '<div class="acts"><button class="btn small gold num" data-act="buy-item" data-arg="' + it.id + '"' + (p.cash < c.cash || p.chains < c.bars ? ' disabled' : '') + '>' + label + '</button></div></div>';
     };
     let h = '';
-    if (this.s.ev().price < 1) h += '<p class="note gold" style="margin-top:0">Výpredaj: všetko o ' + Math.round((1 - this.s.ev().price) * 100) + ' % lacnejšie, nový tovar zadarmo.</p>';
+    if (this.s.ev().price < 1) h += '<p class="note gold" style="margin-top:0">Výpredaj: všetko o ' + Math.round((1 - this.s.ev().price) * 100) + ' % lacnejšie.</p>';
     if (sh.premium) h += '<div class="sec sc" style="margin-top:0;color:#e8c873">Prémiové autá · stále v ponuke</div>' + sh.premium.map((it) => row(it, 'premium')).join('') + '<div class="sec sc">Ojazdené autá</div>';
     if (sh.bm) {
       const el = this.s.elixirLeft();
