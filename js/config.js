@@ -61,7 +61,7 @@ export const CONFIG = {
 
   skipChainPerMin: 1, // chains to finish a running mission, per remaining minute (min 1)
   offersRefreshMin: 20,
-  shopRefreshMin: 120, // free new goods every 2 hours; a new level restocks too
+  shopRefreshMin: 30,
   shopStock: 6,
   shopRerollChains: 1, // new goods right away for one gold bar
   // daily missions (js/daily.js): cash day = this many minutes of mission cash (day 14 pays twice day 1),
