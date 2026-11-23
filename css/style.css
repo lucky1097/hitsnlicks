@@ -42,9 +42,15 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 /* ---------------------------------------------------------------- HUD */
 #hud { position: absolute; inset: 0; pointer-events: none; }
 #hud > * { pointer-events: auto; }
-#hud::before { content: ''; position: absolute; left: 0; top: 0; right: 0; height: 160px; background: linear-gradient(180deg, rgba(5,5,5,.92), rgba(5,5,5,.55) 60%, rgba(5,5,5,0)); pointer-events: none; }
+#hud::before { content: ''; position: absolute; left: 0; top: 0; right: 0; height: 124px; background: linear-gradient(180deg, rgba(5,5,5,.92), rgba(5,5,5,.55) 60%, rgba(5,5,5,0)); pointer-events: none; }
 #hud::after { content: ''; position: absolute; left: 0; bottom: 0; right: 0; height: 240px; background: linear-gradient(0deg, rgba(5,5,5,.9), rgba(5,5,5,.4) 55%, rgba(5,5,5,0)); pointer-events: none; }
-.hud-top { position: absolute; left: 12px; right: 12px; top: calc(12px + env(safe-area-inset-top)); display: flex; align-items: center; gap: 10px; z-index: 2; }
+.hud-top { position: absolute; left: 12px; right: 12px; top: calc(12px + env(safe-area-inset-top)); display: flex; align-items: center; gap: 8px; z-index: 2; }
+.av-wrap { position: relative; flex: none; }
+/* a dot per running pill colour (the details are in Postava) */
+.pilldots { position: absolute; left: -3px; top: -3px; display: flex; gap: 2px; }
+.pilldots[hidden] { display: none; }
+.pilldots i { width: 11px; height: 11px; border-radius: 50%; border: 1px solid #0b0b0b; }
+.pilldots i.red { background: #d42a22; } .pilldots i.blue { background: #2f6fe0; } .pilldots i.green { background: #3ccf4e; }
 .avatar { position: relative; width: 54px; height: 54px; flex: none; padding: 0; border-radius: 50%; border: 1px solid var(--gold); background: #1a1714; overflow: visible; cursor: pointer; }
 .avatar .face { position: relative; display: block; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; }
 .avatar .face > img { width: 54px; height: 54px; object-fit: cover; object-position: 50% 18%; display: block; }
@@ -53,41 +59,46 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .fcard .look.in-fcard { position: absolute; inset: 0; aspect-ratio: auto; background: none; }
 .fcard .look.in-fcard img { object-position: 50% 20%; }
 .avatar .lvl { position: absolute; right: -6px; bottom: -4px; min-width: 24px; height: 22px; padding: 0 4px; background: #0b0b0b; border: 1px solid var(--gold); color: var(--gold-l); font-size: 15px; line-height: 20px; text-align: center; }
-.hud-res { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.hud-money { display: flex; gap: 14px; font-size: 17px; }
+.hud-res { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.hud-money { display: flex; gap: 12px; font-size: 16px; }
+.hud-money .px { width: 20px; height: 20px; }
 .res { display: flex; align-items: center; gap: 4px; font-variant-numeric: lining-nums tabular-nums; }
 .res b { font-weight: 500; }
-.hud-xp { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+/* XP (gold) and heat (red): two thin lines under the money */
+.hud-line { display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+.hud-line .bar { flex: 1; min-width: 40px; max-width: 150px; height: 4px; border: none; background: rgba(233,228,216,.14); }
+.hud-line span { min-width: 30px; }
+.hud-xp { color: #b9a26a; }
+.hud-heat { color: #e6a49c; cursor: pointer; }
+.hud-line .bar.heat { background: rgba(200,52,42,.22); }
+.bar.heat i { background: #c8342a; }
+.hud-heat.hot .bar.heat i { background: #e0352b; animation: pulse 1s infinite alternate; }
 .bar { height: 6px; background: #17140c; border: 1px solid #3a3018; }
 .bar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #e8c873, #9a6e1c); transition: width .3s; }
 .bar.hp { background: #1c1010; border-color: #3a1814; height: 10px; }
 .bar.hp i { background: linear-gradient(180deg, #c8342a, #7a1612); }
-.hud-xp .bar { width: 110px; }
-.icon-btn { width: 46px; height: 46px; flex: none; display: flex; align-items: center; justify-content: center; background: rgba(8,8,8,.7); border: 1px solid var(--line2); color: var(--bone); cursor: pointer; }
-.hud-stack { position: absolute; left: 12px; right: 12px; top: calc(82px + env(safe-area-inset-top)); display: flex; flex-direction: column; align-items: stretch; gap: 8px; z-index: 2; pointer-events: none; }
+.icon-btn { width: 42px; height: 42px; flex: none; display: flex; align-items: center; justify-content: center; background: rgba(8,8,8,.7); border: 1px solid var(--line2); color: var(--bone); cursor: pointer; }
+.hud-stack { position: absolute; left: 12px; right: 12px; top: calc(82px + env(safe-area-inset-top)); display: flex; flex-direction: column; align-items: stretch; gap: 6px; z-index: 2; pointer-events: none; transition: opacity .3s; }
+/* while the joystick is held the line under the bar steps back */
+#hud.walking .hud-stack { opacity: .22; }
 .hud-stack > * { pointer-events: auto; }
-.hud-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; z-index: 2; pointer-events: none; }
-.hud-row > * { pointer-events: auto; }
-.heat { display: flex; align-items: center; gap: 6px; padding: 5px 9px 5px 5px; background: rgba(8,8,8,.72); border: 1px solid rgba(168,35,28,.5); color: var(--red-l); font-size: 14px; }
-.hbar { width: 74px; height: 8px; background: #2a1614; border: 1px solid #4a201c; }
-.hbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #8a1f18, #e0352b); transition: width .3s; }
-.heat b { font-weight: 500; font-size: 13px; color: #f0c8c0; min-width: 34px; text-align: right; }
-.segs { display: flex; gap: 3px; }
-.segs i { width: 13px; height: 8px; background: #2a1614; border: 1px solid #4a201c; }
-.segs i.on { background: #c8342a; border-color: #c8342a; }
-.heat.hot { animation: pulse 1s infinite alternate; }
 @keyframes pulse { to { box-shadow: 0 0 14px rgba(208,71,61,.6); } }
-.hud-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.hud-right > * { pointer-events: auto; }
-.tracker.daily { border-left-color: #f0c95a; }
-.tracker.daily .trk-name { font-size: 15px; }
-.tracker.daily .trk-time b { font-size: 13px; color: #f0c95a; }
-.tracker { max-width: 190px; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 7px 10px; background: rgba(8,8,8,.75); border: none; border-left: 2px solid var(--gold); text-align: left; cursor: pointer; }
-.tracker .sc { font-size: 12px; color: var(--muted); }
-.trk-name { font-size: 16px; line-height: 1.15; }
-.trk-time { display: flex; align-items: center; gap: 4px; color: var(--gold-l); font-size: 15px; font-variant-numeric: lining-nums tabular-nums; }
-.tracker.ready { border-left-color: var(--gold-l); box-shadow: 0 0 16px rgba(201,162,74,.35); }
-.tracker.ready .sc { color: var(--gold-l); }
+/* the running mission: a clock in the bar, its time under it; gold when the reward waits, red while jailed */
+.mbtn { position: relative; }
+.mbtn .px { width: 22px; height: 22px; }
+.mbtn .badge { position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%); min-width: 22px; height: 17px; padding: 0 4px; background: #0b0b0b; border: 1px solid rgba(201,162,74,.6); color: var(--gold-l); font-size: 12px; line-height: 15px; text-align: center; white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+.mbtn.ready { border-color: var(--gold-l); box-shadow: 0 0 14px rgba(201,162,74,.5); }
+.mbtn.ready .badge { background: var(--gold-l); color: #0b0b0b; font-weight: 500; }
+.mbtn.jail { border-color: rgba(208,71,61,.8); }
+.mbtn.jail .badge { border-color: rgba(208,71,61,.8); color: #f0c8c0; }
+/* the one status line: a timed task, the hideout shadow or the Ripper */
+.status { align-self: flex-start; max-width: 100%; display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 7px; background: rgba(8,8,8,.84); border: 1px solid var(--line2); border-left: 3px solid #f0c95a; color: var(--bone); font-size: 14px; line-height: 1.15; }
+.status[hidden] { display: none; }
+.status svg { flex: none; width: 15px; height: 15px; }
+.status b { font-weight: 400; color: #f0c95a; font-variant-numeric: lining-nums tabular-nums; }
+.status.shadow { border-left-color: #b9b4a8; }
+.status.reaper { border-color: rgba(208,71,61,.8); border-left-color: var(--red-l); color: #f0c8c0; animation: pulse 1s infinite alternate; }
+.status.reaper b { color: var(--gold-l); }
 .zoom { position: absolute; right: 12px; bottom: calc(304px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 6px; z-index: 2; }
 .zoom button { width: 44px; height: 44px; background: rgba(8,8,8,.75); border: 1px solid var(--line2); color: var(--bone); font-size: 24px; line-height: 1; cursor: pointer; }
 
@@ -117,8 +128,6 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .joystick { position: absolute; left: 24px; bottom: calc(92px + env(safe-area-inset-bottom)); width: 124px; height: 124px; border-radius: 50%; border: 1px solid rgba(233,228,216,.28); background: radial-gradient(circle, rgba(233,228,216,.08), rgba(233,228,216,.02) 70%); z-index: 2; touch-action: none; }
 .knob { position: absolute; left: 35px; top: 35px; width: 54px; height: 54px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #3a3835, #121212); border: 1px solid rgba(233,228,216,.4); box-shadow: 0 4px 12px rgba(0,0,0,.7); }
 .action { position: absolute; right: 24px; bottom: calc(106px + env(safe-area-inset-bottom)); width: 96px; height: 96px; border-radius: 50%; background: radial-gradient(circle, #1f1b14, #0b0a08 70%); border: 1px solid var(--gold); box-shadow: 0 0 22px rgba(201,162,74,.35); color: var(--gold-t); font-size: 18px; line-height: 1.1; padding: 6px; z-index: 2; cursor: pointer; }
-.hud-left { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.buffs { display: flex; gap: 5px; }
 .buff { display: flex; align-items: center; gap: 4px; padding: 3px 7px 3px 4px; background: rgba(8,8,8,.78); border: 1px solid var(--line2); font-size: 13px; color: var(--bone); line-height: 1; }
 .buff svg { width: 15px; height: 15px; }
 .buff b { font-variant-numeric: tabular-nums; }
@@ -164,16 +173,14 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .evcard .t { display: block; font-size: 18px; color: #efe9dc; }
 .evcard .t small { font-size: 12px; color: #9b968b; font-style: italic; }
 .evcard .s { display: block; font-size: 15px; color: #b9b4a8; }
-.wanted { padding: 2px 8px; background: rgba(8,8,8,.8); border: 1px solid #3a3835; font-size: 17px; letter-spacing: 2px; color: #4f4c46; }
-.wanted b { color: #f0c95a; font-weight: 400; text-shadow: 0 0 6px rgba(240,201,90,.6); }
+/* wanted stars: a small badge on the avatar's corner, only while the police care */
+.wanted { position: absolute; left: -6px; bottom: -6px; height: 20px; padding: 0 4px; background: #0b0b0b; border: 1px solid rgba(240,201,90,.6); color: #f0c95a; font: inherit; font-size: 13px; line-height: 18px; white-space: nowrap; cursor: pointer; }
+.wanted[hidden] { display: none; }
 .wanted.chase { border-color: rgba(224,53,43,.7); animation: pulse 1s infinite alternate; }
-.shadow-tag { padding: 4px 9px; background: rgba(8,8,8,.8); border: 1px solid #3a3835; border-left: 3px solid #b9b4a8; color: #d8d3c7; font-size: 14px; }
-.shadow-tag b { color: #efe9dc; font-variant-numeric: tabular-nums; }
 .hide-scr { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 24px; text-align: center; background: radial-gradient(ellipse 70% 50% at 50% 40%, #1b1a18, #050505 75%); }
 .hide-scr .bl { font-size: 40px; color: #efe9dc; }
 .hide-scr .clock { font-size: 46px; color: var(--gold-l); font-variant-numeric: tabular-nums; }
 .hide-scr p { max-width: 340px; color: #9b968b; font-size: 17px; margin: 0; }
-#hud-heat, #hud-wanted { cursor: pointer; }
 /* a feature that opens later: what it is and from which level */
 .locked-scr { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 12px; text-align: center; }
 .locked-scr .sc { color: #9b968b; }
@@ -225,9 +232,10 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .wrow .top { display: flex; justify-content: space-between; gap: 6px; font-size: 15px; margin-bottom: 4px; }
 .wrow.on { border-color: var(--gold); }
 .wrow.out { opacity: .35; }
-.buffs-list { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
-.reaper-tag { align-self: flex-start; padding: 5px 10px; background: rgba(8,8,8,.8); border: 1px solid rgba(208,71,61,.8); border-left: 3px solid var(--red-l); color: #f0c8c0; font-size: 14px; z-index: 2; animation: pulse 1s infinite alternate; }
-.reaper-tag b { color: var(--gold-l); font-variant-numeric: tabular-nums; }
+/* Postava: the running pills, one row per colour */
+.pills-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.pillrow { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.pillrow .pe { flex: 1; min-width: 0; color: #d8d3c7; }
 .attack { position: absolute; right: 36px; bottom: calc(214px + env(safe-area-inset-bottom)); width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle, #2a1210, #0b0808 70%); border: 1px solid rgba(208,71,61,.85); box-shadow: 0 0 18px rgba(208,71,61,.3); color: #f0c8c0; font-size: 16px; z-index: 2; cursor: pointer; touch-action: none; }
 .attack:active { transform: scale(.94); }
 .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: calc(64px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid rgba(233,228,216,.18); background: rgba(6,6,6,.95); z-index: 3; }
@@ -432,6 +440,9 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .mbox .warn { margin: 0 0 12px; padding: 8px 10px; border: 1px solid rgba(168,35,28,.6); background: rgba(168,35,28,.1); color: #e6a49c; font-size: 16px; }
 .mbox .acts { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
 #toasts { position: absolute; left: 0; right: 0; top: calc(140px + env(safe-area-inset-top)); z-index: 40; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; }
+/* on the map one short message at a time, above the controls (clear of the zoom buttons) */
+#toasts.onmap { top: auto; bottom: calc(286px + env(safe-area-inset-bottom)); }
+#toasts.onmap .toast { max-width: calc(100% - 132px); font-size: 15px; text-align: center; }
 .toast { max-width: 88%; padding: 8px 14px; background: rgba(8,8,8,.92); border: 1px solid var(--line2); border-left: 2px solid var(--gold); font-size: 16px; animation: tin .25s; }
 .toast.bad { border-left-color: var(--red-l); }
 @keyframes tin { from { opacity: 0; transform: translateY(-8px); } }
@@ -457,12 +468,12 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .cls-art { display: block; width: 100%; height: 150px; object-fit: cover; margin: 0 0 8px; border: 1px solid var(--line2); }
 .desc { margin-top: 3px; font-size: 14px; font-style: italic; line-height: 1.3; color: #8f8a80; }
 /* new-player tutorial: one line under the HUD */
-.tut { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(8,8,8,.82); border: 1px solid rgba(201,162,74,.45); border-left: 3px solid var(--gold); box-shadow: 0 0 16px rgba(201,162,74,.18); }
+.tut { display: flex; align-items: center; gap: 8px; padding: 5px 4px 5px 9px; background: rgba(8,8,8,.84); border: 1px solid rgba(201,162,74,.4); border-left: 3px solid var(--gold); }
 .tut[hidden] { display: none; }
 .tut .sc { flex: none; font-size: 12px; color: var(--gold-l); }
-.tut-text { flex: 1; font-size: 15px; line-height: 1.2; color: var(--bone); }
-.tut-acts { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.tut-x { background: none; border: none; color: var(--muted); font-size: 12px; text-decoration: underline; cursor: pointer; padding: 2px; }
+.tut-text { flex: 1; min-width: 0; font-size: 14px; line-height: 1.2; color: var(--bone); }
+.tut .btn.small { flex: none; padding: 4px 10px; font-size: 14px; }
+.tut-x { flex: none; width: 30px; height: 30px; background: none; border: none; color: var(--muted); font-size: 15px; cursor: pointer; padding: 0; }
 .tut.ready { border-color: var(--gold-l); box-shadow: 0 0 20px rgba(201,162,74,.45); }
 .tut.ready .tut-text { color: var(--gold-t); }
 /* hot mission offers: a harder rival for a double reward */
@@ -507,3 +518,4 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .agree { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; font-size: 15px; line-height: 1.35; color: #b9b4a8; text-align: left; }
 .agree input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: #c9a24a; }
 .captcha { min-height: 65px; margin: 0 0 12px; }
+@media (max-width: 380px) { .hud-money { font-size: 15px; gap: 8px; } .hud-money .px { width: 18px; height: 18px; } }

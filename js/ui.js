@@ -1,15 +1,17 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123193311';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123193311';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123193311';
-import { DAILY_TYPES } from './daily.js?v=20261123193311';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123193311';
-import { sound } from './sound.js?v=20261123193311';
-import { CAPTCHA } from './net.js?v=20261123193311';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123193311';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123201248';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123201248';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123201248';
+import { DAILY_TYPES } from './daily.js?v=20261123201248';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123201248';
+import { sound } from './sound.js?v=20261123201248';
+import { CAPTCHA } from './net.js?v=20261123201248';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123201248';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
+// the top bar has little room: big sums shortened (1,2 M / 123 k); screens show them in full
+const short = (n) => (n >= 1e6 ? (Math.floor(n / 1e5) / 10).toLocaleString('sk-SK') + ' M' : n >= 1e5 ? Math.floor(n / 1000) + ' k' : fmt(n));
 const money = (n) => '$ ' + fmt(n);
 const pct = (x) => Math.round(x * 100) + ' %';
 const hours = (min) => { const n = Math.round(min / 60); return n + (n === 1 ? ' hodina' : n < 5 ? ' hodiny' : ' hodín'); };
@@ -143,8 +145,9 @@ export class UI {
       this.input.x = dx / max;
       this.input.y = dy / max;
     };
-    const end = () => { id = null; knob.style.transform = ''; this.input.x = 0; this.input.y = 0; };
-    pad.addEventListener('pointerdown', (e) => { id = e.pointerId; pad.setPointerCapture(id); move(e); });
+    // while the stick is held the line under the bar fades (css #hud.walking), so the map is clear when you run
+    const end = () => { id = null; knob.style.transform = ''; this.input.x = 0; this.input.y = 0; this.el.hud.classList.remove('walking'); };
+    pad.addEventListener('pointerdown', (e) => { this.el.hud.classList.add('walking'); id = e.pointerId; pad.setPointerCapture(id); move(e); });
     pad.addEventListener('pointermove', (e) => { if (e.pointerId === id) move(e); });
     pad.addEventListener('pointerup', end);
     pad.addEventListener('pointercancel', end);
@@ -231,42 +234,36 @@ export class UI {
     $('#hud-lvl').textContent = v.level;
     const lookKey = LOOK_BASE ? JSON.stringify(this.s.p.look || {}) : '';
     if (lookKey && lookKey !== this.hudLook) { this.hudLook = lookKey; $('#hud-face').innerHTML = this.lookHtml(this.s.p.look, 'in-avatar'); }
-    $('#hud-cash').textContent = fmt(v.cash);
-    $('#hud-chains').textContent = fmt(v.chains);
+    $('#hud-cash').textContent = short(v.cash);
+    $('#hud-chains').textContent = short(v.chains);
     const xp = v.xp / v.xpNext;
     $('#hud-xpbar').style.width = Math.min(100, xp * 100) + '%';
     $('#hud-xptext').textContent = pct(xp) + ' XP';
     $('#hud-heatbar').style.width = Math.min(100, v.heat) + '%';
-    $('#hud-heatpct').textContent = Math.round(v.heat) + ' %';
+    $('#hud-heatpct').textContent = Math.round(v.heat) + ' % heat';
     $('#hud-heat').classList.toggle('hot', v.heat >= CONFIG.raidFrom);
+    $('#hud-heat').title = 'Heat ' + Math.round(v.heat) + ' %: denný limit na misie';
 
-    const trk = $('#hud-tracker');
-    if (v.jailLeft > 0) {
-      trk.hidden = false;
-      trk.classList.remove('ready');
-      $('#hud-trk-label').textContent = 'Zatknutý';
-      $('#hud-trk-name').textContent = 'Pauza od misií';
-      $('#hud-trk-time').textContent = clock(v.jailLeft);
-    } else if (v.mission) {
-      trk.hidden = false;
-      trk.classList.toggle('ready', v.mission.ready);
-      $('#hud-trk-label').textContent = v.mission.ready ? 'Hotovo · vyzdvihni' : 'Aktívna misia';
-      $('#hud-trk-name').textContent = v.mission.name;
-      $('#hud-trk-time').textContent = v.mission.ready ? 'odmena čaká' : clock(v.mission.left);
-      if (v.mission.ready && !this.readyNotified) {
-        this.readyNotified = true;
-        sound.play('ready');
-        this.toast('Misia „' + v.mission.name + '“ je hotová. Vyzdvihni si odmenu.');
-        if (this.name === 'missions') this.render();
-      }
-    } else {
-      trk.hidden = true;
+    // the running mission is a clock in the bar: its time under it, gold "!" when the reward waits, red while jailed
+    const mb = $('#hud-mission');
+    const mission = v.jailLeft > 0 ? { cls: 'jail', badge: clock(v.jailLeft), label: 'Zatknutý: pauza od misií' }
+      : v.mission ? { cls: v.mission.ready ? 'ready' : '', badge: v.mission.ready ? '!' : clock(v.mission.left), label: 'Misia ' + v.mission.name + (v.mission.ready ? ': vyzdvihni odmenu' : '') }
+        : null;
+    mb.hidden = !mission;
+    if (mission) {
+      mb.classList.toggle('ready', mission.cls === 'ready');
+      mb.classList.toggle('jail', mission.cls === 'jail');
+      if ($('#hud-mtime').textContent !== mission.badge) $('#hud-mtime').textContent = mission.badge;
+      if (mb.title !== mission.label) { mb.title = mission.label; mb.setAttribute('aria-label', mission.label); }
+    }
+    if (v.mission && v.mission.ready && !this.readyNotified) {
+      this.readyNotified = true;
+      sound.play('ready'); // the glowing clock says the rest, no message over the map
+      if (this.name === 'missions') this.render();
     }
     const rp = this.s.reaper();
-    const rtag = $('#hud-reaper');
-    rtag.hidden = !rp.active;
-    if (rp.active) rtag.innerHTML = 'Ripper ukradol tehličku · <b>' + clock(rp.until - Date.now()) + '</b>';
-    if (rp.active && !this.reaperWas) this.toast('Ripper ukradol Wexlerovi zlatú tehličku! Zasiahni ho a dobehni, kým neujde.', true);
+    this.reaperLine = rp.active ? 'Ripper ukradol tehličku · <b>' + clock(rp.until - Date.now()) + '</b>' : '';
+    if (rp.active && !this.reaperWas) this.toast('Ripper ukradol Wexlerovi tehličku! Zasiahni ho, kým neujde.', true);
     this.reaperWas = rp.active;
     const g = this.s.gang();
     if (g && g.log.length && g.log[0].at !== this.lastGangLog) {
@@ -280,19 +277,45 @@ export class UI {
     this.hideHud();
     // tabs of features the player has not reached yet look dim (the screen says from which level)
     for (const f of ['arena', 'gang']) $('.tabs [data-arg="' + f + '"]').classList.toggle('locked', !!this.s.locked(f) && !(f === 'gang' && g));
-    // wanted stars (0–5): only while the police are interested
+    // wanted stars (0–5): a badge on the avatar's corner, only while the police are interested
     const ws = this.s.wantedStars(), wel = $('#hud-wanted');
     wel.hidden = !ws;
     if (ws) {
-      const html = '<b>' + '★'.repeat(ws) + '</b>' + '★'.repeat(5 - ws);
-      if (wel.dataset.html !== html) { wel.innerHTML = html; wel.dataset.html = html; }
+      const txt = '★ ' + ws;
+      if (wel.textContent !== txt) { wel.textContent = txt; wel.title = 'Hľadanosť ' + ws + ' z 5: polícia na ulici'; }
       wel.classList.toggle('chase', ws >= CONFIG.wantedChase);
     }
-    const bl = $('#hud-buffs');
-    const chips = this.buffChips();
-    bl.hidden = !chips;
-    if (chips !== bl.dataset.html) { bl.innerHTML = chips; bl.dataset.html = chips; }
+    // running pills: only a dot per colour on the avatar (the effects and times are in Postava)
+    const b = this.s.buffs(), dots = ['red', 'blue', 'green'].filter((k) => b[k].length).map((k) => '<i class="' + k + '"></i>').join('');
+    const pd = $('#hud-pills');
+    pd.hidden = !dots;
+    if (pd.dataset.html !== dots) { pd.innerHTML = dots; pd.dataset.html = dots; }
+    this.statusHud();
     this.updateAction();
+  }
+
+  // the one line under the bar: a timed daily step first, then the Ripper, then the hideout shadow;
+  // while it shows, the tutorial / goal line waits
+  statusHud() {
+    const el = $('#hud-status');
+    const pick = this.dailyChip ? ['', this.dailyChip] : this.reaperLine ? ['reaper', this.reaperLine] : this.shadowChip ? ['shadow', this.shadowChip] : null;
+    el.hidden = !pick;
+    if (pick) {
+      el.className = 'status' + (pick[0] ? ' ' + pick[0] : '');
+      if (el.dataset.html !== pick[1]) { el.innerHTML = pick[1]; el.dataset.html = pick[1]; }
+    }
+    if (pick) $('#hud-tut').hidden = true;
+  }
+
+  // the tutorial and first-hour goal line (and its map arrow) can be switched off per device (Nastavenia or its ✕)
+  tipsOn() {
+    if (this.tips === undefined) { try { this.tips = localStorage.getItem('hl_tips') !== 'off'; } catch (e) { this.tips = true; } }
+    return this.tips;
+  }
+
+  setTips(on) {
+    this.tips = on;
+    try { localStorage.setItem('hl_tips', on ? 'on' : 'off'); } catch (e) { /* still applies until the page reloads */ }
   }
 
   // ---------------------------------------------------------------- weekend events
@@ -322,7 +345,7 @@ export class UI {
     const h = this.s.hideState();
     if (h.since && !this.hideBusy && (this.s.hidingLeft() <= 0 || (this.name !== 'hideout' && this.name !== 'title'))) this.hideFinish();
     const left = this.s.shadowLeft();
-    this.shadowChip = left ? '<span class="buff shadow" title="V tieni: polícia ťa nehľadá">' + SHADOW_ICON + '<small>' + clock(left) + '</small></span>' : '';
+    this.shadowChip = left ? SHADOW_ICON + '<span>V tieni, polícia ťa nehľadá · <b>' + clock(left) + '</b></span>' : '';
   }
 
   async hideFinish() {
@@ -415,7 +438,7 @@ export class UI {
     el.classList.remove('goal', 'ready');
     el.querySelector('.tut-x').hidden = false;
     $('#hud-tut-go').dataset.act = 'tut-go';
-    el.hidden = t.id === 'finish';
+    el.hidden = t.id === 'finish' || !this.tipsOn(); // switched off: the steps still count, the line and the arrow are gone
     if (this.tutStep !== undefined && t.step > this.tutStep) sound.play('go');
     this.tutStep = t.step;
     if (t.id === 'finish') {
@@ -431,12 +454,15 @@ export class UI {
     if (st.go) { go.textContent = st.go[0]; go.dataset.arg = st.go[1]; }
   }
 
-  // bottom edge of the HUD column under the top bar (px from the top of the game), read at most every 300 ms
+  // bottom edge of the HUD (the status / tutorial line if one shows, else the top bar), px from the top of the game,
+  // read at most every 300 ms
   hudBottom() {
     const now = Date.now();
     if (!this.hudB || now - this.hudB.at > 300) {
+      const top = $('#app').getBoundingClientRect().top;
       const r = $('#hud-stack').getBoundingClientRect();
-      this.hudB = { at: now, v: r.height ? Math.round(r.bottom - $('#app').getBoundingClientRect().top) : 134 };
+      const bar = $('.hud-top').getBoundingClientRect();
+      this.hudB = { at: now, v: Math.round((r.height ? r.bottom : bar.bottom + 10) - top) || 96 };
     }
     return this.hudB.v;
   }
@@ -445,7 +471,7 @@ export class UI {
   // a button for its reward; the map arrow points to the goal's place (main.js tutorialTarget)
   goalHud(el) {
     const g = this.s.goal ? this.s.goal() : null;
-    el.hidden = !g;
+    el.hidden = !g || (!this.tipsOn() && !g.ready); // switched off: only a reached goal shows, so its reward is not lost
     if (!g) return;
     el.classList.add('goal');
     el.classList.toggle('ready', g.ready);
@@ -455,7 +481,7 @@ export class UI {
       : g.text + (g.n > 1 && g.kind !== 'level' ? ' (' + g.have + ' / ' + g.n + ')' : '');
     $('#hud-tut-n').textContent = 'Cieľ ' + (g.i + 1) + '/' + g.total;
     if ($('#hud-tut-text').textContent !== text) $('#hud-tut-text').textContent = text;
-    el.querySelector('.tut-x').hidden = true;
+    el.querySelector('.tut-x').hidden = g.ready;
     const go = $('#hud-tut-go');
     const btn = g.ready ? ['Vyzdvihnúť', 'goal-claim', ''] : g.go ? [g.go[0], 'tut-go', g.go[1]] : null;
     go.hidden = !btn;
@@ -491,7 +517,7 @@ export class UI {
       if (t.type === 'sledovanie' && w && w.follow > 0) live.push('sleduješ ' + Math.min(v.followSec, Math.floor(w.follow)) + '/' + v.followSec + ' s');
       if (t.type === 'graffiti' && w && w.spray > 0) live.push('sprej ' + Math.min(v.spraySec, Math.floor(w.spray)) + '/' + v.spraySec + ' s');
     }
-    if (live.length) this.dailyChip = '<span class="buff daily" title="Denná misia">' + CHEST_ICON + '<small>' + [...new Set(live)].join(' · ') + '</small></span>';
+    if (live.length) this.dailyChip = CHEST_ICON + '<span>Denná misia · <b>' + [...new Set(live)].join(' · ') + '</b></span>';
   }
 
   // the map stepped on a target / picked a parcel / survived the escape
@@ -558,13 +584,13 @@ export class UI {
     return { html: this.hdr('Denné misie', 'deň <span class="gold">' + (v.done ? cur : v.day) + '</span> / 15') + '<div class="body">' + h + '</div>' };
   }
 
-  // one chip per pill colour: icon, stacks, time until the next stack runs out
-  buffChips() {
+  // the running pills for Postava: one row per colour with its effect, stacks and the time until the next stack runs out
+  pillRows() {
     const b = this.s.buffs(), cls = this.s.p.cls, now = Date.now();
-    return (this.dailyChip || '') + (this.shadowChip || '') + ['red', 'blue', 'green'].filter((k) => b[k].length).map((k) => {
+    return ['red', 'blue', 'green'].filter((k) => b[k].length).map((k) => {
       const n = b[k].length;
-      return '<span class="buff ' + k + '" title="' + pillName(k) + ': +' + pct(CONFIG.pillBoost * n) + ' ' + pillEffect(k, cls) + '">' + PILL_ICON[k] +
-        '<b>+' + Math.round(CONFIG.pillBoost * n * 100) + ' %</b><small>' + clock(Math.min(...b[k]) - now) + '</small></span>';
+      return '<div class="pillrow"><span class="buff ' + k + '">' + PILL_ICON[k] + '<b>+' + Math.round(CONFIG.pillBoost * n * 100) + ' %</b></span>' +
+        '<span class="pe">' + pillName(k) + ': ' + pillEffect(k, cls) + '</span><span class="num muted" data-until="' + Math.min(...b[k]) + '">' + clock(Math.min(...b[k]) - now) + '</span></div>';
     }).join('');
   }
 
@@ -651,12 +677,12 @@ export class UI {
     t.className = 'toast' + (bad ? ' bad' : '');
     t.textContent = msg;
     if (bad) sound.play('error');
-    // on the map a toast goes just under the HUD column (heat, mission, tutorial), so it never covers it
-    const stack = !this.name && !this.el.hud.hidden && $('#hud-stack');
-    const r = stack && stack.getBoundingClientRect();
-    this.el.toasts.style.top = r && r.height ? Math.round(r.bottom - $('#app').getBoundingClientRect().top + 8) + 'px' : '';
+    // on the map: one message at a time, low above the controls, so the top of the map stays clear
+    const onMap = !this.name && !this.el.hud.hidden;
+    this.el.toasts.classList.toggle('onmap', onMap);
+    if (onMap) this.el.toasts.querySelectorAll('.toast').forEach((x) => x.remove());
     this.el.toasts.appendChild(t);
-    setTimeout(() => t.remove(), 3200);
+    setTimeout(() => t.remove(), Math.min(5000, 2400 + msg.length * 30));
   }
 
   // ---------------------------------------------------------------- beta: errors and bug reports
@@ -883,7 +909,7 @@ export class UI {
       async offer(a) { this.sel.offer = a; this.render(); },
       async accept() {
         const r = await this.s.startMission(this.arg, this.sel.offer);
-        if (this.check(r)) { sound.play('go'); this.readyNotified = false; this.toast('Misia beží. Medzitým sa môžeš túlať mestom.'); this.close(); }
+        if (this.check(r)) { sound.play('go'); this.readyNotified = false; this.toast('Misia beží. Čas vidíš hore pri hodinách.'); this.close(); }
       },
       async skip() { const r = await this.s.skipMission(); if (this.check(r)) { this.render(); } },
       async claim() {
@@ -977,7 +1003,7 @@ export class UI {
             '<div class="acts"><button class="btn gold" data-act="modal-close">Rozumiem</button></div>');
         }
       },
-      async 'tut-skip-yes'() { if (this.check(await this.s.tutorialSkip())) { this.closeModal(); this.toast('Návod preskočený.'); } },
+      async 'tut-skip-yes'() { if (this.check(await this.s.tutorialSkip())) { this.closeModal(); if (this.name) this.render(); this.toast('Návod preskočený.'); } },
       async 'tut-finish'() {
         const r = await this.s.tutorialFinish();
         if (!this.check(r)) return;
@@ -986,6 +1012,8 @@ export class UI {
         this.toast('Odmena za návod: ' + money(r.cash) + ' a ' + r.bars + ' tehličiek.');
       },
       async 'sound-toggle'() { sound.set(!sound.on); setTimeout(() => sound.play('cash'), 80); this.render(); },
+      'tips-toggle'() { this.setTips(!this.tipsOn()); this.render(); },
+      'tips-off'() { this.setTips(false); this.tick(); this.toast('Návod a ciele sú skryté. Zapneš ich v Nastaveniach.'); },
       async 'test-mode'() { await this.s.setTestMode(!this.s.state.settings.testMode); this.render(); },
       async 'test-bm'() { await this.s.setBlackMarket(!this.s.state.settings.blackMarket); this.render(); },
       async 'buy-bars'(a) {
@@ -1223,7 +1251,7 @@ export class UI {
         this.medalRow(myTiers, true) +
         '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:15px;color:#9b968b" class="num"><span>Skúsenosti</span><span style="color:#e9e4d8">' + fmt(v.xp) + ' / ' + fmt(v.xpNext) + '</span></div><div class="bar" style="height:8px;margin-top:4px"><i style="width:' + Math.min(100, (v.xp / v.xpNext) * 100) + '%"></i></div></div>' +
         '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">Životy ' + fmt(this.s.maxHp()) + ' · úder ' + Math.round(hb * 0.85) + '–' + Math.round(hb * 1.15) + ' · krit ' + pct(F.crit(ts.stastie, p.level)) + ' · brnenie ' + pct(F.reduction(ts.armor, p.level, p.cls)) + ' (max ' + pct(c.armorCap) + ')' + special + '</p>' +
-        (this.buffChips() ? '<div class="buffs-list">' + this.buffChips() + '</div>' : '') +
+        (this.pillRows() ? '<div class="sec sc" style="margin-top:12px">Aktívne tabletky</div><div class="pills-list">' + this.pillRows() + '</div>' : '') +
         '<div style="margin-top:8px;border-top:1px solid var(--line)">' + rows + '</div>' +
         (p.points > 0 ? '<p class="note gold" style="font-size:16px">Voľné body: ' + p.points + '</p>' : '<p class="note">Staty si dokupuješ za peniaze, cena s každým bodom rastie.</p>') +
         '</div>',
@@ -1579,6 +1607,11 @@ export class UI {
     const on = this.s.hasSave() && this.s.state.settings.testMode;
     let h = this.s.hasSave() ? '<div class="switch"><span>Nahlásiť chybu<br><small class="muted" style="font-size:14px">Niečo nefunguje alebo vyzerá zle? Napíš nám.</small></span><button class="btn small gold" data-act="bug-open">Nahlásiť</button></div>' : '';
     h += '<div class="switch"><span>Zvuk<br><small class="muted" style="font-size:14px">Údery, výstrely, peniaze, korisť. Platí pre toto zariadenie.</small></span><button class="btn small ' + (sound.on ? 'gold' : '') + '" data-act="sound-toggle">' + (sound.on ? 'Zapnutý' : 'Vypnutý') + '</button></div>';
+    if (this.s.hasSave()) {
+      const tips = this.tipsOn(), tut = this.s.tutorial ? this.s.tutorial() : null;
+      h += '<div class="switch"><span>Návod a ciele na mape<br><small class="muted" style="font-size:14px">Riadok pod lištou a šípka k cieľu. Splnený cieľ sa ukáže vždy, aby si neprišiel o odmenu.</small></span><button class="btn small ' + (tips ? 'gold' : '') + '" data-act="tips-toggle">' + (tips ? 'Zapnuté' : 'Vypnuté') + '</button></div>';
+      if (tut && tut.id !== 'finish') h += '<div class="switch"><span>Návod pre nováčikov<br><small class="muted" style="font-size:14px">Krok ' + (tut.step + 1) + ' z ' + tut.total + '. Preskočený návod nedá odmenu.</small></span><button class="btn small" data-act="tut-skip">Preskočiť</button></div>';
+    }
     if (this.s.online) {
       if (this.s.loggedIn()) h += '<div class="switch"><span>Účet<br><small class="muted" style="font-size:14px">' + esc(this.s.email()) + '</small></span><button class="btn small" data-act="logout">Odhlásiť</button></div>';
       if (this.s.hasSave()) h += '<div class="switch"><span>Postava<br><small class="muted" style="font-size:14px">Uložená na serveri.</small></span><button class="btn small" data-act="reset">Zmazať</button></div>';

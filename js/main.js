@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261123193311';
-import { RemoteServer } from './remote.js?v=20261123193311';
-import { ONLINE } from './net.js?v=20261123193311';
-import { CONFIG } from './config.js?v=20261123193311';
-import { UI } from './ui.js?v=20261123193311';
-import { createWorld } from './world.js?v=20261123193311';
-import { sound } from './sound.js?v=20261123193311';
+import { SimServer } from './server.js?v=20261123201248';
+import { RemoteServer } from './remote.js?v=20261123201248';
+import { ONLINE } from './net.js?v=20261123201248';
+import { CONFIG } from './config.js?v=20261123201248';
+import { UI } from './ui.js?v=20261123201248';
+import { createWorld } from './world.js?v=20261123201248';
+import { sound } from './sound.js?v=20261123201248';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -54,6 +54,8 @@ const game = createWorld(document.getElementById('game'), {
   // the place the tutorial sends you to (a POI id of this city), or null
   tutorialTarget: () => {
     const t = server.hasSave() && server.tutorial ? server.tutorial() : null;
+    // "Návod a ciele" switched off in Nastavenia: no ring or arrow, except a "Ukáž cestu" the player asked for
+    if (!ui.tipsOn()) return ui.guide && Date.now() < ui.guide.until && server.city() === 'mesto1' ? ui.guide.poi : null;
     if (!t) {
       // "Ukáž cestu" in an unlock window wins for a few minutes or until you get there
       if (ui.guide && Date.now() < ui.guide.until && server.city() === 'mesto1') return ui.guide.poi;
