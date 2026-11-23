@@ -1,0 +1,17 @@
+# Cloudflare Pages response headers (GitHub Pages ignores this file).
+# CSP: scripts, styles, fonts and images only from this site; the game talks only to its Supabase project.
+# style-src needs 'unsafe-inline' for the style="" attributes in ui.js; img-src data:/blob: for Phaser textures.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://ivzplchpakfkilnzvkyj.supabase.co; media-src 'self' data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), usb=(), serial=(), bluetooth=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000
+
+# libraries and fonts carry their version in the file name: keep them a year
+/js/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
