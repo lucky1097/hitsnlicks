@@ -1,10 +1,10 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261123185953';
-import { NET } from './net.js?v=20261123185953';
-import { CONFIG } from './config.js?v=20261123185953';
-import { SHOPS } from './data.js?v=20261123185953';
+import { SimServer } from './server.js?v=20261123191200';
+import { NET } from './net.js?v=20261123191200';
+import { CONFIG } from './config.js?v=20261123191200';
+import { SHOPS } from './data.js?v=20261123191200';
 
 // the official supabase-js UMD build, kept in the repo (js/vendor): no code from a CDN runs in the game
 const SUPABASE_JS = 'js/vendor/supabase-js-2.45.4.js';
@@ -62,7 +62,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261123185953');
+    const { handle, memoryDb } = await import('./api.js?v=20261123191200');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),
@@ -95,23 +95,26 @@ export class RemoteServer extends SimServer {
   loggedIn() { return !!this.session; }
   email() { return this.session && this.session.user.email; }
 
-  async signIn(email, password) {
-    const { data, error } = await this.sb.auth.signInWithPassword({ email, password });
+  // the captcha is checked by Supabase (Attack Protection); ?mock needs none
+  needsCaptcha() { return !/[?&]mock/.test(location.search); } // (the address, not mockDb: the title is drawn before init)
+
+  async signIn(email, password, captchaToken) {
+    const { data, error } = await this.sb.auth.signInWithPassword({ email, password, options: { captchaToken } });
     if (error) return { ok: false, error: authError(error) };
     this.session = data.session;
     await this.call('sync');
     return { ok: true };
   }
 
-  async signUp(email, password) {
-    const { data, error } = await this.sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0] } });
+  async signUp(email, password, captchaToken) {
+    const { data, error } = await this.sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0], captchaToken } });
     if (error) return { ok: false, error: authError(error) };
     if (data.session) { this.session = data.session; return { ok: true }; }
     return { ok: true, confirm: true }; // the project wants the email confirmed first
   }
 
-  async resetPassword(email) {
-    const { error } = await this.sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
+  async resetPassword(email, captchaToken) {
+    const { error } = await this.sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0], captchaToken });
     return error ? { ok: false, error: authError(error) } : { ok: true };
   }
 
@@ -204,6 +207,7 @@ function authError(e) {
   if (/already registered/i.test(m)) return 'Tento email už má účet. Prihlás sa.';
   if (/Password should be/i.test(m)) return 'Heslo musí mať aspoň 6 znakov.';
   if (/should be different/i.test(m)) return 'Nové heslo musí byť iné ako staré.';
+  if (/captcha/i.test(m)) return 'Overenie, že nie si robot, neprešlo. Počkaj na fajku nad tlačidlom a skús znova.';
   if (/rate limit/i.test(m)) return 'Priveľa pokusov, skús to o chvíľu.';
   return m || 'Prihlásenie zlyhalo.';
 }

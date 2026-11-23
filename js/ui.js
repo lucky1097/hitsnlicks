@@ -1,11 +1,12 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123185953';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123185953';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123185953';
-import { DAILY_TYPES } from './daily.js?v=20261123185953';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123185953';
-import { sound } from './sound.js?v=20261123185953';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123185953';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123191200';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123191200';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123191200';
+import { DAILY_TYPES } from './daily.js?v=20261123191200';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123191200';
+import { sound } from './sound.js?v=20261123191200';
+import { CAPTCHA } from './net.js?v=20261123191200';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123191200';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -100,6 +101,7 @@ export class UI {
     this.sel = { cls: 'zlodej', approach: null, offer: null };
     this.errors = []; // the last browser errors (sent with a bug report)
     this.errorsOut = []; // waiting to be sent to the server
+    this.captcha = { id: null, token: null, failed: false }; // Turnstile in the login form (captchaMount)
     this.errorsSent = 0;
     this.errorsAt = 0;
     this.modalOpen = false;
@@ -707,6 +709,37 @@ export class UI {
     this.modal('<h2>' + esc(title) + '</h2><p class="sub" style="font-size:17px;color:#c9c4b8">' + esc(text) + '</p><div class="acts"><button class="btn gold" data-act="modal-close">Rozumiem</button></div>');
   }
 
+  // Cloudflare Turnstile in the login form (#captcha): the script loads once, the widget is drawn again after each
+  // render of the title screen; its token goes with sign-in / sign-up / new password and works only once
+  captchaMount() {
+    const el = $('#captcha');
+    if (!el || el.childElementCount) return;
+    if (!this.captchaScript) {
+      this.captchaScript = new Promise((done, failed) => {
+        const s = document.createElement('script');
+        s.src = CAPTCHA.script; s.async = true;
+        s.onload = done; s.onerror = () => failed(new Error('captcha script'));
+        document.head.appendChild(s);
+      });
+    }
+    this.captchaScript.then(() => {
+      if (!el.isConnected || !window.turnstile) return;
+      if (this.captcha.id != null) { try { window.turnstile.remove(this.captcha.id); } catch (e) { /* its element is gone already */ } }
+      this.captcha.token = null;
+      this.captcha.id = window.turnstile.render(el, {
+        sitekey: CAPTCHA.siteKey, theme: 'dark', size: 'flexible', language: 'sk',
+        callback: (t) => { this.captcha.token = t; this.captcha.failed = false; },
+        'expired-callback': () => { this.captcha.token = null; },
+        'error-callback': () => { this.captcha.token = null; },
+      });
+    }, () => { this.captcha.failed = true; this.logError('captcha script did not load'); });
+  }
+
+  captchaReset() {
+    this.captcha.token = null;
+    if (this.captcha.id != null && window.turnstile) { try { window.turnstile.reset(this.captcha.id); } catch (e) { /* redrawn on the next render */ } }
+  }
+
   // the page was opened from an account email (remote.js authReturn): confirmed, a new password, or a dead link
   authBack(b) {
     if (!b) return;
@@ -1038,8 +1071,15 @@ export class UI {
         this.sel.authEmail = email;
         if (!email) { this.toast('Zadaj email.', true); return; }
         if (mode === 'up' && !($('#auth-agree') && $('#auth-agree').checked)) { this.toast('Potvrď, že máš aspoň 18 rokov a súhlasíš s podmienkami.', true); return; }
-        if (mode === 'reset') { const r = await this.s.resetPassword(email); if (this.check(r)) this.info('Obnova hesla', 'Poslali sme ti email s odkazom na nové heslo.'); return; }
-        const r = mode === 'up' ? await this.s.signUp(email, pass) : await this.s.signIn(email, pass);
+        const needCaptcha = this.s.needsCaptcha && this.s.needsCaptcha();
+        if (needCaptcha && !this.captcha.token) {
+          this.toast(this.captcha.failed ? 'Overenie sa nenačítalo. Obnov stránku, prípadne vypni blokovanie reklám pre túto stránku.' : 'Chvíľu počkaj, kým sa overí, že nie si robot.', true);
+          return;
+        }
+        const token = this.captcha.token;
+        if (needCaptcha) this.captchaReset(); // a token works only once
+        if (mode === 'reset') { const r = await this.s.resetPassword(email, token); if (this.check(r)) this.info('Obnova hesla', 'Poslali sme ti email s odkazom na nové heslo.'); return; }
+        const r = mode === 'up' ? await this.s.signUp(email, pass, token) : await this.s.signIn(email, pass, token);
         if (!this.check(r)) return;
         if (r.confirm) { this.info('Potvrď email', 'Na ' + email + ' sme poslali odkaz. Po potvrdení sa tu prihlás.'); this.sel.authMode = 'in'; this.render(); return; }
         this.render();
@@ -1101,6 +1141,7 @@ export class UI {
       inner += '<div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" value="' + esc(this.sel.authEmail || '') + '"></div>';
       if (mode !== 'reset') inner += '<div class="field"><label for="auth-pass">Heslo' + (mode === 'up' ? ' (aspoň 6 znakov)' : '') + '</label><input id="auth-pass" type="password" autocomplete="' + (mode === 'up' ? 'new-password' : 'current-password') + '"></div>';
       if (mode === 'up') inner += '<label class="agree"><input type="checkbox" id="auth-agree"><span>Mám aspoň 18 rokov a súhlasím s <a href="podmienky.html" target="_blank" rel="noopener">podmienkami používania</a>. Ako chránime tvoje údaje: <a href="sukromie.html" target="_blank" rel="noopener">ochrana osobných údajov</a>.</span></label>';
+      if (this.s.needsCaptcha && this.s.needsCaptcha()) inner += '<div id="captcha" class="captcha"></div>';
       inner += '<button class="btn gold wide" data-act="login" data-arg="' + mode + '">' + { in: 'Prihlásiť sa', up: 'Vytvoriť účet', reset: 'Poslať odkaz na nové heslo' }[mode] + '</button>';
       inner += '<div class="menu" style="margin-top:6px">' + (mode !== 'in' ? '<button data-act="auth-mode" data-arg="in">Mám účet, prihlásiť sa</button>' : '<button data-act="auth-mode" data-arg="up">Nový hráč? Vytvoriť účet</button><button data-act="auth-mode" data-arg="reset">Zabudnuté heslo</button>') + '</div>';
     } else if (has && !this.sel.newGame) {
@@ -1120,6 +1161,7 @@ export class UI {
       if (has) inner += '<button class="btn wide" style="margin-top:8px" data-act="cancel-new">Späť</button>';
     }
     return {
+      after: () => this.captchaMount(),
       html: '<div class="title-scr"><div class="poster"><img src="' + art('photo_title') + '" alt="Hits &amp; Licks: traja chlapi z gangu v nočnej ulici"></div><div class="inner">' + inner + '<p class="legal">Len pre dospelých (18+) · <a href="podmienky.html" target="_blank" rel="noopener">Podmienky používania</a> · <a href="sukromie.html" target="_blank" rel="noopener">Ochrana osobných údajov</a></p></div></div>',
     };
   }

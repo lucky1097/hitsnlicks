@@ -1,8 +1,10 @@
 # Cloudflare Pages response headers (GitHub Pages ignores this file).
 # CSP: scripts, styles, fonts and images only from this site; the game talks only to its Supabase project.
+# The one exception is Cloudflare Turnstile (the captcha in the login form): its script and frame come from
+# challenges.cloudflare.com and cannot be kept in the repo.
 # style-src needs 'unsafe-inline' for the style="" attributes in ui.js; img-src data:/blob: for Phaser textures.
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://ivzplchpakfkilnzvkyj.supabase.co; media-src 'self' data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://ivzplchpakfkilnzvkyj.supabase.co https://challenges.cloudflare.com; media-src 'self' data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
