@@ -41,6 +41,10 @@ Buttons and labels stay short (German especially: shorten rather than wrap).
 | Alchymista, Prievozník (mission givers) | Alchymista, Převozník | Alchemist, Fährmann | Alchemist, Ferryman |
 | Radničná veža | Radniční věž | Rathausturm | Town Hall Tower |
 | pilulka | pilulka | Pille | pill |
+| pešiak (rank under the name, tagline) | pěšák | Fußsoldat | pawn |
+| pešiak (chess piece on items) | pěšák | Bauer | pawn |
+| zložiť policajta, zložený policajt (taken down) | složit policistu, složený policista | Polizist niederschlagen, erledigter Polizist | take down a cop, downed cop |
+| objekt (Gang Wars place) | objekt | Objekt | spot |
 
 ## Names stay as they are
 
@@ -63,3 +67,4 @@ are translated the way their mission stories say them.
   German and English give 2 (`Mission|Missionen`, `mission|missions`).
 - Keys with `{name}` are sentences with gaps; the gap can move to wherever the language needs it.
 - Keep the Slovak sentence's meaning, not its word order. Don't add or drop information.
+- Quotation marks: Czech and German keep „ “; English uses “ ”.

@@ -90,7 +90,7 @@ export const CONFIG = {
   hideMin: 5,
   shadowMin: 20,
   copEpicChance: 0.1, // per officer put down
-  copEpicPerDay: 5, // cap per day: it also limits what a modified client could farm
+  copEpicPerDay: 1, // cap per day (Lucky 2026-11-24: 1): it also limits what a modified client could farm
   copKillGapMs: 250,
   killJailMin: 120,
   killCashShare: 0.5,

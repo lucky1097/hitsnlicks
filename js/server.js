@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261124000258';
-import { eventFx } from './events.js?v=20261124000258';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261124000258';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261124000258';
-import { GangMixin } from './gangs.js?v=20261124000258';
-import { DailyMixin } from './daily.js?v=20261124000258';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261124000258';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261124001158';
+import { eventFx } from './events.js?v=20261124001158';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261124001158';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261124001158';
+import { GangMixin } from './gangs.js?v=20261124001158';
+import { DailyMixin } from './daily.js?v=20261124001158';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261124001158';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
