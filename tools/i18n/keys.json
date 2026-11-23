@@ -1,0 +1,8342 @@
+[
+ {
+  "k": "Corner na Grabenskej",
+  "kind": "data",
+  "ctx": "ALL_TURF.0.name | CITIES.mesto1.pois.13.name | CITIES.mesto1.names.corner1"
+ },
+ {
+  "k": "Corner na Ladskej",
+  "kind": "data",
+  "ctx": "ALL_TURF.1.name | CITIES.mesto1.pois.14.name | CITIES.mesto1.names.corner2"
+ },
+ {
+  "k": "Corner pri Kronprinzovej",
+  "kind": "data",
+  "ctx": "ALL_TURF.2.name | CITIES.mesto1.pois.15.name | CITIES.mesto1.names.corner3"
+ },
+ {
+  "k": "Corner na Kostolnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.3.name | CITIES.mesto1.pois.16.name | CITIES.mesto1.names.corner4"
+ },
+ {
+  "k": "Corner na Východnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.4.name | CITIES.mesto1.pois.17.name | CITIES.mesto1.names.corner5"
+ },
+ {
+  "k": "Garáž na bulvári",
+  "kind": "data",
+  "ctx": "ALL_TURF.5.name | CITIES.mesto1.pois.18.name | CITIES.mesto1.names.garaz1"
+ },
+ {
+  "k": "Garáž na Západnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.6.name | CITIES.mesto1.pois.19.name | CITIES.mesto1.names.garaz2"
+ },
+ {
+  "k": "Garáž na juhu",
+  "kind": "data",
+  "ctx": "ALL_TURF.7.name | CITIES.mesto1.pois.20.name | CITIES.mesto1.names.garaz3"
+ },
+ {
+  "k": "Sklad na Východnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.8.name | CITIES.mesto1.pois.21.name | CITIES.mesto1.names.sklad1"
+ },
+ {
+  "k": "Severný sklad",
+  "kind": "data",
+  "ctx": "ALL_TURF.9.name | CITIES.mesto1.pois.22.name | CITIES.mesto1.names.sklad2"
+ },
+ {
+  "k": "Klub na Bilkerskej",
+  "kind": "data",
+  "ctx": "ALL_TURF.10.name | CITIES.mesto1.pois.23.name | CITIES.mesto1.names.klub1"
+ },
+ {
+  "k": "Klub na Alžbetinej",
+  "kind": "data",
+  "ctx": "ALL_TURF.11.name | CITIES.mesto1.pois.24.name | CITIES.mesto1.names.klub2"
+ },
+ {
+  "k": "Corner na Valentínskej",
+  "kind": "data",
+  "ctx": "ALL_TURF.12.name | CITIES.mesto2.pois.12.name | CITIES.mesto2.names.corner1"
+ },
+ {
+  "k": "Corner na Žateckej",
+  "kind": "data",
+  "ctx": "ALL_TURF.13.name | CITIES.mesto2.pois.13.name | CITIES.mesto2.names.corner2"
+ },
+ {
+  "k": "Corner na Karlovej",
+  "kind": "data",
+  "ctx": "ALL_TURF.14.name | CITIES.mesto2.pois.14.name | CITIES.mesto2.names.corner3"
+ },
+ {
+  "k": "Corner na Kozej",
+  "kind": "data",
+  "ctx": "ALL_TURF.15.name | CITIES.mesto2.pois.15.name | CITIES.mesto2.names.corner4"
+ },
+ {
+  "k": "Corner na Melantrichovej",
+  "kind": "data",
+  "ctx": "ALL_TURF.16.name | CITIES.mesto2.pois.16.name | CITIES.mesto2.names.corner5"
+ },
+ {
+  "k": "Garáž na 17. novembra",
+  "kind": "data",
+  "ctx": "ALL_TURF.17.name | CITIES.mesto2.pois.17.name | CITIES.mesto2.names.garaz1"
+ },
+ {
+  "k": "Garáž na Revolučnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.18.name | CITIES.mesto2.pois.18.name | CITIES.mesto2.names.garaz2"
+ },
+ {
+  "k": "Garáž na Kaprovej",
+  "kind": "data",
+  "ctx": "ALL_TURF.19.name | CITIES.mesto2.pois.19.name | CITIES.mesto2.names.garaz3"
+ },
+ {
+  "k": "Sklad na Dušnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.20.name | CITIES.mesto2.pois.20.name | CITIES.mesto2.names.sklad1"
+ },
+ {
+  "k": "Sklad na Haštalskej",
+  "kind": "data",
+  "ctx": "ALL_TURF.21.name | CITIES.mesto2.pois.21.name | CITIES.mesto2.names.sklad2"
+ },
+ {
+  "k": "Klub na Celetnej",
+  "kind": "data",
+  "ctx": "ALL_TURF.22.name | CITIES.mesto2.pois.22.name | CITIES.mesto2.names.klub1"
+ },
+ {
+  "k": "Pivnica pri námestí",
+  "kind": "data",
+  "ctx": "ALL_TURF.23.name | CITIES.mesto2.pois.23.name | CITIES.mesto2.names.klub2"
+ },
+ {
+  "k": "Kráľ sídliska",
+  "kind": "data",
+  "ctx": "BOSSES.0.title"
+ },
+ {
+  "k": "Záložňa za mrežami",
+  "kind": "data",
+  "ctx": "BOSSES.1.title"
+ },
+ {
+  "k": "Garáž bez papierov",
+  "kind": "data",
+  "ctx": "BOSSES.2.title"
+ },
+ {
+  "k": "Hacker z pivnice",
+  "kind": "data",
+  "ctx": "BOSSES.3.title"
+ },
+ {
+  "k": "Nočné preteky na diaľnici",
+  "kind": "data",
+  "ctx": "BOSSES.4.title"
+ },
+ {
+  "k": "Vymáhač z írskeho pubu",
+  "kind": "data",
+  "ctx": "BOSSES.5.title"
+ },
+ {
+  "k": "Deväťdesiatky nikdy neskončili",
+  "kind": "data",
+  "ctx": "BOSSES.6.title"
+ },
+ {
+  "k": "Tlačí vlastné peniaze",
+  "kind": "data",
+  "ctx": "BOSSES.7.title"
+ },
+ {
+  "k": "Pán prístavu",
+  "kind": "data",
+  "ctx": "BOSSES.8.title"
+ },
+ {
+  "k": "Motorkári z Iron Horse",
+  "kind": "data",
+  "ctx": "BOSSES.9.title"
+ },
+ {
+  "k": "Sklad plný bední",
+  "kind": "data",
+  "ctx": "BOSSES.10.title"
+ },
+ {
+  "k": "Basa je jeho hotel",
+  "kind": "data",
+  "ctx": "BOSSES.11.title"
+ },
+ {
+  "k": "Zákon má cenu",
+  "kind": "data",
+  "ctx": "BOSSES.12.title"
+ },
+ {
+  "k": "Sauna, vodka a dlžníci",
+  "kind": "data",
+  "ctx": "BOSSES.13.title"
+ },
+ {
+  "k": "Majiteľ nočného klubu",
+  "kind": "data",
+  "ctx": "BOSSES.14.title"
+ },
+ {
+  "k": "Kráľovná kasína",
+  "kind": "data",
+  "ctx": "BOSSES.15.title"
+ },
+ {
+  "k": "Dračí stôl",
+  "kind": "data",
+  "ctx": "BOSSES.16.title"
+ },
+ {
+  "k": "Kráľ podzemných zápasov",
+  "kind": "data",
+  "ctx": "BOSSES.17.title"
+ },
+ {
+  "k": "Mesto mu podpisuje šeky",
+  "kind": "data",
+  "ctx": "BOSSES.18.title"
+ },
+ {
+  "k": "Trezor má len jeden kľúč",
+  "kind": "data",
+  "ctx": "BOSSES.19.title"
+ },
+ {
+  "k": "Biely tiger na terase",
+  "kind": "data",
+  "ctx": "BOSSES.20.title"
+ },
+ {
+  "k": "Kartel v bielom",
+  "kind": "data",
+  "ctx": "BOSSES.21.title"
+ },
+ {
+  "k": "Kapor na hrudi, meč za chrbtom",
+  "kind": "data",
+  "ctx": "BOSSES.22.title"
+ },
+ {
+  "k": "Ruža v klope, mačka na kolenách",
+  "kind": "data",
+  "ctx": "BOSSES.23.title"
+ },
+ {
+  "k": "Celé mesto pod jeho oknom",
+  "kind": "data",
+  "ctx": "BOSSES.24.title"
+ },
+ {
+  "k": "Cesty po strechách",
+  "kind": "data",
+  "ctx": "BOSSES2.0.title"
+ },
+ {
+  "k": "Hostinec U zlatého kľúča",
+  "kind": "data",
+  "ctx": "BOSSES2.1.title"
+ },
+ {
+  "k": "Dielňa pod mostom",
+  "kind": "data",
+  "ctx": "BOSSES2.2.title"
+ },
+ {
+  "k": "Prehliadky, z ktorých sa nevracia",
+  "kind": "data",
+  "ctx": "BOSSES2.3.title"
+ },
+ {
+  "k": "Kasíno v pivnici",
+  "kind": "data",
+  "ctx": "BOSSES2.4.title"
+ },
+ {
+  "k": "Varňa za rohom",
+  "kind": "data",
+  "ctx": "BOSSES2.5.title"
+ },
+ {
+  "k": "Kone a kočiar na námestí",
+  "kind": "data",
+  "ctx": "BOSSES2.6.title"
+ },
+ {
+  "k": "Divadlo na Celetnej",
+  "kind": "data",
+  "ctx": "BOSSES2.7.title"
+ },
+ {
+  "k": "Huta za riekou",
+  "kind": "data",
+  "ctx": "BOSSES2.8.title"
+ },
+ {
+  "k": "Majster orloja",
+  "kind": "data",
+  "ctx": "BOSSES2.9.title"
+ },
+ {
+  "k": "Absintový bar",
+  "kind": "data",
+  "ctx": "BOSSES2.10.title"
+ },
+ {
+  "k": "Výletná loď, ktorá nikam nepláva",
+  "kind": "data",
+  "ctx": "BOSSES2.11.title"
+ },
+ {
+  "k": "Banka bez mena",
+  "kind": "data",
+  "ctx": "BOSSES2.12.title"
+ },
+ {
+  "k": "Popravisko na námestí",
+  "kind": "data",
+  "ctx": "BOSSES2.13.title"
+ },
+ {
+  "k": "Boxer z pivnice",
+  "kind": "data",
+  "ctx": "BOSSES2.14.title"
+ },
+ {
+  "k": "Palác na Parížskej",
+  "kind": "data",
+  "ctx": "BOSSES2.15.title"
+ },
+ {
+  "k": "Chodby pod mestom",
+  "kind": "data",
+  "ctx": "BOSSES2.16.title"
+ },
+ {
+  "k": "Dvojica z Dlhej",
+  "kind": "data",
+  "ctx": "BOSSES2.17.title"
+ },
+ {
+  "k": "Salón na Dlhej",
+  "kind": "data",
+  "ctx": "BOSSES2.18.title"
+ },
+ {
+  "k": "Kaviareň Imperiál",
+  "kind": "data",
+  "ctx": "BOSSES2.19.title"
+ },
+ {
+  "k": "Pancierový sklad",
+  "kind": "data",
+  "ctx": "BOSSES2.20.title"
+ },
+ {
+  "k": "Nočné kluby pri rieke",
+  "kind": "data",
+  "ctx": "BOSSES2.21.title"
+ },
+ {
+  "k": "Podpisy a pečate",
+  "kind": "data",
+  "ctx": "BOSSES2.22.title"
+ },
+ {
+  "k": "Tajná lóža",
+  "kind": "data",
+  "ctx": "BOSSES2.23.title"
+ },
+ {
+  "k": "Vládca Starého Mesta",
+  "kind": "data",
+  "ctx": "BOSSES2.24.title"
+ },
+ {
+  "k": "Mesto 1",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.name"
+ },
+ {
+  "k": "Don",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.0.name | CITIES.mesto1.labels.15.text | GIVERS.don.name"
+ },
+ {
+  "k": "Hovoriť",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.0.verb | CITIES.mesto1.pois.1.verb | CITIES.mesto1.pois.3.verb | CITIES.mesto1.pois.10.verb"
+ },
+ {
+  "k": "Díler",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.1.name | CITIES.mesto1.labels.16.text | CITIES.mesto1.names.diler | GIVERS.diler.name"
+ },
+ {
+  "k": "Boss",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.2.name | CITIES.mesto1.labels.17.text | CITIES.mesto1.names.kladivo | GANG_RANKS.boss"
+ },
+ {
+  "k": "Bojovať",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.2.verb"
+ },
+ {
+  "k": "Wexler · zlaté tehličky",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.3.name | CITIES.mesto2.pois.1.name"
+ },
+ {
+  "k": "Zbrane",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.4.name | CITIES.mesto1.labels.8.text | CITIES.mesto1.names.zbrane | CITIES.mesto2.pois.2.name"
+ },
+ {
+  "k": "Vstúpiť",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.4.verb | CITIES.mesto1.pois.5.verb | CITIES.mesto1.pois.6.verb | CITIES.mesto1.pois.8.verb"
+ },
+ {
+  "k": "Oblečenie",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.5.name | CITIES.mesto1.labels.9.text | CITIES.mesto1.names.oblecenie | CITIES.mesto2.pois.3.name"
+ },
+ {
+  "k": "Šperky",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.6.name | CITIES.mesto1.labels.10.text | CITIES.mesto1.names.sperky | CITIES.mesto2.pois.4.name"
+ },
+ {
+  "k": "Posilňovňa",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.7.name | CITIES.mesto1.labels.13.text | CITIES.mesto1.names.posilnovna"
+ },
+ {
+  "k": "Trénovať",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.7.verb"
+ },
+ {
+  "k": "Aréna",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.8.name | CITIES.mesto1.labels.12.text | CITIES.mesto1.names.arena | CITIES.mesto2.pois.7.name"
+ },
+ {
+  "k": "Garáž · mechanik",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.9.name | CITIES.mesto2.pois.6.name"
+ },
+ {
+  "k": "Vylepšiť",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.9.verb | CITIES.mesto2.pois.6.verb"
+ },
+ {
+  "k": "Právnička",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.10.name | CITIES.mesto1.labels.14.text | CITIES.mesto1.names.pravnicka | CITIES.mesto2.pois.5.name"
+ },
+ {
+  "k": "Skrýša",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.11.name | CITIES.mesto1.labels.20.text | CITIES.mesto2.pois.8.name | CITIES.mesto2.labels.19.text"
+ },
+ {
+  "k": "Skryť sa",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.11.verb | CITIES.mesto2.pois.8.verb | ui.js:401 scr_hideout"
+ },
+ {
+  "k": "Taxi",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.12.name | CITIES.mesto1.labels.21.text"
+ },
+ {
+  "k": "Cestovať",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.12.verb | CITIES.mesto2.pois.0.verb | ui.js:1551 scr_travel | ui.js:1554 scr_travel"
+ },
+ {
+  "k": "Pozrieť",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.pois.13.verb | CITIES.mesto1.pois.14.verb | CITIES.mesto1.pois.15.verb | CITIES.mesto1.pois.16.verb"
+ },
+ {
+  "k": "Park pri jazierkach",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.0.text"
+ },
+ {
+  "k": "Bulvár",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.1.text"
+ },
+ {
+  "k": "Námestie",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.2.text"
+ },
+ {
+  "k": "Kancelárie",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.3.text"
+ },
+ {
+  "k": "Staré domy",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.4.text"
+ },
+ {
+  "k": "Západ",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.5.text"
+ },
+ {
+  "k": "Juh",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.6.text"
+ },
+ {
+  "k": "Východ",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.7.text"
+ },
+ {
+  "k": "Obchody",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.11.text | CITIES.mesto2.labels.10.text"
+ },
+ {
+  "k": "Wexler",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.18.text | CITIES.mesto2.labels.15.text"
+ },
+ {
+  "k": "Mechanik",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.labels.19.text | CITIES.mesto2.labels.18.text | CITIES.mesto2.names.mechanik"
+ },
+ {
+  "k": "Garáž",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.names.mechanik | TURF_KINDS.garaz.name | ui.js:1496 scr_upgrade"
+ },
+ {
+  "k": "Štvrť pri jazierkach, kde si začínal. Don, Díler a 25 bossov.",
+  "kind": "data",
+  "ctx": "CITIES.mesto1.blurb"
+ },
+ {
+  "k": "Mesto 2 · Staré Mesto",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.name"
+ },
+ {
+  "k": "Staré Mesto pri rieke: Parížska, námestie s orlojom a uličky, kam auto nevojde.",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.blurb"
+ },
+ {
+  "k": "Zastávka električky",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.pois.0.name"
+ },
+ {
+  "k": "Alchymista",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.pois.9.name | CITIES.mesto2.labels.16.text | GIVERS.alchymista.name"
+ },
+ {
+  "k": "Prievozník",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.pois.10.name | CITIES.mesto2.labels.17.text | GIVERS.prievoznik.name"
+ },
+ {
+  "k": "Radničná veža",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.pois.11.name"
+ },
+ {
+  "k": "Rieka",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.0.text"
+ },
+ {
+  "k": "Nábrežie",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.1.text"
+ },
+ {
+  "k": "Parížska",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.2.text"
+ },
+ {
+  "k": "Staromestské námestie",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.3.text"
+ },
+ {
+  "k": "Uličky",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.4.text"
+ },
+ {
+  "k": "Záhrada",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.5.text"
+ },
+ {
+  "k": "Sever",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.6.text"
+ },
+ {
+  "k": "Grand hotel",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.12.text"
+ },
+ {
+  "k": "Orloj",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.14.text"
+ },
+ {
+  "k": "Zastávka",
+  "kind": "data",
+  "ctx": "CITIES.mesto2.labels.20.text"
+ },
+ {
+  "k": "zlatá",
+  "kind": "data",
+  "ctx": "GANG_COLORS.0.name"
+ },
+ {
+  "k": "zelená",
+  "kind": "data",
+  "ctx": "GANG_COLORS.1.name"
+ },
+ {
+  "k": "oranžová",
+  "kind": "data",
+  "ctx": "GANG_COLORS.2.name"
+ },
+ {
+  "k": "tyrkysová",
+  "kind": "data",
+  "ctx": "GANG_COLORS.3.name"
+ },
+ {
+  "k": "Pravá ruka",
+  "kind": "data",
+  "ctx": "GANG_RANKS.ruka"
+ },
+ {
+  "k": "Vojak",
+  "kind": "data",
+  "ctx": "GANG_RANKS.vojak"
+ },
+ {
+  "k": "Nováčik",
+  "kind": "data",
+  "ctx": "GANG_RANKS.novacik | MISSIONS.vymahanie.stories.0.foe.name"
+ },
+ {
+  "k": "Výcvik",
+  "kind": "data",
+  "ctx": "GANG_UPGRADES.vycvik.name"
+ },
+ {
+  "k": "Výpalné",
+  "kind": "data",
+  "ctx": "GANG_UPGRADES.vypalne.name | DAILY_TYPES.vypalne.name | js/daily.js:27 DAILY_TYPES"
+ },
+ {
+  "k": "Opevnenie",
+  "kind": "data",
+  "ctx": "GANG_UPGRADES.opevnenie.name"
+ },
+ {
+  "k": "Zadávateľ misií",
+  "kind": "data",
+  "ctx": "GIVERS.don.title"
+ },
+ {
+  "k": "Mám pre teba robotu. Rýchlu, čistú a dobre zaplatenú.",
+  "kind": "data",
+  "ctx": "GIVERS.don.quote"
+ },
+ {
+  "k": "Park v strede štvrte, pri fontáne",
+  "kind": "data",
+  "ctx": "GIVERS.don.where"
+ },
+ {
+  "k": "Pouličný obchod",
+  "kind": "data",
+  "ctx": "GIVERS.diler.title"
+ },
+ {
+  "k": "Tovar je, ľudia sú. Chýbaš mi len ty.",
+  "kind": "data",
+  "ctx": "GIVERS.diler.quote"
+ },
+ {
+  "k": "Chodník pri corneri, západ štvrte",
+  "kind": "data",
+  "ctx": "GIVERS.diler.where"
+ },
+ {
+  "k": "Dielňa v gotickej pivnici",
+  "kind": "data",
+  "ctx": "GIVERS.alchymista.title"
+ },
+ {
+  "k": "Každá látka je jed. Záleží len na dávke a na cene.",
+  "kind": "data",
+  "ctx": "GIVERS.alchymista.quote"
+ },
+ {
+  "k": "Pivnica pri Kozej, sever Starého Mesta",
+  "kind": "data",
+  "ctx": "GIVERS.alchymista.where"
+ },
+ {
+  "k": "Mólo na rieke",
+  "kind": "data",
+  "ctx": "GIVERS.prievoznik.title"
+ },
+ {
+  "k": "Rieka nekladie otázky. Ja tiež nie.",
+  "kind": "data",
+  "ctx": "GIVERS.prievoznik.quote"
+ },
+ {
+  "k": "Mólo na nábreží, pri zastávke električky",
+  "kind": "data",
+  "ctx": "GIVERS.prievoznik.where"
+ },
+ {
+  "k": "Rob misie u Dona a dosiahni úroveň 3.",
+  "kind": "data",
+  "ctx": "GOALS.0.text"
+ },
+ {
+  "k": "Obleč sa: nos aspoň 4 kusy výbavy. Bundy a nohavice predáva Oblečenie.",
+  "kind": "data",
+  "ctx": "GOALS.1.text"
+ },
+ {
+  "k": "Splň jednu dennú misiu. Nájdeš ich v truhlici hore.",
+  "kind": "data",
+  "ctx": "GOALS.2.text"
+ },
+ {
+  "k": "Denné",
+  "kind": "data",
+  "ctx": "GOALS.2.go.0"
+ },
+ {
+  "k": "Dosiahni úroveň 5. Otvorí sa Aréna.",
+  "kind": "data",
+  "ctx": "GOALS.3.text"
+ },
+ {
+  "k": "Vyhraj prvý zápas v Aréne.",
+  "kind": "data",
+  "ctx": "GOALS.4.text"
+ },
+ {
+  "k": "Kúp si v Postave spolu 10 bodov do statov.",
+  "kind": "data",
+  "ctx": "GOALS.5.text"
+ },
+ {
+  "k": "Postava",
+  "kind": "data",
+  "ctx": "GOALS.5.go.0 | ui.js:54 | ui.js:56 | ui.js:81"
+ },
+ {
+  "k": "Poraz Pitbulla, prvého bossa. Pred súbojom uvidíš šancu na výhru.",
+  "kind": "data",
+  "ctx": "GOALS.6.text"
+ },
+ {
+  "k": "Daj si u mechanika vylepšiť jeden predmet.",
+  "kind": "data",
+  "ctx": "GOALS.7.text"
+ },
+ {
+  "k": "Od úrovne 8: vyhraj prvý zápas v Podzemných zápasoch.",
+  "kind": "data",
+  "ctx": "GOALS.8.text"
+ },
+ {
+  "k": "Zápasy",
+  "kind": "data",
+  "ctx": "GOALS.8.go.0 | ui.js:1304 scr_hall"
+ },
+ {
+  "k": "Poraz druhého bossa, Starého Morica.",
+  "kind": "data",
+  "ctx": "GOALS.9.text"
+ },
+ {
+  "k": "Dosiahni úroveň 10. Otvoria sa gangy.",
+  "kind": "data",
+  "ctx": "GOALS.10.text"
+ },
+ {
+  "k": "Hliníková pálka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bat.name"
+ },
+ {
+  "k": "Boxer",
+  "kind": "data",
+  "ctx": "ITEM_BASES.knuckles.name | MISSIONS.predaj.stories.1.foe.name | MISSIONS.kradez_sklad.stories.0.foe.name"
+ },
+ {
+  "k": "Vyskakovací nôž",
+  "kind": "data",
+  "ctx": "ITEM_BASES.knife.name"
+ },
+ {
+  "k": "Cvak a je vonku. Vo vrecku nevyzerá ako nič, v ruke ako problém.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.knife.desc"
+ },
+ {
+  "k": "Mäsiarsky sekáčik",
+  "kind": "data",
+  "ctx": "ITEM_BASES.machete.name"
+ },
+ {
+  "k": "Z mäsiarstva na rohu. Mäsiar si dodnes myslí, že ho stratil.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.machete.desc"
+ },
+ {
+  "k": "Tichá deviatka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.glock.name"
+ },
+ {
+  "k": "Tlmič na hlavni a zlatá spúšť. Susedia nič nepočuli, ráno sa len čudujú.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.glock.desc"
+ },
+ {
+  "k": "Zlatá 1911",
+  "kind": "data",
+  "ctx": "ITEM_BASES.gold1911.name"
+ },
+ {
+  "k": "Katana",
+  "kind": "data",
+  "ctx": "ITEM_BASES.katana.name"
+ },
+ {
+  "k": "Kalach",
+  "kind": "data",
+  "ctx": "ITEM_BASES.kalach.name"
+ },
+ {
+  "k": "Krátky kalach",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ak.name"
+ },
+ {
+  "k": "Hrdzavé páčidlo",
+  "kind": "data",
+  "ctx": "ITEM_BASES.crowbar.name"
+ },
+ {
+  "k": "Otvorí dvere, kasu aj debatu. Tá hrdza nie je len hrdza.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.crowbar.desc"
+ },
+ {
+  "k": "Hokejka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.hockey.name"
+ },
+ {
+  "k": "Oblepená páskou ako na zápas. Puk na ulici nenájdeš, hlavy áno.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.hockey.desc"
+ },
+ {
+  "k": "Rozbitá fľaša",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bottle.name"
+ },
+ {
+  "k": "Pred minútou ešte pivo. Teraz argument, ktorý nikto nechce počuť dvakrát.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bottle.desc"
+ },
+ {
+  "k": "Reťaz z bicykla",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bikechain.name"
+ },
+ {
+  "k": "Rukoväť z izolačky, zvyšok hrdzavý. Bicykel ostal pred obchodom bez nej.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bikechain.desc"
+ },
+ {
+  "k": "Starý revolver",
+  "kind": "data",
+  "ctx": "ITEM_BASES.revolver.name"
+ },
+ {
+  "k": "Šesť nábojov a poškriabaná rukoväť. Kto ho mal pred tebou, radšej nezisťuj.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.revolver.desc"
+ },
+ {
+  "k": "Upílená brokovnica",
+  "kind": "data",
+  "ctx": "ITEM_BASES.sawnoff.name"
+ },
+ {
+  "k": "Hlavne skrátené pílkou v garáži. Mieriť netreba, stačí stáť blízko.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.sawnoff.desc"
+ },
+ {
+  "k": "Kalach s drevenou pažbou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.kalash_wood.name"
+ },
+ {
+  "k": "Drevo, oceľ a tridsať nábojov. Prežil tri vojny a teraz ešte tvoju štvrť.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.kalash_wood.desc"
+ },
+ {
+  "k": "Chrómová orlica",
+  "kind": "data",
+  "ctx": "ITEM_BASES.deagle.name"
+ },
+ {
+  "k": "Ťažká, lesklá a hlasná. Po prvom výstrele ti zostane modrina na dlani, jemu horšie.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.deagle.desc"
+ },
+ {
+  "k": "Zlatý samopal s bubnom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.tommy_gold.name"
+ },
+ {
+  "k": "Gravírované zlato a bubon na sto nábojov. Zbraň starých bossov. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.tommy_gold.desc"
+ },
+ {
+  "k": "Kamenárske kladivo",
+  "kind": "data",
+  "ctx": "ITEM_BASES.hammer_stone.name"
+ },
+ {
+  "k": "Prach z dlažby Starého Mesta na hlave aj na rúčke. Každá kocka, čo položil, platila svoju daň.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.hammer_stone.desc"
+ },
+ {
+  "k": "Veslo z loďky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.oar.name"
+ },
+ {
+  "k": "Číslo dvanásť z požičovne pri moste. Loďku vrátiš, veslo si necháš.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.oar.desc"
+ },
+ {
+  "k": "Stará služobná pištoľ",
+  "kind": "data",
+  "ctx": "ITEM_BASES.service_pistol.name"
+ },
+ {
+  "k": "Hranatá, s bakelitovou rukoväťou. Odovzdali ju po rokoch aj s trochou histórie navyše.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.service_pistol.desc"
+ },
+ {
+  "k": "Palica s čepeľou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cane_sword.name"
+ },
+ {
+  "k": "Strieborné držadlo, čierne drevo a pod ním dvadsať centimetrov ocele. Elegantný pán na Parížskej nikdy nechodí neozbrojený.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cane_sword.desc"
+ },
+ {
+  "k": "Samopal so skladacou pažbou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.folding_smg.name"
+ },
+ {
+  "k": "Malý, čierny, s drôtenou pažbou. Do kabáta sa zmestí, do rozhovoru ešte lepšie.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.folding_smg.desc"
+ },
+ {
+  "k": "Katov meč",
+  "kind": "data",
+  "ctx": "ITEM_BASES.executioner.name"
+ },
+ {
+  "k": "Obojručný meč so zaoblenou špičkou a lebkami vyryté po celej čepeli. Kat z námestia ho nikdy nikomu nepožičal. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.executioner.desc"
+ },
+ {
+  "k": "Hodinárska pištoľ",
+  "kind": "data",
+  "ctx": "ITEM_BASES.clockwork_pistol.name"
+ },
+ {
+  "k": "Zlato, gravírovanie a ozubené kolieska pod sklom. Ciferník v rukoväti ukazuje čas, ktorý ti ostáva. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.clockwork_pistol.desc"
+ },
+ {
+  "k": "Vreckové hodinky na retiazke",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_pocket.name"
+ },
+ {
+  "k": "Strieborné, s odklápacím viečkom. Vytiahneš ich, pozrieš a každý v miestnosti vie, že čas vypršal.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_pocket.desc"
+ },
+ {
+  "k": "Kožené hodinky s rímskymi číslami",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_leather.name"
+ },
+ {
+  "k": "Hnedý remienok a krémový ciferník. Vyzeráš ako profesor, ktorý vie, kde sa schovávajú telá.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_leather.desc"
+ },
+ {
+  "k": "Hodinky s fázami mesiaca",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_moon.name"
+ },
+ {
+  "k": "Tmavomodrý ciferník a zlatý mesiac. Pri splne sa robia najlepšie obchody aj najhoršie chyby.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_moon.desc"
+ },
+ {
+  "k": "Hodinky majstra orloja",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_orloj.name"
+ },
+ {
+  "k": "Zlatý ciferník ako orloj a malý kostlivec s presýpacími hodinami. Každú hodinu niekomu odbije. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_orloj.desc"
+ },
+ {
+  "k": "Hranatý béžový sedan",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_boxy.name"
+ },
+ {
+  "k": "Osemdesiate roky, hranaté svetlá a hrdza na prahoch. Na Starom Meste ich jazdia stovky, nikto si ho nevšimne.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_boxy.desc"
+ },
+ {
+  "k": "Staré taxi",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_old_taxi.name"
+ },
+ {
+  "k": "Žlté, s kockovaným pásom a taxametrom, ktorý vždy rátal viac. Taxikár zmizol, auto ostalo.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_old_taxi.desc"
+ },
+ {
+  "k": "Prvorepubliková limuzína",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_retro.name"
+ },
+ {
+  "k": "Čierna, z tridsiatych rokov, s veľkými blatníkmi a chrómovou maskou. Takto prichádzali páni, ktorým patrilo mesto.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_retro.desc"
+ },
+ {
+  "k": "Pohrebák so zlatými ornamentmi",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_hearse.name"
+ },
+ {
+  "k": "Dlhý, čierny, so zlatými ornamentmi a záclonkami. Jazdí sa v ňom len jedným smerom. Len v Autobazári za zlaté tehličky.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_hearse.desc"
+ },
+ {
+  "k": "Hnedé šnurovacie čižmy",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_boots_brown.name"
+ },
+ {
+  "k": "Ošúchaná koža a hrubá podrážka. Prešli dlažbu Starého Mesta tam aj späť a ešte zvládnu aj útek.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_boots_brown.desc"
+ },
+ {
+  "k": "Tenisky turistu",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_tourist.name"
+ },
+ {
+  "k": "Sivo-oranžové, s blatom z vyhliadky. V dave pod orlojom ťa nikto nespozná, si len ďalší turista.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_tourist.desc"
+ },
+ {
+  "k": "Poltopánky s gamašami",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_spats.name"
+ },
+ {
+  "k": "Lakované topánky a biele gamaše s gombíkmi. Takto chodili páni po Parížskej, keď sa ešte strieľalo s noblesou.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_spats.desc"
+ },
+ {
+  "k": "Lakované čelsky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_chelsea.name"
+ },
+ {
+  "k": "Čierne kotníkové čižmy s gumou po boku a kovovou špičkou. Obuješ ich za sekundu, kopneš ešte rýchlejšie.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_chelsea.desc"
+ },
+ {
+  "k": "Krokodílie topánky so zlatou špicou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_croc.name"
+ },
+ {
+  "k": "Čierna krokodília koža, zlaté špice a pracka. Krokodíl prehral jediný súboj v živote. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_croc.desc"
+ },
+ {
+  "k": "Retiazka s kľúčom od pivnice",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_key.name"
+ },
+ {
+  "k": "Starý hrdzavý kľúč na koženej šnúrke. Od ktorej pivnice je, vieš len ty. A ten, kto v nej ostal.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_key.desc"
+ },
+ {
+  "k": "Retiazka so starou mincou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_coin.name"
+ },
+ {
+  "k": "Medená minca so zelenou patinou. Prievozník ju vraj berie ako platbu za cestu, z ktorej sa nevracia.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_coin.desc"
+ },
+ {
+  "k": "Granátový náhrdelník",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_garnet.name"
+ },
+ {
+  "k": "Tmavočervené granáty v zlatom ornamente. Farba ako víno, alebo ako niečo horšie.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_garnet.desc"
+ },
+ {
+  "k": "Prívesok orloja",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_orloj.name"
+ },
+ {
+  "k": "Zlatý astronomický ciferník so znameniami a diamantmi po obvode. Ukazuje čas, hviezdy aj to, kto je na rade. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_orloj.desc"
+ },
+ {
+  "k": "Prsteň s granátom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_garnet.name"
+ },
+ {
+  "k": "Malý tmavočervený kameň v striebre. Skromný, ako sa na Staré Mesto patrí.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_garnet.desc"
+ },
+ {
+  "k": "Prsteň s podkovou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_horseshoe.name"
+ },
+ {
+  "k": "Strieborná podkova pre šťastie. Kôň, ktorý ju nosil, ho veľa nemal.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_horseshoe.desc"
+ },
+ {
+  "k": "Alchymistov prsteň",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_alchemy.name"
+ },
+ {
+  "k": "Staré striebro a zelený kameň s vyrytým slnkom a mesiacom. Alchymista v ňom vraj nosil recept, ktorý nikomu neprezradil.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_alchemy.desc"
+ },
+ {
+  "k": "Prsteň Veľmajstra",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_grandmaster.name"
+ },
+ {
+  "k": "Masívne zlato, čierny diamant a venček rubínov. Kto ho nosí, nemusí v lóži nič hovoriť. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_grandmaster.desc"
+ },
+ {
+  "k": "Prúžkované nohavice s trakmi",
+  "kind": "data",
+  "ctx": "ITEM_BASES.pinstripe.name"
+ },
+ {
+  "k": "Sivé s tenkými prúžkami a čiernymi trakmi. Vyzeráš v nich ako účtovník, ktorý ti vie vyúčtovať aj zuby.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.pinstripe.desc"
+ },
+ {
+  "k": "Rybárske gumáky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.waders.name"
+ },
+ {
+  "k": "Zelené, vodotesné až po hruď. Ideálne na brodenie Vltavou, keď treba odniesť niečo, čo nemá vidieť most.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.waders.desc"
+ },
+ {
+  "k": "Jazdecké nohavice",
+  "kind": "data",
+  "ctx": "ITEM_BASES.breeches.name"
+ },
+ {
+  "k": "Rozšírené v stehnách a s koženými záplatami na kolenách. Fiakristka by ti závidela, kone nie.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.breeches.desc"
+ },
+ {
+  "k": "Smokingové nohavice so zlatým lampasom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.tux_gold.name"
+ },
+ {
+  "k": "Čierne ako noc a so zlatým pruhom po boku. Nosí ich ten, kto sa nepotí, ani keď sa platí krvou. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.tux_gold.desc"
+ },
+ {
+  "k": "Bunda električkára",
+  "kind": "data",
+  "ctx": "ITEM_BASES.tram_jacket.name"
+ },
+ {
+  "k": "Tmavomodrá, s červenými pruhmi na rukávoch a menovkou, ktorá nepatrí nikomu. Revízor ti nepovie ani slovo.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.tram_jacket.desc"
+ },
+ {
+  "k": "Rybársky plášť",
+  "kind": "data",
+  "ctx": "ITEM_BASES.slicker_black.name"
+ },
+ {
+  "k": "Lesklý a nepremokavý. Voda z rieky sa z neho zlieva, rovnako ako otázky.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.slicker_black.desc"
+ },
+ {
+  "k": "Kožený trenčkot",
+  "kind": "data",
+  "ctx": "ITEM_BASES.leather_trench.name"
+ },
+ {
+  "k": "Čierna koža, opasok zaviazaný na uzol a vyhrnutý golier. V uličkách Starého Mesta ťa v ňom spoznajú len tí, čo majú.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.leather_trench.desc"
+ },
+ {
+  "k": "Bordové zamatové sako",
+  "kind": "data",
+  "ctx": "ITEM_BASES.velvet_jacket.name"
+ },
+ {
+  "k": "Zamat farby vína a saténové klopy. Nosí sa do kasína, na kar a na rokovania, z ktorých sa nikto nevracia sám.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.velvet_jacket.desc"
+ },
+ {
+  "k": "Kabát pána veže",
+  "kind": "data",
+  "ctx": "ITEM_BASES.coat_tower.name"
+ },
+ {
+  "k": "Čierny kabát s kožušinovým golierom a zlatou výšivkou ozubených koliesok na manžetách. Čas v ňom beží podľa teba. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.coat_tower.desc"
+ },
+ {
+  "k": "Modré rifle",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jeans_blue.name"
+ },
+ {
+  "k": "Obyčajné rifle. Presne v takých ťa svedok nevie popísať.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jeans_blue.desc"
+ },
+ {
+  "k": "Šušťákové nohavice",
+  "kind": "data",
+  "ctx": "ITEM_BASES.track_pants.name"
+ },
+ {
+  "k": "Šuchocú pri každom kroku. Na tiché vlámanie si vezmi niečo iné.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.track_pants.desc"
+ },
+ {
+  "k": "Olivové kapsáče",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cargo_olive.name"
+ },
+ {
+  "k": "Bočné vrecká na všetko, čo nemáš mať pri sebe. Šnúrky dole proti prievanu aj psom.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cargo_olive.desc"
+ },
+ {
+  "k": "Robotnícke nohavice",
+  "kind": "data",
+  "ctx": "ITEM_BASES.carpenter_pants.name"
+ },
+ {
+  "k": "Dvojité kolená, lebo na kolenách sa tu často končí. Aj začína.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.carpenter_pants.desc"
+ },
+ {
+  "k": "Maskáčové kapsáče",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cargo_camo.name"
+ },
+ {
+  "k": "Maskáč v meste nemaskuje nič. Ale vyzerá, že vieš, čo robíš.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cargo_camo.desc"
+ },
+ {
+  "k": "Sivé tepláky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.sweatpants.name"
+ },
+ {
+  "k": "Večierka o druhej ráno, výsluch o tretej. Pohodlné na oboje.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.sweatpants.desc"
+ },
+ {
+  "k": "Roztrhané čierne rifle",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jeans_ripped.name"
+ },
+ {
+  "k": "Diery na kolenách nie sú z módy. Sú z plota pri Starom moste.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jeans_ripped.desc"
+ },
+ {
+  "k": "Basketbalové trenky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shorts_ball.name"
+ },
+ {
+  "k": "Fialovo-zlaté, dlhé po kolená. Na ihrisku za bytovkou sa v nich rozdávajú karty aj rany.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shorts_ball.desc"
+ },
+ {
+  "k": "Čierne kapsáče s reťazou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cargo_compass.name"
+ },
+ {
+  "k": "Šesť vreciek, popruhy a reťaz od peňaženky. Vreckár by si na nich vylámal prsty.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.cargo_compass.desc"
+ },
+ {
+  "k": "Zamatové tepláky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.track_monogram.name"
+ },
+ {
+  "k": "Smaragdový zamat a zlaté zipsy na vreckách. Pohodlné ako pyžamo, drahé ako oblek.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.track_monogram.desc"
+ },
+ {
+  "k": "Rozbité rifle s chráničmi",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jeans_biker.name"
+ },
+ {
+  "k": "Diery stoja viac ako celé nohavice v obchode. Čierne chrániče sú tam pre prípad, že kľačíš pred niekým, kto ti dlží.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jeans_biker.desc"
+ },
+ {
+  "k": "Pytónové nohavice",
+  "kind": "data",
+  "ctx": "ITEM_BASES.leather_crosses.name"
+ },
+ {
+  "k": "Čierno-zlatá hadia koža od pása po členky. Had ich nosil prvý, ty druhý. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.leather_crosses.desc"
+ },
+ {
+  "k": "Kožená letecká bunda",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jacket_puffer.name"
+ },
+ {
+  "k": "Hnedá koža, kožušinový golier a zips, ktorý vydrží aj pád z motorky. Stará škola nevyjde z módy.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jacket_puffer.desc"
+ },
+ {
+  "k": "Červená páperovka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.puffer_red.name"
+ },
+ {
+  "k": "Teplá, lacná a vidno ju z druhého konca ulice. Na tiché akcie sa nehodí.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.puffer_red.desc"
+ },
+ {
+  "k": "Klubová bunda so zlatými rukávmi",
+  "kind": "data",
+  "ctx": "ITEM_BASES.varsity_gold.name"
+ },
+ {
+  "k": "Z bazáru. Tím, za ktorý kedysi hrala, už dávno neexistuje. Ty áno.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.varsity_gold.desc"
+ },
+ {
+  "k": "Poľná bunda",
+  "kind": "data",
+  "ctx": "ITEM_BASES.field_jacket.name"
+ },
+ {
+  "k": "Štyri vrecká a žiadne otázky. Vydrží dážď, blato aj policajný obušok.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.field_jacket.desc"
+ },
+ {
+  "k": "Školská bunda s H",
+  "kind": "data",
+  "ctx": "ITEM_BASES.varsity_red.name"
+ },
+ {
+  "k": "H ako Hits. Alebo Hustler. Alebo Hlupák, záleží, kto sa pýta.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.varsity_red.desc"
+ },
+ {
+  "k": "Robotnícka bunda",
+  "kind": "data",
+  "ctx": "ITEM_BASES.work_jacket.name"
+ },
+ {
+  "k": "Menčestrový golier a ošúchané lakte. Vyzeráš, že poctivo robíš. Nerobíš.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.work_jacket.desc"
+ },
+ {
+  "k": "Olivová bomberka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bomber_olive.name"
+ },
+ {
+  "k": "Oranžová podšívka svieti ako výstražné svetlo. Ideálna na rýchle odchody.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.bomber_olive.desc"
+ },
+ {
+  "k": "Šušťáková bunda",
+  "kind": "data",
+  "ctx": "ITEM_BASES.track_navy.name"
+ },
+ {
+  "k": "Rovno z deväťdesiatok: čierna, zelená, biela a jeden zips pod bradu. Nulový rešpekt k dress codu.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.track_navy.desc"
+ },
+ {
+  "k": "Saténová bunda s drakom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jacket_compass.name"
+ },
+ {
+  "k": "Čierny satén a zlatý drak na hrudi. Drak strážil poklad, ty strážiš rajón.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.jacket_compass.desc"
+ },
+ {
+  "k": "Čierny kožuch",
+  "kind": "data",
+  "ctx": "ITEM_BASES.parka_fur.name"
+ },
+ {
+  "k": "Dlhý, huňatý a čierny ako noc. Schová sa pod ním čokoľvek, aj brokovnica.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.parka_fur.desc"
+ },
+ {
+  "k": "Čierna mikina so zlatým zipsom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.puffer_hood.name"
+ },
+ {
+  "k": "Kapucňa cez hlavu, ruky vo vrecku a zlatý zips až po bradu. Kamery vidia len tieň.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.puffer_hood.desc"
+ },
+ {
+  "k": "Motorkárska bunda",
+  "kind": "data",
+  "ctx": "ITEM_BASES.biker_jacket.name"
+ },
+ {
+  "k": "Šikmý zips, opasok a cvočky. Motorku nemáš, ale vyzeráš, že ťa niekde čaká.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.biker_jacket.desc"
+ },
+ {
+  "k": "Rifľová bunda",
+  "kind": "data",
+  "ctx": "ITEM_BASES.denim_jacket.name"
+ },
+ {
+  "k": "Vyblednutá od slnka aj od policajných svetiel. Klasika, ktorá nikdy nepýta otázky.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.denim_jacket.desc"
+ },
+ {
+  "k": "Kabát z ťavej vlny",
+  "kind": "data",
+  "ctx": "ITEM_BASES.coat_camel.name"
+ },
+ {
+  "k": "Dvojradový kabát, aký nosia muži, ktorí sa nikomu nemusia predstavovať. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.coat_camel.desc"
+ },
+ {
+  "k": "Čierne kožené tenisky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.sneaker_black.name"
+ },
+ {
+  "k": "Čierne od podrážky po šnúrky, len očká sú zlaté. Krv na nich nevidno.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.sneaker_black.desc"
+ },
+ {
+  "k": "Čierne poltopánky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_derby.name"
+ },
+ {
+  "k": "Na pohreb, na súd aj na stretnutie s Donom. Do troch týždňov stihneš všetky tri.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_derby.desc"
+ },
+ {
+  "k": "Biele nazúvacie tenisky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_white_low.name"
+ },
+ {
+  "k": "Biele ako nevinnosť. Vydržia presne do prvej mláky pri večierke.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_white_low.desc"
+ },
+ {
+  "k": "Tenisky na suchý zips",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_air.name"
+ },
+ {
+  "k": "Žiadne šnúrky, o ktoré by sa dalo potknúť. Dva remienky na suchý zips a môžeš utekať.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_air.desc"
+ },
+ {
+  "k": "Čierne skejtky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_skate.name"
+ },
+ {
+  "k": "Hrubé šnúrky, plochá podrážka. Na skejt nevkročili, na plot pri parku každý deň.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_skate.desc"
+ },
+ {
+  "k": "Bojové čižmy",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_combat.name"
+ },
+ {
+  "k": "Osem dierok na šnúrky a oceľová špička. Dvere sa nimi otvárajú aj bez kľúča.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_combat.desc"
+ },
+ {
+  "k": "Plátenné vysoké tenisky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_canvas_high.name"
+ },
+ {
+  "k": "Klasika z každého koncertu a každej bitky po ňom.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_canvas_high.desc"
+ },
+ {
+  "k": "Šľapky s bielymi ponožkami",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_slides.name"
+ },
+ {
+  "k": "S ponožkami, samozrejme. Ak musíš utekať, máš problém.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_slides.desc"
+ },
+ {
+  "k": "Sivé semišové členkové topánky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_grey_runner.name"
+ },
+ {
+  "k": "Nosia ich otcovia aj díleri. Polícia ich preto nevie od seba rozoznať.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_grey_runner.desc"
+ },
+ {
+  "k": "Pracovné čižmy",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_work_boot.name"
+ },
+ {
+  "k": "Žlté čižmy zo stavby. Na stavbe si nikdy nebol, ale všetci si to myslia.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_work_boot.desc"
+ },
+ {
+  "k": "Hadie kotníkové tenisky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_hightop_red.name"
+ },
+ {
+  "k": "Pár, za ktorý ľudia stoja v rade pred obchodom celú noc. Ty si v rade nestál.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_hightop_red.desc"
+ },
+ {
+  "k": "Masívne módne tenisky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_chunky.name"
+ },
+ {
+  "k": "Podrážka hrubá ako tehla. Vyzerajú ťažko, ale nakopnú lepšie ako čižmy.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_chunky.desc"
+ },
+ {
+  "k": "Lakované mokasíny so strapcami",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_loafer.name"
+ },
+ {
+  "k": "Strapce so zlatými koncami a lesk ako zrkadlo. V takých sa chodí len po kobercoch a po cudzích peniazoch.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_loafer.desc"
+ },
+ {
+  "k": "Zlaté tenisky s diamantmi",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_gold.name"
+ },
+ {
+  "k": "Zlato po členky a diamanty v šnúrkach. Nikto nevie, kto ich vyrobil. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.shoe_gold.desc"
+ },
+ {
+  "k": "Rubínový prsteň",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_ruby.name"
+ },
+ {
+  "k": "Strieborná obrúčka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_silver.name"
+ },
+ {
+  "k": "Hladká a obyčajná. Nosí ju každý, kto chce vyzerať ženatý pred políciou.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_silver.desc"
+ },
+ {
+  "k": "Čierny oceľový prsteň",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_black.name"
+ },
+ {
+  "k": "Matná čierna oceľ. Na päsť sedí lepšie ako boxer.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_black.desc"
+ },
+ {
+  "k": "Pečatný prsteň s erbom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_signet.name"
+ },
+ {
+  "k": "Kľúče a erb rodu, ktorý nikdy neexistoval. Pečatí sa ním každá dohoda.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_signet.desc"
+ },
+ {
+  "k": "Prsteň s lebkou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_skull.name"
+ },
+ {
+  "k": "Lebka z čiernej ocele. Odtlačok na tvári dlžníka vydrží týždeň.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_skull.desc"
+ },
+ {
+  "k": "Starý zlatý prsteň s rubínom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_ruby_old.name"
+ },
+ {
+  "k": "Zlato je ošúchané, kameň je sklo. Vyzerá však presne ako ten pravý.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_ruby_old.desc"
+ },
+ {
+  "k": "Prsteň z reťaze",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_chain.name"
+ },
+ {
+  "k": "Kubánske ohnivká stočené do kruhu. Reťaz na krk si dovolíš až budúci mesiac.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_chain.desc"
+ },
+ {
+  "k": "Prsteň s opálom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_opal.name"
+ },
+ {
+  "k": "Kameň mení farbu podľa nálady. Tvoja je väčšinou zlá.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_opal.desc"
+ },
+ {
+  "k": "Absolventský prsteň",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_college.name"
+ },
+ {
+  "k": "Modrý kameň a orol. Na vysokej si nebol, ale prsteň máš z obchodu so zálohou.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_college.desc"
+ },
+ {
+  "k": "Prsteň so znakom dolára",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_dollar.name"
+ },
+ {
+  "k": "Zlatý dolár vysypaný kamienkami. Nenápadnosť nie je tvoja silná stránka.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_dollar.desc"
+ },
+ {
+  "k": "Prsteň s pavúkom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_nail.name"
+ },
+ {
+  "k": "Zlatý pavúk s telom z čierneho ónyxu sedí na prste a nehýbe sa. Kto ti podáva ruku, pozrie sa radšej dvakrát.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_nail.desc"
+ },
+ {
+  "k": "Prsteň zo zlatého nugetu",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_nugget.name"
+ },
+ {
+  "k": "Kus surového zlata, ako ho vytiahli zo zeme. Pri podaní ruky to každý pocíti.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_nugget.desc"
+ },
+ {
+  "k": "Šampiónsky prsteň",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_champion.name"
+ },
+ {
+  "k": "Diamanty v kruhoch, erb a pohár na boku. Vyhral si ho v lige, o ktorej nikto nesmie vedieť.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_champion.desc"
+ },
+ {
+  "k": "Platinový prsteň s obrovským diamantom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_emerald_cut.name"
+ },
+ {
+  "k": "Diamant veľký ako kocka cukru a okolo neho ďalšie desiatky. Svieti aj v tme. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.ring_emerald_cut.desc"
+ },
+ {
+  "k": "Strieborná retiazka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_silver.name"
+ },
+ {
+  "k": "Polovica hladká, polovica ohnivká. Ako ty: napoly slušný chlapec.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_silver.desc"
+ },
+ {
+  "k": "Tenká retiazka s krížikom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_cross.name"
+ },
+ {
+  "k": "Od babky na birmovku. Odvtedy videla veci, za ktoré by sa babka modlila.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_cross.desc"
+ },
+ {
+  "k": "Zlatá kubánska retiazka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_cuban.name"
+ },
+ {
+  "k": "Hrubé ohnivká, tenké pozlátenie. Zatiaľ to nikto nezistil.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_cuban.desc"
+ },
+ {
+  "k": "Vojenské známky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_tags.name"
+ },
+ {
+  "k": "Dve plieškové známky bez mena. Keby sa niečo stalo, nikto nebude vedieť, kto si bol.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_tags.desc"
+ },
+ {
+  "k": "Zelenajúca zlatá retiazka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_tarnished.name"
+ },
+ {
+  "k": "Kúpená ako zlato na trhovisku. Krk ti už zozelenel, retiazka sa ešte drží.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_tarnished.desc"
+ },
+ {
+  "k": "Čierny ruženec",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_rosary.name"
+ },
+ {
+  "k": "Čierne korálky a strieborný kríž. Modlíš sa len pred súdom.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_rosary.desc"
+ },
+ {
+  "k": "Zlatá točená retiazka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_rope.name"
+ },
+ {
+  "k": "Točená ako lano, starý štýl z deväťdesiatok. Stále funguje.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_rope.desc"
+ },
+ {
+  "k": "Retiaz s visacím zámkom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_padlock.name"
+ },
+ {
+  "k": "Kľúč zahodil do rieky. Kto ho chce dať dole, musí si priniesť flexu.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_padlock.desc"
+ },
+ {
+  "k": "Retiazka s pešiakom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_pawn.name"
+ },
+ {
+  "k": "Zlatý pešiak na krku. Každý začína ako pešiak, len niektorí to dotiahnu ďalej.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_pawn.desc"
+ },
+ {
+  "k": "Ľadový prívesok s tvárou Krista",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_jesus.name"
+ },
+ {
+  "k": "Diamanty od tŕňovej koruny po bradu. Požehnanie, ktoré sa dá kúpiť.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_jesus.desc"
+ },
+ {
+  "k": "Diamantová tenisová retiazka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_tennis.name"
+ },
+ {
+  "k": "Rad diamantov bez konca. Na tenis si ju nikto nikdy neobliekol.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_tennis.desc"
+ },
+ {
+  "k": "Retiazka s kockami",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_clover.name"
+ },
+ {
+  "k": "Dve kocky z čierneho ónyxu so zlatými bodkami. Kto ich nosí, hrá vždy s vlastnými, aby padlo, čo má padnúť.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_clover.desc"
+ },
+ {
+  "k": "Ľadová retiaz s kráľom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_king.name"
+ },
+ {
+  "k": "Šachový kráľ z diamantov s rubínom na hrudi. Pešiak sa stal kráľom. Vypadne len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.neck_king.desc"
+ },
+ {
+  "k": "Hodinky z ružového zlata",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_rose.name"
+ },
+ {
+  "k": "Tenké ako bankovka, ružové zlato a diamanty namiesto čísel. Nosia sa k obleku, nie k teplákom. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_rose.desc"
+ },
+ {
+  "k": "Smaragdové hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_green.name"
+ },
+ {
+  "k": "Venček smaragdov okolo čierneho ciferníka. Zelené ako peniaze, len vydržia dlhšie. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_green.desc"
+ },
+ {
+  "k": "Hodinky s oranžovým remienkom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_smart.name"
+ },
+ {
+  "k": "Gumené, odolné a so stopkami. Odmeriaš si, za koľko obehneš blok aj s policajtmi za chrbtom.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_smart.desc"
+ },
+ {
+  "k": "Pozlátený chronograf",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_gold_chrono.name"
+ },
+ {
+  "k": "Tri malé ciferníky a ani jeden neukazuje správny čas. Zlato sa zotrie do leta.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_gold_chrono.desc"
+ },
+ {
+  "k": "Hodinky s kalkulačkou",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_calc.name"
+ },
+ {
+  "k": "Účtovník gangu na zápästí. Podiel z lupu si vyrátaš skôr, ako sa ostatní spýtajú.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_calc.desc"
+ },
+ {
+  "k": "Vojenské hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_field.name"
+ },
+ {
+  "k": "Látkový remienok, čísla čitateľné aj v tme pod mostom. Po starom otcovi, vraj.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_field.desc"
+ },
+ {
+  "k": "Potápačské hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_diver.name"
+ },
+ {
+  "k": "Vydržia dvesto metrov pod vodou. Testoval ich jeden dlžník v prístave.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_diver.desc"
+ },
+ {
+  "k": "Ošúchané zlaté hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_gold_old.name"
+ },
+ {
+  "k": "Poškriabané sklo, rímske čísla. Zo záložne, a záložňa ich mala od niekoho, kto už nič nepotrebuje.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_gold_old.desc"
+ },
+ {
+  "k": "Plastové hodinky s hviezdičkami",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_plastic.name"
+ },
+ {
+  "k": "Žiarivo žltý remienok a hviezdičky. Nikto ťa nebude brať vážne, a presne o to ide.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_plastic.desc"
+ },
+ {
+  "k": "Odolné digitálky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_rugged.name"
+ },
+ {
+  "k": "Prežijú pád zo štvrtého poschodia. Ty asi nie.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_rugged.desc"
+ },
+ {
+  "k": "Čierne digitálky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_digital.name"
+ },
+ {
+  "k": "Lacné, presné, nezničiteľné. Majú ich všetci, takže svedkovia si ich nezapamätajú.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_digital.desc"
+ },
+ {
+  "k": "Hranaté zlaté hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_daydate.name"
+ },
+ {
+  "k": "Hranaté zlaté puzdro a čierny kožený remienok. Takéto nosil každý starý boss, ktorý sa dožil dôchodku.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_daydate.desc"
+ },
+ {
+  "k": "Čierne keramické hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_sub_green.name"
+ },
+ {
+  "k": "Celé čierne, len ručičky sú červené ako krv. Odpočítavajú čas, ktorý ti ostáva na splatenie dlhu.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_sub_green.desc"
+ },
+ {
+  "k": "Ľadové hodinky",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_diamond.name"
+ },
+ {
+  "k": "Diamanty na lunete aj na každom článku remienka. Na zápästí nosíš celú ulicu. Vypadnú len z bossa.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.watch_diamond.desc"
+ },
+ {
+  "k": "Strieborný japonský sedan",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_sedan.name"
+ },
+ {
+  "k": "Znížený, na širokých diskoch, s motorom, čo znie ako tichá hrozba. Policajti si myslia, že je to len otec na nákupe.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_sedan.desc"
+ },
+ {
+  "k": "Čierny kombík",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_hatch.name"
+ },
+ {
+  "k": "Preliačina na dverách, plechové disky a kufor, do ktorého sa zmestí všeličo. Takých jazdí po meste sto a ani jeden si nikto nepamätá.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_hatch.desc"
+ },
+ {
+  "k": "Biela dodávka",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_van.name"
+ },
+ {
+  "k": "Strešný nosič, tmavé okná, preliačiny na každom boku. Čo sa vezie vzadu, vie len ten, kto šoféruje.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_van.desc"
+ },
+ {
+  "k": "Tmavočervený lowrider",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_lowrider.name"
+ },
+ {
+  "k": "Zlaté drôtené kolesá a hydraulika, čo vyskočí na semafore. Nenápadné to nie je, ale na corneri ťa všetci rešpektujú.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_lowrider.desc"
+ },
+ {
+  "k": "Stará žiguli",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_ziguli.name"
+ },
+ {
+  "k": "Béžová, hrdzavá, s preliačinou na dverách. Naštartuje na tretí pokus, ale potom nezastaví nič.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_ziguli.desc"
+ },
+ {
+  "k": "Čierny športiak so zlatým pruhom",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_super.name"
+ },
+ {
+  "k": "Nízky, čierny, so zlatým pruhom a krídlom vzadu. Polícia ho síce vidí, ale nikdy nedobehne.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_super.desc"
+ },
+ {
+  "k": "Obrnený čierny pick-up",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_gwagon.name"
+ },
+ {
+  "k": "Obrovské pneumatiky, oceľový nárazník a štyri svetlá na streche. Keď zastaví pred podnikom, platí sa bez reči.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_gwagon.desc"
+ },
+ {
+  "k": "Predĺžená limuzína",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_royal.name"
+ },
+ {
+  "k": "Šestoro dverí, zlaté disky a tmavé sklá. V takom aute sa nepáchajú zločiny, v takom sa o nich rozhoduje.",
+  "kind": "data",
+  "ctx": "ITEM_BASES.car_royal.desc"
+ },
+ {
+  "k": "Sledovanie",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.name | DAILY_TYPES.sledovanie.name | js/daily.js:25 DAILY_TYPES"
+ },
+ {
+  "k": "Don chce vedieť, s kým sa stretáva majiteľ práčovne. Sadni si na lavičku, tvár sa, že čítaš noviny, a pozeraj. Len si daj pozor, aby niekto nesledoval teba.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.0.text"
+ },
+ {
+  "k": "Chlapík so semienkami sedí na vedľajšej lavičke celý deň. Videl ťa a pľuje šupky rovno pred teba.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.0.hit"
+ },
+ {
+  "k": "Semienko",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.0.foe.name"
+ },
+ {
+  "k": "Gopník zo sídliska",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.0.foe.title"
+ },
+ {
+  "k": "Nový chlapík na corneri chodí každý večer tou istou cestou. Zisti kam. Tieň za tebou ale nemusí byť len tvoj.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.1.text"
+ },
+ {
+  "k": "V podchode sa na teba usmieva chalan v čiapke. Sledoval ťa celý čas.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.1.hit"
+ },
+ {
+  "k": "Sprejer",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.1.foe.name | MISSIONS.prepadnutie.stories.1.foe.name"
+ },
+ {
+  "k": "Oči rivalov v podchode",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.1.foe.title"
+ },
+ {
+  "k": "Don potrebuje vedieť, kto sa schádza v zadnej uličke za práčovňou. Prší, nikto tam nechodí. Skoro nikto.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.2.text"
+ },
+ {
+  "k": "Z kríkov cvaká fotoaparát. Niekto si ťa práve odfotil a nechce o fotky prísť.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.2.hit"
+ },
+ {
+  "k": "Fotograf",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.2.foe.name"
+ },
+ {
+  "k": "Bulvár platí za každú tvár",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.2.foe.title"
+ },
+ {
+  "k": "Sleduj chlapíka, ktorý vraj donáša polícii. Ak je to pravda, Don chce vedieť, komu.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.3.text"
+ },
+ {
+  "k": "Mokrý informátor si ťa všimol. Je vystrašený, a vystrašení ľudia bijú bez rozmyslu.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.3.hit"
+ },
+ {
+  "k": "Informátor",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.3.foe.name"
+ },
+ {
+  "k": "Spieva každému, kto platí",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.3.foe.title"
+ },
+ {
+  "k": "Don chce vedieť, kto chodí k jeho dlžníkovi na sídlisku. Postav sa pod okná a pozeraj. Lenže na sídlisku vidí všetko niekto iný.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.4.text"
+ },
+ {
+  "k": "Babka v natáčkach ťa sleduje z okna už hodinu. Teraz zišla dolu s paličkou a nie je zvedavá, je nahnevaná.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.4.hit"
+ },
+ {
+  "k": "Babka Hedviga",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.4.foe.name"
+ },
+ {
+  "k": "Oči sídliska",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.4.foe.title"
+ },
+ {
+  "k": "Pod mostom sa zhromažďujú ľudia, ktorí vidia všetko a nik ich nevidí. Don chce vedieť, čo videl jeden z nich.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.5.text"
+ },
+ {
+  "k": "Bezdomovec pri sude sa usmieva. Za informáciu chce viac, ako máš, a vie, že ho sleduješ.",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.5.hit"
+ },
+ {
+  "k": "Starý Lojzo",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.5.foe.name"
+ },
+ {
+  "k": "Kráľ spod mosta",
+  "kind": "data",
+  "ctx": "MISSIONS.sledovanie.stories.5.foe.title"
+ },
+ {
+  "k": "Doručenie zásielky",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.name"
+ },
+ {
+  "k": "Balík, adresa, žiadne otázky. Čo je vnútri, ťa nezaujíma. Na druhej strane štvrte ťa už ale niekto čaká a nie je to adresát.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.0.text"
+ },
+ {
+  "k": "Vreckárka v baretke ti už jednu peňaženku vytiahla. Balík nedostane.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.0.hit"
+ },
+ {
+  "k": "Vreckárka",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.0.foe.name"
+ },
+ {
+  "k": "Prsty ako hodváb",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.0.foe.title"
+ },
+ {
+  "k": "Zásielka pre kamaráta z garáže. Cesta vedie cez park, kde sa večer motajú tí, čo nemajú čo stratiť.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.1.text"
+ },
+ {
+  "k": "Chuligán so šálom sa vracia zo zápasu. Prehrali a niekto za to zaplatí.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.1.hit"
+ },
+ {
+  "k": "Chuligán",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.1.foe.name | MISSIONS.ochrana.stories.0.foe.name"
+ },
+ {
+  "k": "Z kotla",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.1.foe.title"
+ },
+ {
+  "k": "Obálka musí byť na druhom konci mesta do hodiny. Kuriéri na bicykloch sú rýchli. Niektorí až príliš.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.2.text"
+ },
+ {
+  "k": "Kuriér na bicykli ti zastavil cestu. Chce tvoju obálku do svojej tašky.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.2.hit"
+ },
+ {
+  "k": "Cyklokuriér",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.2.foe.name"
+ },
+ {
+  "k": "Doručí čokoľvek, aj cudzie",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.2.foe.title"
+ },
+ {
+  "k": "Zásielka ide taxíkom. Šofér vraj nekladie otázky. Lenže taxikár, ktorý sa toľko usmieva, niečo chystá.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.3.text"
+ },
+ {
+  "k": "Taxikár zastavil v tmavej ulici a otočil sa. Zlatý zub, zlé úmysly.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.3.hit"
+ },
+ {
+  "k": "Taxikár",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.3.foe.name"
+ },
+ {
+  "k": "Taxameter beží stále",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.3.foe.title"
+ },
+ {
+  "k": "Balík pre lekára, ktorý operuje bez otázok a bez licencie. Čaká v pivnici pod lekárňou. A nemá rád neohlásené návštevy.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.4.text"
+ },
+ {
+  "k": "Doktorko si navliekol rukavice. Za balík chce viac, ako sa dohodlo, a skalpel má po ruke.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.4.hit"
+ },
+ {
+  "k": "Doktorko",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.4.foe.name"
+ },
+ {
+  "k": "Šije bez otázok",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.4.foe.title"
+ },
+ {
+  "k": "Zásielku odovzdáš rozvozárovi pred kaviarňou. Do batohu sa zmestí viac ako pizza. Len či je to ten správny rozvozár.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.5.text"
+ },
+ {
+  "k": "Rozvozár zložil batoh. Jedlo neprivezie, privezie päste.",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.5.hit"
+ },
+ {
+  "k": "Rozvozár",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.5.foe.name"
+ },
+ {
+  "k": "Doručí aj to, čo nemá",
+  "kind": "data",
+  "ctx": "MISSIONS.dorucenie.stories.5.foe.title"
+ },
+ {
+  "k": "Predaj tovaru",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.name"
+ },
+ {
+  "k": "Dostal si tašku. Do večera musí zmiznúť. Kto vie, čo v nej je. Pozor, ihrisko na sídlisku má svoju šéfku a tá nemá rada cudzí tovar.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.0.text"
+ },
+ {
+  "k": "Kobra si zapla bundu. Na jej ihrisku sa nepredáva bez jej súhlasu.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.0.hit"
+ },
+ {
+  "k": "Kobra",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.0.foe.name"
+ },
+ {
+  "k": "Šéfka ihriska",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.0.foe.title"
+ },
+ {
+  "k": "Kupec chce tovar hneď a za hotové. Lenže kupci, ktorí platia hneď, zvyknú mať v rukáve aj niečo iné.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.1.text"
+ },
+ {
+  "k": "Kupec nemá peniaze. Má len boxer na prstoch.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.1.hit"
+ },
+ {
+  "k": "Kupec zo schodiska",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.1.foe.title"
+ },
+ {
+  "k": "Tovar treba predať v uličke za obchodmi. Je tam už jeden predajca s dodávkou plnou elektroniky a konkurenciu nemá rád.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.2.text"
+ },
+ {
+  "k": "Paser zabuchol dvere dodávky. Toto je jeho ulička.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.2.hit"
+ },
+ {
+  "k": "Paser",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.2.foe.name"
+ },
+ {
+  "k": "Kradnutá elektronika lacno",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.2.foe.title"
+ },
+ {
+  "k": "Barman z rohu vraj kúpi všetko. Pod pultom má viac fliaš ako peňazí.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.3.text"
+ },
+ {
+  "k": "Barman odložil pohár. Za tovar zaplatí, ale päsťami.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.3.hit"
+ },
+ {
+  "k": "Barman",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.3.foe.name"
+ },
+ {
+  "k": "Spod pultu",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.3.foe.title"
+ },
+ {
+  "k": "Tovar si chce kúpiť zlatník. Platí dobre, ale každý kus si najprv dlho prezerá cez lupu.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.4.text"
+ },
+ {
+  "k": "Zlatník odložil lupu. Tvrdí, že tovar je falošný, a jeho ochranka už zamyká dvere.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.4.hit"
+ },
+ {
+  "k": "Zlatník",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.4.foe.name"
+ },
+ {
+  "k": "Všetko si preverí",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.4.foe.title"
+ },
+ {
+  "k": "Predavač tenisiek z rohu vraj vezme všetko, čo sa dá predať ďalej. Lenže rád si nechá aj to, za čo nezaplatí.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.5.text"
+ },
+ {
+  "k": "Teniskár položil škatuľu a zapol si reťaz. Rokovanie skončilo.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.5.hit"
+ },
+ {
+  "k": "Teniskár",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.5.foe.name"
+ },
+ {
+  "k": "Kúpi lacno, predá draho",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.5.foe.title"
+ },
+ {
+  "k": "Na ihrisku v uličke sa predáva všeličo. Chlapík v bielom klobúku tam rozhoduje, kto smie.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.6.text"
+ },
+ {
+  "k": "Klobúk zahodil cigaretu a odložil loptu. Toto je jeho ihrisko.",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.6.hit"
+ },
+ {
+  "k": "Klobúk",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.6.foe.name"
+ },
+ {
+  "k": "Šéf ihriska v uličke",
+  "kind": "data",
+  "ctx": "MISSIONS.predaj.stories.6.foe.title"
+ },
+ {
+  "k": "Vymáhanie dlhu",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.name"
+ },
+ {
+  "k": "Mladý motorkár si od Dona požičal na novú mašinu. Splátky nechodia, mašina áno. Pripomeň mu, komu patrí.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.0.text"
+ },
+ {
+  "k": "Nováčik sa len usmieva. Myslí si, že ho chlapi z klubu kryjú.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.0.hit"
+ },
+ {
+  "k": "Motorkár na skúšku",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.0.foe.title"
+ },
+ {
+  "k": "Majiteľ večierky zabudol na mesačnú platbu. Pripomenutie musí byť zdvorilé. Prvýkrát.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.1.text"
+ },
+ {
+  "k": "Synovec majiteľa trénuje v pivnici zápasy. Zdvorilosť pokladá za slabosť.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.1.hit"
+ },
+ {
+  "k": "Zápasník",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.1.foe.name"
+ },
+ {
+  "k": "Synovec z večierky",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.1.foe.title"
+ },
+ {
+  "k": "Právnik vyhral pre Dona prípad a teraz chce dvojnásobný honorár. Pripomeň mu pôvodnú dohodu.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.2.text"
+ },
+ {
+  "k": "Advokát sa usmieva a zviera kufrík. Zmluvu podpíše, až keď prehrá.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.2.hit"
+ },
+ {
+  "k": "Advokát",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.2.foe.name"
+ },
+ {
+  "k": "Paragrafy a výhovorky",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.2.foe.title"
+ },
+ {
+  "k": "Starý pán z verandy požičal pred rokmi Donovi peniaze. Teraz si ich pýta späť aj s úrokmi. Don tvrdí, že je to naopak.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.3.text"
+ },
+ {
+  "k": "Dedko vstal z hojdačky a zvierol palicu. Pamätá si časy, keď sa to robilo inak.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.3.hit"
+ },
+ {
+  "k": "Dedo Ferko",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.3.foe.name"
+ },
+ {
+  "k": "Úžerník na dôchodku",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.3.foe.title"
+ },
+ {
+  "k": "Holič z hlavnej ulice platil každý mesiac. Tento mesiac vraj nemá. Nožnice ale má stále ostré.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.4.text"
+ },
+ {
+  "k": "Holič sa usmieva a pomaly otvára zlaté nožnice. Strihať bude dnes zadarmo.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.4.hit"
+ },
+ {
+  "k": "Holič",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.4.foe.name"
+ },
+ {
+  "k": "Strihá všetko",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.4.foe.title"
+ },
+ {
+  "k": "Úradník z banky si požičal na hazard. Teraz chodí po meste s kufrom a tvári sa, že ťa nepozná.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.5.text"
+ },
+ {
+  "k": "Úradník zviera kufrík a potí sa. Keď ho zaženieš do kúta, bude sa biť ako o život.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.5.hit"
+ },
+ {
+  "k": "Úradník",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.5.foe.name"
+ },
+ {
+  "k": "Dlh až po kravatu",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.5.foe.title"
+ },
+ {
+  "k": "Synček z bohatej rodiny požičal od Dona na nové auto. Splácať sa mu nechce, veď mu všetko kúpi otec.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.6.text"
+ },
+ {
+  "k": "Frajer v okuliaroch sa uškŕňa. Myslí si, že ho peniaze otca ochránia.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.6.hit"
+ },
+ {
+  "k": "Frajer",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.6.foe.name"
+ },
+ {
+  "k": "Peniaze po otcovi",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.6.foe.title"
+ },
+ {
+  "k": "Krupiér z kasína vypláca výhry len tým, ktorí mu dávajú podiel. Don nedostal nič.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.7.text"
+ },
+ {
+  "k": "Krupiér zložil žetóny. Banka dnes vyhrá, myslí si.",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.7.hit"
+ },
+ {
+  "k": "Krupiér",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.7.foe.name"
+ },
+ {
+  "k": "Banka vždy vyhrá",
+  "kind": "data",
+  "ctx": "MISSIONS.vymahanie.stories.7.foe.title"
+ },
+ {
+  "k": "Krádež auta",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.name"
+ },
+ {
+  "k": "Pred hotelom stojí čierne auto, ktoré už nepatrí svojmu majiteľovi. Kľúče máš, stačí ho odviezť do garáže. Šofér však nespí.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.0.text"
+ },
+ {
+  "k": "Šofér si naťahuje čierne rukavice. Tento muž nie je obyčajný šofér.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.0.hit"
+ },
+ {
+  "k": "Čistič",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.0.foe.name | MISSIONS.kradez_sklad.stories.1.foe.name"
+ },
+ {
+  "k": "Muž z izby 29",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.0.foe.title"
+ },
+ {
+  "k": "Autobazár dostal nový kúsok. Don ho chce skôr, než ho niekto kúpi. Nočná zmena by mala spať.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.1.text"
+ },
+ {
+  "k": "Nočnú zmenu tu robí vyhadzovač z klubu. A nespí.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.1.hit"
+ },
+ {
+  "k": "Vyhadzovač",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.1.foe.name | MISSIONS.ochrana.stories.1.foe.name"
+ },
+ {
+  "k": "Nočná zmena",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.1.foe.title"
+ },
+ {
+  "k": "Čierna limuzína parkuje pred bankou. Vzadu sedí niekto, kto vie o autách viac ako ty.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.2.text"
+ },
+ {
+  "k": "Žena z limuzíny odložila tablet. Už vie, kto si, a nepáči sa jej to.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.2.hit"
+ },
+ {
+  "k": "Šoférka",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.2.foe.name"
+ },
+ {
+  "k": "Vodička pre bossov",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.2.foe.title"
+ },
+ {
+  "k": "V servise na juhu stojí auto, ktoré Don chce. Mechanik ho vraj opravuje. Skôr ho schováva.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.3.text"
+ },
+ {
+  "k": "Mladý mechanik si prehodil kľúč z ruky do ruky. Auto nedostaneš bez neho.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.3.hit"
+ },
+ {
+  "k": "Šrobovák",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.3.foe.name"
+ },
+ {
+  "k": "Servis bez faktúr",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.3.foe.title"
+ },
+ {
+  "k": "Pred tetovacím salónom parkuje motorka, ktorá patrí rivalom. Kľúče sú vo vnútri. Majiteľka salónu nie je priateľská.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.4.text"
+ },
+ {
+  "k": "Tatérka si zapla strojček. Tvoju tvár si zapamätá, a ty jej podpis tiež.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.4.hit"
+ },
+ {
+  "k": "Tatérka",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.4.foe.name"
+ },
+ {
+  "k": "Atrament a krv",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.4.foe.title"
+ },
+ {
+  "k": "Pred bytom influencerky stojí nové kupé. Kľúče nechala na stolíku pri okne. Lenže ona práve natáča.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.5.text"
+ },
+ {
+  "k": "Influencerka ťa má na videu naživo. Telefón nepustí a nechty má ostré.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.5.hit"
+ },
+ {
+  "k": "Bibi",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.5.foe.name"
+ },
+ {
+  "k": "Milión sledovateľov",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_auta.stories.5.foe.title"
+ },
+ {
+  "k": "Prepadnutie rivala",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.name"
+ },
+ {
+  "k": "Červení si myslia, že im patrí corner. Prejdi okolo a ukáž im, že sa mýlia.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.0.text"
+ },
+ {
+  "k": "Z uličky vyšiel chlap so šatkou cez tvár. Červení si poslali svojho najhoršieho.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.0.hit"
+ },
+ {
+  "k": "Maska",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.0.foe.name"
+ },
+ {
+  "k": "Červený gang",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.0.foe.title"
+ },
+ {
+  "k": "Kuriér rivalov nosí každý piatok obálku. Dnes ju donesie nám.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.1.text"
+ },
+ {
+  "k": "Kuriérom je známa tvár z podchodu. Obálku len tak nepustí.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.1.hit"
+ },
+ {
+  "k": "Kuriér červených",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.1.foe.title"
+ },
+ {
+  "k": "Rivali posielajú sprejera, aby premaľoval tvoje značky. Zastav ho skôr, než pokryje celú stenu.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.2.text"
+ },
+ {
+  "k": "Farbiar sa usmial a potriasol sprejom. Nevieš, či ti ho strčí do tváre, alebo ťa ním udrie.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.2.hit"
+ },
+ {
+  "k": "Farbiar",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.2.foe.name"
+ },
+ {
+  "k": "Sprejer červených",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.2.foe.title"
+ },
+ {
+  "k": "Rivali dostávajú zbrane od starého puškára v dielni za mestom. Dnes si ich vyzdvihneš ty.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.3.text"
+ },
+ {
+  "k": "Puškár položil skrutkovač a siahol po revolveri na stole.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.3.hit"
+ },
+ {
+  "k": "Puškár",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.3.foe.name"
+ },
+ {
+  "k": "Dielňa rivalov",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.3.foe.title"
+ },
+ {
+  "k": "Rivali majú v uličke vlastného vymáhača. Vždy v tej istej mikine, vždy s tou istou reťazou.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.4.text"
+ },
+ {
+  "k": "Chlap v kapucni vyšiel z tmy. Nič nepovie, rovno udrie.",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.4.hit"
+ },
+ {
+  "k": "Kapucňa",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.4.foe.name"
+ },
+ {
+  "k": "Vymáhač červených",
+  "kind": "data",
+  "ctx": "MISSIONS.prepadnutie.stories.4.foe.title"
+ },
+ {
+  "k": "Ochrana podniku",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.name"
+ },
+ {
+  "k": "Postráž bar, kým sa nezotmie. Nikto nesmie robiť problémy. Jeden to aj tak skúsi.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.0.text"
+ },
+ {
+  "k": "Chuligán po zápase rozbil pohár a pozerá rovno na teba.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.0.hit"
+ },
+ {
+  "k": "Hosť bez pozvania",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.0.foe.title"
+ },
+ {
+  "k": "Majiteľ klubu platí za pokoj. Dnes večer príde niekto, kto pokoj nemá rád.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.1.text"
+ },
+ {
+  "k": "Vyhadzovač konkurencie prišiel robiť poriadok po svojom.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.1.hit"
+ },
+ {
+  "k": "Od konkurencie",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.1.foe.title"
+ },
+ {
+  "k": "Majiteľ baru platí aj za to, aby policajti chodili okolo bez zastavenia. Dnes jeden zastavil.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.2.text"
+ },
+ {
+  "k": "Mladý policajt volá posily a trasú sa mu ruky. Toho sa treba zbaviť rýchlo.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.2.hit"
+ },
+ {
+  "k": "Zelenáč",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.2.foe.name"
+ },
+ {
+  "k": "Prvý týždeň v uniforme",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.2.foe.title"
+ },
+ {
+  "k": "Policajná hliadka stojí pred klubom už hodinu. Vraj kvôli kontrole. Skôr kvôli šiškám z pekárne vedľa.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.3.text"
+ },
+ {
+  "k": "Policajt dojedol šišku a utrel si fúzy. Teraz má čas aj na teba.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.3.hit"
+ },
+ {
+  "k": "Šiška",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.3.foe.name"
+ },
+ {
+  "k": "Hliadka pri pekárni",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.3.foe.title"
+ },
+ {
+  "k": "Pojazdný bufet pred klubom platí za ochranu. Konkurenčný kuchár ho chce vytlačiť a dnes prišiel osobne.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.4.text"
+ },
+ {
+  "k": "Kuchár ti ponúka hranolky. V druhej ruke drží niečo oveľa horšie.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.4.hit"
+ },
+ {
+  "k": "Kuchár",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.4.foe.name"
+ },
+ {
+  "k": "Bufet na kolesách",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.4.foe.title"
+ },
+ {
+  "k": "Nonstop pri klube patrí pod Donovu ochranu. Nočná predavačka ale dnes pustila dnu niekoho, kto platiť nechce.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.5.text"
+ },
+ {
+  "k": "Predavačka nafúkla bublinu a vytiahla spod pultu basebalku.",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.5.hit"
+ },
+ {
+  "k": "Pokladníčka",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.5.foe.name"
+ },
+ {
+  "k": "Nočná zmena v nonstope",
+  "kind": "data",
+  "ctx": "MISSIONS.ochrana.stories.5.foe.title"
+ },
+ {
+  "k": "Krádež zo skladu",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.name"
+ },
+ {
+  "k": "Sklad pri klube je dnes v noci prázdny. Skoro. Jeden strážnik zostal a nemá dobrú náladu.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.0.text"
+ },
+ {
+  "k": "Strážnik skladu zhasol svetlo na schodisku a navliekol si boxer.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.0.hit"
+ },
+ {
+  "k": "Strážnik skladu",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.0.foe.title"
+ },
+ {
+  "k": "V sklade rivalov leží hotovosť za tisíce. Dvere sú otvorené, pes nie je. Zato je tam niekto horší.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.1.text"
+ },
+ {
+  "k": "Peniaze stráži muž v čiernom obleku. Rukavice má už natiahnuté.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.1.hit"
+ },
+ {
+  "k": "Strážca hotovosti",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.1.foe.title"
+ },
+ {
+  "k": "Sklad je čistý, ale pred ním je policajná páska. Niekto tu už bol pred tebou a detektívka hľadá stopy.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.2.text"
+ },
+ {
+  "k": "Detektívka ťa spoznala z fotiek na nástenke. Ruka jej ide k puzdru.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.2.hit"
+ },
+ {
+  "k": "Detektívka",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.2.foe.name | MISSIONS.elixir.stories.1.foe.name"
+ },
+ {
+  "k": "Vražedné oddelenie",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.2.foe.title"
+ },
+ {
+  "k": "Ochranka skladu je preč, ale polícia dostala anonymný tip. Na mieste je zásahovka skôr, ako si čakal.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.3.text"
+ },
+ {
+  "k": "Za štítom stojí zásahovka. Cesta von vedie len cez neho.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.3.hit"
+ },
+ {
+  "k": "Zásahovka",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.3.foe.name"
+ },
+ {
+  "k": "Štít a helma",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.3.foe.title"
+ },
+ {
+  "k": "Tovar zo skladu treba vyviezť po diaľnici. Na odbočke stojí dopravák s radarom a nerád vidí rýchle dodávky.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.4.text"
+ },
+ {
+  "k": "Dopravák si zložil okuliare. Pokutu dnes nebude písať.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.4.hit"
+ },
+ {
+  "k": "Radar",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.4.foe.name"
+ },
+ {
+  "k": "Dopravná polícia",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.4.foe.title"
+ },
+ {
+  "k": "Tovar z policajného skladu je uložený vo väznici. Strážnik pozná každý kľúč aj každú cestu.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.5.text"
+ },
+ {
+  "k": "Dozorca zatriasol zväzkom kľúčov. Odtiaľto nikto neodchádza bez jeho súhlasu.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.5.hit"
+ },
+ {
+  "k": "Dozorca",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.5.foe.name"
+ },
+ {
+  "k": "Kľúče od všetkého",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.5.foe.title"
+ },
+ {
+  "k": "Sklad stráži psovod so psom. Pes ťa zacíti skôr, ako ho uvidíš.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.6.text"
+ },
+ {
+  "k": "Psovod pustil vodítko. Za ním ide aj on.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.6.hit"
+ },
+ {
+  "k": "Psovod",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.6.foe.name"
+ },
+ {
+  "k": "Psia hliadka",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.6.foe.title"
+ },
+ {
+  "k": "Tovar sa presúva cez obchodné centrum v noci. Strážnik SBS má byť na obchôdzke. Je na nej len napoly.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.7.text"
+ },
+ {
+  "k": "Strážnik s vysielačkou ťa zbadal. Spotený, ale odhodlaný.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.7.hit"
+ },
+ {
+  "k": "Strážnik SBS",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.7.foe.name"
+ },
+ {
+  "k": "Nočná zmena v obchodnom centre",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.7.foe.title"
+ },
+ {
+  "k": "Hotovosť zo skladu sa ráno ukladá v banke. Pokladníčka pozná kód od trezoru. Strach jej dodáva odvahu.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.8.text"
+ },
+ {
+  "k": "Pokladníčka za sklom stlačila tlačidlo. Potom zdvihla ťažkú pečiatku.",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.8.hit"
+ },
+ {
+  "k": "Pokladníčka z banky",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.8.foe.name"
+ },
+ {
+  "k": "Za nepriestrelným sklom",
+  "kind": "data",
+  "ctx": "MISSIONS.kradez_sklad.stories.8.foe.title"
+ },
+ {
+  "k": "Dodávka elixíru",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.name"
+ },
+ {
+  "k": "Alchymista ti podá drevenú krabičku a v nej fľaštičku zapečatenú voskom. Hosť v Grand hoteli čaká v izbe na štvrtom poschodí a nechce, aby ho videl personál.",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.0.text"
+ },
+ {
+  "k": "Vrátnik ti zastúpi cestu. Bez kľúča od izby sa ďalej nejde a bez úplatku tiež nie. Ty nemáš ani jedno.",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.0.hit"
+ },
+ {
+  "k": "Vrátnik",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.0.foe.name"
+ },
+ {
+  "k": "Kľúče od všetkých dverí Grand hotela",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.0.foe.title"
+ },
+ {
+  "k": "Ďalšia zásielka do hotela. Tentoraz si ju preberie dáma v bare. Lenže od pivnice za tebou ide niekto s fotoaparátom.",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.1.text"
+ },
+ {
+  "k": "Ryšavá detektívka zahasí cigaretu a zastaví ťa pri výťahu. Fotky už má, teraz chce aj krabičku.",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.1.hit"
+ },
+ {
+  "k": "Fotí za peniaze manželiek",
+  "kind": "data",
+  "ctx": "MISSIONS.elixir.stories.1.foe.title"
+ },
+ {
+  "k": "Zháňanie prísad",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.name"
+ },
+ {
+  "k": "Alchymistovi došla prísada, ktorá sa dá kúpiť len na recept. Nočná lekáreň na Dlhej má plný sklad a jedného unaveného lekárnika.",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.0.text"
+ },
+ {
+  "k": "Lekárnik spod pultu vytiahol bejzbalku. Trasie sa, ale drží ju pevne.",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.0.hit"
+ },
+ {
+  "k": "Nočný lekárnik",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.0.foe.name"
+ },
+ {
+  "k": "Na službe sám, no nie bezbranný",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.0.foe.title"
+ },
+ {
+  "k": "Drogéria pri námestí má v sklade sudy rozpúšťadla. Alchymista ich chce do rána. Strážnik vraj spí.",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.1.text"
+ },
+ {
+  "k": "Strážnik nespí. Baterkou ti svieti do očí a obušok už drží v ruke.",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.1.hit"
+ },
+ {
+  "k": "Strážnik drogérie",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.1.foe.name"
+ },
+ {
+  "k": "Dvanásť hodín na nohách",
+  "kind": "data",
+  "ctx": "MISSIONS.prisady.stories.1.foe.title"
+ },
+ {
+  "k": "Stráž laboratória",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.name"
+ },
+ {
+  "k": "V pivnici sa varí niečo, čo nesmie vychladnúť. Alchymista musí odísť a ty postrážiš dvere, kým sa nevráti.",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.0.text"
+ },
+ {
+  "k": "Dverami vojde postava v plynovej maske. Konkurencia prišla po recept aj s vlastnou chémiou.",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.0.hit"
+ },
+ {
+  "k": "Konkurenčný chemik",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.0.foe.name"
+ },
+ {
+  "k": "Varí to isté, len horšie",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.0.foe.title"
+ },
+ {
+  "k": "Niekto vynáša Alchymistove recepty. Sadni si do tmy medzi police a čakaj, kto si po ne príde.",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.1.text"
+ },
+ {
+  "k": "Chudý chlapík so zápisníkom pod pazuchou si dá prst na pery. Myslí si, že sa dohodnete.",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.1.hit"
+ },
+ {
+  "k": "Zlodej receptov",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.1.foe.name"
+ },
+ {
+  "k": "Predá všetko, čo prečíta",
+  "kind": "data",
+  "ctx": "MISSIONS.laboratorium.stories.1.foe.title"
+ },
+ {
+  "k": "Falošný absint",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.name"
+ },
+ {
+  "k": "Alchymista namiešal zelený absint, ktorý chutí ako pravý a stojí desatinu. Bary na Kozej ho majú kúpiť. Prvý barman sa ale presvedčiť nedá.",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.0.text"
+ },
+ {
+  "k": "Fúzatý barman ochutnal, odpľul si a rozbil fľašu o pult. Teraz ju drží za hrdlo.",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.0.hit"
+ },
+ {
+  "k": "Barman z Kozej",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.0.foe.name"
+ },
+ {
+  "k": "Za tento pult sa nechodí",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.0.foe.title"
+ },
+ {
+  "k": "Absint mieri do starého baru pri rieke. V kúte sedí stály hosť, ktorý pozná každú fľašu.",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.1.text"
+ },
+ {
+  "k": "Tulák so zelenými perami spozná, že je to falošné, a začne kričať na celý bar. Musíš ho umlčať.",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.1.hit"
+ },
+ {
+  "k": "Absintový tulák",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.1.foe.name"
+ },
+ {
+  "k": "Maliar, čo prepil všetky obrazy",
+  "kind": "data",
+  "ctx": "MISSIONS.absint.stories.1.foe.title"
+ },
+ {
+  "k": "Pašovanie po rieke",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.name"
+ },
+ {
+  "k": "Prievozník má loďku s nákladom pod plachtou. Preveslovať popod most, vyložiť na druhom brehu a žiadne otázky.",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.0.text"
+ },
+ {
+  "k": "Z rákosia sa vynorí starý rybár s harpúnou. Toto je jeho rieka a nik mu za ňu nezaplatil.",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.0.hit"
+ },
+ {
+  "k": "Rybár s harpúnou",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.0.foe.name"
+ },
+ {
+  "k": "Rieka patrí jemu",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.0.foe.title"
+ },
+ {
+  "k": "Dnes v noci ide dvakrát väčší náklad. Hmla je hustá, a to je dobre. Aj zle.",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.1.text"
+ },
+ {
+  "k": "Z hmly ti do tváre zasvieti baterka. Riečna hliadka má dnes službu a nemá rada prekvapenia.",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.1.hit"
+ },
+ {
+  "k": "Riečna hliadka",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.1.foe.name"
+ },
+ {
+  "k": "Dvadsať rokov na rieke",
+  "kind": "data",
+  "ctx": "MISSIONS.pasovanie.stories.1.foe.title"
+ },
+ {
+  "k": "Nočné vykladanie",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.name"
+ },
+ {
+  "k": "K mólu pripláva čln s debnami. Vyložiť ich treba skôr, ako ráno prídu prístavní robotníci.",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.0.text"
+ },
+ {
+  "k": "Jeden robotník prišiel skôr. Obor v roztrhanom tielku si prehadzuje hák z ruky do ruky.",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.0.hit"
+ },
+ {
+  "k": "Prístavný nosič",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.0.foe.name"
+ },
+ {
+  "k": "Debny nosí aj s ľuďmi",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.0.foe.title"
+ },
+ {
+  "k": "Debny musia do skladu pri nábreží. Na móle však sedí starý rybár a nehýbe sa.",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.1.text"
+ },
+ {
+  "k": "Rybár vstane, prehodí si sieť cez plece a zdvihne trojzubec. Videl, čo je v debnách.",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.1.hit"
+ },
+ {
+  "k": "Rybár z móla",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.1.foe.name"
+ },
+ {
+  "k": "Nespí, len tak vyzerá",
+  "kind": "data",
+  "ctx": "MISSIONS.vykladanie.stories.1.foe.title"
+ },
+ {
+  "k": "Mýto na moste",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.name"
+ },
+ {
+  "k": "Výletné lode pod mostom platia Prievozníkovi za pokoj na vode. Jedna loď mešká s platbou už tretí týždeň.",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.0.text"
+ },
+ {
+  "k": "Majiteľ lode sa usmieva cez dym cigary. Biele sako, zlatá reťaz a dvaja chlapi za chrbtom.",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.0.hit"
+ },
+ {
+  "k": "Majiteľ lode",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.0.foe.name"
+ },
+ {
+  "k": "Zarába na turistoch aj na tichu",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.0.foe.title"
+ },
+ {
+  "k": "Na moste hrajú muzikanti a každý odvádza podiel. Ten s harmonikou zabudol, komu.",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.1.text"
+ },
+ {
+  "k": "Hudobník dohrá skladbu a vytiahne z topánky nôž. Na moste sa vraj nevyberá.",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.1.hit"
+ },
+ {
+  "k": "Hudobník z mosta",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.1.foe.name"
+ },
+ {
+  "k": "Hrá za drobné aj o krk",
+  "kind": "data",
+  "ctx": "MISSIONS.myto.stories.1.foe.title"
+ },
+ {
+  "k": "Potopiť dôkazy",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.name"
+ },
+ {
+  "k": "Kovový kufrík s papiermi, ktoré nikto nesmie vidieť, musí skončiť na dne rieky aj s kotvou. V noci a ďaleko od brehu.",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.0.text"
+ },
+ {
+  "k": "Pri móle sa z vody vynorí potápač. Hľadá presne tento kufrík a nôž má pripravený.",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.0.hit"
+ },
+ {
+  "k": "Potápač",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.0.foe.name"
+ },
+ {
+  "k": "Na dne nájde všetko",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.0.foe.title"
+ },
+ {
+  "k": "Kufrík ide do vody pod nábrežím. Okná nad riekou sú tmavé. Takmer všetky.",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.1.text"
+ },
+ {
+  "k": "V okne stojí muž v pyžame a všetko videl. Zbehol dolu a kričí, že zavolá políciu.",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.1.hit"
+ },
+ {
+  "k": "Svedok z nábrežia",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.1.foe.name"
+ },
+ {
+  "k": "Videl, čo nemal",
+  "kind": "data",
+  "ctx": "MISSIONS.dokazy.stories.1.foe.title"
+ },
+ {
+  "k": "Červení",
+  "kind": "data",
+  "ctx": "RIVAL_GANGS.cerveni.name"
+ },
+ {
+  "k": "Kostlivci",
+  "kind": "data",
+  "ctx": "RIVAL_GANGS.kostlivci.name"
+ },
+ {
+  "k": "Modrí hadi",
+  "kind": "data",
+  "ctx": "RIVAL_GANGS.hadi.name"
+ },
+ {
+  "k": "Riečni potkani",
+  "kind": "data",
+  "ctx": "RIVAL_GANGS.potkani.name"
+ },
+ {
+  "k": "Kováči",
+  "kind": "data",
+  "ctx": "RIVAL_GANGS.kovaci.name"
+ },
+ {
+  "k": "Krvavá lóža",
+  "kind": "data",
+  "ctx": "RIVAL_GANGS.loza.name"
+ },
+ {
+  "k": "Nič nevidíš, nič nekupuješ.",
+  "kind": "data",
+  "ctx": "SHOPS.zbrane.blurb"
+ },
+ {
+  "k": "Čierna nikdy nevyjde z módy.",
+  "kind": "data",
+  "ctx": "SHOPS.oblecenie.blurb"
+ },
+ {
+  "k": "Zlato hovorí za teba.",
+  "kind": "data",
+  "ctx": "SHOPS.sperky.blurb"
+ },
+ {
+  "k": "Autobazár",
+  "kind": "data",
+  "ctx": "SHOPS.autobazar.name | ui.js:1483 scr_upgrade"
+ },
+ {
+  "k": "Bez papierov, bez otázok, bez záruky.",
+  "kind": "data",
+  "ctx": "SHOPS.autobazar.blurb"
+ },
+ {
+  "k": "Zbraň",
+  "kind": "data",
+  "ctx": "SLOTS.0.name"
+ },
+ {
+  "k": "Bunda",
+  "kind": "data",
+  "ctx": "SLOTS.1.name"
+ },
+ {
+  "k": "Nohavice",
+  "kind": "data",
+  "ctx": "SLOTS.2.name"
+ },
+ {
+  "k": "Topánky",
+  "kind": "data",
+  "ctx": "SLOTS.3.name"
+ },
+ {
+  "k": "Retiazka",
+  "kind": "data",
+  "ctx": "SLOTS.4.name"
+ },
+ {
+  "k": "Prsteň",
+  "kind": "data",
+  "ctx": "SLOTS.5.name"
+ },
+ {
+  "k": "Hodinky",
+  "kind": "data",
+  "ctx": "SLOTS.6.name"
+ },
+ {
+  "k": "Auto",
+  "kind": "data",
+  "ctx": "SLOTS.7.name"
+ },
+ {
+  "k": "Corner",
+  "kind": "data",
+  "ctx": "TURF_KINDS.corner.name"
+ },
+ {
+  "k": "+2 % peňazí z misií",
+  "kind": "data",
+  "ctx": "TURF_KINDS.corner.text"
+ },
+ {
+  "k": "−5 % čas misií",
+  "kind": "data",
+  "ctx": "TURF_KINDS.garaz.text"
+ },
+ {
+  "k": "Sklad",
+  "kind": "data",
+  "ctx": "TURF_KINDS.sklad.name"
+ },
+ {
+  "k": "+3 % šanca na drop epického predmetu z misie",
+  "kind": "data",
+  "ctx": "TURF_KINDS.sklad.text"
+ },
+ {
+  "k": "Klub",
+  "kind": "data",
+  "ctx": "TURF_KINDS.klub.name"
+ },
+ {
+  "k": "+5 % peňazí a +3 % XP z misií",
+  "kind": "data",
+  "ctx": "TURF_KINDS.klub.text"
+ },
+ {
+  "k": "Svalovec",
+  "kind": "data",
+  "ctx": "CLASSES.svalovec.name"
+ },
+ {
+  "k": "Najviac životov, najlepšie brnenie a blok (28 % proti Zlodejovi, 10 % proti Dealerovi), najslabší úder. Úder mu dvíha Sila.",
+  "kind": "data",
+  "ctx": "CLASSES.svalovec.blurb"
+ },
+ {
+  "k": "Zlodej",
+  "kind": "data",
+  "ctx": "CLASSES.zlodej.name"
+ },
+ {
+  "k": "Stred. Polovici úderov Svalovca sa vyhne. Úder mu dvíha Obratnosť.",
+  "kind": "data",
+  "ctx": "CLASSES.zlodej.blurb"
+ },
+ {
+  "k": "Dealer",
+  "kind": "data",
+  "ctx": "CLASSES.dealer.name"
+ },
+ {
+  "k": "Najsilnejší úder, ktorý ignoruje brnenie, ale najmenej životov. Úder mu dvíha Charizma.",
+  "kind": "data",
+  "ctx": "CLASSES.dealer.blurb"
+ },
+ {
+  "k": "bežný",
+  "kind": "data",
+  "ctx": "RARITIES.0.name"
+ },
+ {
+  "k": "epický",
+  "kind": "data",
+  "ctx": "RARITIES.1.name"
+ },
+ {
+  "k": "legendárny",
+  "kind": "data",
+  "ctx": "RARITIES.2.name"
+ },
+ {
+  "k": "Sila",
+  "kind": "data",
+  "ctx": "STAT_NAMES.sila"
+ },
+ {
+  "k": "Odolnosť",
+  "kind": "data",
+  "ctx": "STAT_NAMES.odolnost"
+ },
+ {
+  "k": "Obratnosť",
+  "kind": "data",
+  "ctx": "STAT_NAMES.obratnost"
+ },
+ {
+  "k": "Charizma",
+  "kind": "data",
+  "ctx": "STAT_NAMES.charizma"
+ },
+ {
+  "k": "Šťastie",
+  "kind": "data",
+  "ctx": "STAT_NAMES.stastie"
+ },
+ {
+  "k": "Dvojité XP",
+  "kind": "data",
+  "ctx": "EVENTS.xp2.name"
+ },
+ {
+  "k": "Misie, bossovia, aréna aj Gang Wars dávajú dvojnásobné XP.",
+  "kind": "data",
+  "ctx": "EVENTS.xp2.desc"
+ },
+ {
+  "k": "Rýchle prachy",
+  "kind": "data",
+  "ctx": "EVENTS.fast.name"
+ },
+ {
+  "k": "Misie trvajú polovicu času.",
+  "kind": "data",
+  "ctx": "EVENTS.fast.desc"
+ },
+ {
+  "k": "Zlatá horúčka",
+  "kind": "data",
+  "ctx": "EVENTS.gold.name"
+ },
+ {
+  "k": "Každá vyhratá misia má 25 % šancu dať 1 až 3 zlaté tehličky. Bossovia pridajú 3 tehličky a Ripper chodí dvakrát častejšie.",
+  "kind": "data",
+  "ctx": "EVENTS.gold.desc"
+ },
+ {
+  "k": "Šťastný víkend",
+  "kind": "data",
+  "ctx": "EVENTS.lucky.name"
+ },
+ {
+  "k": "Šťastný bežec chodí každých 15 minút s dvojnásobnou šancou na epický predmet. Tabletky pôsobia dvakrát dlhšie.",
+  "kind": "data",
+  "ctx": "EVENTS.lucky.desc"
+ },
+ {
+  "k": "Víkend gangov",
+  "kind": "data",
+  "ctx": "EVENTS.gangs.name"
+ },
+ {
+  "k": "Obsadenie objektu dáva dvojnásobnú odmenu a v sieni slávy sa ráta za dve výhry. Obrana objektov neslabne a po neúspešnom útoku sa dá skúsiť hneď.",
+  "kind": "data",
+  "ctx": "EVENTS.gangs.desc"
+ },
+ {
+  "k": "Amnestia",
+  "kind": "data",
+  "ctx": "EVENTS.amnesty.name"
+ },
+ {
+  "k": "Právnička je za polovicu a bez denného limitu.",
+  "kind": "data",
+  "ctx": "EVENTS.amnesty.desc"
+ },
+ {
+  "k": "Dvojité peniaze",
+  "kind": "data",
+  "ctx": "EVENTS.cash2.name"
+ },
+ {
+  "k": "Misie, bossovia, aréna aj Gang Wars dávajú dvojnásobné peniaze.",
+  "kind": "data",
+  "ctx": "EVENTS.cash2.desc"
+ },
+ {
+  "k": "Policajný štrajk",
+  "kind": "data",
+  "ctx": "EVENTS.strike.name"
+ },
+ {
+  "k": "Hľadanosť na ulici aj heat z misií pribúdajú o polovicu pomalšie.",
+  "kind": "data",
+  "ctx": "EVENTS.strike.desc"
+ },
+ {
+  "k": "Čierny trh celý víkend",
+  "kind": "data",
+  "ctx": "EVENTS.bm.name"
+ },
+ {
+  "k": "Čierny trh je otvorený pre všetkých celý víkend a v každom obchode ponúka o 2 epické kusy viac.",
+  "kind": "data",
+  "ctx": "EVENTS.bm.desc"
+ },
+ {
+  "k": "Výpredaj",
+  "kind": "data",
+  "ctx": "EVENTS.sale.name"
+ },
+ {
+  "k": "Obchody aj vylepšenia u mechanika sú o 30 % lacnejšie a nový tovar je zadarmo.",
+  "kind": "data",
+  "ctx": "EVENTS.sale.desc"
+ },
+ {
+  "k": "Legendárny víkend",
+  "kind": "data",
+  "ctx": "EVENTS.legend.name"
+ },
+ {
+  "k": "Šanca na legendárny predmet z bossa je 5 % namiesto 1 % a legendárny predmet môže padnúť aj z misie.",
+  "kind": "data",
+  "ctx": "EVENTS.legend.desc"
+ },
+ {
+  "k": "Hon na bossov",
+  "kind": "data",
+  "ctx": "EVENTS.bosshunt.name"
+ },
+ {
+  "k": "Pokusy na bossov sú bez čakania a bez tehličiek.",
+  "kind": "data",
+  "ctx": "EVENTS.bosshunt.desc"
+ },
+ {
+  "k": "Prieskum",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.scout.name | js/daily.js:19 DAILY_TYPES"
+ },
+ {
+  "k": "Skrýše",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.stash.name | js/daily.js:20 DAILY_TYPES"
+ },
+ {
+  "k": "Kuriér",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.courier.name | js/daily.js:21 DAILY_TYPES"
+ },
+ {
+  "k": "Bežec alebo Ripper",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.runner.name | js/daily.js:22 DAILY_TYPES"
+ },
+ {
+  "k": "Dlžník",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.dlznik.name | world.js:836 special | js/daily.js:23 DAILY_TYPES"
+ },
+ {
+  "k": "Vreckár",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.vreckar.name | js/daily.js:24 DAILY_TYPES"
+ },
+ {
+  "k": "Graffiti",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.graffiti.name | js/daily.js:26 DAILY_TYPES"
+ },
+ {
+  "k": "Útek",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.escape.name | js/daily.js:28 DAILY_TYPES"
+ },
+ {
+  "k": "Policajná razia",
+  "kind": "data",
+  "ctx": "DAILY_TYPES.razia.name | js/daily.js:29 DAILY_TYPES"
+ },
+ {
+  "k": "Misie",
+  "kind": "data",
+  "ctx": "MEDALS.0.name | ui.js:83 | ui.js:1395 scr_missions | ui.js:1399 scr_missions"
+ },
+ {
+  "k": "splnených misií",
+  "kind": "data",
+  "ctx": "MEDALS.0.unit"
+ },
+ {
+  "k": "Bossovia",
+  "kind": "data",
+  "ctx": "MEDALS.1.name"
+ },
+ {
+  "k": "porazených bossov",
+  "kind": "data",
+  "ctx": "MEDALS.1.unit"
+ },
+ {
+  "k": "výhier v Aréne",
+  "kind": "data",
+  "ctx": "MEDALS.2.unit"
+ },
+ {
+  "k": "Podzemné zápasy",
+  "kind": "data",
+  "ctx": "MEDALS.3.name | ui.js:63 | ui.js:88 | ui.js:1559 scr_club"
+ },
+ {
+  "k": "poschodie Podzemných zápasov",
+  "kind": "data",
+  "ctx": "MEDALS.3.unit"
+ },
+ {
+  "k": "Gang Wars",
+  "kind": "data",
+  "ctx": "MEDALS.4.name"
+ },
+ {
+  "k": "obsadených objektov",
+  "kind": "data",
+  "ctx": "MEDALS.4.unit"
+ },
+ {
+  "k": "Ulica",
+  "kind": "data",
+  "ctx": "MEDALS.5.name"
+ },
+ {
+  "k": "zložených policajtov",
+  "kind": "data",
+  "ctx": "MEDALS.5.unit"
+ },
+ {
+  "k": "Denné misie",
+  "kind": "data",
+  "ctx": "MEDALS.6.name | ui.js:84 | ui.js:606 scr_daily | ui.js:1388 scr_missions"
+ },
+ {
+  "k": "dní so splnenými dennými misiami",
+  "kind": "data",
+  "ctx": "MEDALS.6.unit"
+ },
+ {
+  "k": "Úroveň",
+  "kind": "data",
+  "ctx": "MEDALS.7.name"
+ },
+ {
+  "k": "úroveň",
+  "kind": "data",
+  "ctx": "MEDALS.7.unit"
+ },
+ {
+  "k": "Bronz",
+  "kind": "data",
+  "ctx": "MEDAL_TIERS.0.name"
+ },
+ {
+  "k": "Striebro",
+  "kind": "data",
+  "ctx": "MEDAL_TIERS.1.name"
+ },
+ {
+  "k": "Zlato",
+  "kind": "data",
+  "ctx": "MEDAL_TIERS.2.name"
+ },
+ {
+  "k": "Obočie",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.name"
+ },
+ {
+  "k": "angry",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.0.name"
+ },
+ {
+  "k": "one raised",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.1.name"
+ },
+ {
+  "k": "scar",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.2.name"
+ },
+ {
+  "k": "worried raised",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.3.name"
+ },
+ {
+  "k": "thick neutral",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.4.name"
+ },
+ {
+  "k": "frown",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.5.name"
+ },
+ {
+  "k": "faint",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.6.name"
+ },
+ {
+  "k": "thin arched",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.7.name"
+ },
+ {
+  "k": "heavy dark",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.0.items.8.name"
+ },
+ {
+  "k": "Oči",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.name"
+ },
+ {
+  "k": "sleepy",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.0.name"
+ },
+ {
+  "k": "squint",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.1.name"
+ },
+ {
+  "k": "wide stare",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.2.name"
+ },
+ {
+  "k": "side eye",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.3.name"
+ },
+ {
+  "k": "calm",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.4.name"
+ },
+ {
+  "k": "tired bags",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.5.name"
+ },
+ {
+  "k": "cold light",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.6.name"
+ },
+ {
+  "k": "wink",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.7.name"
+ },
+ {
+  "k": "black eye",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.1.items.8.name"
+ },
+ {
+  "k": "Brada",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.name"
+ },
+ {
+  "k": "stubble",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.0.name"
+ },
+ {
+  "k": "full beard",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.1.name"
+ },
+ {
+  "k": "goatee",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.2.name"
+ },
+ {
+  "k": "chin strap",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.3.name"
+ },
+ {
+  "k": "pencil mustache",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.4.name"
+ },
+ {
+  "k": "horseshoe mustache",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.5.name"
+ },
+ {
+  "k": "short boxed",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.6.name"
+ },
+ {
+  "k": "long beard",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.7.name"
+ },
+ {
+  "k": "patchy",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.2.items.8.name"
+ },
+ {
+  "k": "Účes",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.name"
+ },
+ {
+  "k": "buzz fade",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.0.name"
+ },
+ {
+  "k": "cornrows",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.1.name"
+ },
+ {
+  "k": "dreads",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.2.name"
+ },
+ {
+  "k": "curly top fade",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.3.name"
+ },
+ {
+  "k": "twists",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.4.name"
+ },
+ {
+  "k": "waves",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.5.name"
+ },
+ {
+  "k": "edgar",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.6.name"
+ },
+ {
+  "k": "low ponytail",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.3.items.7.name"
+ },
+ {
+  "k": "Extra",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.name"
+ },
+ {
+  "k": "oval sunglasses",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.0.name"
+ },
+ {
+  "k": "aviators",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.1.name"
+ },
+ {
+  "k": "flat cap",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.2.name"
+ },
+ {
+  "k": "snapback backwards",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.3.name"
+ },
+ {
+  "k": "beanie",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.4.name"
+ },
+ {
+  "k": "bandana",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.5.name"
+ },
+ {
+  "k": "diamond earrings",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.6.name"
+ },
+ {
+  "k": "gold chain",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.7.name"
+ },
+ {
+  "k": "neck tattoo",
+  "kind": "data",
+  "ctx": "LOOK_PARTS.4.items.8.name"
+ },
+ {
+  "k": "hodina|hodiny|hodín",
+  "kind": "plural",
+  "ctx": "ui.js:18"
+ },
+ {
+  "k": "Červená pilulka",
+  "kind": "ui",
+  "ctx": "ui.js:48"
+ },
+ {
+  "k": "Modrá pilulka",
+  "kind": "ui",
+  "ctx": "ui.js:48"
+ },
+ {
+  "k": "Zelené srdce",
+  "kind": "ui",
+  "ctx": "ui.js:48"
+ },
+ {
+  "k": "Životy",
+  "kind": "ui",
+  "ctx": "ui.js:49"
+ },
+ {
+  "k": "Choď za Donom do parku (zlatý kruh, biela „!“) a vezmi si misiu.",
+  "kind": "ui",
+  "ctx": "ui.js:52"
+ },
+ {
+  "k": "Misia je hotová. Vráť sa za Donom a vyzdvihni si odmenu.",
+  "kind": "ui",
+  "ctx": "ui.js:53"
+ },
+ {
+  "k": "Misia beží. Kým skončí, prejdi sa po meste.",
+  "kind": "ui",
+  "ctx": "ui.js:53"
+ },
+ {
+  "k": "Otvor Postavu a zvýš si niektorý stat.",
+  "kind": "ui",
+  "ctx": "ui.js:54"
+ },
+ {
+  "k": "Choď do obchodu Zbrane (zlatý kruh) a kúp si novú zbraň.",
+  "kind": "ui",
+  "ctx": "ui.js:55"
+ },
+ {
+  "k": "V Postave ťukni na zbraň a nasaď si tú novú.",
+  "kind": "ui",
+  "ctx": "ui.js:56"
+ },
+ {
+  "k": "Bojuj s inými hráčmi o body a miesto v rebríčku. Päť zápasov za hodinu máš zadarmo.",
+  "kind": "ui",
+  "ctx": "ui.js:62"
+ },
+ {
+  "k": "Ukáž cestu",
+  "kind": "ui",
+  "ctx": "ui.js:62"
+ },
+ {
+  "k": "Sto súperov v pivnici pod klubom, každý silnejší ako ten pred ním. Jeden zápas za hodinu, každé desiate poschodie platí zlaté tehličky.",
+  "kind": "ui",
+  "ctx": "ui.js:63"
+ },
+ {
+  "k": "Otvoriť",
+  "kind": "ui",
+  "ctx": "ui.js:63 | ui.js:64"
+ },
+ {
+  "k": "Gangy",
+  "kind": "ui",
+  "ctx": "ui.js:64 | ui.js:1304 scr_hall"
+ },
+ {
+  "k": "Založ si vlastný gang alebo sa pridaj k inému. Spolu obsadíte objekty v meste a celý gang má z nich bonusy k misiám.",
+  "kind": "ui",
+  "ctx": "ui.js:64"
+ },
+ {
+  "k": "Čierny trh",
+  "kind": "ui",
+  "ctx": "ui.js:65 | js/server.js:928 buyElixir"
+ },
+ {
+  "k": "Každý piatok od 18:00 majú obchody aj epické kúsky. U Wexlera si za tehličky kúpiš elixír, ktorý ti Čierny trh otvorí hocikedy na 24 hodín.",
+  "kind": "ui",
+  "ctx": "ui.js:65"
+ },
+ {
+  "k": "Staty, výbava a vylepšenia tvojej postavy.",
+  "kind": "ui",
+  "ctx": "ui.js:81"
+ },
+ {
+  "k": "Inventár",
+  "kind": "ui",
+  "ctx": "ui.js:82 | ui.js:1366 scr_inventory"
+ },
+ {
+  "k": "Všetky predmety, ktoré nosíš so sebou.",
+  "kind": "ui",
+  "ctx": "ui.js:82"
+ },
+ {
+  "k": "Aktívna misia a kde nájdeš zadávateľov.",
+  "kind": "ui",
+  "ctx": "ui.js:83"
+ },
+ {
+  "k": "Tri úlohy na mape každý deň a 15-dňový kalendár odmien.",
+  "kind": "ui",
+  "ctx": "ui.js:84"
+ },
+ {
+  "k": "Víkendové eventy",
+  "kind": "ui",
+  "ctx": "ui.js:85 | ui.js:361 scr_events"
+ },
+ {
+  "k": "Každý víkend dva eventy naraz: čo platí teraz a čo príde.",
+  "kind": "ui",
+  "ctx": "ui.js:85"
+ },
+ {
+  "k": "Polícia a heat",
+  "kind": "ui",
+  "ctx": "ui.js:86"
+ },
+ {
+  "k": "Heat, hviezdy, kontrola, basa, právnička a skrýša na jednom mieste.",
+  "kind": "ui",
+  "ctx": "ui.js:86"
+ },
+ {
+  "k": "Súboje s inými hráčmi a rebríček.",
+  "kind": "ui",
+  "ctx": "ui.js:87"
+ },
+ {
+  "k": "Sto súperov v pivnici pod klubom, každý silnejší. Jeden zápas za hodinu.",
+  "kind": "ui",
+  "ctx": "ui.js:88"
+ },
+ {
+  "k": "Boss fights",
+  "kind": "ui",
+  "ctx": "ui.js:89 | ui.js:1513 scr_boss | ui.js:1540 scr_boss"
+ },
+ {
+  "k": "Bossovia mesta, v ktorom si: Kladivo v Meste 1, Radničná veža v Meste 2.",
+  "kind": "ui",
+  "ctx": "ui.js:89"
+ },
+ {
+  "k": "Gang",
+  "kind": "ui",
+  "ctx": "ui.js:90 | index.html #hud | js/gangs.js:171 createGang"
+ },
+ {
+  "k": "Tvoj gang, pokladnica, členovia a boje o územie.",
+  "kind": "ui",
+  "ctx": "ui.js:90"
+ },
+ {
+  "k": "Sieň slávy",
+  "kind": "ui",
+  "ctx": "ui.js:91 | ui.js:1326 scr_hall"
+ },
+ {
+  "k": "Všetci registrovaní hráči. Klikni na hráča a uvidíš jeho staty a výbavu.",
+  "kind": "ui",
+  "ctx": "ui.js:91"
+ },
+ {
+  "k": "Nastavenia",
+  "kind": "ui",
+  "ctx": "ui.js:92 | ui.js:1221 scr_title | ui.js:1669 scr_settings | ui.js:1678 scr_settings"
+ },
+ {
+  "k": "Zvuk, účet a nahlásenie chyby.",
+  "kind": "ui",
+  "ctx": "ui.js:92"
+ },
+ {
+  "k": "Hlavné menu",
+  "kind": "ui",
+  "ctx": "ui.js:93"
+ },
+ {
+  "k": "Späť na úvodnú obrazovku. Hra sa ukladá sama.",
+  "kind": "ui",
+  "ctx": "ui.js:93"
+ },
+ {
+  "k": "Späť",
+  "kind": "ui",
+  "ctx": "ui.js:245 hdr | ui.js:1230 scr_title | ui.js:1241 scr_menu"
+ },
+ {
+  "k": "{n} % heat",
+  "kind": "ui",
+  "ctx": "ui.js:265 tick"
+ },
+ {
+  "k": "Heat {n} %: denný limit na misie",
+  "kind": "ui",
+  "ctx": "ui.js:267 tick"
+ },
+ {
+  "k": "Zatknutý: pauza od misií",
+  "kind": "ui",
+  "ctx": "ui.js:271 tick"
+ },
+ {
+  "k": "Misia {name}: vyzdvihni odmenu",
+  "kind": "ui",
+  "ctx": "ui.js:272 tick"
+ },
+ {
+  "k": "Misia {name}",
+  "kind": "ui",
+  "ctx": "ui.js:272 tick"
+ },
+ {
+  "k": "Ripper ukradol tehličku · <b>{cas}</b>",
+  "kind": "ui",
+  "ctx": "ui.js:287 tick"
+ },
+ {
+  "k": "Ripper ukradol Wexlerovi tehličku! Zasiahni ho, kým neujde.",
+  "kind": "ui",
+  "ctx": "ui.js:288 tick"
+ },
+ {
+  "k": "Gang: {text}",
+  "kind": "ui",
+  "ctx": "ui.js:292 tick"
+ },
+ {
+  "k": "Hľadanosť {n} z 5: polícia na ulici",
+  "kind": "ui",
+  "ctx": "ui.js:307 tick"
+ },
+ {
+  "k": "hlavný",
+  "kind": "ui",
+  "ctx": "ui.js:346 evCard"
+ },
+ {
+  "k": "bonus",
+  "kind": "ui",
+  "ctx": "ui.js:346 evCard"
+ },
+ {
+  "k": "Každý víkend od piatku {hod}:00 do nedele polnoci bežia dva eventy naraz: jeden hlavný a jeden bonus. Poradie sa opakuje každých {n} týždňov.",
+  "kind": "ui",
+  "ctx": "ui.js:351 scr_events"
+ },
+ {
+  "k": "Teraz · ešte {cas}",
+  "kind": "ui",
+  "ctx": "ui.js:353 scr_events"
+ },
+ {
+  "k": "Najbližší víkend · začína o {cas}",
+  "kind": "ui",
+  "ctx": "ui.js:355 scr_events"
+ },
+ {
+  "k": "Budúci víkend",
+  "kind": "ui",
+  "ctx": "ui.js:357 scr_events"
+ },
+ {
+  "k": "Poradie",
+  "kind": "ui",
+  "ctx": "ui.js:360 scr_events"
+ },
+ {
+  "k": "V tieni, polícia ťa nehľadá · <b>{cas}</b>",
+  "kind": "ui",
+  "ctx": "ui.js:370 hideHud"
+ },
+ {
+  "k": "Teraz sa skrývaš v tieni. Polícia ťa {min} minút nebude naháňať.",
+  "kind": "ui",
+  "ctx": "ui.js:379 hideFinish"
+ },
+ {
+  "k": "Odišiel si zo skrýše príliš skoro. Polícia ťa stále hľadá.",
+  "kind": "ui",
+  "ctx": "ui.js:380 hideFinish"
+ },
+ {
+  "k": "Skrývaš sa v tieni",
+  "kind": "ui",
+  "ctx": "ui.js:388 scr_hideout"
+ },
+ {
+  "k": "Vonku hliadkuje polícia. Vydrž tu {hide} minút a potom ťa {shadow} minút nebude nikto naháňať, ani keď budeš mať hviezdy.",
+  "kind": "ui",
+  "ctx": "ui.js:390 scr_hideout"
+ },
+ {
+  "k": "Odísť skôr (bez ochrany)",
+  "kind": "ui",
+  "ctx": "ui.js:391 scr_hideout"
+ },
+ {
+  "k": "Si v tieni",
+  "kind": "ui",
+  "ctx": "ui.js:393 scr_hideout"
+ },
+ {
+  "k": "Polícia ťa teraz nehľadá. Keď čas vyprší a budeš mať hviezdy, začnú ťa znova naháňať.",
+  "kind": "ui",
+  "ctx": "ui.js:395 scr_hideout"
+ },
+ {
+  "k": "Vyjsť von",
+  "kind": "ui",
+  "ctx": "ui.js:396 scr_hideout"
+ },
+ {
+  "k": "Zadný vchod",
+  "kind": "ui",
+  "ctx": "ui.js:398 scr_hideout"
+ },
+ {
+  "k": "Pivnica bez okien, matrac a zámok z vnútornej strany. Keď ťa hľadá polícia, schovaj sa tu na {hide} minút. Hľadanosť zmizne a {shadow} minút ťa polícia nebude naháňať.",
+  "kind": "ui",
+  "ctx": "ui.js:399 scr_hideout"
+ },
+ {
+  "k": "Hľadanosť teraz: {stars}",
+  "kind": "ui",
+  "ctx": "ui.js:400 scr_hideout"
+ },
+ {
+  "k": "žiadna",
+  "kind": "ui",
+  "ctx": "ui.js:400 scr_hideout"
+ },
+ {
+  "k": "Polícia ťa teraz nehľadá, nie je pred kým sa skrývať.",
+  "kind": "ui",
+  "ctx": "ui.js:402 scr_hideout"
+ },
+ {
+  "k": "Medaily",
+  "kind": "ui",
+  "ctx": "ui.js:415 medalRow"
+ },
+ {
+  "k": "Nové medaily",
+  "kind": "ui",
+  "ctx": "ui.js:432 medalCheck"
+ },
+ {
+  "k": "Nová medaila",
+  "kind": "ui",
+  "ctx": "ui.js:432 medalCheck"
+ },
+ {
+  "k": "<span class=\"gold\">+{bars} tehl.</span>",
+  "kind": "ui",
+  "ctx": "ui.js:433 medalCheck | ui.js:516 tutFinishModal"
+ },
+ {
+  "k": "Zlatý rám na profile: {total} / {count} medailí.",
+  "kind": "ui",
+  "ctx": "ui.js:434 medalCheck"
+ },
+ {
+  "k": "Pokračovať",
+  "kind": "ui",
+  "ctx": "ui.js:435 medalCheck | ui.js:583 dailyRewardModal | ui.js:676 reaperCaught | ui.js:685 runnerHit"
+ },
+ {
+  "k": "Úroveň {n}",
+  "kind": "ui",
+  "ctx": "ui.js:450 unlockCheck"
+ },
+ {
+  "k": "Odomknuté: {name}",
+  "kind": "ui",
+  "ctx": "ui.js:450 unlockCheck"
+ },
+ {
+  "k": "Neskôr",
+  "kind": "ui",
+  "ctx": "ui.js:451 unlockCheck | ui.js:806 authBack"
+ },
+ {
+  "k": "Rozumiem",
+  "kind": "ui",
+  "ctx": "ui.js:452 unlockCheck | ui.js:760 info | ui.js:1029 goal-claim"
+ },
+ {
+  "k": "Návod {n}/{total}",
+  "kind": "ui",
+  "ctx": "ui.js:472 tutHud"
+ },
+ {
+  "k": "{n} tehl.",
+  "kind": "ui",
+  "ctx": "ui.js:501 goalHud | ui.js:602 scr_daily | ui.js:1531 scr_boss | ui.js:1570 scr_club"
+ },
+ {
+  "k": "Splnené! Odmena: {rew}",
+  "kind": "ui",
+  "ctx": "ui.js:502 goalHud"
+ },
+ {
+  "k": "Cieľ {n}/{total}",
+  "kind": "ui",
+  "ctx": "ui.js:504 goalHud"
+ },
+ {
+  "k": "Vyzdvihnúť",
+  "kind": "ui",
+  "ctx": "ui.js:508 goalHud | ui.js:517 tutFinishModal"
+ },
+ {
+  "k": "Návod hotový",
+  "kind": "ui",
+  "ctx": "ui.js:515 tutFinishModal"
+ },
+ {
+  "k": "Základy máš. Ďalej ťa čakajú denné misie (truhlica hore), Aréna od úrovne {arena}, Podzemné zápasy od úrovne {club} a gang od úrovne {gang}.",
+  "kind": "ui",
+  "ctx": "ui.js:515 tutFinishModal"
+ },
+ {
+  "k": "kuriér {cas}",
+  "kind": "ui",
+  "ctx": "ui.js:537 dailyHud"
+ },
+ {
+  "k": "útek {n}/{total} s",
+  "kind": "ui",
+  "ctx": "ui.js:538 dailyHud"
+ },
+ {
+  "k": "sleduješ {n}/{total} s",
+  "kind": "ui",
+  "ctx": "ui.js:539 dailyHud"
+ },
+ {
+  "k": "sprej {n}/{total} s",
+  "kind": "ui",
+  "ctx": "ui.js:540 dailyHud"
+ },
+ {
+  "k": "Denná misia",
+  "kind": "ui",
+  "ctx": "ui.js:542 dailyHud"
+ },
+ {
+  "k": "Sleduješ ho. Drž sa za ním {n} sekúnd.",
+  "kind": "ui",
+  "ctx": "ui.js:551 dailyStep"
+ },
+ {
+  "k": "Sprejuješ. Nehýb sa.",
+  "kind": "ui",
+  "ctx": "ui.js:551 dailyStep"
+ },
+ {
+  "k": "Útek: vydrž {n} sekúnd, kým ťa policajt nechytí.",
+  "kind": "ui",
+  "ctx": "ui.js:551 dailyStep"
+ },
+ {
+  "k": "Balík máš. Dones ho do {min} minút, sleduj šípku.",
+  "kind": "ui",
+  "ctx": "ui.js:558 dailyStep"
+ },
+ {
+  "k": "{name}: {have} / {need}",
+  "kind": "ui",
+  "ctx": "ui.js:559 dailyStep"
+ },
+ {
+  "k": "splnené",
+  "kind": "ui",
+  "ctx": "ui.js:559 dailyStep | ui.js:567 dailyAfter"
+ },
+ {
+  "k": "Nová úroveň",
+  "kind": "ui",
+  "ctx": "ui.js:573 dailyRewardText"
+ },
+ {
+  "k": "{n} zlatých tehličiek",
+  "kind": "ui",
+  "ctx": "ui.js:574 dailyRewardText | ui.js:1637 scr_wexler"
+ },
+ {
+  "k": "Legendárny predmet + {n} tehličiek",
+  "kind": "ui",
+  "ctx": "ui.js:575 dailyRewardText"
+ },
+ {
+  "k": "Denné misie splnené",
+  "kind": "ui",
+  "ctx": "ui.js:581 dailyRewardModal"
+ },
+ {
+  "k": "Deň {n} z 15",
+  "kind": "ui",
+  "ctx": "ui.js:581 dailyRewardModal"
+ },
+ {
+  "k": "Nové úlohy o polnoci.",
+  "kind": "ui",
+  "ctx": "ui.js:583 dailyRewardModal"
+ },
+ {
+  "k": "Ľahká",
+  "kind": "ui",
+  "ctx": "ui.js:589 scr_daily"
+ },
+ {
+  "k": "Akčná",
+  "kind": "ui",
+  "ctx": "ui.js:589 scr_daily"
+ },
+ {
+  "k": "Ťažká",
+  "kind": "ui",
+  "ctx": "ui.js:589 scr_daily"
+ },
+ {
+  "k": "Tri úlohy priamo na mape. Ciele ukazujú zlaté kruhy a šípka na kraji obrazovky. Keď splníš všetky tri, dostaneš odmenu dňa z kalendára.",
+  "kind": "ui",
+  "ctx": "ui.js:590 scr_daily"
+ },
+ {
+  "k": "Zostáva {cas}",
+  "kind": "ui",
+  "ctx": "ui.js:592 scr_daily"
+ },
+ {
+  "k": "Dnes máš hotovo. Nové úlohy o {cas}.",
+  "kind": "ui",
+  "ctx": "ui.js:597 scr_daily"
+ },
+ {
+  "k": "Úlohy sa menia o polnoci ({cas}). Vynechaný deň nevadí, kalendár počká.",
+  "kind": "ui",
+  "ctx": "ui.js:597 scr_daily"
+ },
+ {
+  "k": "Kalendár odmien",
+  "kind": "ui",
+  "ctx": "ui.js:600 scr_daily"
+ },
+ {
+  "k": "+1 úroveň",
+  "kind": "ui",
+  "ctx": "ui.js:602 scr_daily"
+ },
+ {
+  "k": "Legendárka",
+  "kind": "ui",
+  "ctx": "ui.js:602 scr_daily"
+ },
+ {
+  "k": "Deň {n}",
+  "kind": "ui",
+  "ctx": "ui.js:604 scr_daily"
+ },
+ {
+  "k": "deň <span class=\"gold\">{n}</span> / 15",
+  "kind": "ui",
+  "ctx": "ui.js:606 scr_daily"
+ },
+ {
+  "k": "{name}: +{n} {effect}, čas obnovený na hodinu.",
+  "kind": "ui",
+  "ctx": "ui.js:623 pill"
+ },
+ {
+  "k": "{name}: +{n} {effect} na hodinu.",
+  "kind": "ui",
+  "ctx": "ui.js:624 pill"
+ },
+ {
+  "k": "voľný",
+  "kind": "ui",
+  "ctx": "ui.js:643 updateAction | world.js:548 updateTurf"
+ },
+ {
+  "k": "Výstrel",
+  "kind": "ui",
+  "ctx": "ui.js:650 updateAction"
+ },
+ {
+  "k": "Úder",
+  "kind": "ui",
+  "ctx": "ui.js:650 updateAction | index.html #hud"
+ },
+ {
+  "k": "Chytil si ho",
+  "kind": "ui",
+  "ctx": "ui.js:674 reaperCaught"
+ },
+ {
+  "k": "Ripper ležal na zemi a tehličku pustil.",
+  "kind": "ui",
+  "ctx": "ui.js:674 reaperCaught"
+ },
+ {
+  "k": "+1 zlatá tehlička",
+  "kind": "ui",
+  "ctx": "ui.js:674 reaperCaught"
+ },
+ {
+  "k": "Wexler: „Dobrá práca. Nechaj si ju, zaslúžil si si ju.“",
+  "kind": "ui",
+  "ctx": "ui.js:675 reaperCaught"
+ },
+ {
+  "k": "Šťastný zásah",
+  "kind": "ui",
+  "ctx": "ui.js:684 runnerHit"
+ },
+ {
+  "k": "Zmizol v oblaku iskier a niečo po ňom ostalo na zemi.",
+  "kind": "ui",
+  "ctx": "ui.js:684 runnerHit"
+ },
+ {
+  "k": "Zmizol v oblaku iskier. Tentoraz nič nepustil.",
+  "kind": "ui",
+  "ctx": "ui.js:687 runnerHit"
+ },
+ {
+  "k": "Heat dnes",
+  "kind": "ui",
+  "ctx": "ui.js:695 heatMeter"
+ },
+ {
+  "k": "Odkaz už neplatí",
+  "kind": "ui",
+  "ctx": "ui.js:800 authBack"
+ },
+ {
+  "k": "Odkaz z e-mailu vypršal alebo už bol použitý. Ak si e-mail už potvrdil, stačí sa prihlásiť. Ak nie, zaregistruj sa znova a pošleme ti nový odkaz.",
+  "kind": "ui",
+  "ctx": "ui.js:800 authBack"
+ },
+ {
+  "k": "E-mail je potvrdený",
+  "kind": "ui",
+  "ctx": "ui.js:802 authBack"
+ },
+ {
+  "k": "Si prihlásený, môžeš hrať.",
+  "kind": "ui",
+  "ctx": "ui.js:802 authBack"
+ },
+ {
+  "k": "Vitaj v Hits & Licks! Si prihlásený. Teraz si vyber prezývku a triedu a začni.",
+  "kind": "ui",
+  "ctx": "ui.js:802 authBack"
+ },
+ {
+  "k": "Nové heslo",
+  "kind": "ui",
+  "ctx": "ui.js:804 authBack"
+ },
+ {
+  "k": "Si prihlásený cez odkaz z e-mailu. Zadaj nové heslo, ktorým sa budeš odteraz prihlasovať.",
+  "kind": "ui",
+  "ctx": "ui.js:804 authBack"
+ },
+ {
+  "k": "Nové heslo (aspoň 8 znakov)",
+  "kind": "ui",
+  "ctx": "ui.js:805 authBack"
+ },
+ {
+  "k": "Uložiť heslo",
+  "kind": "ui",
+  "ctx": "ui.js:806 authBack"
+ },
+ {
+  "k": "Polícia stratila stopu. Hľadanosť klesla.",
+  "kind": "ui",
+  "ctx": "ui.js:815 wantedLose"
+ },
+ {
+  "k": "Stratil si sa polícii. Nikto ťa nehľadá.",
+  "kind": "ui",
+  "ctx": "ui.js:815 wantedLose"
+ },
+ {
+  "k": "Policajt na zemi. Teraz ťa naháňa {n} policajtov.",
+  "kind": "ui",
+  "ctx": "ui.js:822 copDown"
+ },
+ {
+  "k": "Z policajta niečo vypadlo",
+  "kind": "ui",
+  "ctx": "ui.js:824 copDown"
+ },
+ {
+  "k": "Na zemi ostal epický kus.",
+  "kind": "ui",
+  "ctx": "ui.js:824 copDown"
+ },
+ {
+  "k": "{name}: {have} / 2 policajti",
+  "kind": "ui",
+  "ctx": "ui.js:828 copDown"
+ },
+ {
+  "k": "Teraz ujdi!",
+  "kind": "ui",
+  "ctx": "ui.js:828 copDown"
+ },
+ {
+  "k": "Zatknutý",
+  "kind": "ui",
+  "ctx": "ui.js:839 police"
+ },
+ {
+  "k": "Zložil si policajta. Tentoraz sa to nedá vybaviť pokutou.",
+  "kind": "ui",
+  "ctx": "ui.js:839 police"
+ },
+ {
+  "k": "Prísť o {n} % peňazí · {cena}",
+  "kind": "ui",
+  "ctx": "ui.js:841 police"
+ },
+ {
+  "k": "{cas} bez misií od Dona a Dílera",
+  "kind": "ui",
+  "ctx": "ui.js:842 police"
+ },
+ {
+  "k": "Denné misie môžeš robiť aj v base.",
+  "kind": "ui",
+  "ctx": "ui.js:843 police"
+ },
+ {
+  "k": "Kontrola",
+  "kind": "ui",
+  "ctx": "ui.js:847 police | ui.js:1596 scr_policehelp"
+ },
+ {
+  "k": "Policajt ťa chytil. Potom bude {n} minút pokoj.",
+  "kind": "ui",
+  "ctx": "ui.js:847 police"
+ },
+ {
+  "k": "Utiecť · Obratnosť {n}",
+  "kind": "ui",
+  "ctx": "ui.js:849 police"
+ },
+ {
+  "k": "Podplatiť · {cena}",
+  "kind": "ui",
+  "ctx": "ui.js:850 police"
+ },
+ {
+  "k": "Vzdať sa · {n} min bez misií",
+  "kind": "ui",
+  "ctx": "ui.js:851 police"
+ },
+ {
+  "k": "Nová úroveň {level}! +{n} voľné body.",
+  "kind": "ui",
+  "ctx": "ui.js:859 levelUpText"
+ },
+ {
+  "k": "Heat −{n}",
+  "kind": "ui",
+  "ctx": "ui.js:867 bonusText"
+ },
+ {
+  "k": "čas misií −{n}",
+  "kind": "ui",
+  "ctx": "ui.js:867 bonusText"
+ },
+ {
+  "k": "Zbraň +{n}",
+  "kind": "ui",
+  "ctx": "ui.js:867 bonusText | ui.js:1335 scr_profile"
+ },
+ {
+  "k": "Brnenie +{n}",
+  "kind": "ui",
+  "ctx": "ui.js:867 bonusText | ui.js:1335 scr_profile"
+ },
+ {
+  "k": "Naozaj začať odznova? Uložená hra sa zmaže.",
+  "kind": "ui",
+  "ctx": "ui.js:909 start-game"
+ },
+ {
+  "k": "Vitaj v Meste 1",
+  "kind": "ui",
+  "ctx": "ui.js:917 start-game"
+ },
+ {
+  "k": "Návod hore na obrazovke ťa prevedie prvými krokmi. Pohyb: klávesy WASD alebo šípky, akcia: E, útok: F, záložky: 1 až 5.",
+  "kind": "ui",
+  "ctx": "ui.js:917 start-game"
+ },
+ {
+  "k": "Návod hore na obrazovke ťa prevedie prvými krokmi. Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.",
+  "kind": "ui",
+  "ctx": "ui.js:917 start-game"
+ },
+ {
+  "k": "Auto sa odomyká na úrovni {level}.",
+  "kind": "ui",
+  "ctx": "ui.js:923 slot"
+ },
+ {
+  "k": "Predané za {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:933 sell"
+ },
+ {
+  "k": "Vylepšené za {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:935 upgrade"
+ },
+ {
+  "k": "Misia beží. Čas vidíš hore pri hodinách.",
+  "kind": "ui",
+  "ctx": "ui.js:939 accept"
+ },
+ {
+  "k": "Čierny trh je otvorený na {hours} hodín.",
+  "kind": "ui",
+  "ctx": "ui.js:948 buy-elixir"
+ },
+ {
+  "k": "Nový tovar je v obchode.",
+  "kind": "ui",
+  "ctx": "ui.js:949 shop-reroll"
+ },
+ {
+  "k": "Kúpené: {item}.",
+  "kind": "ui",
+  "ctx": "ui.js:952 buy-item"
+ },
+ {
+  "k": "Heat znížený o {heat} %. Dnes ešte {left}×.",
+  "kind": "ui",
+  "ctx": "ui.js:954 lawyer"
+ },
+ {
+  "k": "Vitaj: {mesto}.",
+  "kind": "ui",
+  "ctx": "ui.js:966 travel"
+ },
+ {
+  "k": "Poschodie {floor} · {title}",
+  "kind": "ui",
+  "ctx": "ui.js:971 club-fight"
+ },
+ {
+  "k": "{trieda} · úroveň {level}",
+  "kind": "ui",
+  "ctx": "ui.js:977 arena-fight"
+ },
+ {
+  "k": "Ušiel si, ale polícia si ťa zapamätala: +1 hviezda.",
+  "kind": "ui",
+  "ctx": "ui.js:988 police"
+ },
+ {
+  "k": "Chytili ťa. Pokuta {fine} a {min} min bez misií.",
+  "kind": "ui",
+  "ctx": "ui.js:988 police"
+ },
+ {
+  "k": "Policajt zobral {cena} a odišiel.",
+  "kind": "ui",
+  "ctx": "ui.js:988 police"
+ },
+ {
+  "k": "Vzdal si sa. {min} min bez misií.",
+  "kind": "ui",
+  "ctx": "ui.js:988 police"
+ },
+ {
+  "k": "Zobrali ti {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:999 police-killer"
+ },
+ {
+  "k": "{cas} bez misií od Dona a Dílera.",
+  "kind": "ui",
+  "ctx": "ui.js:999 police-killer"
+ },
+ {
+  "k": "+{bars} tehl.",
+  "kind": "ui",
+  "ctx": "ui.js:1005 medal"
+ },
+ {
+  "k": "Máš {have} / {next} ({unit}).",
+  "kind": "ui",
+  "ctx": "ui.js:1007 medal"
+ },
+ {
+  "k": "Všetky tri stupne máš ({unit}: {have}).",
+  "kind": "ui",
+  "ctx": "ui.js:1007 medal"
+ },
+ {
+  "k": "Zavrieť",
+  "kind": "ui",
+  "ctx": "ui.js:1008 medal | ui.js:1252 scr_menu | ui.js:1848 gangMemberModal"
+ },
+ {
+  "k": "Preskočiť návod?",
+  "kind": "ui",
+  "ctx": "ui.js:1012 tut-skip"
+ },
+ {
+  "k": "Odmenu za návod potom nedostaneš.",
+  "kind": "ui",
+  "ctx": "ui.js:1012 tut-skip"
+ },
+ {
+  "k": "Pokračovať v návode",
+  "kind": "ui",
+  "ctx": "ui.js:1012 tut-skip"
+ },
+ {
+  "k": "Preskočiť",
+  "kind": "ui",
+  "ctx": "ui.js:1012 tut-skip | ui.js:1662 scr_settings | ui.js:1920 scr_war | ui.js:2051 scr_fight"
+ },
+ {
+  "k": "Šípka „!“ ťa dovedie: {name}.",
+  "kind": "ui",
+  "ctx": "ui.js:1020 unlock-go"
+ },
+ {
+  "k": "Cieľ splnený: {cena} a {bars} tehličiek.",
+  "kind": "ui",
+  "ctx": "ui.js:1026 goal-claim"
+ },
+ {
+  "k": "Cieľ splnený: {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:1026 goal-claim"
+ },
+ {
+  "k": "Cieľ splnený: {bars} tehličiek.",
+  "kind": "ui",
+  "ctx": "ui.js:1026 goal-claim"
+ },
+ {
+  "k": "Cieľ splnený: .",
+  "kind": "ui",
+  "ctx": "ui.js:1026 goal-claim"
+ },
+ {
+  "k": "Prvé ciele máš za sebou",
+  "kind": "ui",
+  "ctx": "ui.js:1028 goal-claim"
+ },
+ {
+  "k": "Si na nohách. Odteraz si ciele určuješ sám: každý deň denné misie, bossovia mesta, Aréna a Podzemné zápasy, gang a jeho rajón. V piatok večer od úrovne {level} sa otvára Čierny trh.",
+  "kind": "ui",
+  "ctx": "ui.js:1028 goal-claim"
+ },
+ {
+  "k": "Návod preskočený.",
+  "kind": "ui",
+  "ctx": "ui.js:1032 tut-skip-yes"
+ },
+ {
+  "k": "Odmena za návod: {cash} a {bars} tehličiek.",
+  "kind": "ui",
+  "ctx": "ui.js:1038 tut-finish"
+ },
+ {
+  "k": "Návod a ciele sú skryté. Zapneš ich v Nastaveniach.",
+  "kind": "ui",
+  "ctx": "ui.js:1048 tips-off"
+ },
+ {
+  "k": "+{bars} zlatých tehličiek (testovacia kúpa).",
+  "kind": "ui",
+  "ctx": "ui.js:1053 buy-bars"
+ },
+ {
+  "k": "Vzhľad uložený.",
+  "kind": "ui",
+  "ctx": "ui.js:1075 look-save"
+ },
+ {
+  "k": "Gang založený za {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:1079 gang-create"
+ },
+ {
+  "k": "Vložené do pokladnice: {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:1081 deposit"
+ },
+ {
+  "k": "Žiadosť odoslaná. Počkaj, kým ju šéf schváli.",
+  "kind": "ui",
+  "ctx": "ui.js:1082 gang-ask"
+ },
+ {
+  "k": "Si v gangu {name}.",
+  "kind": "ui",
+  "ctx": "ui.js:1084 gang-accept"
+ },
+ {
+  "k": "Tento hráč je už v inom gangu.",
+  "kind": "ui",
+  "ctx": "ui.js:1089 gang-approve"
+ },
+ {
+  "k": "{name} je nový člen gangu.",
+  "kind": "ui",
+  "ctx": "ui.js:1089 gang-approve | js/gangs.js:272 approveJoin"
+ },
+ {
+  "k": "Pozvánka pre {name} odoslaná.",
+  "kind": "ui",
+  "ctx": "ui.js:1097 gang-invite"
+ },
+ {
+  "k": "Vedenie gangu je odovzdané.",
+  "kind": "ui",
+  "ctx": "ui.js:1108 gang-lead"
+ },
+ {
+  "k": "{name} už nie je v gangu.",
+  "kind": "ui",
+  "ctx": "ui.js:1109 gang-kick"
+ },
+ {
+  "k": "Odísť z gangu?",
+  "kind": "ui",
+  "ctx": "ui.js:1111 gang-leave"
+ },
+ {
+  "k": "Si posledný člen, gang sa tým rozpustí a jeho objekty ostanú voľné.",
+  "kind": "ui",
+  "ctx": "ui.js:1111 gang-leave"
+ },
+ {
+  "k": "Vedenie prevezme pravá ruka alebo najstarší člen.",
+  "kind": "ui",
+  "ctx": "ui.js:1111 gang-leave"
+ },
+ {
+  "k": "Do gangu sa môžeš vrátiť len na novú žiadosť.",
+  "kind": "ui",
+  "ctx": "ui.js:1111 gang-leave"
+ },
+ {
+  "k": "Zostať",
+  "kind": "ui",
+  "ctx": "ui.js:1112 gang-leave"
+ },
+ {
+  "k": "Odísť",
+  "kind": "ui",
+  "ctx": "ui.js:1112 gang-leave | ui.js:1877 scr_turf"
+ },
+ {
+  "k": "Už nie si v gangu.",
+  "kind": "ui",
+  "ctx": "ui.js:1114 gang-leave-yes"
+ },
+ {
+  "k": "Rozpustiť gang?",
+  "kind": "ui",
+  "ctx": "ui.js:1116 gang-disband"
+ },
+ {
+  "k": "Všetci členovia budú bez gangu, pokladnica prepadne a objekty gangu ostanú voľné. Nedá sa to vrátiť.",
+  "kind": "ui",
+  "ctx": "ui.js:1116 gang-disband"
+ },
+ {
+  "k": "Nie",
+  "kind": "ui",
+  "ctx": "ui.js:1117 gang-disband | ui.js:1760 scr_gang"
+ },
+ {
+  "k": "Rozpustiť",
+  "kind": "ui",
+  "ctx": "ui.js:1117 gang-disband"
+ },
+ {
+  "k": "Gang je rozpustený.",
+  "kind": "ui",
+  "ctx": "ui.js:1119 gang-disband-yes"
+ },
+ {
+  "k": "Vylepšené.",
+  "kind": "ui",
+  "ctx": "ui.js:1120 gang-up"
+ },
+ {
+  "k": "Obrana doplnená za {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:1122 turf-refill"
+ },
+ {
+  "k": "{turf} je váš. {cash}, +{xp} XP.",
+  "kind": "ui",
+  "ctx": "ui.js:1127 turf-attack"
+ },
+ {
+  "k": "Zadaj email.",
+  "kind": "ui",
+  "ctx": "ui.js:1134 login"
+ },
+ {
+  "k": "Potvrď, že máš aspoň 18 rokov a súhlasíš s podmienkami.",
+  "kind": "ui",
+  "ctx": "ui.js:1135 login"
+ },
+ {
+  "k": "Overenie sa nenačítalo. Obnov stránku, prípadne vypni blokovanie reklám pre túto stránku.",
+  "kind": "ui",
+  "ctx": "ui.js:1138 login"
+ },
+ {
+  "k": "Zaškrtni políčko „Overte, že ste človek“ nad tlačidlom.",
+  "kind": "ui",
+  "ctx": "ui.js:1139 login"
+ },
+ {
+  "k": "Chvíľu počkaj, kým sa overí, že nie si robot.",
+  "kind": "ui",
+  "ctx": "ui.js:1139 login"
+ },
+ {
+  "k": "Obnova hesla",
+  "kind": "ui",
+  "ctx": "ui.js:1144 login"
+ },
+ {
+  "k": "Poslali sme ti email s odkazom na nové heslo.",
+  "kind": "ui",
+  "ctx": "ui.js:1144 login"
+ },
+ {
+  "k": "Potvrď email",
+  "kind": "ui",
+  "ctx": "ui.js:1147 login"
+ },
+ {
+  "k": "Na {email} sme poslali odkaz. Po potvrdení sa tu prihlás.",
+  "kind": "ui",
+  "ctx": "ui.js:1147 login"
+ },
+ {
+  "k": "Heslo je zmenené.",
+  "kind": "ui",
+  "ctx": "ui.js:1155 pass-save"
+ },
+ {
+  "k": "Zmazať účet?",
+  "kind": "ui",
+  "ctx": "ui.js:1160 account-delete"
+ },
+ {
+  "k": "Zmaže sa tvoja postava so všetkými vecami, miesto v gangu, e-mail aj heslo. Nedá sa to vrátiť.",
+  "kind": "ui",
+  "ctx": "ui.js:1160 account-delete"
+ },
+ {
+  "k": "Nechať",
+  "kind": "ui",
+  "ctx": "ui.js:1161 account-delete"
+ },
+ {
+  "k": "Zmazať navždy",
+  "kind": "ui",
+  "ctx": "ui.js:1161 account-delete"
+ },
+ {
+  "k": "Účet je zmazaný",
+  "kind": "ui",
+  "ctx": "ui.js:1170 account-delete-go"
+ },
+ {
+  "k": "Tvoju postavu, e-mail aj heslo sme vymazali. Ďakujeme, že si hral.",
+  "kind": "ui",
+  "ctx": "ui.js:1170 account-delete-go"
+ },
+ {
+  "k": "Nahlásiť chybu",
+  "kind": "ui",
+  "ctx": "ui.js:1173 bug-open | ui.js:1657 scr_settings"
+ },
+ {
+  "k": "Čo sa stalo a čo si práve robil? Každá chyba nám pomôže.",
+  "kind": "ui",
+  "ctx": "ui.js:1173 bug-open"
+ },
+ {
+  "k": "Napríklad: v obchode Zbrane som kúpil nôž a peniaze sa odpočítali dvakrát.",
+  "kind": "ui",
+  "ctx": "ui.js:1174 bug-open"
+ },
+ {
+  "k": "Spolu s textom pošleme verziu hry, tvoju úroveň, obrazovku, typ zariadenia a posledné chyby hry.",
+  "kind": "ui",
+  "ctx": "ui.js:1175 bug-open"
+ },
+ {
+  "k": "Zrušiť",
+  "kind": "ui",
+  "ctx": "ui.js:1176 bug-open | ui.js:1809 scr_gang"
+ },
+ {
+  "k": "Odoslať",
+  "kind": "ui",
+  "ctx": "ui.js:1176 bug-open"
+ },
+ {
+  "k": "Ďakujeme, hlásenie sme dostali.",
+  "kind": "ui",
+  "ctx": "ui.js:1184 bug-send"
+ },
+ {
+  "k": "Naozaj zmazať postavu na serveri? Tento krok sa nedá vrátiť.",
+  "kind": "ui",
+  "ctx": "ui.js:1187 reset"
+ },
+ {
+  "k": "Naozaj zmazať uloženú hru? Tento krok sa nedá vrátiť.",
+  "kind": "ui",
+  "ctx": "ui.js:1187 reset"
+ },
+ {
+  "k": "Jazyk",
+  "kind": "ui",
+  "ctx": "ui.js:1198 langPicker | ui.js:1656 scr_settings"
+ },
+ {
+  "k": "Od pešiaka po bossa mesta",
+  "kind": "ui",
+  "ctx": "ui.js:1205 scr_title"
+ },
+ {
+  "k": "Víkendový event",
+  "kind": "ui",
+  "ctx": "ui.js:1207 scr_title | ui.js:1390 scr_missions"
+ },
+ {
+  "k": "Email",
+  "kind": "ui",
+  "ctx": "ui.js:1210 scr_title"
+ },
+ {
+  "k": "Heslo",
+  "kind": "ui",
+  "ctx": "ui.js:1211 scr_title"
+ },
+ {
+  "k": "aspoň 8 znakov",
+  "kind": "ui",
+  "ctx": "ui.js:1211 scr_title"
+ },
+ {
+  "k": "Mám aspoň 18 rokov a súhlasím s <a href=\"{terms}\" target=\"_blank\" rel=\"noopener\">podmienkami používania</a>. Ako chránime tvoje údaje: <a href=\"{privacy}\" target=\"_blank\" rel=\"noopener\">ochrana osobných údajov</a>.",
+  "kind": "ui",
+  "ctx": "ui.js:1212 scr_title"
+ },
+ {
+  "k": "Prihlásiť sa",
+  "kind": "ui",
+  "ctx": "ui.js:1214 scr_title"
+ },
+ {
+  "k": "Vytvoriť účet",
+  "kind": "ui",
+  "ctx": "ui.js:1214 scr_title"
+ },
+ {
+  "k": "Poslať odkaz na nové heslo",
+  "kind": "ui",
+  "ctx": "ui.js:1214 scr_title"
+ },
+ {
+  "k": "Mám účet, prihlásiť sa",
+  "kind": "ui",
+  "ctx": "ui.js:1215 scr_title"
+ },
+ {
+  "k": "Nový hráč? Vytvoriť účet",
+  "kind": "ui",
+  "ctx": "ui.js:1215 scr_title"
+ },
+ {
+  "k": "Zabudnuté heslo",
+  "kind": "ui",
+  "ctx": "ui.js:1215 scr_title"
+ },
+ {
+  "k": "Nová hra",
+  "kind": "ui",
+  "ctx": "ui.js:1220 scr_title"
+ },
+ {
+  "k": "úroveň {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1222 scr_title | ui.js:1352 scr_profile"
+ },
+ {
+  "k": "Prezývka",
+  "kind": "ui",
+  "ctx": "ui.js:1224 scr_title | js/server.js:79 newGame"
+ },
+ {
+  "k": "aspoň 3 znaky",
+  "kind": "ui",
+  "ctx": "ui.js:1224 scr_title"
+ },
+ {
+  "k": "Ty",
+  "kind": "ui",
+  "ctx": "ui.js:1224 scr_title | ui.js:1523 scr_boss | ui.js:1568 scr_club | world.js:170 create"
+ },
+ {
+  "k": "Začať",
+  "kind": "ui",
+  "ctx": "ui.js:1229 scr_title"
+ },
+ {
+  "k": "Hits &amp; Licks: traja chlapi z gangu v nočnej ulici",
+  "kind": "ui",
+  "ctx": "ui.js:1234 scr_title"
+ },
+ {
+  "k": "Len pre dospelých (18+)",
+  "kind": "ui",
+  "ctx": "ui.js:1234 scr_title"
+ },
+ {
+  "k": "Podmienky používania",
+  "kind": "ui",
+  "ctx": "ui.js:1234 scr_title | ui.js:1668 scr_settings | ui.js:1677 scr_settings"
+ },
+ {
+  "k": "Ochrana osobných údajov",
+  "kind": "ui",
+  "ctx": "ui.js:1234 scr_title | ui.js:1668 scr_settings | ui.js:1677 scr_settings"
+ },
+ {
+  "k": "Zavrieť menu",
+  "kind": "ui",
+  "ctx": "ui.js:1241 scr_menu"
+ },
+ {
+  "k": "Menu",
+  "kind": "ui",
+  "ctx": "ui.js:1244 scr_menu | index.html #hud"
+ },
+ {
+  "k": "od verzie 2",
+  "kind": "ui",
+  "ctx": "ui.js:1247 scr_menu"
+ },
+ {
+  "k": "od úrovne {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1247 scr_menu"
+ },
+ {
+  "k": "Ťukni: vybrať",
+  "kind": "ui",
+  "ctx": "ui.js:1251 scr_menu"
+ },
+ {
+  "k": "Späť: zavrieť",
+  "kind": "ui",
+  "ctx": "ui.js:1251 scr_menu"
+ },
+ {
+  "k": "od Lv {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1264 scr_character"
+ },
+ {
+  "k": "úder ignoruje brnenie",
+  "kind": "ui",
+  "ctx": "ui.js:1272 scr_character"
+ },
+ {
+  "k": "úhyb 50 % proti Svalovcom",
+  "kind": "ui",
+  "ctx": "ui.js:1272 scr_character"
+ },
+ {
+  "k": "blok {zlodej} proti Zlodejom, {dealer} proti Dealerom",
+  "kind": "ui",
+  "ctx": "ui.js:1272 scr_character"
+ },
+ {
+  "k": "triedny, dvíha úder",
+  "kind": "ui",
+  "ctx": "ui.js:1278 scr_character"
+ },
+ {
+  "k": "Pridať bod do {stat}",
+  "kind": "ui",
+  "ctx": "ui.js:1280 scr_character"
+ },
+ {
+  "k": "Úroveň <span class=\"gold\">{n}</span>",
+  "kind": "ui",
+  "ctx": "ui.js:1284 scr_character | ui.js:1349 scr_profile"
+ },
+ {
+  "k": "Tvoja postava",
+  "kind": "ui",
+  "ctx": "ui.js:1287 scr_character"
+ },
+ {
+  "k": "Vzhľad",
+  "kind": "ui",
+  "ctx": "ui.js:1287 scr_character | ui.js:1727 scr_look"
+ },
+ {
+  "k": "Pešiak",
+  "kind": "ui",
+  "ctx": "ui.js:1287 scr_character"
+ },
+ {
+  "k": "Skúsenosti",
+  "kind": "ui",
+  "ctx": "ui.js:1290 scr_character | index.html #hud"
+ },
+ {
+  "k": "Životy {hp} · úder {lo}–{hi} · krit {krit} · brnenie {brn} (max {max})",
+  "kind": "ui",
+  "ctx": "ui.js:1291 scr_character"
+ },
+ {
+  "k": "Aktívne tabletky",
+  "kind": "ui",
+  "ctx": "ui.js:1292 scr_character"
+ },
+ {
+  "k": "Voľné body: {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1294 scr_character"
+ },
+ {
+  "k": "Staty si dokupuješ za peniaze, cena s každým bodom rastie.",
+  "kind": "ui",
+  "ctx": "ui.js:1294 scr_character"
+ },
+ {
+  "k": "Hráči",
+  "kind": "ui",
+  "ctx": "ui.js:1304 scr_hall"
+ },
+ {
+  "k": "{n} hráčov",
+  "kind": "ui",
+  "ctx": "ui.js:1309 scr_hall | ui.js:1320 scr_hall"
+ },
+ {
+  "k": "ty",
+  "kind": "ui",
+  "ctx": "ui.js:1311 scr_hall | ui.js:1322 scr_hall | ui.js:1800 scr_gang"
+ },
+ {
+  "k": "úr. {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1312 scr_hall | ui.js:1323 scr_hall | ui.js:1346 scr_profile | ui.js:1372 scr_inventory"
+ },
+ {
+  "k": "Zatiaľ nikto nevyhral ani jeden zápas.",
+  "kind": "ui",
+  "ctx": "ui.js:1312 scr_hall"
+ },
+ {
+  "k": "{n} gangov",
+  "kind": "ui",
+  "ctx": "ui.js:1315 scr_hall"
+ },
+ {
+  "k": "tvoj",
+  "kind": "ui",
+  "ctx": "ui.js:1316 scr_hall"
+ },
+ {
+  "k": "{n} čl.",
+  "kind": "ui",
+  "ctx": "ui.js:1317 scr_hall"
+ },
+ {
+  "k": "{n} výh.",
+  "kind": "ui",
+  "ctx": "ui.js:1317 scr_hall"
+ },
+ {
+  "k": "Zatiaľ tu nie je žiadny gang.",
+  "kind": "ui",
+  "ctx": "ui.js:1318 scr_hall"
+ },
+ {
+  "k": "Zatiaľ tu nikto nie je.",
+  "kind": "ui",
+  "ctx": "ui.js:1323 scr_hall"
+ },
+ {
+  "k": "Poradie podľa vyhratých bojov o územie (Gang Wars).",
+  "kind": "ui",
+  "ctx": "ui.js:1327 scr_hall"
+ },
+ {
+  "k": "Poradie podľa najvyššieho poschodia v Podzemných zápasoch.",
+  "kind": "ui",
+  "ctx": "ui.js:1328 scr_hall"
+ },
+ {
+  "k": "Offline hra: ostatných hráčov a gangy uvidíš po prihlásení.",
+  "kind": "ui",
+  "ctx": "ui.js:1329 scr_hall"
+ },
+ {
+  "k": "Životy {hp} · zbraň {zbran} · brnenie {brn}",
+  "kind": "ui",
+  "ctx": "ui.js:1355 scr_profile"
+ },
+ {
+  "k": "Výbava",
+  "kind": "ui",
+  "ctx": "ui.js:1357 scr_profile"
+ },
+ {
+  "k": "Nemá nasadenú žiadnu výbavu.",
+  "kind": "ui",
+  "ctx": "ui.js:1357 scr_profile"
+ },
+ {
+  "k": "nasadené",
+  "kind": "ui",
+  "ctx": "ui.js:1371 scr_inventory"
+ },
+ {
+  "k": "Zložiť",
+  "kind": "ui",
+  "ctx": "ui.js:1373 scr_inventory"
+ },
+ {
+  "k": "Nasadiť",
+  "kind": "ui",
+  "ctx": "ui.js:1373 scr_inventory"
+ },
+ {
+  "k": "Predať {cena}",
+  "kind": "ui",
+  "ctx": "ui.js:1374 scr_inventory"
+ },
+ {
+  "k": "Nemáš žiadne predmety pre tento slot. Kúp ich v obchodoch na ulici: Zbrane, Oblečenie, Šperky (sever štvrte). Niekedy padnú aj z misií a bossov.",
+  "kind": "ui",
+  "ctx": "ui.js:1377 scr_inventory"
+ },
+ {
+  "k": "Nemáš žiadne predmety. Kúp ich v obchodoch na ulici: Zbrane, Oblečenie, Šperky (sever štvrte). Niekedy padnú aj z misií a bossov.",
+  "kind": "ui",
+  "ctx": "ui.js:1378 scr_inventory"
+ },
+ {
+  "k": "Dnes hotovo · nové o polnoci",
+  "kind": "ui",
+  "ctx": "ui.js:1389 scr_missions"
+ },
+ {
+  "k": "{n} / {total} splnené · úlohy na mape",
+  "kind": "ui",
+  "ctx": "ui.js:1389 scr_missions"
+ },
+ {
+  "k": "deň {n} / 15",
+  "kind": "ui",
+  "ctx": "ui.js:1389 scr_missions"
+ },
+ {
+  "k": "ešte {cas}",
+  "kind": "ui",
+  "ctx": "ui.js:1390 scr_missions"
+ },
+ {
+  "k": "Misie zadávajú postavy v meste. Hľadaj bielu bublinu „!“ nad hlavou. Každá misia sa končí súbojom.",
+  "kind": "ui",
+  "ctx": "ui.js:1391 scr_missions"
+ },
+ {
+  "k": "Si zatknutý. Misie až o {cas}.",
+  "kind": "ui",
+  "ctx": "ui.js:1394 scr_missions"
+ },
+ {
+  "k": "Horúca · {n}× odmena",
+  "kind": "ui",
+  "ctx": "ui.js:1404 scr_missions | ui.js:1429 scr_missions"
+ },
+ {
+  "k": "od: {giver} · na konci súboj: {foe}",
+  "kind": "ui",
+  "ctx": "ui.js:1404 scr_missions"
+ },
+ {
+  "k": "na konci súboj: {foe}",
+  "kind": "ui",
+  "ctx": "ui.js:1404 scr_missions"
+ },
+ {
+  "k": "Dokončiť misiu · súboj",
+  "kind": "ui",
+  "ctx": "ui.js:1407 scr_missions"
+ },
+ {
+  "k": "Misia beží, hotovo o {cas}",
+  "kind": "ui",
+  "ctx": "ui.js:1409 scr_missions"
+ },
+ {
+  "k": "Skrátiť za {n} zlatých tehličiek",
+  "kind": "ui",
+  "ctx": "ui.js:1410 scr_missions"
+ },
+ {
+  "k": "Kým misia beží, môžeš sa túlať mestom, nakupovať a bojovať.",
+  "kind": "ui",
+  "ctx": "ui.js:1411 scr_missions"
+ },
+ {
+  "k": "Zatiaľ pre teba nemám nič, na čo by si stačil. Vráť sa, keď budeš mať úroveň {n}.",
+  "kind": "ui",
+  "ctx": "ui.js:1419 scr_missions"
+ },
+ {
+  "k": "Neskôr: {zoznam}",
+  "kind": "ui",
+  "ctx": "ui.js:1420 scr_missions | ui.js:1447 scr_missions"
+ },
+ {
+  "k": "heat +{n} %",
+  "kind": "ui",
+  "ctx": "ui.js:1429 scr_missions"
+ },
+ {
+  "k": "Na konci ťa čaká",
+  "kind": "ui",
+  "ctx": "ui.js:1433 scr_missions"
+ },
+ {
+  "k": "Horúca misia: súper je zhruba rovnako silný ako ty, takže môžeš prehrať. Za výhru {n}× peniaze aj XP. Šanca na výhru: asi {sanca} %.",
+  "kind": "ui",
+  "ctx": "ui.js:1436 scr_missions"
+ },
+ {
+  "k": "Si zatknutý, misie až o {cas}.",
+  "kind": "ui",
+  "ctx": "ui.js:1441 scr_missions"
+ },
+ {
+  "k": "Na túto misiu máš dnes priveľký heat. Vyber kratšiu, zájdi za právničkou (dnes ešte {n}×) alebo počkaj do polnoci ({cas}).",
+  "kind": "ui",
+  "ctx": "ui.js:1442 scr_missions"
+ },
+ {
+  "k": "Prijať horúcu misiu",
+  "kind": "ui",
+  "ctx": "ui.js:1443 scr_missions"
+ },
+ {
+  "k": "Prijať misiu",
+  "kind": "ui",
+  "ctx": "ui.js:1443 scr_missions"
+ },
+ {
+  "k": "Heat je tvoj denný limit na misie. Dvíha sa už pri prijatí misie a o polnoci spadne na nulu.",
+  "kind": "ui",
+  "ctx": "ui.js:1444 scr_missions"
+ },
+ {
+  "k": "Rýchly štart do úrovne {n}: misie trvajú len chvíľu a dávajú viac XP.",
+  "kind": "ui",
+  "ctx": "ui.js:1445 scr_missions"
+ },
+ {
+  "k": "{n} tehličiek",
+  "kind": "ui",
+  "ctx": "ui.js:1458 scr_shop | ui.js:1579 scr_club | ui.js:1649 scr_wexler"
+ },
+ {
+  "k": "Teraz: {bonus}",
+  "kind": "ui",
+  "ctx": "ui.js:1459 scr_shop"
+ },
+ {
+  "k": "Výpredaj: všetko o {n} % lacnejšie, nový tovar zadarmo.",
+  "kind": "ui",
+  "ctx": "ui.js:1463 scr_shop"
+ },
+ {
+  "k": "Prémiové autá · stále v ponuke",
+  "kind": "ui",
+  "ctx": "ui.js:1464 scr_shop"
+ },
+ {
+  "k": "Ojazdené autá",
+  "kind": "ui",
+  "ctx": "ui.js:1464 scr_shop"
+ },
+ {
+  "k": "Čierny trh · elixír ešte <span data-until=\"{until}\"></span> · len epické kusy",
+  "kind": "ui",
+  "ctx": "ui.js:1468 scr_shop"
+ },
+ {
+  "k": "Čierny trh · {kedy} · len epické kusy",
+  "kind": "ui",
+  "ctx": "ui.js:1468 scr_shop"
+ },
+ {
+  "k": "celý víkend",
+  "kind": "ui",
+  "ctx": "ui.js:1468 scr_shop"
+ },
+ {
+  "k": "len dnes večer",
+  "kind": "ui",
+  "ctx": "ui.js:1468 scr_shop"
+ },
+ {
+  "k": "Čierny trh je vypredaný.",
+  "kind": "ui",
+  "ctx": "ui.js:1469 scr_shop"
+ },
+ {
+  "k": "Všetko vypredané.",
+  "kind": "ui",
+  "ctx": "ui.js:1473 scr_shop"
+ },
+ {
+  "k": "Čierny trh: v piatok od {h}:00, len epické kusy. Každý stojí peniaze a {n} zlatých tehličiek.",
+  "kind": "ui",
+  "ctx": "ui.js:1474 scr_shop"
+ },
+ {
+  "k": "Odomyká sa na úrovni {n}.",
+  "kind": "ui",
+  "ctx": "ui.js:1474 scr_shop"
+ },
+ {
+  "k": "Nový tovar hneď · {n} zlatá tehlička",
+  "kind": "ui",
+  "ctx": "ui.js:1476 scr_shop"
+ },
+ {
+  "k": "Nový tovar hneď · zadarmo",
+  "kind": "ui",
+  "ctx": "ui.js:1476 scr_shop"
+ },
+ {
+  "k": "Nový tovar o <span data-until=\"{until}\"></span> alebo po novej úrovni.",
+  "kind": "ui",
+  "ctx": "ui.js:1477 scr_shop"
+ },
+ {
+  "k": "Auto znižuje heat z misií aj ich čas. Nasadiť ho môžeš od úrovne {n}.",
+  "kind": "ui",
+  "ctx": "ui.js:1483 scr_upgrade"
+ },
+ {
+  "k": "Mechanik vylepší tvoje nasadené veci. Každé vylepšenie pridá 10 % bonusu, najviac +{n}. Garáž drží tvoj gang.",
+  "kind": "ui",
+  "ctx": "ui.js:1484 scr_upgrade"
+ },
+ {
+  "k": "maximum",
+  "kind": "ui",
+  "ctx": "ui.js:1493 scr_upgrade"
+ },
+ {
+  "k": "Nemáš nasadené žiadne predmety.",
+  "kind": "ui",
+  "ctx": "ui.js:1495 scr_upgrade"
+ },
+ {
+  "k": "„Polícia ťa má v hľadáčiku? Za správnu cenu sa papiere stratia.“",
+  "kind": "ui",
+  "ctx": "ui.js:1502 scr_lawyer"
+ },
+ {
+  "k": "Heat je tvoj denný limit na misie a sám od seba neklesá. O polnoci spadne na nulu (o <span data-until=\"{until}\"></span>). Od {n} % hrozí po misii razia.",
+  "kind": "ui",
+  "ctx": "ui.js:1505 scr_lawyer"
+ },
+ {
+  "k": "Znížiť heat o {n} % · {cena}",
+  "kind": "ui",
+  "ctx": "ui.js:1506 scr_lawyer"
+ },
+ {
+  "k": "Amnestia: za polovicu a bez denného limitu.",
+  "kind": "ui",
+  "ctx": "ui.js:1507 scr_lawyer"
+ },
+ {
+  "k": "Dnes ešte {n} z {total}.",
+  "kind": "ui",
+  "ctx": "ui.js:1507 scr_lawyer"
+ },
+ {
+  "k": "Dnes už nie. Ďalšie {total} o polnoci.",
+  "kind": "ui",
+  "ctx": "ui.js:1507 scr_lawyer"
+ },
+ {
+  "k": "Všetci bossovia {place} sú porazení.",
+  "kind": "ui",
+  "ctx": "ui.js:1513 scr_boss | js/server.js:1136 fightBoss"
+ },
+ {
+  "k": "Zo stanice sa dá odísť do Mesta 2, ak máš úroveň {n}.",
+  "kind": "ui",
+  "ctx": "ui.js:1513 scr_boss"
+ },
+ {
+  "k": "Ďalšie mesto príde neskôr.",
+  "kind": "ui",
+  "ctx": "ui.js:1513 scr_boss"
+ },
+ {
+  "k": "Boss {n} / {total}",
+  "kind": "ui",
+  "ctx": "ui.js:1521 scr_boss"
+ },
+ {
+  "k": "Životy {hp}<br>Úder {dmg}",
+  "kind": "ui",
+  "ctx": "ui.js:1523 scr_boss | ui.js:1524 scr_boss | ui.js:1568 scr_club | ui.js:1569 scr_club"
+ },
+ {
+  "k": "Šanca na výhru: takmer žiadna",
+  "kind": "ui",
+  "ctx": "ui.js:1527 scr_boss"
+ },
+ {
+  "k": "Šanca na výhru: takmer istá",
+  "kind": "ui",
+  "ctx": "ui.js:1527 scr_boss"
+ },
+ {
+  "k": "Šanca na výhru: asi {n} %",
+  "kind": "ui",
+  "ctx": "ui.js:1527 scr_boss"
+ },
+ {
+  "k": "Najprv zosilnej: misie, body v Posilňovni a lepšia výbava v obchodoch.",
+  "kind": "ui",
+  "ctx": "ui.js:1528 scr_boss"
+ },
+ {
+  "k": "Odmena: <span class=\"gold\">{cash} · {xp} XP{bars}</span> · predmet: {drop}",
+  "kind": "ui",
+  "ctx": "ui.js:1530 scr_boss"
+ },
+ {
+  "k": "<span style=\"color:#ff6aa8\">istý epický</span> (prvý boss)",
+  "kind": "ui",
+  "ctx": "ui.js:1532 scr_boss"
+ },
+ {
+  "k": "{epic} % epický, {legend} % legendárny",
+  "kind": "ui",
+  "ctx": "ui.js:1532 scr_boss"
+ },
+ {
+  "k": "Bojovať · Hon na bossov, bez čakania",
+  "kind": "ui",
+  "ctx": "ui.js:1534 scr_boss"
+ },
+ {
+  "k": "Bojovať · pokus zadarmo",
+  "kind": "ui",
+  "ctx": "ui.js:1535 scr_boss"
+ },
+ {
+  "k": "Bojovať za {n} zlatých tehličiek",
+  "kind": "ui",
+  "ctx": "ui.js:1536 scr_boss"
+ },
+ {
+  "k": "Platené pokusy dnes: {left} / {max}.",
+  "kind": "ui",
+  "ctx": "ui.js:1537 scr_boss"
+ },
+ {
+  "k": "Platené pokusy sú na dnes minuté.",
+  "kind": "ui",
+  "ctx": "ui.js:1537 scr_boss"
+ },
+ {
+  "k": "Ďalší pokus zadarmo o <span data-until=\"{until}\"></span>",
+  "kind": "ui",
+  "ctx": "ui.js:1537 scr_boss"
+ },
+ {
+  "k": "Línia bossov {place}",
+  "kind": "ui",
+  "ctx": "ui.js:1538 scr_boss"
+ },
+ {
+  "k": "Do tímu si môžeš zobrať 1–2 členov gangu (príde s gangmi).",
+  "kind": "ui",
+  "ctx": "ui.js:1539 scr_boss"
+ },
+ {
+  "k": "Taxík alebo električka ťa odvezie do iného mesta. Kým ťa naháňa polícia alebo sedíš v skrýši, nikam sa nejde.",
+  "kind": "ui",
+  "ctx": "ui.js:1546 scr_travel"
+ },
+ {
+  "k": "Tu si",
+  "kind": "ui",
+  "ctx": "ui.js:1549 scr_travel"
+ },
+ {
+  "k": "Zamknuté",
+  "kind": "ui",
+  "ctx": "ui.js:1550 scr_travel | ui.js:1606 lockedScr"
+ },
+ {
+  "k": "Pivnica pod klubom, kde sa bije o peniaze a meno. Sto súperov, každý silnejší ako ten pred ním.",
+  "kind": "ui",
+  "ctx": "ui.js:1559 scr_club"
+ },
+ {
+  "k": "Porazil si všetkých {total} súperov. V pivnici pod klubom už nie je nikto, kto by sa ti postavil.",
+  "kind": "ui",
+  "ctx": "ui.js:1562 scr_club"
+ },
+ {
+  "k": "Poschodie {n} / {total}",
+  "kind": "ui",
+  "ctx": "ui.js:1566 scr_club"
+ },
+ {
+  "k": "legendárny predmet",
+  "kind": "ui",
+  "ctx": "ui.js:1570 scr_club | ui.js:1577 scr_club"
+ },
+ {
+  "k": "epický predmet",
+  "kind": "ui",
+  "ctx": "ui.js:1570 scr_club | ui.js:1578 scr_club"
+ },
+ {
+  "k": "Odmena za výhru: <span class=\"gold\">{cash} · {xp} XP{extra}</span>",
+  "kind": "ui",
+  "ctx": "ui.js:1571 scr_club"
+ },
+ {
+  "k": "Nastúpiť do ringu",
+  "kind": "ui",
+  "ctx": "ui.js:1572 scr_club"
+ },
+ {
+  "k": "Ďalší zápas o <span data-until=\"{until}\"></span>",
+  "kind": "ui",
+  "ctx": "ui.js:1573 scr_club"
+ },
+ {
+  "k": "epický predmet a {n} tehl.",
+  "kind": "ui",
+  "ctx": "ui.js:1578 scr_club"
+ },
+ {
+  "k": "Poschodia s odmenou navyše",
+  "kind": "ui",
+  "ctx": "ui.js:1581 scr_club"
+ },
+ {
+  "k": "Jeden zápas za {n} minút, vyhraný aj prehraný. Prehra ťa nevráti späť. Poradie nájdeš v Sieni slávy.",
+  "kind": "ui",
+  "ctx": "ui.js:1582 scr_club"
+ },
+ {
+  "k": "Polícia má dve oddelené strany: <b class=\"gold\">heat</b> sleduje len tvoje misie počas dňa, <b class=\"gold\">hviezdy</b> sú naháňačka na ulici za všetko ostatné. Jedno druhé neovplyvňuje.",
+  "kind": "ui",
+  "ctx": "ui.js:1590 scr_policehelp"
+ },
+ {
+  "k": "Heat",
+  "kind": "ui",
+  "ctx": "ui.js:1592 scr_policehelp"
+ },
+ {
+  "k": "Denný limit na misie. Zdvihne ho iba misia, nič na ulici. Keď je plný, misie od Dona a Dílera na dnes končia. O polnoci spadne na nulu. Auto ho znižuje.",
+  "kind": "ui",
+  "ctx": "ui.js:1592 scr_policehelp"
+ },
+ {
+  "k": "Razia",
+  "kind": "ui",
+  "ctx": "ui.js:1593 scr_policehelp"
+ },
+ {
+  "k": "Od {n} % heatu ťa po misii môže čakať razia: pokuta {fine} peňazí alebo {min} minút v base.",
+  "kind": "ui",
+  "ctx": "ui.js:1593 scr_policehelp"
+ },
+ {
+  "k": "Zníži heat o {n} %, najviac {max}-krát za deň. Platí sa peniazmi.",
+  "kind": "ui",
+  "ctx": "ui.js:1594 scr_policehelp"
+ },
+ {
+  "k": "Hviezdy",
+  "kind": "ui",
+  "ctx": "ui.js:1595 scr_policehelp"
+ },
+ {
+  "k": "Hľadanosť na ulici. Pribúdajú za všetko mimo misií: streľbu, bitku, autá, výbuchy, policajtov, graffiti, útok gangu aj útek z kontroly. Od {n} hviezd ťa naháňajú policajti. Keď ťa nevidia, každých {sec} s stratíš hviezdu.",
+  "kind": "ui",
+  "ctx": "ui.js:1595 scr_policehelp"
+ },
+ {
+  "k": "Keď ťa policajt chytí, vyberieš si: utiecť (šanca podľa Obratnosti), podplatiť (Charizma zlacňuje) alebo sa vzdať ({min} minút bez misií). Potom máš {peace} minút pokoj.",
+  "kind": "ui",
+  "ctx": "ui.js:1596 scr_policehelp"
+ },
+ {
+  "k": "Zložený policajt",
+  "kind": "ui",
+  "ctx": "ui.js:1597 scr_policehelp"
+ },
+ {
+  "k": "Každý zložený policajt zdvojnásobí, koľko ich po tebe ide. Môže z neho padnúť epický predmet ({chance}, najviac {max} za deň). Ak ťa potom chytia, prídeš o {share} peňazí alebo máš {hours} bez misií.",
+  "kind": "ui",
+  "ctx": "ui.js:1597 scr_policehelp"
+ },
+ {
+  "k": "Basa",
+  "kind": "ui",
+  "ctx": "ui.js:1598 scr_policehelp"
+ },
+ {
+  "k": "Kým si v base, nedostaneš misie od Dona a Dílera. Denné misie na mape robiť môžeš.",
+  "kind": "ui",
+  "ctx": "ui.js:1598 scr_policehelp"
+ },
+ {
+  "k": "Skrýša a tieň",
+  "kind": "ui",
+  "ctx": "ui.js:1599 scr_policehelp"
+ },
+ {
+  "k": "Keď ťa hľadajú, schovaj sa v skrýši na {min} minút. Hviezdy zmiznú a ďalších {shadow} minút si v tieni: polícia ťa nenaháňa.",
+  "kind": "ui",
+  "ctx": "ui.js:1599 scr_policehelp"
+ },
+ {
+  "k": "Ako funguje polícia",
+  "kind": "ui",
+  "ctx": "ui.js:1601 scr_policehelp"
+ },
+ {
+  "k": "Od úrovne {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1606 lockedScr"
+ },
+ {
+  "k": "Teraz máš úroveň {n}. Úrovne získaš za misie, denné misie a bossov.",
+  "kind": "ui",
+  "ctx": "ui.js:1606 lockedScr"
+ },
+ {
+  "k": "V aréne sa biješ s inými hráčmi o body v rebríčku. Najprv sa trochu otrkaj na misiách.",
+  "kind": "ui",
+  "ctx": "ui.js:1610 scr_arena"
+ },
+ {
+  "k": "Súboje prebehnú automaticky podľa statov a výbavy.",
+  "kind": "ui",
+  "ctx": "ui.js:1612 scr_arena"
+ },
+ {
+  "k": "Zadarmo ešte <span class=\"gold\">{left} z {max}</span>, obnova o <span data-until=\"{until}\"></span>.",
+  "kind": "ui",
+  "ctx": "ui.js:1613 scr_arena"
+ },
+ {
+  "k": "Zadarmo ešte <span class=\"gold\">{left} z {max}</span>.",
+  "kind": "ui",
+  "ctx": "ui.js:1614 scr_arena"
+ },
+ {
+  "k": "Súperi s hviezdičkou sú skutoční hráči.",
+  "kind": "ui",
+  "ctx": "ui.js:1614 scr_arena"
+ },
+ {
+  "k": "Súperi sú zatiaľ počítačoví.",
+  "kind": "ui",
+  "ctx": "ui.js:1614 scr_arena"
+ },
+ {
+  "k": "{n} b.",
+  "kind": "ui",
+  "ctx": "ui.js:1617 scr_arena | ui.js:1625 scr_arena | ui.js:2243 finishFight"
+ },
+ {
+  "k": "Životy {hp} · úder {dmg}",
+  "kind": "ui",
+  "ctx": "ui.js:1617 scr_arena"
+ },
+ {
+  "k": "Vyzvať",
+  "kind": "ui",
+  "ctx": "ui.js:1618 scr_arena"
+ },
+ {
+  "k": "Vyzvať · {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1618 scr_arena"
+ },
+ {
+  "k": "Noví súperi",
+  "kind": "ui",
+  "ctx": "ui.js:1620 scr_arena"
+ },
+ {
+  "k": "Rebríček · sezóna 1",
+  "kind": "ui",
+  "ctx": "ui.js:1621 scr_arena"
+ },
+ {
+  "k": "Ty: {rank}. miesto · {points} b.",
+  "kind": "ui",
+  "ctx": "ui.js:1623 scr_arena"
+ },
+ {
+  "k": "Výhry {wins} · prehry {losses}",
+  "kind": "ui",
+  "ctx": "ui.js:1624 scr_arena"
+ },
+ {
+  "k": "Zlato nikdy nestráca hodnotu. Na rozdiel od ľudí.",
+  "kind": "ui",
+  "ctx": "ui.js:1630 scr_wexler"
+ },
+ {
+  "k": "Zlaté tehličky",
+  "kind": "ui",
+  "ctx": "ui.js:1630 scr_wexler | ui.js:1634 scr_wexler | index.html #hud"
+ },
+ {
+  "k": "Ripper mi práve ukradol tehličku! Chyť ho do <b data-until=\"{until}\"></b> a je tvoja.",
+  "kind": "ui",
+  "ctx": "ui.js:1632 scr_wexler"
+ },
+ {
+  "k": "Ripper sa sem chodí kradnúť približne raz za hodinu. Ďalší pokus o <span data-until=\"{until}\"></span>.",
+  "kind": "ui",
+  "ctx": "ui.js:1633 scr_wexler"
+ },
+ {
+  "k": "Zlaté tehličky sa zatiaľ nepredávajú. Získaš ich v misiách, od bossov, za denné úlohy a za medaily.",
+  "kind": "ui",
+  "ctx": "ui.js:1635 scr_wexler"
+ },
+ {
+  "k": "Skracovanie misií, ďalšie pokusy na bossov a v aréne",
+  "kind": "ui",
+  "ctx": "ui.js:1637 scr_wexler"
+ },
+ {
+  "k": "Testovacia kúpa (len offline): tehličky sa pripíšu hneď.",
+  "kind": "ui",
+  "ctx": "ui.js:1640 scr_wexler"
+ },
+ {
+  "k": "Elixír Čierneho trhu",
+  "kind": "ui",
+  "ctx": "ui.js:1643 scr_wexler | ui.js:1644 scr_wexler"
+ },
+ {
+  "k": "Na {n} hodín ti otvorí Čierny trh vo všetkých obchodoch. Epické kusy ťa čakajú hocikedy, nielen v piatok večer.",
+  "kind": "ui",
+  "ctx": "ui.js:1645 scr_wexler"
+ },
+ {
+  "k": "Účinkuje ešte <b data-until=\"{until}\"></b>. Ďalší elixír čas predĺži.",
+  "kind": "ui",
+  "ctx": "ui.js:1646 scr_wexler"
+ },
+ {
+  "k": "Čierny trh sa odomyká na úrovni {n}.",
+  "kind": "ui",
+  "ctx": "ui.js:1647 scr_wexler"
+ },
+ {
+  "k": "Čierny ako noc, zapečatený pešiakom. Kto sa napije, nájde dvere, ktoré ostatní nevidia.",
+  "kind": "ui",
+  "ctx": "ui.js:1648 scr_wexler"
+ },
+ {
+  "k": "<span class=\"gold\">{n}</span> tehličiek",
+  "kind": "ui",
+  "ctx": "ui.js:1650 scr_wexler"
+ },
+ {
+  "k": "Zapnutý",
+  "kind": "ui",
+  "ctx": "ui.js:1655 scr_settings"
+ },
+ {
+  "k": "Vypnutý",
+  "kind": "ui",
+  "ctx": "ui.js:1655 scr_settings"
+ },
+ {
+  "k": "Niečo nefunguje alebo vyzerá zle? Napíš nám.",
+  "kind": "ui",
+  "ctx": "ui.js:1657 scr_settings"
+ },
+ {
+  "k": "Nahlásiť",
+  "kind": "ui",
+  "ctx": "ui.js:1657 scr_settings"
+ },
+ {
+  "k": "Zvuk",
+  "kind": "ui",
+  "ctx": "ui.js:1658 scr_settings"
+ },
+ {
+  "k": "Údery, výstrely, peniaze, korisť. Platí pre toto zariadenie.",
+  "kind": "ui",
+  "ctx": "ui.js:1658 scr_settings"
+ },
+ {
+  "k": "Návod a ciele na mape",
+  "kind": "ui",
+  "ctx": "ui.js:1661 scr_settings"
+ },
+ {
+  "k": "Riadok pod lištou a šípka k cieľu. Splnený cieľ sa ukáže vždy, aby si neprišiel o odmenu.",
+  "kind": "ui",
+  "ctx": "ui.js:1661 scr_settings"
+ },
+ {
+  "k": "Zapnuté",
+  "kind": "ui",
+  "ctx": "ui.js:1661 scr_settings"
+ },
+ {
+  "k": "Vypnuté",
+  "kind": "ui",
+  "ctx": "ui.js:1661 scr_settings"
+ },
+ {
+  "k": "Návod pre nováčikov",
+  "kind": "ui",
+  "ctx": "ui.js:1662 scr_settings"
+ },
+ {
+  "k": "Krok {n} z {total}. Preskočený návod nedá odmenu.",
+  "kind": "ui",
+  "ctx": "ui.js:1662 scr_settings"
+ },
+ {
+  "k": "Účet",
+  "kind": "ui",
+  "ctx": "ui.js:1665 scr_settings"
+ },
+ {
+  "k": "Odhlásiť",
+  "kind": "ui",
+  "ctx": "ui.js:1665 scr_settings"
+ },
+ {
+  "k": "Uložená na serveri.",
+  "kind": "ui",
+  "ctx": "ui.js:1666 scr_settings"
+ },
+ {
+  "k": "Zmazať",
+  "kind": "ui",
+  "ctx": "ui.js:1666 scr_settings | ui.js:1675 scr_settings"
+ },
+ {
+  "k": "Zmazať účet",
+  "kind": "ui",
+  "ctx": "ui.js:1667 scr_settings"
+ },
+ {
+  "k": "Zmaže postavu, e-mail aj heslo. Nedá sa to vrátiť.",
+  "kind": "ui",
+  "ctx": "ui.js:1667 scr_settings"
+ },
+ {
+  "k": "Testovací režim",
+  "kind": "ui",
+  "ctx": "ui.js:1672 scr_settings"
+ },
+ {
+  "k": "Čas beží 60× rýchlejšie: misie, heat, bossovia, obchody.",
+  "kind": "ui",
+  "ctx": "ui.js:1672 scr_settings"
+ },
+ {
+  "k": "Čierny trh vždy otvorený",
+  "kind": "ui",
+  "ctx": "ui.js:1674 scr_settings"
+ },
+ {
+  "k": "Na testovanie. Normálne len v piatok od {h}:00.",
+  "kind": "ui",
+  "ctx": "ui.js:1674 scr_settings"
+ },
+ {
+  "k": "Uložená hra",
+  "kind": "ui",
+  "ctx": "ui.js:1675 scr_settings"
+ },
+ {
+  "k": "Ukladá sa v tomto prehliadači.",
+  "kind": "ui",
+  "ctx": "ui.js:1675 scr_settings"
+ },
+ {
+  "k": "Predchádzajúce",
+  "kind": "ui",
+  "ctx": "ui.js:1721 scr_look"
+ },
+ {
+  "k": "nič",
+  "kind": "ui",
+  "ctx": "ui.js:1722 scr_look"
+ },
+ {
+  "k": "Ďalšie",
+  "kind": "ui",
+  "ctx": "ui.js:1723 scr_look"
+ },
+ {
+  "k": "Náhodne",
+  "kind": "ui",
+  "ctx": "ui.js:1725 scr_look"
+ },
+ {
+  "k": "Uložiť",
+  "kind": "ui",
+  "ctx": "ui.js:1725 scr_look"
+ },
+ {
+  "k": "Ďalšie časti (pleť, ústa, brada, čiapky…) sa tu objavia, keď pribudnú ich vrstvy.",
+  "kind": "ui",
+  "ctx": "ui.js:1726 scr_look"
+ },
+ {
+  "k": "obrana {p}",
+  "kind": "ui",
+  "ctx": "ui.js:1738 turfCard"
+ },
+ {
+  "k": "Voľný, stačí ho obsadiť",
+  "kind": "ui",
+  "ctx": "ui.js:1738 turfCard"
+ },
+ {
+  "k": "životy {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1742 fighterRow"
+ },
+ {
+  "k": "úder {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1742 fighterRow"
+ },
+ {
+  "k": "Gang je tvoj cech: s ostatnými hráčmi držíte objekty v meste a bojujete o územie. Do gangu sa dá vstúpiť alebo ho založiť, keď ťa už v meste poznajú.",
+  "kind": "ui",
+  "ctx": "ui.js:1748 scr_gang"
+ },
+ {
+  "k": "Územie: {mesto}",
+  "kind": "ui",
+  "ctx": "ui.js:1751 scr_gang"
+ },
+ {
+  "k": "Držíte aj inde",
+  "kind": "ui",
+  "ctx": "ui.js:1752 scr_gang"
+ },
+ {
+  "k": "Gang je tvoj cech. Spolu s ostatnými hráčmi držíte objekty v meste a kým ich držíte, celý gang má ich bonus. Ostatné gangy aj počítačoví rivali vám ich budú chcieť zobrať.",
+  "kind": "ui",
+  "ctx": "ui.js:1757 scr_gang"
+ },
+ {
+  "k": "Pozvánky",
+  "kind": "ui",
+  "ctx": "ui.js:1759 scr_gang"
+ },
+ {
+  "k": "ťa pozýva do gangu",
+  "kind": "ui",
+  "ctx": "ui.js:1759 scr_gang"
+ },
+ {
+  "k": "Gangy v meste",
+  "kind": "ui",
+  "ctx": "ui.js:1762 scr_gang"
+ },
+ {
+  "k": "Načítavam…",
+  "kind": "ui",
+  "ctx": "ui.js:1764 scr_gang"
+ },
+ {
+  "k": "Zatiaľ tu nie je žiadny gang. Založ prvý.",
+  "kind": "ui",
+  "ctx": "ui.js:1765 scr_gang"
+ },
+ {
+  "k": "{n} / {slots} členov",
+  "kind": "ui",
+  "ctx": "ui.js:1768 scr_gang | ui.js:1782 scr_gang"
+ },
+ {
+  "k": "{n} výhier",
+  "kind": "ui",
+  "ctx": "ui.js:1768 scr_gang | ui.js:1782 scr_gang"
+ },
+ {
+  "k": "šéf {meno}",
+  "kind": "ui",
+  "ctx": "ui.js:1768 scr_gang"
+ },
+ {
+  "k": "Zrušiť žiadosť",
+  "kind": "ui",
+  "ctx": "ui.js:1769 scr_gang"
+ },
+ {
+  "k": "Plný",
+  "kind": "ui",
+  "ctx": "ui.js:1769 scr_gang"
+ },
+ {
+  "k": "Požiadať",
+  "kind": "ui",
+  "ctx": "ui.js:1769 scr_gang"
+ },
+ {
+  "k": "Offline hra: ostatné gangy uvidíš po prihlásení.",
+  "kind": "ui",
+  "ctx": "ui.js:1771 scr_gang"
+ },
+ {
+  "k": "Založiť vlastný gang",
+  "kind": "ui",
+  "ctx": "ui.js:1772 scr_gang"
+ },
+ {
+  "k": "Meno gangu",
+  "kind": "ui",
+  "ctx": "ui.js:1773 scr_gang | js/gangs.js:172 createGang"
+ },
+ {
+  "k": "napr. Nočné Mory",
+  "kind": "ui",
+  "ctx": "ui.js:1773 scr_gang"
+ },
+ {
+  "k": "Skratka (2–4 znaky, uvidíš ju na mape)",
+  "kind": "ui",
+  "ctx": "ui.js:1774 scr_gang"
+ },
+ {
+  "k": "Farba graffiti",
+  "kind": "ui",
+  "ctx": "ui.js:1775 scr_gang"
+ },
+ {
+  "k": "Založiť gang · {cena}",
+  "kind": "ui",
+  "ctx": "ui.js:1776 scr_gang"
+ },
+ {
+  "k": "+{p} peňazí",
+  "kind": "ui",
+  "ctx": "ui.js:1781 scr_gang"
+ },
+ {
+  "k": "+{p} XP",
+  "kind": "ui",
+  "ctx": "ui.js:1781 scr_gang"
+ },
+ {
+  "k": "−{p} čas misií",
+  "kind": "ui",
+  "ctx": "ui.js:1781 scr_gang"
+ },
+ {
+  "k": "+{p} epický drop",
+  "kind": "ui",
+  "ctx": "ui.js:1781 scr_gang"
+ },
+ {
+  "k": "{n} objektov",
+  "kind": "ui",
+  "ctx": "ui.js:1782 scr_gang"
+ },
+ {
+  "k": "ty: {rank}",
+  "kind": "ui",
+  "ctx": "ui.js:1782 scr_gang"
+ },
+ {
+  "k": "Zatiaľ žiadny bonus. Obsaďte nejaký objekt.",
+  "kind": "ui",
+  "ctx": "ui.js:1783 scr_gang"
+ },
+ {
+  "k": "Pokladnica",
+  "kind": "ui",
+  "ctx": "ui.js:1786 scr_gang"
+ },
+ {
+  "k": "Vkladať môže každý člen. Z pokladnice sa platia vylepšenia a obrana objektov.",
+  "kind": "ui",
+  "ctx": "ui.js:1788 scr_gang"
+ },
+ {
+  "k": "Členovia {n} / {slots}",
+  "kind": "ui",
+  "ctx": "ui.js:1795 scr_gang"
+ },
+ {
+  "k": "Upraviť",
+  "kind": "ui",
+  "ctx": "ui.js:1799 scr_gang"
+ },
+ {
+  "k": "bráni {objekt}",
+  "kind": "ui",
+  "ctx": "ui.js:1800 scr_gang"
+ },
+ {
+  "k": "Žiadosti o vstup",
+  "kind": "ui",
+  "ctx": "ui.js:1804 scr_gang"
+ },
+ {
+  "k": "Prijať",
+  "kind": "ui",
+  "ctx": "ui.js:1806 scr_gang"
+ },
+ {
+  "k": "Odmietnuť",
+  "kind": "ui",
+  "ctx": "ui.js:1806 scr_gang"
+ },
+ {
+  "k": "Žiadne žiadosti. Hráči bez gangu ťa nájdu v zozname gangov.",
+  "kind": "ui",
+  "ctx": "ui.js:1807 scr_gang"
+ },
+ {
+  "k": "Pozvať hráča (prezývka)",
+  "kind": "ui",
+  "ctx": "ui.js:1808 scr_gang"
+ },
+ {
+  "k": "Pozvať",
+  "kind": "ui",
+  "ctx": "ui.js:1808 scr_gang"
+ },
+ {
+  "k": "pozvaný",
+  "kind": "ui",
+  "ctx": "ui.js:1809 scr_gang"
+ },
+ {
+  "k": "Vylepšenia gangu",
+  "kind": "ui",
+  "ctx": "ui.js:1812 scr_gang"
+ },
+ {
+  "k": "zatiaľ nič",
+  "kind": "ui",
+  "ctx": "ui.js:1815 scr_gang"
+ },
+ {
+  "k": "max",
+  "kind": "ui",
+  "ctx": "ui.js:1816 scr_gang"
+ },
+ {
+  "k": "Vylepšenia kupuje šéf alebo pravá ruka.",
+  "kind": "ui",
+  "ctx": "ui.js:1818 scr_gang | js/gangs.js:417 buyGangUpgrade"
+ },
+ {
+  "k": "Denník",
+  "kind": "ui",
+  "ctx": "ui.js:1821 scr_gang"
+ },
+ {
+  "k": "Zatiaľ ticho.",
+  "kind": "ui",
+  "ctx": "ui.js:1821 scr_gang"
+ },
+ {
+  "k": "Odísť z gangu",
+  "kind": "ui",
+  "ctx": "ui.js:1822 scr_gang"
+ },
+ {
+  "k": "Rozpustiť gang",
+  "kind": "ui",
+  "ctx": "ui.js:1822 scr_gang"
+ },
+ {
+  "k": "len jedna",
+  "kind": "ui",
+  "ctx": "ui.js:1844 gangMemberModal"
+ },
+ {
+  "k": "Odovzdať mu vedenie",
+  "kind": "ui",
+  "ctx": "ui.js:1846 gangMemberModal"
+ },
+ {
+  "k": "Vyhodiť z gangu",
+  "kind": "ui",
+  "ctx": "ui.js:1847 gangMemberModal"
+ },
+ {
+  "k": "Nováčik môže vkladať do pokladnice a brániť. Vojak aj útočí a dopĺňa obranu. Pravá ruka navyše prijíma členov a kupuje vylepšenia.",
+  "kind": "ui",
+  "ctx": "ui.js:1849 gangMemberModal"
+ },
+ {
+  "k": "teraz",
+  "kind": "ui",
+  "ctx": "ui.js:1853 ago"
+ },
+ {
+  "k": "{n} min",
+  "kind": "ui",
+  "ctx": "ui.js:1853 ago"
+ },
+ {
+  "k": "{n} h",
+  "kind": "ui",
+  "ctx": "ui.js:1853 ago"
+ },
+ {
+  "k": "drží {majitel}",
+  "kind": "ui",
+  "ctx": "ui.js:1859 scr_turf"
+ },
+ {
+  "k": "nikto",
+  "kind": "ui",
+  "ctx": "ui.js:1859 scr_turf"
+ },
+ {
+  "k": "Bonus pre celý gang: <span class=\"gold\">{bonus}</span>",
+  "kind": "ui",
+  "ctx": "ui.js:1860 scr_turf"
+ },
+ {
+  "k": "Sila obrany",
+  "kind": "ui",
+  "ctx": "ui.js:1861 scr_turf"
+ },
+ {
+  "k": "Doplniť obranu na {p} · {cena} z pokladnice",
+  "kind": "ui",
+  "ctx": "ui.js:1865 scr_turf"
+ },
+ {
+  "k": "Obrana je plná. Bez doplnenia slabne o {p} za hodinu.",
+  "kind": "ui",
+  "ctx": "ui.js:1866 scr_turf"
+ },
+ {
+  "k": "Pod ochranou ešte {cas}.",
+  "kind": "ui",
+  "ctx": "ui.js:1867 scr_turf"
+ },
+ {
+  "k": "Obrancovia {n} / {slots}",
+  "kind": "ui",
+  "ctx": "ui.js:1871 scr_turf"
+ },
+ {
+  "k": "Objekt nikto nebráni. Prvý útok ho zoberie.",
+  "kind": "ui",
+  "ctx": "ui.js:1872 scr_turf"
+ },
+ {
+  "k": "Stiahnuť",
+  "kind": "ui",
+  "ctx": "ui.js:1877 scr_turf"
+ },
+ {
+  "k": "Presunúť sa sem (teraz bránim {objekt})",
+  "kind": "ui",
+  "ctx": "ui.js:1881 scr_turf"
+ },
+ {
+  "k": "Brániť tento objekt",
+  "kind": "ui",
+  "ctx": "ui.js:1881 scr_turf"
+ },
+ {
+  "k": "Na objekte je plno obrancov.",
+  "kind": "ui",
+  "ctx": "ui.js:1882 scr_turf | js/gangs.js:492 toggleDefender"
+ },
+ {
+  "k": "Každý člen bráni jeden objekt a bojuje v ňom so svojou výbavou, aj keď nie je online. Počítačoví rivali skúšajú objekty prebrať zhruba raz za hodinu, iné gangy kedykoľvek.",
+  "kind": "ui",
+  "ctx": "ui.js:1884 scr_turf"
+ },
+ {
+  "k": "Obrancovia",
+  "kind": "ui",
+  "ctx": "ui.js:1889 scr_turf | ui.js:2030 finishWar"
+ },
+ {
+  "k": "Obrancovia gangu {gang}",
+  "kind": "ui",
+  "ctx": "ui.js:1892 scr_turf"
+ },
+ {
+  "k": "Nikto ho nebráni. Stačí prísť a zobrať ho.",
+  "kind": "ui",
+  "ctx": "ui.js:1892 scr_turf"
+ },
+ {
+  "k": "Objekt nikto nedrží. Stačí prísť s gangom a obsadiť ho.",
+  "kind": "ui",
+  "ctx": "ui.js:1894 scr_turf"
+ },
+ {
+  "k": "Na boj o územie potrebuješ gang.",
+  "kind": "ui",
+  "ctx": "ui.js:1897 scr_turf | js/gangs.js:510 attackTurf"
+ },
+ {
+  "k": "Založiť gang",
+  "kind": "ui",
+  "ctx": "ui.js:1897 scr_turf"
+ },
+ {
+  "k": "Tvoj tím",
+  "kind": "ui",
+  "ctx": "ui.js:1899 scr_turf"
+ },
+ {
+  "k": "Ďalší útok o {cas}.",
+  "kind": "ui",
+  "ctx": "ui.js:1900 scr_turf"
+ },
+ {
+  "k": "Objekt bol práve obsadený. Pod ochranou ešte {cas}.",
+  "kind": "ui",
+  "ctx": "ui.js:1901 scr_turf"
+ },
+ {
+  "k": "Objekt je v inom meste ({mesto}). Zaútočiť sa dá len na mieste.",
+  "kind": "ui",
+  "ctx": "ui.js:1902 scr_turf"
+ },
+ {
+  "k": "Ako nováčik ešte útočiť nemôžeš. Hodnosť vojaka ti dá šéf.",
+  "kind": "ui",
+  "ctx": "ui.js:1903 scr_turf"
+ },
+ {
+  "k": "Zaútočiť",
+  "kind": "ui",
+  "ctx": "ui.js:1904 scr_turf"
+ },
+ {
+  "k": "Obsadiť",
+  "kind": "ui",
+  "ctx": "ui.js:1904 scr_turf"
+ },
+ {
+  "k": "Po útoku ťa bude hľadať polícia: +1 hviezda. S tebou idú najsilnejší ďalší členovia gangu (aj keď nie sú online).",
+  "kind": "ui",
+  "ctx": "ui.js:1904 scr_turf"
+ },
+ {
+  "k": "Duel {n}",
+  "kind": "ui",
+  "ctx": "ui.js:1914 scr_war | ui.js:1960 nextDuel | ui.js:2001 warStep"
+ },
+ {
+  "k": "Tvoj gang",
+  "kind": "ui",
+  "ctx": "ui.js:1918 scr_war"
+ },
+ {
+  "k": "Obrana",
+  "kind": "ui",
+  "ctx": "ui.js:1918 scr_war"
+ },
+ {
+  "k": "<span class=\"gold\">Vyhral si</span> nad {name}",
+  "kind": "ui",
+  "ctx": "ui.js:1999 warStep"
+ },
+ {
+  "k": "<span class=\"gold\">{a}</span> vyhral nad {name}",
+  "kind": "ui",
+  "ctx": "ui.js:1999 warStep"
+ },
+ {
+  "k": "<span class=\"red\">{name}</span> ťa porazil",
+  "kind": "ui",
+  "ctx": "ui.js:2000 warStep"
+ },
+ {
+  "k": "<span class=\"red\">{name}</span> vyhral nad {a}",
+  "kind": "ui",
+  "ctx": "ui.js:2000 warStep"
+ },
+ {
+  "k": "Územie je vaše",
+  "kind": "ui",
+  "ctx": "ui.js:2029 finishWar"
+ },
+ {
+  "k": "Útok zlyhal",
+  "kind": "ui",
+  "ctx": "ui.js:2029 finishWar"
+ },
+ {
+  "k": "{name} teraz drží tvoj gang. Bojovníci ostali na mieste ako obrancovia.",
+  "kind": "ui",
+  "ctx": "ui.js:2030 finishWar"
+ },
+ {
+  "k": "{obrancovia} {name} udržali. Ďalší pokus o {min} min.",
+  "kind": "ui",
+  "ctx": "ui.js:2030 finishWar"
+ },
+ {
+  "k": "{b} tvoj úder zablokoval.",
+  "kind": "ui",
+  "ctx": "ui.js:2156 fightLine"
+ },
+ {
+  "k": "Zablokoval si úder.",
+  "kind": "ui",
+  "ctx": "ui.js:2156 fightLine"
+ },
+ {
+  "k": "{b} sa uhol.",
+  "kind": "ui",
+  "ctx": "ui.js:2157 fightLine"
+ },
+ {
+  "k": "Kritický zásah za <span class=\"gold\">{dmg}</span>!",
+  "kind": "ui",
+  "ctx": "ui.js:2157 fightLine"
+ },
+ {
+  "k": "Zasiahol si za <b>{dmg}</b>.",
+  "kind": "ui",
+  "ctx": "ui.js:2157 fightLine"
+ },
+ {
+  "k": "Uhol si sa.",
+  "kind": "ui",
+  "ctx": "ui.js:2158 fightLine"
+ },
+ {
+  "k": "{b}: kritický úder za <span class=\"red\">{dmg}</span>!",
+  "kind": "ui",
+  "ctx": "ui.js:2158 fightLine"
+ },
+ {
+  "k": "{b} ťa zasiahol za <span class=\"red\">{dmg}</span>.",
+  "kind": "ui",
+  "ctx": "ui.js:2158 fightLine"
+ },
+ {
+  "k": "Kolo {n}",
+  "kind": "ui",
+  "ctx": "ui.js:2171 fightStep"
+ },
+ {
+  "k": "blok",
+  "kind": "ui",
+  "ctx": "ui.js:2196 hitMark"
+ },
+ {
+  "k": "úhyb",
+  "kind": "ui",
+  "ctx": "ui.js:2196 hitMark"
+ },
+ {
+  "k": "Misia splnená",
+  "kind": "ui",
+  "ctx": "ui.js:2220 finishFight"
+ },
+ {
+  "k": "Misia zlyhala",
+  "kind": "ui",
+  "ctx": "ui.js:2220 finishFight"
+ },
+ {
+  "k": "{b} leží na zemi. {name} je hotová.",
+  "kind": "ui",
+  "ctx": "ui.js:2221 finishFight"
+ },
+ {
+  "k": "{b} ťa dnes premohol. Tentoraz bez odmeny.",
+  "kind": "ui",
+  "ctx": "ui.js:2221 finishFight"
+ },
+ {
+  "k": "Horúca misia: {x}× odmena!",
+  "kind": "ui",
+  "ctx": "ui.js:2222 finishFight"
+ },
+ {
+  "k": "Horúca misia nevyšla. Zosilnej a skús ďalšiu.",
+  "kind": "ui",
+  "ctx": "ui.js:2222 finishFight"
+ },
+ {
+  "k": "+{n} tehl.",
+  "kind": "ui",
+  "ctx": "ui.js:2223 finishFight | ui.js:2236 finishFight | ui.js:2240 finishFight"
+ },
+ {
+  "k": "heat +{n}",
+  "kind": "ui",
+  "ctx": "ui.js:2223 finishFight"
+ },
+ {
+  "k": "Sklad tvojho gangu: epický kúsok navyše!",
+  "kind": "ui",
+  "ctx": "ui.js:2225 finishFight"
+ },
+ {
+  "k": "Legendárny víkend: legendárny kúsok z misie!",
+  "kind": "ui",
+  "ctx": "ui.js:2226 finishFight"
+ },
+ {
+  "k": "Razia! Polícia ti zobrala {cena}.",
+  "kind": "ui",
+  "ctx": "ui.js:2227 finishFight"
+ },
+ {
+  "k": "Razia! Zatkli ťa, {n} min bez misií.",
+  "kind": "ui",
+  "ctx": "ui.js:2227 finishFight"
+ },
+ {
+  "k": "Víťazstvo",
+  "kind": "ui",
+  "ctx": "ui.js:2233 finishFight"
+ },
+ {
+  "k": "Prehra",
+  "kind": "ui",
+  "ctx": "ui.js:2233 finishFight"
+ },
+ {
+  "k": "{b} je porazený. Ďalší boss: {next}.",
+  "kind": "ui",
+  "ctx": "ui.js:2235 finishFight"
+ },
+ {
+  "k": "{b} je porazený.",
+  "kind": "ui",
+  "ctx": "ui.js:2235 finishFight"
+ },
+ {
+  "k": "{b} bol silnejší. Vylepši staty a výbavu a skús to znova.",
+  "kind": "ui",
+  "ctx": "ui.js:2235 finishFight"
+ },
+ {
+  "k": "Prvý boss: istý epický kúsok!",
+  "kind": "ui",
+  "ctx": "ui.js:2237 finishFight"
+ },
+ {
+  "k": "Poschodie {n} je tvoje. Ďalší súper o hodinu.",
+  "kind": "ui",
+  "ctx": "ui.js:2239 finishFight"
+ },
+ {
+  "k": "Poschodie {n} je tvoje. Porazil si všetkých.",
+  "kind": "ui",
+  "ctx": "ui.js:2239 finishFight"
+ },
+ {
+  "k": "{b} ťa poslal na zem. Ďalší pokus o hodinu.",
+  "kind": "ui",
+  "ctx": "ui.js:2239 finishFight"
+ },
+ {
+  "k": "Rebríček ťa posunul vyššie.",
+  "kind": "ui",
+  "ctx": "ui.js:2242 finishFight"
+ },
+ {
+  "k": "Body si stratil, peniaze nie.",
+  "kind": "ui",
+  "ctx": "ui.js:2242 finishFight"
+ },
+ {
+  "k": "Taška",
+  "kind": "ui",
+  "ctx": "world.js:836 special"
+ },
+ {
+  "k": "Cieľ",
+  "kind": "ui",
+  "ctx": "world.js:836 special"
+ },
+ {
+  "k": "Všimol si ťa. Odstúp a začni sledovať odznova.",
+  "kind": "ui",
+  "ctx": "world.js:895 updateFollow"
+ },
+ {
+  "k": "Stratil si ho z dohľadu. Nájdi ho a začni odznova.",
+  "kind": "ui",
+  "ctx": "world.js:898 updateFollow"
+ },
+ {
+  "k": "Bez spojenia",
+  "kind": "ui",
+  "ctx": "main.js:88"
+ },
+ {
+  "k": "Server sa nepodarilo načítať. Skús obnoviť stránku.",
+  "kind": "ui",
+  "ctx": "main.js:88"
+ },
+ {
+  "k": "Návod",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "W A S D",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "pohyb",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "E",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "akcia",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "F",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "útok",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "záložky",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Esc",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "späť",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "koliesko",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "zoom",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Mesto",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Hľadanosť: polícia na ulici",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Hotovosť",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Heat: denný limit na misie",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Misia",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Skryť návod a ciele",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Priblížiť",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Oddialiť",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Útok zbraňou",
+  "kind": "html",
+  "ctx": "index.html #hud"
+ },
+ {
+  "k": "Testovací režim je len offline.",
+  "kind": "server",
+  "ctx": "js/server.js:74 setTestMode"
+ },
+ {
+  "k": "Len offline.",
+  "kind": "server",
+  "ctx": "js/server.js:75 setBlackMarket"
+ },
+ {
+  "k": "Neznáma trieda.",
+  "kind": "server",
+  "ctx": "js/server.js:78 newGame"
+ },
+ {
+  "k": "{label} musí mať 3 až {n} znakov.",
+  "kind": "server",
+  "ctx": "js/config.js:259 cleanName"
+ },
+ {
+  "k": "{label} môže mať len písmená, číslice, medzeru a znaky . _ -",
+  "kind": "server",
+  "ctx": "js/config.js:260 cleanName"
+ },
+ {
+  "k": "Neznáma pilulka.",
+  "kind": "server",
+  "ctx": "js/server.js:161 takePill"
+ },
+ {
+  "k": "{what} sa odomyká na úrovni {n}.",
+  "kind": "server",
+  "ctx": "js/server.js:317 lockedFail"
+ },
+ {
+  "k": "{what} sa odomykajú na úrovni {n}.",
+  "kind": "server",
+  "ctx": "js/server.js:317 lockedFail"
+ },
+ {
+  "k": "Auto sa odomyká na úrovni {n}.",
+  "kind": "server",
+  "ctx": "js/server.js:336 equip"
+ },
+ {
+  "k": "Predmet nemáš.",
+  "kind": "server",
+  "ctx": "js/server.js:335 equip"
+ },
+ {
+  "k": "Neznámy slot.",
+  "kind": "server",
+  "ctx": "js/server.js:343 unequip"
+ },
+ {
+  "k": "Predmet je na maxime.",
+  "kind": "server",
+  "ctx": "js/server.js:365 upgradeItem"
+ },
+ {
+  "k": "Nemáš dosť peňazí.",
+  "kind": "server",
+  "ctx": "js/server.js:367 upgradeItem"
+ },
+ {
+  "k": "Napíš aspoň pár slov, čo sa stalo.",
+  "kind": "server",
+  "ctx": "js/server.js:378 reportBug"
+ },
+ {
+  "k": "Dnes si už poslal dosť hlásení. Ďakujeme, pozrieme sa na ne.",
+  "kind": "server",
+  "ctx": "js/server.js:381 reportBug"
+ },
+ {
+  "k": "Neplatné hlásenie.",
+  "kind": "server",
+  "ctx": "js/server.js:393 logErrors"
+ },
+ {
+  "k": "Neznámy obchod.",
+  "kind": "server",
+  "ctx": "js/server.js:455 rerollShop"
+ },
+ {
+  "k": "Nemáš zlatú tehličku.",
+  "kind": "server",
+  "ctx": "js/server.js:457 rerollShop"
+ },
+ {
+  "k": "Tento predmet už nie je na predaj.",
+  "kind": "server",
+  "ctx": "js/server.js:477 buyItem"
+ },
+ {
+  "k": "Stojí aj {n} zlatých tehličiek.",
+  "kind": "server",
+  "ctx": "js/server.js:485 buyItem"
+ },
+ {
+  "k": "Žiadna nová medaila.",
+  "kind": "server",
+  "ctx": "js/server.js:508 claimMedals"
+ },
+ {
+  "k": "Návod ešte nie je hotový.",
+  "kind": "server",
+  "ctx": "js/server.js:542 tutorialFinish"
+ },
+ {
+  "k": "Návod už nebeží.",
+  "kind": "server",
+  "ctx": "js/server.js:552 tutorialSkip"
+ },
+ {
+  "k": "Žiadny cieľ.",
+  "kind": "server",
+  "ctx": "js/server.js:591 goalClaim"
+ },
+ {
+  "k": "Cieľ ešte nie je splnený.",
+  "kind": "server",
+  "ctx": "js/server.js:592 goalClaim"
+ },
+ {
+  "k": "Neplatný vzhľad.",
+  "kind": "server",
+  "ctx": "js/server.js:605 setLook"
+ },
+ {
+  "k": "Neznámy stat.",
+  "kind": "server",
+  "ctx": "js/server.js:618 spendPoint"
+ },
+ {
+  "k": "Nemáš voľné body.",
+  "kind": "server",
+  "ctx": "js/server.js:619 spendPoint"
+ },
+ {
+  "k": "Už máš rozbehnutú misiu.",
+  "kind": "server",
+  "ctx": "js/server.js:682 startMission"
+ },
+ {
+  "k": "Si zavretý. Misie počkajú.",
+  "kind": "server",
+  "ctx": "js/server.js:683 startMission"
+ },
+ {
+  "k": "Táto misia už neplatí.",
+  "kind": "server",
+  "ctx": "js/server.js:684 startMission"
+ },
+ {
+  "k": "Heat je takmer plný. Polícia ťa sleduje, na dnes stačilo. Skús právničku alebo počkaj do polnoci.",
+  "kind": "server",
+  "ctx": "js/server.js:688 startMission"
+ },
+ {
+  "k": "Nemáš misiu.",
+  "kind": "server",
+  "ctx": "js/server.js:715 skipMission"
+ },
+ {
+  "k": "Nemáš dosť zlatých tehličiek.",
+  "kind": "server",
+  "ctx": "js/server.js:718 skipMission"
+ },
+ {
+  "k": "Misia ešte beží.",
+  "kind": "server",
+  "ctx": "js/server.js:728 claimMission"
+ },
+ {
+  "k": "Najprv poraz všetkých {n} bossov Mesta 1.",
+  "kind": "server",
+  "ctx": "js/server.js:799 travelLock"
+ },
+ {
+  "k": "Mesto 2 sa odomyká na úrovni {n}.",
+  "kind": "server",
+  "ctx": "js/server.js:800 travelLock"
+ },
+ {
+  "k": "Mesta 1",
+  "kind": "server",
+  "ctx": "js/server.js:1101 bossLine"
+ },
+ {
+  "k": "Radničnej veže",
+  "kind": "server",
+  "ctx": "js/server.js:1100 bossLine"
+ },
+ {
+  "k": "Také mesto nepoznáme.",
+  "kind": "server",
+  "ctx": "js/server.js:806 travel"
+ },
+ {
+  "k": "Tu už si.",
+  "kind": "server",
+  "ctx": "js/server.js:807 travel"
+ },
+ {
+  "k": "Naháňa ťa polícia. Najprv sa jej zbav.",
+  "kind": "server",
+  "ctx": "js/server.js:810 travel"
+ },
+ {
+  "k": "Najprv vyjdi zo skrýše.",
+  "kind": "server",
+  "ctx": "js/server.js:811 travel"
+ },
+ {
+  "k": "Už si v tieni. Polícia ťa nenaháňa.",
+  "kind": "server",
+  "ctx": "js/server.js:824 hideStart"
+ },
+ {
+  "k": "Polícia ťa nehľadá, nie je pred kým sa skrývať.",
+  "kind": "server",
+  "ctx": "js/server.js:825 hideStart"
+ },
+ {
+  "k": "Nie si v skrýši.",
+  "kind": "server",
+  "ctx": "js/server.js:834 hideEnd"
+ },
+ {
+  "k": "Nikto ťa nenaháňa.",
+  "kind": "server",
+  "ctx": "js/server.js:862 copDown"
+ },
+ {
+  "k": "Príliš rýchlo.",
+  "kind": "server",
+  "ctx": "js/server.js:866 copDown"
+ },
+ {
+  "k": "Nie je za čo.",
+  "kind": "server",
+  "ctx": "js/server.js:884 policeKiller"
+ },
+ {
+  "k": "Zložil si policajta. Tu už úplatok nepomôže.",
+  "kind": "server",
+  "ctx": "js/server.js:898 policeCheck"
+ },
+ {
+  "k": "Na úplatok nemáš dosť peňazí.",
+  "kind": "server",
+  "ctx": "js/server.js:911 policeCheck"
+ },
+ {
+  "k": "Elixír stojí {n} zlatých tehličiek.",
+  "kind": "server",
+  "ctx": "js/server.js:929 buyElixir"
+ },
+ {
+  "k": "Platby cez Stripe ešte nie sú zapojené.",
+  "kind": "server",
+  "ctx": "js/server.js:937 buyBars"
+ },
+ {
+  "k": "Neznámy balíček.",
+  "kind": "server",
+  "ctx": "js/server.js:939 buyBars"
+ },
+ {
+  "k": "Ripper už ušiel.",
+  "kind": "server",
+  "ctx": "js/server.js:958 catchRipper"
+ },
+ {
+  "k": "Už je preč.",
+  "kind": "server",
+  "ctx": "js/server.js:974 hitRunner"
+ },
+ {
+  "k": "Ešte ťa hľadajú.",
+  "kind": "server",
+  "ctx": "js/server.js:1032 wantedLose"
+ },
+ {
+  "k": "Heat je na nule. Právnička nemá čo riešiť.",
+  "kind": "server",
+  "ctx": "js/server.js:1044 lawyer"
+ },
+ {
+  "k": "Právnička ti dnes už pomohla {n}×. Príď zajtra.",
+  "kind": "server",
+  "ctx": "js/server.js:1045 lawyer"
+ },
+ {
+  "k": "Dnes už si použil všetky {n} platené pokusy. Počkaj na pokus zadarmo.",
+  "kind": "server",
+  "ctx": "js/server.js:1140 fightBoss"
+ },
+ {
+  "k": "Porazil si všetkých {n} súperov.",
+  "kind": "server",
+  "ctx": "js/server.js:1207 fightClub"
+ },
+ {
+  "k": "Ďalší zápas ešte nie je. Organizátor zháňa súpera.",
+  "kind": "server",
+  "ctx": "js/server.js:1208 fightClub"
+ },
+ {
+  "k": "Súper už odišiel.",
+  "kind": "server",
+  "ctx": "js/server.js:1268 fightArena"
+ },
+ {
+  "k": "Funguje len online, s inými hráčmi.",
+  "kind": "server",
+  "ctx": "js/gangs.js:28 requestJoin"
+ },
+ {
+  "k": "Už máš gang.",
+  "kind": "server",
+  "ctx": "js/gangs.js:170 createGang"
+ },
+ {
+  "k": "Skratka musí mať 2 až 4 znaky.",
+  "kind": "server",
+  "ctx": "js/gangs.js:176 createGang"
+ },
+ {
+  "k": "Túto skratku už má iný gang.",
+  "kind": "server",
+  "ctx": "js/gangs.js:177 createGang"
+ },
+ {
+  "k": "Založenie gangu stojí {n} $.",
+  "kind": "server",
+  "ctx": "js/gangs.js:180 createGang"
+ },
+ {
+  "k": "Gang {name} [{tag}] je založený.",
+  "kind": "server",
+  "ctx": "js/gangs.js:192 createGang"
+ },
+ {
+  "k": "Počítačoví členovia odišli. Do gangu teraz vstupujú skutoční hráči.",
+  "kind": "server",
+  "ctx": "js/gangs.js:204 migrateLegacyGang"
+ },
+ {
+  "k": "Už si v gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:214 requestJoin"
+ },
+ {
+  "k": "Taký gang už neexistuje.",
+  "kind": "server",
+  "ctx": "js/gangs.js:217 requestJoin"
+ },
+ {
+  "k": "Gang je plný.",
+  "kind": "server",
+  "ctx": "js/gangs.js:219 requestJoin"
+ },
+ {
+  "k": "Pozvánka už neplatí.",
+  "kind": "server",
+  "ctx": "js/gangs.js:240 acceptInvite"
+ },
+ {
+  "k": "Gang je medzitým plný.",
+  "kind": "server",
+  "ctx": "js/gangs.js:241 acceptInvite"
+ },
+ {
+  "k": "{name} prijal pozvánku a je v gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:246 acceptInvite"
+ },
+ {
+  "k": "Nemáš gang.",
+  "kind": "server",
+  "ctx": "js/gangs.js:261 approveJoin"
+ },
+ {
+  "k": "Žiadosti vybavuje šéf alebo pravá ruka.",
+  "kind": "server",
+  "ctx": "js/gangs.js:262 approveJoin"
+ },
+ {
+  "k": "Táto žiadosť už neplatí.",
+  "kind": "server",
+  "ctx": "js/gangs.js:264 approveJoin"
+ },
+ {
+  "k": "Gang je plný ({n} členov).",
+  "kind": "server",
+  "ctx": "js/gangs.js:268 approveJoin"
+ },
+ {
+  "k": "Pozývať môže šéf alebo pravá ruka.",
+  "kind": "server",
+  "ctx": "js/gangs.js:290 invitePlayer"
+ },
+ {
+  "k": "Hráč s takou prezývkou nie je.",
+  "kind": "server",
+  "ctx": "js/gangs.js:292 invitePlayer"
+ },
+ {
+  "k": "{name} už je v tvojom gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:293 invitePlayer"
+ },
+ {
+  "k": "{name} už je v inom gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:294 invitePlayer"
+ },
+ {
+  "k": "Pozvánky ruší šéf alebo pravá ruka.",
+  "kind": "server",
+  "ctx": "js/gangs.js:304 cancelInvite"
+ },
+ {
+  "k": "Vyhodiť člena môže len šéf.",
+  "kind": "server",
+  "ctx": "js/gangs.js:321 kickMember"
+ },
+ {
+  "k": "Sám seba nevyhodíš. Môžeš z gangu odísť.",
+  "kind": "server",
+  "ctx": "js/gangs.js:322 kickMember"
+ },
+ {
+  "k": "Taký člen nie je.",
+  "kind": "server",
+  "ctx": "js/gangs.js:324 kickMember"
+ },
+ {
+  "k": "Člen",
+  "kind": "server",
+  "ctx": "js/gangs.js:325 kickMember"
+ },
+ {
+  "k": "{name} bol vyhodený z gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:327 kickMember"
+ },
+ {
+  "k": "Hodnosti mení len šéf.",
+  "kind": "server",
+  "ctx": "js/gangs.js:336 setRank"
+ },
+ {
+  "k": "Neznáma hodnosť.",
+  "kind": "server",
+  "ctx": "js/gangs.js:337 setRank"
+ },
+ {
+  "k": "Tomuto členovi hodnosť nezmeníš.",
+  "kind": "server",
+  "ctx": "js/gangs.js:339 setRank"
+ },
+ {
+  "k": "Vedenie môže odovzdať len šéf.",
+  "kind": "server",
+  "ctx": "js/gangs.js:348 transferLead"
+ },
+ {
+  "k": "{name} je novým šéfom gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:355 transferLead"
+ },
+ {
+  "k": "Nie si v gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:363 leaveGang"
+ },
+ {
+  "k": "{name} odišiel z gangu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:373 leaveGang"
+ },
+ {
+  "k": "{name} odišiel z gangu. Vedenie prebral {next}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:373 leaveGang"
+ },
+ {
+  "k": "ďalší člen",
+  "kind": "server",
+  "ctx": "js/gangs.js:373 leaveGang"
+ },
+ {
+  "k": "Gang môže rozpustiť len šéf.",
+  "kind": "server",
+  "ctx": "js/gangs.js:383 disbandGang"
+ },
+ {
+  "k": "Nemáš peniaze na vklad.",
+  "kind": "server",
+  "ctx": "js/gangs.js:404 deposit"
+ },
+ {
+  "k": "{name} vložil do pokladnice {n} $.",
+  "kind": "server",
+  "ctx": "js/gangs.js:407 deposit"
+ },
+ {
+  "k": "Neznáme vylepšenie.",
+  "kind": "server",
+  "ctx": "js/gangs.js:416 buyGangUpgrade"
+ },
+ {
+  "k": "Vylepšenie je na maxime.",
+  "kind": "server",
+  "ctx": "js/gangs.js:418 buyGangUpgrade"
+ },
+ {
+  "k": "V pokladnici chýbajú peniaze.",
+  "kind": "server",
+  "ctx": "js/gangs.js:420 buyGangUpgrade"
+ },
+ {
+  "k": "{name} vylepšené na úroveň {n}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:423 buyGangUpgrade"
+ },
+ {
+  "k": "Tento objekt nedržíte.",
+  "kind": "server",
+  "ctx": "js/gangs.js:465 refillTurf"
+ },
+ {
+  "k": "Nováčik obranu dopĺňať nemôže.",
+  "kind": "server",
+  "ctx": "js/gangs.js:466 refillTurf"
+ },
+ {
+  "k": "Obrana je plná.",
+  "kind": "server",
+  "ctx": "js/gangs.js:467 refillTurf"
+ },
+ {
+  "k": "Iného člena z obrany stiahne len šéf.",
+  "kind": "server",
+  "ctx": "js/gangs.js:486 toggleDefender"
+ },
+ {
+  "k": "Brániť sa prihlasuje každý sám.",
+  "kind": "server",
+  "ctx": "js/gangs.js:491 toggleDefender"
+ },
+ {
+  "k": "Nováčik ešte na územie útočiť nemôže. Šéf ti musí dať hodnosť.",
+  "kind": "server",
+  "ctx": "js/gangs.js:511 attackTurf"
+ },
+ {
+  "k": "Neznámy objekt.",
+  "kind": "server",
+  "ctx": "js/gangs.js:514 attackTurf"
+ },
+ {
+  "k": "Na objekt v inom meste sa útočí len na mieste. Najprv tam odcestuj.",
+  "kind": "server",
+  "ctx": "js/gangs.js:515 attackTurf"
+ },
+ {
+  "k": "Tento objekt už držíte.",
+  "kind": "server",
+  "ctx": "js/gangs.js:518 attackTurf"
+ },
+ {
+  "k": "Ďalší útok na tento objekt až o chvíľu.",
+  "kind": "server",
+  "ctx": "js/gangs.js:520 attackTurf"
+ },
+ {
+  "k": "Objekt bol práve obsadený. Chvíľu je pod ochranou.",
+  "kind": "server",
+  "ctx": "js/gangs.js:521 attackTurf"
+ },
+ {
+  "k": "Gang {name} [{tag}] vám prebral {place}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:532 attackTurf"
+ },
+ {
+  "k": "{name} prebral {place} gangu {gang}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:549 attackTurf"
+ },
+ {
+  "k": "{name} obsadil {place}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:549 attackTurf"
+ },
+ {
+  "k": "Ubránili ste {place} pred gangom {gang}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:552 attackTurf"
+ },
+ {
+  "k": "{name}: útok na {place} nevyšiel.",
+  "kind": "server",
+  "ctx": "js/gangs.js:553 attackTurf"
+ },
+ {
+  "k": "{gang} vám prebrali {place}.",
+  "kind": "server",
+  "ctx": "js/gangs.js:593 gangHour"
+ },
+ {
+  "k": "{gang} vám prebrali {place} – nikto ho nebránil.",
+  "kind": "server",
+  "ctx": "js/gangs.js:593 gangHour"
+ },
+ {
+  "k": "Obehni tri miesta: {spots}.",
+  "kind": "server",
+  "ctx": "js/daily.js:19 DAILY_TYPES.scout"
+ },
+ {
+  "k": "Pozbieraj 5 balíčkov schovaných po uliciach štvrte.",
+  "kind": "server",
+  "ctx": "js/daily.js:20 DAILY_TYPES.stash"
+ },
+ {
+  "k": "Vyzdvihni balík: {from}. Dones ho do {min} minút: {to}.",
+  "kind": "server",
+  "ctx": "js/daily.js:21 DAILY_TYPES.courier"
+ },
+ {
+  "k": "Zraz šťastného bežca alebo chyť Rippera, ktorý okradol Wexlera.",
+  "kind": "server",
+  "ctx": "js/daily.js:22 DAILY_TYPES.runner"
+ },
+ {
+  "k": "Dlžník chodí po štvrti a pred tebou uteká. Zbi ho tromi údermi, alebo mu vyhoď do vzduchu auto (obe sú označené).",
+  "kind": "server",
+  "ctx": "js/daily.js:23 DAILY_TYPES.dlznik"
+ },
+ {
+  "k": "Chodec s plnou taškou sa prechádza po chodníku. Keď sa priblížiš, dá sa na útek. Dobehni ho a tašku mu vytrhni.",
+  "kind": "server",
+  "ctx": "js/daily.js:24 DAILY_TYPES.vreckar"
+ },
+ {
+  "k": "Choď {sec} sekúnd za označeným cieľom. Nepribližuj sa príliš, inak si ťa všimne, a nestrať ho z dohľadu.",
+  "kind": "server",
+  "ctx": "js/daily.js:25 DAILY_TYPES.sledovanie"
+ },
+ {
+  "k": "Nastriekaj značku na objekt rivalov: {spot}. Postoj {sec} sekundy pri dverách. Rivali si to všimnú a polícia tiež: pribudne hviezda.",
+  "kind": "server",
+  "ctx": "js/daily.js:26 DAILY_TYPES.graffiti"
+ },
+ {
+  "k": "Majiteľ podniku neplatí. Jeho auto je na mape označené zlatým kruhom. Rozbi ho, kým nezačne horieť a nevybuchne.",
+  "kind": "server",
+  "ctx": "js/daily.js:27 DAILY_TYPES.vypalne"
+ },
+ {
+  "k": "Urob si na ulici problémy (aspoň {stars} hviezdičky hľadanosti). Keď ťa naháňa polícia pešo, vydrž {sec} sekúnd, kým ťa nechytí.",
+  "kind": "server",
+  "ctx": "js/daily.js:28 DAILY_TYPES.escape"
+ },
+ {
+  "k": "Keď ťa naháňa polícia (od {stars} hviezdičiek), zlož 2 policajtov a potom sa {sec} sekúnd nedaj chytiť. Za každého zloženého ich príde dvakrát viac.",
+  "kind": "server",
+  "ctx": "js/daily.js:29 DAILY_TYPES.razia"
+ },
+ {
+  "k": "Táto úloha už neplatí.",
+  "kind": "server",
+  "ctx": "js/daily.js:100 dailyStep"
+ },
+ {
+  "k": "Najprv vyzdvihni balík.",
+  "kind": "server",
+  "ctx": "js/daily.js:119 dailyStep"
+ },
+ {
+  "k": "Neskoro. Balík sa vrátil na miesto, skús to znova.",
+  "kind": "server",
+  "ctx": "js/daily.js:123 dailyStep"
+ },
+ {
+  "k": "Najprv zlož dvoch policajtov.",
+  "kind": "server",
+  "ctx": "js/daily.js:130 dailyStep"
+ },
+ {
+  "k": "Ešte si neušiel.",
+  "kind": "server",
+  "ctx": "js/daily.js:132 dailyStep"
+ },
+ {
+  "k": "Polícia ťa už nenaháňa.",
+  "kind": "server",
+  "ctx": "js/daily.js:133 dailyStep"
+ },
+ {
+  "k": "Ešte nie.",
+  "kind": "server",
+  "ctx": "js/daily.js:141 dailyStep"
+ },
+ {
+  "k": "Túto úlohu splníš inak.",
+  "kind": "server",
+  "ctx": "js/daily.js:145 dailyStep"
+ },
+ {
+  "k": "Nie si prihlásený.",
+  "kind": "server",
+  "ctx": "js/api.js:141 handle"
+ },
+ {
+  "k": "Neplatná požiadavka.",
+  "kind": "server",
+  "ctx": "js/api.js:142 handle"
+ },
+ {
+  "k": "Hráč neexistuje.",
+  "kind": "server",
+  "ctx": "js/api.js:160 handle"
+ },
+ {
+  "k": "Neznáma akcia.",
+  "kind": "server",
+  "ctx": "js/api.js:165 handle"
+ },
+ {
+  "k": "Nemáš postavu.",
+  "kind": "server",
+  "ctx": "js/api.js:170 handle"
+ },
+ {
+  "k": "Postavu už máš.",
+  "kind": "server",
+  "ctx": "js/api.js:171 handle"
+ },
+ {
+  "k": "Túto prezývku už niekto má.",
+  "kind": "server",
+  "ctx": "js/api.js:175 handle"
+ },
+ {
+  "k": "Chyba servera.",
+  "kind": "server",
+  "ctx": "js/api.js:223 handle"
+ },
+ {
+  "k": "Server je zaneprázdnený, skús to znova.",
+  "kind": "server",
+  "ctx": "js/api.js:265 handle"
+ },
+ {
+  "k": "Server neodpovedá.",
+  "kind": "server",
+  "ctx": "js/remote.js:160 call"
+ },
+ {
+  "k": "Bez spojenia so serverom.",
+  "kind": "server",
+  "ctx": "js/remote.js:169 call"
+ },
+ {
+  "k": "Nesprávny email alebo heslo.",
+  "kind": "server",
+  "ctx": "js/remote.js:225 authError"
+ },
+ {
+  "k": "Najprv potvrď email, poslali sme ti odkaz.",
+  "kind": "server",
+  "ctx": "js/remote.js:226 authError"
+ },
+ {
+  "k": "Tento email už má účet. Prihlás sa.",
+  "kind": "server",
+  "ctx": "js/remote.js:227 authError"
+ },
+ {
+  "k": "Heslo musí mať aspoň 8 znakov.",
+  "kind": "server",
+  "ctx": "js/remote.js:228 authError"
+ },
+ {
+  "k": "Nové heslo musí byť iné ako staré.",
+  "kind": "server",
+  "ctx": "js/remote.js:229 authError"
+ },
+ {
+  "k": "Overenie, že nie si robot, neprešlo. Počkaj na fajku nad tlačidlom a skús znova.",
+  "kind": "server",
+  "ctx": "js/remote.js:230 authError"
+ },
+ {
+  "k": "Priveľa pokusov, skús to o chvíľu.",
+  "kind": "server",
+  "ctx": "js/remote.js:231 authError"
+ },
+ {
+  "k": "Prihlásenie zlyhalo.",
+  "kind": "server",
+  "ctx": "js/remote.js:232 authError"
+ },
+ {
+  "k": "+{n} % XP z misií",
+  "kind": "server",
+  "ctx": "js/data.js:538 GANG_UPGRADES.vycvik.text"
+ },
+ {
+  "k": "+{n} % peňazí z misií",
+  "kind": "server",
+  "ctx": "js/data.js:539 GANG_UPGRADES.vypalne.text"
+ },
+ {
+  "k": "+{n} % sily obrany objektov",
+  "kind": "server",
+  "ctx": "js/data.js:540 GANG_UPGRADES.opevnenie.text"
+ }
+]

@@ -415,6 +415,12 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .logo { margin: 0; text-align: center; font-family: var(--black); font-weight: 900; font-size: 70px; line-height: .95; color: #efe9dc; text-shadow: 0 3px 0 #000, 0 0 24px rgba(0,0,0,.95); }
 .logo span { color: var(--gold); }
 .tag { margin: 2px 0 16px; text-align: center; font-size: 17px; font-style: italic; color: #8a857a; }
+/* language picker (title screen, Nastavenia): SK · CZ · DE · EN */
+.langs { display: flex; justify-content: center; gap: 6px; margin: 0 0 16px; }
+.langs button { min-width: 46px; min-height: 34px; padding: 0 8px; background: transparent; border: 1px solid var(--line2); color: #8f8a80; font: inherit; font-size: 14px; letter-spacing: 2px; cursor: pointer; }
+.langs button.on { border-color: var(--gold); color: var(--gold-t); }
+.switch .langs { margin: 0; flex-shrink: 0; gap: 4px; }
+.switch .langs button { min-width: 40px; padding: 0 4px; }
 .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .field label { font-size: 14px; color: var(--muted); }
 .field input { height: 46px; padding: 0 12px; background: #0e0e0f; border: 1px solid var(--line2); color: var(--bone); font-family: var(--serif); font-size: 19px; }

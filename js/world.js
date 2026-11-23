@@ -1,9 +1,10 @@
 // The open world: pixel-art city, player movement, NPCs, traffic, police. Uses global Phaser.
 // A city comes from its city.json (tools/mapa.ps1 builds them from tools/art/City.cs, City2.cs): a collision grid,
 // a street graph that cars, police, walkers, the Ripper and the runner move on, and the buildings (marks).
-import { CITIES, WALKER_SPRITES } from './data.js?v=20261123222158';
-import { mulberry32 } from './combat.js?v=20261123222158'; // the server's generator: a task's seed hides its packages on the same corners everywhere
-import { sound } from './sound.js?v=20261123222158';
+import { CITIES, WALKER_SPRITES } from './data.js?v=20261124000258';
+import { mulberry32 } from './combat.js?v=20261124000258'; // the server's generator: a task's seed hides its packages on the same corners everywhere
+import { sound } from './sound.js?v=20261124000258';
+import { tt } from './i18n.js?v=20261124000258';
 
 const PEOPLE = ['hrac', 'zlodej', 'svalovec', 'dealer', 'boss', 'zadavatel', 'diler', 'mechanik', 'pravnicka', 'lekarka', 'policajt', 'chodkyna', 'chodec'];
 const CARS = ['sedan_blue', 'sedan_red', 'sedan_green', 'sedan_white', 'taxi', 'police', 'van', 'pickup'];
@@ -166,7 +167,7 @@ export function createWorld(parent, hooks) {
 
       // map labels (DOM, so text stays crisp at any zoom)
       this.labels = C.labels.map((l) => this.makeLabel(l));
-      this.labels.push(this.makeLabel({ text: 'Ty', kind: 'me', follow: true, maxZoom: 1.6, dy: -16 }));
+      this.labels.push(this.makeLabel({ text: tt('Ty'), kind: 'me', follow: true, maxZoom: 1.6, dy: -16 }));
       this.labels.push(this.makeLabel({ text: 'Ripper', kind: 'boss', reaper: true, dy: -16 }));
 
       // gang turf: owner graffiti on the roof + a label in the owner's colour
@@ -544,7 +545,7 @@ export function createWorld(parent, hooks) {
         tf.g.clear();
         tf.t.setText(o ? o.tag : '');
         const kind = v.kindInfo.name;
-        tf.label.el.innerHTML = (o && o.mine ? '<b>★</b>' : '') + kind + ' · ' + (o ? o.tag : 'voľný');
+        tf.label.el.innerHTML = (o && o.mine ? '<b>★</b>' : '') + kind + ' · ' + (o ? o.tag : tt('voľný'));
         tf.label.el.className = 'wl wl-turf' + (o ? (o.mine ? ' mine' : '') : ' free');
         tf.label.el.style.borderColor = o ? o.color : '';
         tf.label.el.style.color = o ? o.color : '';
@@ -832,7 +833,7 @@ export function createWorld(parent, hooks) {
       const sprite = { dlznik: 'p_svalovec', vreckar: 'p_chodkyna', sledovanie: 'p_dealer' }[t.type];
       sp = { kind: t.type, task: t.i, special: true, on: true, s: this.add.image(n.x, n.y, sprite).setDepth(9), prev: null, to: pick(n.n), walkT: 0, down: 0, hits: 0, downed: false, run: false };
       if (t.type === 'vreckar') sp.bag = this.add.rectangle(n.x, n.y, 4, 4, 0xc9a24a).setDepth(9.5);
-      sp.label = this.makeLabel({ text: { dlznik: 'Dlžník', vreckar: 'Taška', sledovanie: 'Cieľ' }[t.type], kind: 'boss', obj: sp, dy: -16 });
+      sp.label = this.makeLabel({ text: { dlznik: tt('Dlžník'), vreckar: tt('Taška'), sledovanie: tt('Cieľ') }[t.type], kind: 'boss', obj: sp, dy: -16 });
       this.labels.push(sp.label);
       this.specials.set(t.i, sp);
       return sp;
@@ -891,10 +892,10 @@ export function createWorld(parent, hooks) {
       const fail = (msg) => { f.on = false; f.t = 0; f.cool = 3; hooks.onDailyFail(msg); };
       if (!f.on) {
         if (f.cool <= 0 && d > 20 && d < 90) { Object.assign(f, { on: true, t: 0, lostT: 0, sent: false }); hooks.onDailyStep(t.i, 0); }
-      } else if (d < 20) fail('Všimol si ťa. Odstúp a začni sledovať odznova.');
+      } else if (d < 20) fail(tt('Všimol si ťa. Odstúp a začni sledovať odznova.'));
       else {
         f.lostT = d > 110 ? f.lostT + dt : 0;
-        if (f.lostT > 3) fail('Stratil si ho z dohľadu. Nájdi ho a začni odznova.');
+        if (f.lostT > 3) fail(tt('Stratil si ho z dohľadu. Nájdi ho a začni odznova.'));
         else {
           f.t += dt;
           if (f.t >= sec + 0.5 && !f.sent) { f.sent = true; hooks.onDailyStep(t.i, 1); }

@@ -1,10 +1,24 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261123222158';
-import { NET } from './net.js?v=20261123222158';
-import { CONFIG } from './config.js?v=20261123222158';
-import { SHOPS } from './data.js?v=20261123222158';
+import { SimServer } from './server.js?v=20261124000258';
+import { NET } from './net.js?v=20261124000258';
+import { CONFIG } from './config.js?v=20261124000258';
+import { SHOPS } from './data.js?v=20261124000258';
+import { LANG, tts } from './i18n.js?v=20261124000258';
+
+// the server answers in Slovak: names, titles and story lines in an answer are put into the player's language here
+// (errors stay Slovak, the UI checks some of them and ui.toast translates what it shows)
+const ANSWER_TEXT = new Set(['name', 'title', 'subtitle', 'hit', 'text', 'desc', 'lineName']);
+function localize(v, depth = 0) {
+  if (LANG === 'sk' || !v || typeof v !== 'object' || depth > 6) return v;
+  for (const k of Object.keys(v)) {
+    if (k === 'state') continue;
+    const x = v[k];
+    if (typeof x === 'string') { if (ANSWER_TEXT.has(k)) v[k] = tts(x); } else if (x && typeof x === 'object') localize(x, depth + 1);
+  }
+  return v;
+}
 
 // the official supabase-js UMD build, kept in the repo (js/vendor): no code from a CDN runs in the game
 const SUPABASE_JS = 'js/vendor/supabase-js-2.45.4.js';
@@ -62,7 +76,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261123222158');
+    const { handle, memoryDb } = await import('./api.js?v=20261124000258');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),
@@ -74,7 +88,7 @@ export class RemoteServer extends SimServer {
       if ('state' in out) this.state = JSON.parse(JSON.stringify(out.state));
       this.lastSync = Date.now();
       this.onChange();
-      return out;
+      return localize(out);
     };
     this.mockDb = db;
   }
@@ -107,7 +121,7 @@ export class RemoteServer extends SimServer {
   }
 
   async signUp(email, password, captchaToken) {
-    const { data, error } = await this.sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0], captchaToken } });
+    const { data, error } = await this.sb.auth.signUp({ email, password, options: { emailRedirectTo: location.href.split('#')[0], captchaToken, data: { lang: LANG } } }); // lang: the language of the account emails
     if (error) return { ok: false, error: authError(error) };
     if (data.session) { this.session = data.session; return { ok: true }; }
     return { ok: true, confirm: true }; // the project wants the email confirmed first
@@ -123,6 +137,12 @@ export class RemoteServer extends SimServer {
     if (!this.session) return { ok: false, error: 'Nie si prihlásený.' };
     const { error } = await this.sb.auth.updateUser({ password });
     return error ? { ok: false, error: authError(error) } : { ok: true };
+  }
+
+  // the account emails (new password) follow the language chosen here
+  async saveLang(lang) {
+    if (!this.session || !this.sb.auth.updateUser) return;
+    try { await Promise.race([this.sb.auth.updateUser({ data: { lang } }), new Promise((r) => setTimeout(r, 2500))]); } catch (e) { /* the game still switches */ }
   }
 
   async signOut() { await this.sb.auth.signOut(); this.session = null; this.state = null; }
@@ -144,7 +164,7 @@ export class RemoteServer extends SimServer {
       if (out.now) this.clockSkew = out.now - Date.now();
       this.lastSync = Date.now();
       this.onChange();
-      return out;
+      return localize(out);
     } catch (e) {
       return { ok: false, error: 'Bez spojenia so serverom.' };
     } finally {
