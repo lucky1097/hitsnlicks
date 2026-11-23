@@ -1,10 +1,10 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261123192431';
-import { NET } from './net.js?v=20261123192431';
-import { CONFIG } from './config.js?v=20261123192431';
-import { SHOPS } from './data.js?v=20261123192431';
+import { SimServer } from './server.js?v=20261123193311';
+import { NET } from './net.js?v=20261123193311';
+import { CONFIG } from './config.js?v=20261123193311';
+import { SHOPS } from './data.js?v=20261123193311';
 
 // the official supabase-js UMD build, kept in the repo (js/vendor): no code from a CDN runs in the game
 const SUPABASE_JS = 'js/vendor/supabase-js-2.45.4.js';
@@ -62,11 +62,11 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261123192431');
+    const { handle, memoryDb } = await import('./api.js?v=20261123193311');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),
-      updateUser: async (u) => (String(u.password || '').length < 6 ? { error: { message: 'Password should be at least 6 characters.' } } : { data: {}, error: null }) } };
+      updateUser: async (u) => (String(u.password || '').length < 8 ? { error: { message: 'Password should be at least 8 characters.' } } : { data: {}, error: null }) } };
     this.call = async (action, ...args) => {
       if (!this.session) return { ok: false, error: 'Nie si prihlásený.' };
       const out = await handle(db, this.session.user.id, action, args);
@@ -205,7 +205,7 @@ function authError(e) {
   if (/Invalid login/i.test(m)) return 'Nesprávny email alebo heslo.';
   if (/Email not confirmed/i.test(m)) return 'Najprv potvrď email, poslali sme ti odkaz.';
   if (/already registered/i.test(m)) return 'Tento email už má účet. Prihlás sa.';
-  if (/Password should be/i.test(m)) return 'Heslo musí mať aspoň 6 znakov.';
+  if (/Password should be/i.test(m)) return 'Heslo musí mať aspoň 8 znakov.';
   if (/should be different/i.test(m)) return 'Nové heslo musí byť iné ako staré.';
   if (/captcha/i.test(m)) return 'Overenie, že nie si robot, neprešlo. Počkaj na fajku nad tlačidlom a skús znova.';
   if (/rate limit/i.test(m)) return 'Priveľa pokusov, skús to o chvíľu.';

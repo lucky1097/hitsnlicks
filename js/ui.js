@@ -1,12 +1,12 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123192431';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123192431';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123192431';
-import { DAILY_TYPES } from './daily.js?v=20261123192431';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123192431';
-import { sound } from './sound.js?v=20261123192431';
-import { CAPTCHA } from './net.js?v=20261123192431';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123192431';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123193311';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123193311';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123193311';
+import { DAILY_TYPES } from './daily.js?v=20261123193311';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123193311';
+import { sound } from './sound.js?v=20261123193311';
+import { CAPTCHA } from './net.js?v=20261123193311';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123193311';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -751,7 +751,7 @@ export class UI {
       this.info('E-mail je potvrdený', this.s.hasSave() ? 'Si prihlásený, môžeš hrať.' : 'Vitaj v Hits & Licks! Si prihlásený. Teraz si vyber prezývku a triedu a začni.');
     } else if (b.type === 'recovery' && b.session) {
       this.modal('<h2>Nové heslo</h2><p class="sub" style="font-size:17px;color:#c9c4b8">Si prihlásený cez odkaz z e-mailu. Zadaj nové heslo, ktorým sa budeš odteraz prihlasovať.</p>' +
-        '<div class="field"><label for="new-pass">Nové heslo</label><input id="new-pass" type="password" autocomplete="new-password"></div>' +
+        '<div class="field"><label for="new-pass">Nové heslo (aspoň 8 znakov)</label><input id="new-pass" type="password" autocomplete="new-password"></div>' +
         '<div class="acts"><button class="btn" data-act="modal-close">Neskôr</button><button class="btn gold" data-act="pass-save">Uložiť heslo</button></div>');
       setTimeout(() => { const t = $('#new-pass'); if (t) t.focus(); }, 50);
     }
@@ -1142,7 +1142,7 @@ export class UI {
     if (this.s.online && !this.s.loggedIn()) {
       const mode = this.sel.authMode || 'in';
       inner += '<div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" autocomplete="email" value="' + esc(this.sel.authEmail || '') + '"></div>';
-      if (mode !== 'reset') inner += '<div class="field"><label for="auth-pass">Heslo' + (mode === 'up' ? ' (aspoň 6 znakov)' : '') + '</label><input id="auth-pass" type="password" autocomplete="' + (mode === 'up' ? 'new-password' : 'current-password') + '"></div>';
+      if (mode !== 'reset') inner += '<div class="field"><label for="auth-pass">Heslo' + (mode === 'up' ? ' (aspoň 8 znakov)' : '') + '</label><input id="auth-pass" type="password" autocomplete="' + (mode === 'up' ? 'new-password' : 'current-password') + '"></div>';
       if (mode === 'up') inner += '<label class="agree"><input type="checkbox" id="auth-agree"><span>Mám aspoň 18 rokov a súhlasím s <a href="podmienky.html" target="_blank" rel="noopener">podmienkami používania</a>. Ako chránime tvoje údaje: <a href="sukromie.html" target="_blank" rel="noopener">ochrana osobných údajov</a>.</span></label>';
       if (this.s.needsCaptcha && this.s.needsCaptcha()) inner += '<div id="captcha" class="captcha"></div>';
       inner += '<button class="btn gold wide" data-act="login" data-arg="' + mode + '">' + { in: 'Prihlásiť sa', up: 'Vytvoriť účet', reset: 'Poslať odkaz na nové heslo' }[mode] + '</button>';
