@@ -25,9 +25,9 @@
 //   addPoints(id, delta)
 //   deletePlayer(id)
 //   deleteUser(id)   (the login itself: email and password)
-import { SimServer } from './server.js?v=20261123201248';
-import { cleanName } from './config.js?v=20261123201248';
-import { GIVERS, SHOPS } from './data.js?v=20261123201248';
+import { SimServer } from './server.js?v=20261123222158';
+import { cleanName } from './config.js?v=20261123222158';
+import { GIVERS, SHOPS } from './data.js?v=20261123222158';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });

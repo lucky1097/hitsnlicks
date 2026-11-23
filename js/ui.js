@@ -1,12 +1,12 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123201248';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123201248';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123201248';
-import { DAILY_TYPES } from './daily.js?v=20261123201248';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123201248';
-import { sound } from './sound.js?v=20261123201248';
-import { CAPTCHA } from './net.js?v=20261123201248';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123201248';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123222158';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123222158';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123222158';
+import { DAILY_TYPES } from './daily.js?v=20261123222158';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123222158';
+import { sound } from './sound.js?v=20261123222158';
+import { CAPTCHA } from './net.js?v=20261123222158';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123222158';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -119,6 +119,11 @@ export class UI {
   // ---------------------------------------------------------------- wiring
   bind() {
     $('#app').addEventListener('click', (e) => {
+      // computer: a click on the dimmed map around a window (#app::after) closes the window
+      if (e.target === e.currentTarget) {
+        if (this.name && this.name !== 'title' && this.name !== 'fight' && !this.modalOpen && !this.el.screen.classList.contains('overlay')) { sound.play('back'); this.close(); }
+        return;
+      }
       const t = e.target.closest('[data-act]');
       if (!t || t.disabled) return;
       sound.play(t.dataset.act === 'back' || t.dataset.act === 'modal-close' ? 'back' : 'click');
@@ -131,6 +136,20 @@ export class UI {
       if (t && d) d.textContent = t.dataset.desc;
     });
     this.el.action.addEventListener('click', () => { sound.play('click'); this.action(); });
+    // keyboard (computer): 1-5 = the tabs, Esc = back / close a plain message (never while typing)
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+      if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable]')) return;
+      if (e.key === 'Escape') {
+        if (this.modalOpen) { const x = $('#modal [data-act="modal-close"]'); if (x) x.click(); return; }
+        if (this.name && this.name !== 'title' && this.name !== 'fight') { const b = $('#screen [data-act="back"]'); if (b) b.click(); }
+        return;
+      }
+      const n = '12345'.indexOf(e.key);
+      if (n < 0 || this.modalOpen || !this.s.hasSave() || this.name === 'title' || this.name === 'fight' || this.el.hud.hidden) return;
+      const tab = document.querySelectorAll('.tabs button')[n];
+      if (tab) tab.click();
+    });
   }
 
   bindJoystick() {
@@ -182,6 +201,7 @@ export class UI {
     this.name = null; this.arg = null; this.stack = []; this.renderKey = null;
     this.el.screen.hidden = true;
     this.el.screen.innerHTML = '';
+    delete this.el.screen.dataset.scr;
     this.el.hud.hidden = !this.s.hasSave();
     this.setTab('city');
     this.tick();
@@ -199,6 +219,7 @@ export class UI {
     this.renderKey = key;
     this.scrollMem = keep;
     this.el.screen.className = out.overlay ? 'overlay' : '';
+    this.el.screen.dataset.scr = this.name; // the desktop layout sizes the window per screen (css #screen[data-scr])
     this.el.screen.innerHTML = out.html;
     const body = this.el.screen.querySelector('.body');
     if (body) {
@@ -887,7 +908,9 @@ export class UI {
         this.readyNotified = false;
         this.tutShown = false; this.tutStep = undefined; // a new character gets the tutorial (and its reward window) again
         this.close();
-        this.info('Vitaj v Meste 1', 'Návod hore na obrazovke ťa prevedie prvými krokmi. Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.');
+        // a computer with a mouse has no joystick on screen (css), so it gets only the keys
+        const keysOnly = window.matchMedia && matchMedia('(min-width: 900px) and (min-height: 560px) and (hover: hover) and (pointer: fine)').matches;
+        this.info('Vitaj v Meste 1', 'Návod hore na obrazovke ťa prevedie prvými krokmi. ' + (keysOnly ? 'Pohyb: klávesy WASD alebo šípky, akcia: E, útok: F, záložky: 1 až 5.' : 'Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.'));
       },
       async continue() { this.close(); },
       async spend(a) { if (this.check(await this.s.spendPoint(a))) { sound.play('up'); this.render(); } },
@@ -1355,12 +1378,13 @@ export class UI {
       return { html: this.hdr('Misie', money(v.cash)) + '<div class="body">' + h + '</div>' };
     }
     const g = GIVERS[giverId];
-    let h = this.hdr('Misie', money(v.cash)) + '<section class="giver photo"><img src="' + art(g.photo) + '" alt="' + g.name + '" style="object-position:' + g.focus + '"><div class="shade"></div><div class="txt"><span class="bl" style="font-size:34px;color:#efe9dc">' + g.name + '</span><q>' + g.quote + '</q><span class="sc" style="font-size:13px;color:#b9b4a8">' + g.title + '</span></div></section><div class="body">';
+    // the giver page has two columns on a computer (.split: cards | story and buttons); on a phone the .col divs are plain blocks
+    let h = this.hdr('Misie', money(v.cash)) + '<section class="giver photo"><img src="' + art(g.photo) + '" alt="' + g.name + '" style="object-position:' + g.focus + '"><div class="shade"></div><div class="txt"><span class="bl" style="font-size:34px;color:#efe9dc">' + g.name + '</span><q>' + g.quote + '</q><span class="sc" style="font-size:13px;color:#b9b4a8">' + g.title + '</span></div></section>';
     if (m) {
       const t = MISSIONS[m.tpl];
       const ready = Date.now() >= m.endsAt;
       const story = t.stories[m.v || 0] || t.stories[0];
-      h += '<div class="card sel" style="cursor:default"><img src="' + art(t.art) + '" alt=""><div class="mid"><span class="t">' + t.name + '</span>' + (m.hot ? '<span class="hot">Horúca · ' + CONFIG.hotReward + '× odmena</span>' : '') + '<span class="s">' + (m.giver !== giverId ? 'od: ' + GIVERS[m.giver].name + ' · ' : '') + 'na konci súboj: ' + esc(story.foe.name) + '</span></div><div class="end"><span class="gold" style="font-size:18px">' + money(m.cash) + '</span><span class="s">' + fmt(m.xp) + ' XP</span></div></div>';
+      h += '<div class="body split"><div class="col"><div class="card sel" style="cursor:default"><img src="' + art(t.art) + '" alt=""><div class="mid"><span class="t">' + t.name + '</span>' + (m.hot ? '<span class="hot">Horúca · ' + CONFIG.hotReward + '× odmena</span>' : '') + '<span class="s">' + (m.giver !== giverId ? 'od: ' + GIVERS[m.giver].name + ' · ' : '') + 'na konci súboj: ' + esc(story.foe.name) + '</span></div><div class="end"><span class="gold" style="font-size:18px">' + money(m.cash) + '</span><span class="s">' + fmt(m.xp) + ' XP</span></div></div></div><div class="col">';
       h += '<p class="story">' + story.text + '</p>';
       if (ready) {
         h += '<button class="btn gold wide" style="margin-top:6px" data-act="claim">Dokončiť misiu · súboj</button>';
@@ -1369,25 +1393,26 @@ export class UI {
         h += '<button class="btn wide" data-act="skip">Skrátiť za ' + this.s.skipCost() + ' zlatých tehličiek</button>';
         h += '<p class="note">Kým misia beží, môžeš sa túlať mestom, nakupovať a bojovať.</p>';
       }
-      return { html: h + '</div>' };
+      return { html: h + '</div></div>' };
     }
     const offers = this.s.offers(giverId);
     // a giver of a later city may have nothing for you yet: say from which level
     if (!offers.length) {
       const first = Math.min(...g.pool.map((id) => MISSIONS[id].minLevel));
-      h += '<p class="story">Zatiaľ pre teba nemám nič, na čo by si stačil. Vráť sa, keď budeš mať úroveň ' + first + '.</p>' +
+      h += '<div class="body"><p class="story">Zatiaľ pre teba nemám nič, na čo by si stačil. Vráť sa, keď budeš mať úroveň ' + first + '.</p>' +
         '<p class="note">Neskôr: ' + g.pool.map((id) => MISSIONS[id].name + ' (úr. ' + MISSIONS[id].minLevel + ')').join(' · ') + '</p>';
       return { html: h + '</div>' };
     }
     if (!offers.some((o) => o.tpl === this.sel.offer)) this.sel.offer = offers[0].tpl;
     const sel = offers.find((o) => o.tpl === this.sel.offer);
+    h += '<div class="body split"><div class="col">';
     for (const o of offers) {
       const t = MISSIONS[o.tpl];
       const pv = this.s.preview(o.tpl, o.v, o.hot);
       h += '<button class="card' + (o.tpl === this.sel.offer ? ' sel' : '') + (o.hot ? ' hotcard' : '') + '" data-act="offer" data-arg="' + o.tpl + '"><img src="' + art(t.art) + '" alt=""><span class="mid"><span class="t">' + t.name + '</span>' + (o.hot ? '<span class="hot">Horúca · ' + CONFIG.hotReward + '× odmena</span>' : '') + '<span class="s num">' + dur(pv.durationMs) + ' · ' + '<span class="red">heat +' + pv.heat + ' %</span>' + '</span></span><span class="end"><span class="gold" style="font-size:18px">' + money(pv.cash) + '</span><span class="s">' + fmt(pv.xp) + ' XP</span></span></button>';
     }
     const story = MISSIONS[sel.tpl].stories[sel.v];
-    h += '<p class="story">' + story.text + '</p>';
+    h += '</div><div class="col"><p class="story">' + story.text + '</p>';
     h += '<div class="foe"><img class="ph" src="' + art(story.foe.art) + '" alt=""><span><span class="sc" style="font-size:12px;color:#8a857a">Na konci ťa čaká</span><br><b>' + esc(story.foe.name) + '</b> <span class="muted">· ' + esc(story.foe.title) + '</span></span></div>';
     if (sel.hot) {
       const chance = Math.round(this.s.winChance(this.s.missionFoe(story, true)) * 20) * 5;
@@ -1403,7 +1428,7 @@ export class UI {
     if (this.s.p.level < CONFIG.fastUntil) h += '<p class="note gold">Rýchly štart do úrovne ' + CONFIG.fastUntil + ': misie trvajú len chvíľu a dávajú viac XP.</p>';
     const locked = g.pool.filter((id) => MISSIONS[id].minLevel > this.s.p.level).sort((a, b) => MISSIONS[a].minLevel - MISSIONS[b].minLevel);
     if (locked.length) h += '<p class="note">Neskôr: ' + locked.map((id) => MISSIONS[id].name + ' (úr. ' + MISSIONS[id].minLevel + ')').join(' · ') + '</p>';
-    return { html: h + '</div>' };
+    return { html: h + '</div></div>' };
   }
 
   scr_shop(shopId) {

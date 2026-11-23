@@ -519,3 +519,189 @@ button:focus-visible { outline: 1px solid var(--gold-l); outline-offset: 2px; }
 .agree input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: #c9a24a; }
 .captcha { min-height: 65px; margin: 0 0 12px; }
 @media (max-width: 380px) { .hud-money { font-size: 15px; gap: 8px; } .hud-money .px { width: 18px; height: 18px; } }
+
+/* ================================================================ computer (wide window)
+   Everything below applies only from 900 px wide and 560 px high, so the phone layout above stays as it is.
+   Sizes: 900-1199 compact (tabs as a dock at the bottom), 1200+ (tabs in the top bar), 1700 x 950+ big. */
+.keys-hint { display: none; }
+@media (min-width: 900px) and (min-height: 560px) {
+  #app { max-width: none; border: none; }
+
+  /* --- HUD: one bar across the top */
+  #hud::before { height: 120px; }
+  #hud::after { height: 150px; }
+  .hud-top { left: 20px; right: 20px; top: 16px; gap: 12px; }
+  .avatar, .avatar .face, .avatar .face > img { width: 60px; height: 60px; }
+  .hud-res { flex: 0 1 290px; margin-right: auto; }
+  .hud-money { font-size: 18px; gap: 16px; }
+  .hud-line { font-size: 13px; }
+  .hud-line .bar { max-width: 210px; }
+  .icon-btn { width: 46px; height: 46px; }
+
+  /* tabs: a dock at the bottom on a smaller window (the top bar has no room for them there) */
+  .tabs { left: 50%; right: auto; bottom: 18px; transform: translateX(-50%); height: 52px; padding: 0;
+    display: flex; border: 1px solid var(--line2); background: rgba(6,6,6,.9); box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+  .tabs button { position: relative; padding: 0 20px; font-size: 18px; }
+  .tabs button + button { border-left: 1px solid rgba(233,228,216,.08); }
+  .tabs button.on { border-top: none; box-shadow: inset 0 2px 0 var(--gold); }
+  .tabs button::after { position: absolute; right: 5px; top: 3px; font-size: 10px; color: #6b675f; }
+  .tabs button:nth-child(1)::after { content: '1'; } .tabs button:nth-child(2)::after { content: '2'; }
+  .tabs button:nth-child(3)::after { content: '3'; } .tabs button:nth-child(4)::after { content: '4'; }
+  .tabs button:nth-child(5)::after { content: '5'; }
+
+  /* the one line under the bar: centred, not edge to edge */
+  .hud-stack { left: 50%; right: auto; width: min(640px, calc(100% - 40px)); transform: translateX(-50%); top: 92px; align-items: center; }
+  .status { align-self: center; }
+  .tut { width: 100%; }
+
+  /* controls (touch tablets keep the joystick; mouse + keyboard below) */
+  .joystick { bottom: 96px; }
+  .zoom { right: 20px; bottom: 300px; }
+  .action { bottom: 96px; }
+  .attack { bottom: 210px; }
+  .poi-tag { bottom: 160px; }
+  #toasts.onmap { bottom: 214px; }
+  #toasts.onmap .toast { max-width: 520px; }
+
+  /* --- screens: a window over the dimmed map; the top bar stays above it, so a tab is one click away */
+  #screen:not(.overlay):not([data-scr="title"]) { inset: 92px auto auto 50%; max-height: calc(100% - 92px - 90px); transform: translateX(-50%);
+    width: min(720px, calc(100% - 40px)); border: 1px solid rgba(201,162,74,.35); box-shadow: 0 30px 80px rgba(0,0,0,.9); }
+  /* the dimmed map around the window; a click on it closes the window (ui.js bind) */
+  #app:has(> #screen:not([hidden]):not(.overlay):not([data-scr="title"]))::after { content: ''; position: absolute; inset: 0; z-index: 9; background: rgba(0,0,0,.66); cursor: pointer; }
+  #app:has(> #screen[data-scr="fight"])::after { cursor: default; }
+  #app:has(> #screen:not([hidden]):not(.overlay):not([data-scr="title"]):not([data-scr="fight"])) :is(.hud-top, .tabs) { z-index: 11; }
+  #screen[data-scr="fight"] { top: 20px !important; bottom: 20px !important; max-height: none !important; }
+  #screen:is([data-scr="character"], [data-scr="profile"], [data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"], [data-scr="fight"]),
+  #screen[data-scr="missions"]:has(.split) { width: min(1100px, calc(100% - 40px)) !important; }
+  .hdr { height: 64px; padding: 0 20px 0 8px; }
+  .body { padding: 18px 24px 28px; }
+  .mbox { max-width: 420px; }
+
+  /* item lists (shops, inventory, garage): two per row */
+  #screen:is([data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"]) .body, #screen .bm {
+    display: flex; flex-wrap: wrap; align-content: flex-start; column-gap: 12px; }
+  #screen:is([data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"]) .body > *, #screen .bm > * { flex: 1 1 100%; min-width: 0; }
+  #screen:is([data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"]) .body > .item, #screen .bm > .item { flex: 0 1 calc(50% - 6px); }
+  #screen[data-scr="shop"] .body > .btn.wide { flex: 0 1 420px; margin: 8px auto 0; }
+
+  /* Postava (and another player's card): the figure on the left, the numbers on the right */
+  #screen:is([data-scr="character"], [data-scr="profile"]) .body { display: grid; grid-template-columns: minmax(320px, 480px) minmax(0, 1fr); column-gap: 36px; align-content: start; }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .body > * { grid-column: 2; }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .body > .char { grid-column: 1; grid-row: 1 / span 12; align-self: start; }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .portrait { height: clamp(338px, 46vh, 520px); }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .char { grid-template-columns: 76px minmax(0, 1fr) 76px; }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .slots { gap: 10px; }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .slot .box { width: 76px; height: 76px; }
+  #screen:is([data-scr="character"], [data-scr="profile"]) .slot .box img { width: 74px; height: 74px; }
+
+  /* mission giver: the offers on the left, the story and the button on the right */
+  #screen[data-scr="missions"] .giver.photo { height: clamp(160px, 26vh, 320px); }
+  #screen[data-scr="missions"] .giver.photo img { object-position: 50% 25% !important; }
+  #screen[data-scr="missions"] .body.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 28px; align-content: start; }
+  .split > .col { min-width: 0; }
+  .split > .col > .story:first-child { margin-top: 0; }
+
+  /* fight: a stage that grows with the window */
+  #screen[data-scr="fight"] { --sh: clamp(330px, 46vh, 520px); }
+  #screen[data-scr="fight"] .stage { height: var(--sh); }
+  #screen[data-scr="fight"] .stage .bg { top: 0; height: 100%; }
+  #screen[data-scr="fight"] .fcard { height: calc(var(--sh) * .6); width: calc(var(--sh) * .47); bottom: 20px; }
+  #screen[data-scr="fight"] .fcard.me { left: 6%; } #screen[data-scr="fight"] .fcard.foe { right: 6%; }
+  #screen[data-scr="fight"] .stage .vs { top: auto; bottom: calc(var(--sh) * .25); font-size: 56px; }
+  #screen[data-scr="fight"] .hpgrid { gap: 40px; padding: 8px 24px; }
+  #screen[data-scr="fight"] .flog { max-width: 760px; margin: 0 auto; padding: 0 24px; border-top: none; }
+  #screen[data-scr="fight"] #fskip { display: block; max-width: 420px; margin: 0 auto; }
+
+  /* --- before the game (sign-in, new character, continue): the poster at full height, the form beside it */
+  #screen[data-scr="title"] .title-scr { display: flex; justify-content: center; align-items: stretch; overflow: hidden; background: #050505; }
+  #screen[data-scr="title"] .title-scr::before { content: ''; position: absolute; inset: -60px; background: url(../assets/art/photo_title.jpg) center 30% / cover; filter: blur(30px) brightness(.26) saturate(.7); }
+  #screen[data-scr="title"] .poster { position: relative; flex: 0 1 auto; min-width: 0; height: 100%; aspect-ratio: 900 / 1612; box-shadow: 0 0 60px rgba(0,0,0,.9); }
+  #screen[data-scr="title"] .poster img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
+  #screen[data-scr="title"] .poster::after { height: 10%; }
+  #screen[data-scr="title"] .poster ~ .inner { flex: none; width: clamp(380px, 34vw, 540px); padding: 36px clamp(28px, 3vw, 52px); overflow-y: auto; justify-content: safe center;
+    background: linear-gradient(90deg, rgba(6,6,6,.97), rgba(6,6,6,.9)); border-left: 1px solid rgba(201,162,74,.28); box-shadow: 20px 0 60px rgba(0,0,0,.6); }
+  #screen[data-scr="title"] .tag { margin-bottom: 22px; font-size: 20px; }
+  #screen[data-scr="title"] .cls-art { height: clamp(150px, 26vh, 300px); }
+  #screen[data-scr="title"] .legal { margin-top: 26px; }
+}
+
+/* tabs in the top bar once there is room for them */
+@media (min-width: 1200px) and (min-height: 560px) {
+  .tabs { top: 22px; bottom: auto; height: 48px; }
+  .tabs button.on { box-shadow: inset 0 -2px 0 var(--gold); background: radial-gradient(ellipse 70% 90% at 50% 100%, rgba(201,162,74,.28), rgba(201,162,74,0) 70%); }
+  .joystick { bottom: 40px; }
+  .zoom { bottom: 250px; }
+  .action { bottom: 50px; }
+  .attack { bottom: 160px; }
+  .poi-tag { bottom: 104px; }
+  #toasts.onmap { bottom: 150px; }
+  #screen:not(.overlay):not([data-scr="title"]) { max-height: calc(100% - 92px - 24px); }
+}
+
+/* mouse + keyboard: no joystick, the buttons say their key */
+@media (min-width: 900px) and (min-height: 560px) and (hover: hover) and (pointer: fine) {
+  .joystick { display: none; }
+  .zoom { bottom: 150px; }
+  .action { left: 50%; right: auto; bottom: 88px; transform: translateX(-50%); width: auto; height: 52px; padding: 0 22px 0 12px;
+    border-radius: 0; display: flex; align-items: center; gap: 10px; font-size: 19px; }
+  .action::before { content: 'E'; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--gold); color: var(--gold-l); font-size: 15px; }
+  .attack { right: 20px; bottom: 88px; width: auto; height: 52px; padding: 0 20px 0 12px; border-radius: 0; display: flex; align-items: center; gap: 10px; font-size: 18px; }
+  .attack:active { transform: none; filter: brightness(1.3); }
+  .attack::before { content: 'F'; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid rgba(208,71,61,.85); font-size: 15px; }
+}
+@media (min-width: 1200px) and (min-height: 560px) and (hover: hover) and (pointer: fine) {
+  .action, .attack { bottom: 36px; }
+  .zoom { bottom: 100px; }
+  .keys-hint { display: block; position: absolute; left: 20px; bottom: 24px; z-index: 2; padding: 6px 10px; background: rgba(8,8,8,.8); border: 1px solid var(--line);
+    font-size: 14px; color: #8a857a; pointer-events: none; }
+  .keys-hint b { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; margin: 0 4px 0 8px; border: 1px solid var(--line2); color: var(--bone2); font-weight: 400; font-size: 12px; }
+  .keys-hint b:first-child { margin-left: 0; }
+}
+
+/* a big screen: a bigger bar, wider windows, three items per row */
+@media (min-width: 1700px) and (min-height: 950px) {
+  .avatar, .avatar .face, .avatar .face > img { width: 68px; height: 68px; }
+  .hud-res { flex-basis: 340px; }
+  .hud-money { font-size: 21px; }
+  .hud-money .px { width: 24px; height: 24px; }
+  .hud-line { font-size: 14px; }
+  .hud-line .bar { max-width: 250px; height: 5px; }
+  .icon-btn { width: 52px; height: 52px; }
+  .tabs { top: 24px; height: 54px; }
+  .tabs button { padding: 0 28px; font-size: 21px; }
+  .hud-stack { top: 104px; width: 760px; }
+  .tut-text, .status { font-size: 16px; }
+  .wl { font-size: 15px; }
+  #screen:not(.overlay):not([data-scr="title"]) { top: 104px; max-height: calc(100% - 104px - 28px); width: min(820px, calc(100% - 40px)); }
+  #screen:is([data-scr="character"], [data-scr="profile"], [data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"], [data-scr="fight"]),
+  #screen[data-scr="missions"]:has(.split) { width: min(1320px, 86vw) !important; }
+  #screen:is([data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"]) .body > .item, #screen .bm > .item { flex-basis: calc(33.333% - 8px); }
+  .mbox { max-width: 460px; }
+  #screen[data-scr="title"] .tag { font-size: 22px; }
+  #screen[data-scr="title"] .field input { height: 52px; font-size: 20px; }
+  #screen[data-scr="title"] .btn { min-height: 54px; font-size: 21px; }
+}
+
+/* a very big window (a 27" 1440p screen at 100 %, a 4K screen at 150 %): the whole interface scaled up.
+   The fight stage itself is never zoomed (the weapon animation measures it), it grows through --sh instead. */
+@media (min-width: 2200px) and (min-height: 1250px) {
+  #app { --z: 1.3; }
+  .hud-top, .tabs, .hud-stack, .zoom, .action, .attack, .keys-hint, .poi-tag, #toasts, .mbox, #screen.overlay > *,
+  #screen:not(.overlay):not([data-scr="title"]) > :not(.stage), #screen[data-scr="title"] .poster ~ .inner { zoom: var(--z); }
+  .wl { font-size: 17px; }
+  .wl-district { font-size: 28px; }
+  #screen:not(.overlay):not([data-scr="title"]) { top: 136px; max-height: calc(100% - 136px - 36px); width: min(1060px, calc(100% - 60px)); }
+  #screen:is([data-scr="character"], [data-scr="profile"], [data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"], [data-scr="fight"]),
+  #screen[data-scr="missions"]:has(.split) { width: min(1720px, 88vw) !important; }
+  #screen[data-scr="fight"] { --sh: clamp(330px, 48vh, 760px); }
+  #screen[data-scr="title"] .poster ~ .inner { width: 540px; }
+}
+@media (min-width: 3200px) and (min-height: 1750px) {
+  #app { --z: 1.7; }
+  #screen:not(.overlay):not([data-scr="title"]) { top: 176px; max-height: calc(100% - 176px - 48px); width: min(1400px, calc(100% - 80px)); }
+  #screen:is([data-scr="character"], [data-scr="profile"], [data-scr="shop"], [data-scr="inventory"], [data-scr="upgrade"], [data-scr="fight"]),
+  #screen[data-scr="missions"]:has(.split) { width: min(2240px, 88vw) !important; }
+  .wl { font-size: 22px; }
+}
+/* the 1-5 key numbers on the tabs only with a keyboard */
+@media (min-width: 900px) and (min-height: 560px) and (hover: none) { .tabs button::after { display: none; } }

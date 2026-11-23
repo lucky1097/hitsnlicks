@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#070707">
 <title>Hits &amp; Licks – beta</title>
 <link rel="stylesheet" href="css/fonts.css">
-<link rel="stylesheet" href="css/style.css?v=20261123201248">
+<link rel="stylesheet" href="css/style.css?v=20261123222158">
 <script src="js/vendor/phaser-3.80.1.min.js"></script>
 </head>
 <body>
@@ -64,6 +64,8 @@
     <div class="joystick" id="joystick"><div class="knob" id="knob"></div></div>
     <button class="action" id="action" hidden>Hovoriť</button>
     <button class="attack" id="attack" hidden aria-label="Útok zbraňou">Úder</button>
+    <!-- computer only (css): what the keys do -->
+    <div class="keys-hint" aria-hidden="true"><b>W A S D</b> pohyb <b>E</b> akcia <b>F</b> útok <b>1–5</b> záložky <b>Esc</b> späť <b>koliesko</b> zoom</div>
     <nav class="tabs">
       <button class="on" data-act="tab" data-arg="city">Mesto</button>
       <button data-act="tab" data-arg="character">Postava</button>
@@ -77,6 +79,6 @@
   <div id="modal" hidden></div>
   <div id="toasts"></div>
 </div>
-<script type="module" src="js/main.js?v=20261123201248"></script>
+<script type="module" src="js/main.js?v=20261123222158"></script>
 </body>
 </html>
