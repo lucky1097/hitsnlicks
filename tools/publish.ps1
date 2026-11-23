@@ -1,5 +1,5 @@
-# Publishes the web client to GitHub Pages (https://lucky1097.github.io/hitsnlicks/).
-# GitHub Pages lets phones cache files for 10 minutes, so every JS/CSS link gets a fresh ?v=<stamp>:
+# Publishes the web client: pushes main to GitHub; Cloudflare Pages deploys it to https://hitsnlicks.online (about a minute).
+# Phones may cache files, so every JS/CSS link gets a fresh ?v=<stamp> (old GitHub Pages address: js/moved.js redirects):
 # all imports carry the same stamp, otherwise a module could load twice.
 # Usage: powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish.ps1 -Message "what changed"
 param([Parameter(Mandatory = $true)][string]$Message)
