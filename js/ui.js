@@ -1,11 +1,11 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123002711';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123002711';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123002711';
-import { DAILY_TYPES } from './daily.js?v=20261123002711';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123002711';
-import { sound } from './sound.js?v=20261123002711';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123002711';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123182626';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123182626';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123182626';
+import { DAILY_TYPES } from './daily.js?v=20261123182626';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123182626';
+import { sound } from './sound.js?v=20261123182626';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123182626';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -707,6 +707,21 @@ export class UI {
     this.modal('<h2>' + esc(title) + '</h2><p class="sub" style="font-size:17px;color:#c9c4b8">' + esc(text) + '</p><div class="acts"><button class="btn gold" data-act="modal-close">Rozumiem</button></div>');
   }
 
+  // the page was opened from an account email (remote.js authReturn): confirmed, a new password, or a dead link
+  authBack(b) {
+    if (!b) return;
+    if (b.error) {
+      this.info('Odkaz už neplatí', 'Odkaz z e-mailu vypršal alebo už bol použitý. Ak si e-mail už potvrdil, stačí sa prihlásiť. Ak nie, zaregistruj sa znova a pošleme ti nový odkaz.');
+    } else if (b.type === 'signup' && b.session) {
+      this.info('E-mail je potvrdený', this.s.hasSave() ? 'Si prihlásený, môžeš hrať.' : 'Vitaj v Hits & Licks! Si prihlásený. Teraz si vyber prezývku a triedu a začni.');
+    } else if (b.type === 'recovery' && b.session) {
+      this.modal('<h2>Nové heslo</h2><p class="sub" style="font-size:17px;color:#c9c4b8">Si prihlásený cez odkaz z e-mailu. Zadaj nové heslo, ktorým sa budeš odteraz prihlasovať.</p>' +
+        '<div class="field"><label for="new-pass">Nové heslo</label><input id="new-pass" type="password" autocomplete="new-password"></div>' +
+        '<div class="acts"><button class="btn" data-act="modal-close">Neskôr</button><button class="btn gold" data-act="pass-save">Uložiť heslo</button></div>');
+      setTimeout(() => { const t = $('#new-pass'); if (t) t.focus(); }, 50);
+    }
+  }
+
   // nobody saw you for a while: a star less
   async wantedLose() {
     const r = await this.s.wantedLose();
@@ -1028,6 +1043,13 @@ export class UI {
         if (!this.check(r)) return;
         if (r.confirm) { this.info('Potvrď email', 'Na ' + email + ' sme poslali odkaz. Po potvrdení sa tu prihlás.'); this.sel.authMode = 'in'; this.render(); return; }
         this.render();
+      },
+      async 'pass-save'() {
+        const t = $('#new-pass');
+        const r = await this.s.setPassword(t ? t.value : '');
+        if (!this.check(r)) return;
+        this.closeModal();
+        this.toast('Heslo je zmenené.');
       },
       async 'auth-mode'(a) { this.sel.authEmail = $('#auth-email') ? $('#auth-email').value : ''; this.sel.authMode = a; this.render(); },
       async logout() { await this.s.signOut(); this.open('title'); },

@@ -1,10 +1,10 @@
-import { SimServer } from './server.js?v=20261123002711';
-import { RemoteServer } from './remote.js?v=20261123002711';
-import { ONLINE } from './net.js?v=20261123002711';
-import { CONFIG } from './config.js?v=20261123002711';
-import { UI } from './ui.js?v=20261123002711';
-import { createWorld } from './world.js?v=20261123002711';
-import { sound } from './sound.js?v=20261123002711';
+import { SimServer } from './server.js?v=20261123182626';
+import { RemoteServer } from './remote.js?v=20261123182626';
+import { ONLINE } from './net.js?v=20261123182626';
+import { CONFIG } from './config.js?v=20261123182626';
+import { UI } from './ui.js?v=20261123182626';
+import { createWorld } from './world.js?v=20261123182626';
+import { sound } from './sound.js?v=20261123182626';
 
 // warm the browser cache so screens open without blank images
 ['maska', 'diler', 'kladivo', 'fightbg', 'it_pistol', 'it_bat', 'it_watch', 'it_duffel', 'it_package', 'it_keys']
@@ -80,7 +80,7 @@ ui.zoom = (dir) => {
 
 if (ONLINE) {
   server.onChange = () => ui.tick();
-  server.init().then(() => ui.open('title'), () => ui.info('Bez spojenia', 'Server sa nepodarilo načítať. Skús obnoviť stránku.'));
+  server.init().then(() => { ui.open('title'); ui.authBack(server.authBack); }, () => ui.info('Bez spojenia', 'Server sa nepodarilo načítať. Skús obnoviť stránku.'));
 }
 ui.open('title');
 setInterval(() => ui.tick(), 250);

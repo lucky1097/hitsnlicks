@@ -1,10 +1,10 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261123002711';
-import { NET } from './net.js?v=20261123002711';
-import { CONFIG } from './config.js?v=20261123002711';
-import { SHOPS } from './data.js?v=20261123002711';
+import { SimServer } from './server.js?v=20261123182626';
+import { NET } from './net.js?v=20261123182626';
+import { CONFIG } from './config.js?v=20261123182626';
+import { SHOPS } from './data.js?v=20261123182626';
 
 // the official supabase-js UMD build, kept in the repo (js/vendor): no code from a CDN runs in the game
 const SUPABASE_JS = 'js/vendor/supabase-js-2.45.4.js';
@@ -23,6 +23,24 @@ const ACTIONS = ['newGame', 'setLook', 'spendPoint', 'buyStat', 'equip', 'unequi
 
 const noStore = { load: () => null, save() {}, clear() {} };
 
+// what a link from an account email brought back in the address: after "#" a session (type signup = the email was
+// confirmed, recovery = a new password is wanted) or, for a used or expired link, an error (also after "?")
+export function authReturn(loc) {
+  const h = new URLSearchParams(String(loc.hash || '').replace(/^#/, ''));
+  const q = new URLSearchParams(String(loc.search || ''));
+  const err = h.get('error_code') || q.get('error_code') || h.get('error') || q.get('error');
+  if (err) return { error: err };
+  return h.get('access_token') && h.get('type') ? { type: h.get('type') } : null;
+}
+
+// the address without the email link's tokens and error params (the rest, like ?mock, stays)
+function cleanAddress() {
+  const q = new URLSearchParams(location.search);
+  ['error', 'error_code', 'error_description', 'code'].forEach((k) => q.delete(k));
+  const s = q.toString();
+  history.replaceState(null, '', location.pathname + (s ? '?' + s : ''));
+}
+
 export class RemoteServer extends SimServer {
   // (see main.js: used when js/net.js has a project, or with ?mock for testing)
   constructor() {
@@ -34,6 +52,7 @@ export class RemoteServer extends SimServer {
     this.lastSync = 0;
     this.onChange = () => {};
     this.onError = () => {}; // a server failure the player met (logged for the beta, see ui.logError)
+    this.authBack = null; // { type, session } or { error } when the page was opened from an account email (see ui.authBack)
   }
 
   // server failures worth logging: a crash in the rules or an answer that was not JSON
@@ -43,10 +62,11 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261123002711');
+    const { handle, memoryDb } = await import('./api.js?v=20261123182626');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
-    this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}) } };
+    this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),
+      updateUser: async (u) => (String(u.password || '').length < 6 ? { error: { message: 'Password should be at least 6 characters.' } } : { data: {}, error: null }) } };
     this.call = async (action, ...args) => {
       if (!this.session) return { ok: false, error: 'Nie si prihlásený.' };
       const out = await handle(db, this.session.user.id, action, args);
@@ -61,11 +81,13 @@ export class RemoteServer extends SimServer {
 
   async init() {
     if (/[?&]mock/.test(location.search)) return this.initMock();
+    const back = authReturn(location); // read before supabase-js takes the tokens out of the address
     await loadScript(SUPABASE_JS);
     const { createClient } = window.supabase;
     this.sb = createClient(NET.url, NET.anonKey);
     const { data } = await this.sb.auth.getSession();
     this.session = data.session;
+    if (back) { this.authBack = { ...back, session: !!this.session }; cleanAddress(); }
     this.sb.auth.onAuthStateChange((_e, session) => { this.session = session; });
     if (this.session) await this.call('sync');
   }
@@ -90,6 +112,13 @@ export class RemoteServer extends SimServer {
 
   async resetPassword(email) {
     const { error } = await this.sb.auth.resetPasswordForEmail(email, { redirectTo: location.href.split('#')[0] });
+    return error ? { ok: false, error: authError(error) } : { ok: true };
+  }
+
+  // a new password after the "Zabudnuté heslo" email link (that link logs the player in)
+  async setPassword(password) {
+    if (!this.session) return { ok: false, error: 'Nie si prihlásený.' };
+    const { error } = await this.sb.auth.updateUser({ password });
     return error ? { ok: false, error: authError(error) } : { ok: true };
   }
 
@@ -174,6 +203,7 @@ function authError(e) {
   if (/Email not confirmed/i.test(m)) return 'Najprv potvrď email, poslali sme ti odkaz.';
   if (/already registered/i.test(m)) return 'Tento email už má účet. Prihlás sa.';
   if (/Password should be/i.test(m)) return 'Heslo musí mať aspoň 6 znakov.';
+  if (/should be different/i.test(m)) return 'Nové heslo musí byť iné ako staré.';
   if (/rate limit/i.test(m)) return 'Priveľa pokusov, skús to o chvíľu.';
   return m || 'Prihlásenie zlyhalo.';
 }
