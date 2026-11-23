@@ -1,12 +1,12 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123191200';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123191200';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123191200';
-import { DAILY_TYPES } from './daily.js?v=20261123191200';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123191200';
-import { sound } from './sound.js?v=20261123191200';
-import { CAPTCHA } from './net.js?v=20261123191200';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123191200';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261123191431';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261123191431';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261123191431';
+import { DAILY_TYPES } from './daily.js?v=20261123191431';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261123191431';
+import { sound } from './sound.js?v=20261123191431';
+import { CAPTCHA } from './net.js?v=20261123191431';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261123191431';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString('sk-SK');
@@ -725,12 +725,14 @@ export class UI {
     this.captchaScript.then(() => {
       if (!el.isConnected || !window.turnstile) return;
       if (this.captcha.id != null) { try { window.turnstile.remove(this.captcha.id); } catch (e) { /* its element is gone already */ } }
-      this.captcha.token = null;
+      this.captcha.token = null; this.captcha.ask = false;
       this.captcha.id = window.turnstile.render(el, {
         sitekey: CAPTCHA.siteKey, theme: 'dark', size: 'flexible', language: 'sk',
         callback: (t) => { this.captcha.token = t; this.captcha.failed = false; },
         'expired-callback': () => { this.captcha.token = null; },
         'error-callback': () => { this.captcha.token = null; },
+        'before-interactive-callback': () => { this.captcha.ask = true; }, // Cloudflare wants the box ticked
+        'after-interactive-callback': () => { this.captcha.ask = false; },
       });
     }, () => { this.captcha.failed = true; this.logError('captcha script did not load'); });
   }
@@ -1073,7 +1075,8 @@ export class UI {
         if (mode === 'up' && !($('#auth-agree') && $('#auth-agree').checked)) { this.toast('Potvrď, že máš aspoň 18 rokov a súhlasíš s podmienkami.', true); return; }
         const needCaptcha = this.s.needsCaptcha && this.s.needsCaptcha();
         if (needCaptcha && !this.captcha.token) {
-          this.toast(this.captcha.failed ? 'Overenie sa nenačítalo. Obnov stránku, prípadne vypni blokovanie reklám pre túto stránku.' : 'Chvíľu počkaj, kým sa overí, že nie si robot.', true);
+          this.toast(this.captcha.failed ? 'Overenie sa nenačítalo. Obnov stránku, prípadne vypni blokovanie reklám pre túto stránku.'
+            : this.captcha.ask ? 'Zaškrtni políčko „Overte, že ste človek“ nad tlačidlom.' : 'Chvíľu počkaj, kým sa overí, že nie si robot.', true);
           return;
         }
         const token = this.captcha.token;
