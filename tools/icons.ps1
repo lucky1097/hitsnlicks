@@ -1,10 +1,11 @@
-# App icons (home screen / PWA) from the ski-mask art on the game's black: assets/icons/app-*.png.
+# App icons (home screen / PWA) from the ski-mask art (zdroj_art/navrhy/kukla_ikona.png, 1024 px, local only) on the
+# game's black: assets/icons/app-*.png.
 # Usage: powershell -NoProfile -ExecutionPolicy Bypass -File tools/icons.ps1
 Add-Type -AssemblyName System.Drawing
 $root = Split-Path -Parent $PSScriptRoot
-$src = [System.Drawing.Image]::FromFile((Join-Path $root 'assets\art\maska.png'))
+$src = [System.Drawing.Image]::FromFile((Join-Path $root 'zdroj_art\navrhy\kukla_ikona.png'))
 # the head and the chain, as a square
-$crop = New-Object System.Drawing.Rectangle 0, 40, 600, 600
+$crop = New-Object System.Drawing.Rectangle 0, 0, 1024, 1024
 $bg = [System.Drawing.ColorTranslator]::FromHtml('#070707')
 # name, size, share of the icon the art fills (maskable icons keep the art inside the central safe zone)
 $icons = @(@('app-192', 192, 0.96), @('app-512', 512, 0.96), @('app-maskable-512', 512, 0.72), @('app-180', 180, 0.96))

@@ -1,13 +1,13 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124193336';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124193336';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124193336';
-import { DAILY_TYPES } from './daily.js?v=20261124193336';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124193336';
-import { sound } from './sound.js?v=20261124193336';
-import { CAPTCHA } from './net.js?v=20261124193336';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124193336';
-import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124193336';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124225321';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124225321';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124225321';
+import { DAILY_TYPES } from './daily.js?v=20261124225321';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124225321';
+import { sound } from './sound.js?v=20261124225321';
+import { CAPTCHA } from './net.js?v=20261124225321';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124225321';
+import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124225321';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString(LOCALE);
@@ -22,7 +22,9 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 const pad = (n) => String(n).padStart(2, '0');
 const rar = (id) => RARITIES.find((r) => r.id === id) || RARITIES[0];
 const BACK = '<svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>';
-const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'diler', dealer: 'photo_dlznik' };
+const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'photo_zlodej', dealer: 'photo_dlznik' };
+// the street behind every fight, one per city
+const FIGHT_BG = { mesto1: 'photo_fightbg', mesto2: 'photo_fightbg2' };
 // where the face sits in each class artwork (CSS object-position)
 const BOT_FOCUS = { svalovec: '32% 7%' };
 // fight animation: weapon cut-outs live in assets/fx (tools/cutout.ps1); guns drawn pointing left get
@@ -983,7 +985,7 @@ export class UI {
         const r = await this.s.fightBoss();
         if (!this.check(r)) return;
         const b = this.s.bossInfo();
-        this.open('fight', { kind: 'boss', ...r, artB: r.b.portrait || 'kladivo', silhouette: !r.b.portrait, title: r.b.name, subtitle: r.b.title, next: b }, true);
+        this.open('fight', { kind: 'boss', ...r, artB: r.b.portrait || 'photo_zlodej', silhouette: !r.b.portrait, title: r.b.name, subtitle: r.b.title, next: b }, true);
       },
       async travel(a) {
         const r = await this.s.travel(a);
@@ -1001,7 +1003,7 @@ export class UI {
         const opp = this.s.arena().opponents[Number(a)];
         const r = await this.s.fightArena(Number(a));
         if (!this.check(r)) return;
-        this.open('fight', { kind: 'arena', ...r, artB: BOT_ART[opp.cls] || 'maska', focusB: BOT_FOCUS[opp.cls], title: opp.name, subtitle: tt('{trieda} · úroveň {level}', { trieda: CLASSES[opp.cls].name, level: opp.level }) }, true);
+        this.open('fight', { kind: 'arena', ...r, artB: BOT_ART[opp.cls] || 'photo_zlodej', focusB: BOT_FOCUS[opp.cls], title: opp.name, subtitle: tt('{trieda} · úroveň {level}', { trieda: CLASSES[opp.cls].name, level: opp.level }) }, true);
       },
       async 'arena-new'() { if (this.check(await this.s.refreshArena())) this.render(); },
       async 'fight-skip'() { this.finishFight(true); },
@@ -1323,7 +1325,7 @@ export class UI {
       html: this.hdr(tt('Postava'), tt('Úroveň <span class="gold">{n}</span>', { n: p.level }) + ' · ' + CLASSES[p.cls].name) +
         '<div class="body"><div class="char">' +
         '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
-        '<div class="pframe"><div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="' + tt('Tvoja postava') + '">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">' + tt('Vzhľad') + '</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + tt('Pešiak') + ' · ' + CITIES[this.s.city()].name + '</span></div></div>' + frameHtml(medalTotal(myTiers)) + '</div>' +
+        '<div class="pframe"><div class="portrait">' + (LOOK_BASE ? this.lookHtml(p.look, 'in-portrait') : '<img src="' + art('photo_zlodej') + '" alt="' + tt('Tvoja postava') + '">') + (LOOK_BASE ? '<button class="btn small look-edit" data-act="open-look">' + tt('Vzhľad') + '</button>' : '') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(p.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + tt('Pešiak') + ' · ' + CITIES[this.s.city()].name + '</span></div></div>' + frameHtml(medalTotal(myTiers)) + '</div>' +
         '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
         this.medalRow(myTiers, true) +
         '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:15px;color:#9b968b" class="num"><span>' + tt('Skúsenosti') + '</span><span style="color:#e9e4d8">' + fmt(v.xp) + ' / ' + fmt(v.xpNext) + '</span></div><div class="bar" style="height:8px;margin-top:4px"><i style="width:' + Math.min(100, (v.xp / v.xpNext) * 100) + '%"></i></div></div>' +
@@ -1388,7 +1390,7 @@ export class UI {
       html: this.hdr(esc(pr.name), tt('Úroveň <span class="gold">{n}</span>', { n: pr.level }) + ' · ' + (c ? c.name : '')) +
         '<div class="body"><div class="char">' +
         '<div class="slots">' + ['zbran', 'bunda', 'nohavice', 'topanky'].map(slotHtml).join('') + '</div>' +
-        '<div class="pframe"><div class="portrait">' + (LOOK_BASE ? this.lookHtml(pr.look, 'in-portrait') : '<img src="' + art('maska') + '" alt="">') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(pr.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + (c ? c.name : '') + ' · ' + tt('úroveň {n}', { n: pr.level }) + '</span></div></div>' + frameHtml(medalTotal(pr.medals || {})) + '</div>' +
+        '<div class="pframe"><div class="portrait">' + (LOOK_BASE ? this.lookHtml(pr.look, 'in-portrait') : '<img src="' + art('photo_zlodej') + '" alt="">') + '<div class="cap"><span class="bl" style="font-size:32px;color:#efe9dc">' + esc(pr.name) + '</span><span class="sc" style="font-size:13px;color:#9b968b">' + (c ? c.name : '') + ' · ' + tt('úroveň {n}', { n: pr.level }) + '</span></div></div>' + frameHtml(medalTotal(pr.medals || {})) + '</div>' +
         '<div class="slots">' + ['retiazka', 'prsten', 'hodinky', 'auto'].map(slotHtml).join('') + '</div></div>' +
         this.medalRow(pr.medals || {}, false) +
         '<p class="note num" style="text-align:left;color:#b9b4a8;font-size:15px">' + tt('Životy {hp} · zbraň {zbran} · brnenie {brn}', { hp: fmt(pr.hp), zbran: fmt(pr.weapon), brn: fmt(pr.armor) }) + '</p>' +
@@ -1554,8 +1556,8 @@ export class UI {
     const b = info.boss;
     let scene;
     if (b.wide) scene = '<img class="bg full" src="' + art(b.wide) + '" alt="' + b.name + '" style="object-position:' + (b.focus || '50% 30%') + '">';
-    else if (b.art) scene = '<img class="bg" src="' + art('fightbg') + '" alt=""><img class="fb" src="' + art(b.art) + '" alt="' + b.name + '">';
-    else scene = '<img class="bg" src="' + art('fightbg') + '" alt=""><img class="fb" src="' + art('kladivo') + '" alt="" style="filter:brightness(0) drop-shadow(0 0 1px #6b675f)">';
+    else if (b.art) scene = '<img class="bg" src="' + this.fightBg() + '" alt=""><img class="fb" src="' + art(b.art) + '" alt="' + b.name + '">';
+    else scene = '<img class="bg" src="' + this.fightBg() + '" alt=""><img class="fb" src="' + art('photo_zlodej') + '" alt="" style="filter:brightness(0) drop-shadow(0 0 1px #6b675f)">';
     let h = '<div class="stage">' + scene + '<div class="fade-t"></div><div class="fade-b"></div>' +
       '<div class="title" style="align-items:flex-start;left:16px;' + (b.titleLow ? 'top:auto;bottom:14px' : 'top:60px') + '"><span class="sc" style="font-size:14px;color:#b9b4a8">' + tt('Boss {n} / {total}', { n: info.index + 1, total: info.total }) + '</span><span class="bl" style="font-size:46px;font-weight:900;color:#efe9dc;text-shadow:0 3px 0 #000">' + info.boss.name + '</span><span class="sc" style="font-size:14px;color:#e05a4f;text-shadow:0 1px 2px #000,0 0 8px #000,0 0 12px #000">' + info.boss.title + '</span></div></div>';
     h += '<div class="body"><div class="hpgrid" style="padding:0">' +
@@ -1653,7 +1655,7 @@ export class UI {
       : tt('Zadarmo ešte <span class="gold">{left} z {max}</span>.', { left: a.freeLeft, max: CONFIG.pvpFreePerHour })) + ' ' + (this.s.online ? tt('Súperi s hviezdičkou sú skutoční hráči.') : tt('Súperi sú zatiaľ počítačoví.')) + '</p>';
     a.opponents.forEach((o, i) => {
       const hp = F.maxHp(o.stats, o.level, o.cls);
-      h += '<div class="card" style="cursor:default"><img src="' + art(BOT_ART[o.cls] || 'maska') + '" alt="" style="object-fit:cover;object-position:' + (BOT_FOCUS[o.cls] || '50% 20%') + ';background:#1a1714"><span class="mid"><span class="t">' + esc(o.name) + (o.id ? ' <span class="gold">★</span>' : '') + '</span><span class="s num">' + CLASSES[o.cls].name + ' · ' + tt('úr. {n}', { n: o.level }) + ' · ' + tt('{n} b.', { n: fmt(o.points) }) + '</span><span class="s num">' + tt('Životy {hp} · úder {dmg}', { hp: fmt(hp), dmg: Math.round(F.hitOf(o)) }) + '</span></span>' +
+      h += '<div class="card" style="cursor:default"><img src="' + art(BOT_ART[o.cls] || 'photo_zlodej') + '" alt="" style="object-fit:cover;object-position:' + (BOT_FOCUS[o.cls] || '50% 20%') + ';background:#1a1714"><span class="mid"><span class="t">' + esc(o.name) + (o.id ? ' <span class="gold">★</span>' : '') + '</span><span class="s num">' + CLASSES[o.cls].name + ' · ' + tt('úr. {n}', { n: o.level }) + ' · ' + tt('{n} b.', { n: fmt(o.points) }) + '</span><span class="s num">' + tt('Životy {hp} · úder {dmg}', { hp: fmt(hp), dmg: Math.round(F.hitOf(o)) }) + '</span></span>' +
         '<button class="btn small gold" data-act="arena-fight" data-arg="' + i + '">' + (a.freeLeft > 0 ? tt('Vyzvať') : tt('Vyzvať · {n}', { n: CONFIG.pvpExtraChains })) + '</button></div>';
     });
     if (this.s.online) h += '<button class="btn wide" data-act="arena-new">' + tt('Noví súperi') + '</button>';
@@ -1958,7 +1960,7 @@ export class UI {
   scr_war(d) {
     const col = (list, side) => list.map((f, i) => '<div class="wrow" id="w' + side + i + '"><div class="top"><span>' + esc(f.name) + '</span><span class="num muted" id="w' + side + 't' + i + '">' + fmt(f.hp) + '</span></div><div class="bar hp"><i id="w' + side + 'b' + i + '" style="width:100%"></i></div></div>').join('');
     const prev = d.result.prev;
-    const h = '<div class="stage" id="stage"><img class="bg" src="' + art('fightbg') + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
+    const h = '<div class="stage" id="stage"><img class="bg" src="' + this.fightBg() + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
       '<div class="title"><span class="bl" id="wtitle">' + tt('Duel {n}', { n: 1 }) + '</span><span class="sc" style="font-size:14px;color:#d0473d;text-shadow:0 1px 0 #000">' + esc(d.turf.name) + (prev ? ' · ' + esc(prev.name) : '') + '</span></div>' +
       '<figure class="fcard me" id="fa"></figure><span class="vs">vs</span><figure class="fcard foe" id="fb"></figure></div>' +
       '<div class="hpgrid"><div><div class="top"><span class="bl" id="wna"></span><span class="num muted" id="hpa" style="font-size:14px"></span></div><div class="bar hp"><i id="hpba" style="width:100%"></i></div></div>' +
@@ -1969,11 +1971,13 @@ export class UI {
     return { html: '<header class="hdr"><span style="width:12px"></span><h1 style="font-size:24px" class="sc">Gang Wars</h1></header>' + h, after: () => this.playWar(d) };
   }
 
+  fightBg() { return art(FIGHT_BG[this.s.city()] || FIGHT_BG.mesto1); }
+
   // fight card of a gang fighter: you wear your own look, members and rivals their class art
   warCard(f, me) {
     if (me && LOOK_BASE) return this.lookHtml(this.s.p.look, 'in-fcard');
     const focus = !me && BOT_FOCUS[f.cls];
-    return '<img src="' + art(me ? 'maska' : BOT_ART[f.cls] || 'maska') + '" alt="' + esc(f.name) + '"' + (focus ? ' style="object-position:' + focus + '"' : '') + '>';
+    return '<img src="' + art(me ? 'photo_zlodej' : BOT_ART[f.cls] || 'photo_zlodej') + '" alt="' + esc(f.name) + '"' + (focus ? ' style="object-position:' + focus + '"' : '') + '>';
   }
 
   playWar(d) {
@@ -2087,9 +2091,9 @@ export class UI {
   scr_fight(d) {
     const nameA = esc(d.a.name), nameB = esc(d.b.name);
     const head = d.kind === 'boss' ? 'Boss fight' : d.kind === 'arena' ? tt('Aréna') : d.kind === 'club' ? tt('Podzemné zápasy') : MISSIONS[d.result.tpl].name;
-    const h = '<div class="stage" id="stage"><img class="bg" src="' + art('fightbg') + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
+    const h = '<div class="stage" id="stage"><img class="bg" src="' + this.fightBg() + '" alt=""><div class="fade-t"></div><div class="fade-b"></div>' +
       '<div class="title"><span class="bl">' + esc(d.title) + '</span><span class="sc" style="font-size:14px;color:#d0473d;text-shadow:0 1px 0 #000">' + esc(d.subtitle || '') + '</span></div>' +
-      '<figure class="fcard me" id="fa">' + (LOOK_BASE ? this.lookHtml(this.s.p.look, 'in-fcard') : '<img src="' + art('maska') + '" alt="' + nameA + '">') + '</figure>' +
+      '<figure class="fcard me" id="fa">' + (LOOK_BASE ? this.lookHtml(this.s.p.look, 'in-fcard') : '<img src="' + art('photo_zlodej') + '" alt="' + nameA + '">') + '</figure>' +
       '<span class="vs">vs</span>' +
       '<figure class="fcard foe" id="fb"><img src="' + art(d.artB) + '" alt="' + nameB + '"' + (d.silhouette ? ' style="filter:brightness(.15)"' : d.focusB ? ' style="object-position:' + d.focusB + '"' : '') + '></figure></div>' +
       '<div class="hpgrid"><div><div class="top"><span class="bl">' + nameA + '</span><span class="num muted" id="hpa" style="font-size:14px"></span></div><div class="bar hp"><i id="hpba" style="width:100%"></i></div></div>' +
