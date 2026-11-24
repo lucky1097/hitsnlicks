@@ -1,11 +1,11 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261124001158';
-import { NET } from './net.js?v=20261124001158';
-import { CONFIG } from './config.js?v=20261124001158';
-import { SHOPS } from './data.js?v=20261124001158';
-import { LANG, tts } from './i18n.js?v=20261124001158';
+import { SimServer } from './server.js?v=20261124111258';
+import { NET } from './net.js?v=20261124111258';
+import { CONFIG } from './config.js?v=20261124111258';
+import { SHOPS } from './data.js?v=20261124111258';
+import { LANG, tts } from './i18n.js?v=20261124111258';
 
 // the server answers in Slovak: names, titles and story lines in an answer are put into the player's language here
 // (errors stay Slovak, the UI checks some of them and ui.toast translates what it shows)
@@ -76,7 +76,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261124001158');
+    const { handle, memoryDb } = await import('./api.js?v=20261124111258');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),

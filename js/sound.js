@@ -1,8 +1,10 @@
-// Every sound of the game is synthesised here with Web Audio: no files to load, nothing to license.
+// The game's sounds: recorded effects in assets/sfx/<name>.mp3 (cartoon gangster style, generated for the game,
+// see docs/decisions.md), loaded after the first touch. Until a file is loaded, or if it fails, the same name is
+// synthesised with Web Audio below, so a sound never goes missing.
 // sound.play(name, { delay, vol }) plays one effect; sound.weapon(base) / sound.equip(base) pick the
 // effect that fits an item. On/off is per device (localStorage), off by default only if the player turned it off.
 // Browsers start audio muted until the first touch or key, so nothing plays before that.
-import { ITEM_BASES } from './data.js?v=20261124001158';
+import { ITEM_BASES } from './data.js?v=20261124111258';
 
 const KEY = 'hl_sound';
 let enabled = true;
@@ -34,6 +36,47 @@ function unlock() {
   if (!enabled) return;
   const c = audio();
   if (c && c.state !== 'running') c.resume().catch(() => {});
+  if (c) loadFiles();
+}
+
+// ---------------------------------------------------------------- recorded effects
+// every name in S has a file; the version of this module (?v= from publish) keeps the browser cache fresh
+const FILE_V = new URL(import.meta.url).search;
+const buffers = {}; // name -> AudioBuffer once decoded
+let loading = false;
+// blows, shots and whooshes get a slightly different pitch each time so repeats do not sound copied
+const VARY = new Set(['swing', 'fist', 'thud', 'slash', 'glass', 'chain', 'pistol', 'silenced', 'revolver', 'heavy', 'shotgun',
+  'rifle', 'smg', 'hit', 'crit', 'whiff', 'clang', 'body', 'steps', 'cloth', 'click', 'back']);
+
+function loadFiles() {
+  if (loading) return;
+  loading = true;
+  const queue = Object.keys(S);
+  // four at a time, in the background: decoding all at once can stutter a phone
+  const next = async () => {
+    const name = queue.shift();
+    if (!name) return;
+    try {
+      const res = await fetch('assets/sfx/' + name + '.mp3' + FILE_V);
+      if (res.ok) {
+        const data = await res.arrayBuffer();
+        buffers[name] = await new Promise((ok, bad) => ctx.decodeAudioData(data, ok, bad)); // callback form: older Safari
+      }
+    } catch (e) { /* this one stays synthesised */ }
+    return next();
+  };
+  for (let i = 0; i < 4; i++) next();
+}
+
+function playFile(name, t, v) {
+  const src = ctx.createBufferSource();
+  src.buffer = buffers[name];
+  if (VARY.has(name)) src.playbackRate.value = rnd(0.94, 1.06);
+  const g = ctx.createGain();
+  g.gain.value = v;
+  src.connect(g);
+  g.connect(out);
+  src.start(t);
 }
 ['pointerdown', 'keydown', 'touchend'].forEach((e) => window.addEventListener(e, unlock, { capture: true, passive: true }));
 
@@ -222,6 +265,8 @@ export const sound = {
   get on() { return enabled; },
   get state() { return ctx ? ctx.state : 'none'; }, // for testing in the console (hl.sound)
   names: () => Object.keys(S),
+  loaded: () => Object.keys(buffers), // for testing: which effects play from files
+  synth(name) { if (audio() && S[name]) S[name](ctx.currentTime + 0.005, 1); }, // for comparing with the old sound
   set(on) {
     enabled = !!on;
     try { localStorage.setItem(KEY, enabled ? '1' : '0'); } catch (e) { /* not saved, still applies now */ }
@@ -233,7 +278,8 @@ export const sound = {
     const now = ctx.currentTime;
     if (!o.delay && last[name] && now - last[name] < 0.03) return; // two in the same instant sound as one, only louder
     last[name] = now;
-    try { S[name](now + 0.005 + (o.delay || 0), o.vol ?? 1); } catch (e) { console.warn('sound', name, e); } // a sound must never break the game
+    const t = now + 0.005 + (o.delay || 0), v = o.vol ?? 1;
+    try { if (buffers[name]) playFile(name, t, v); else S[name](t, v); } catch (e) { console.warn('sound', name, e); } // a sound must never break the game
   },
   // the strike sound of a weapon base id ('fist' for bare hands)
   weaponSfx(base) {
