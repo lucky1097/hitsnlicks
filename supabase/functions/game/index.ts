@@ -86,6 +86,12 @@ const db = {
   async addPoints(id: string, delta: number) { must(await admin.rpc('add_pvp_points', { p_id: id, p_delta: delta })); },
   async deletePlayer(id: string) { must(await admin.from('players').delete().eq('id', id)); },
   async deleteUser(id: string) { const { error } = await admin.auth.admin.deleteUser(id); if (error) throw error; },
+  // Stripe payments recorded by the pay function's webhook (table purchases, service role only)
+  async paidPurchases(id: string) {
+    const rows = must(await admin.from('purchases').select('id, bars').eq('user_id', id).eq('status', 'paid').is('credited_at', null).limit(20)) as any[];
+    return rows.map((r) => ({ id: r.id, bars: r.bars }));
+  },
+  async markCredited(ids: string[]) { must(await admin.from('purchases').update({ credited_at: new Date().toISOString() }).in('id', ids)); },
 };
 
 Deno.serve(async (req) => {

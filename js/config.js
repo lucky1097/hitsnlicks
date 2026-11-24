@@ -161,12 +161,13 @@ export const CONFIG = {
   runnerEveryMin: 60, // counted from the hit
   runnerEpicChance: 0.01,
 
-  // Wexler's gold bar packs (premium currency); real payments via Stripe come later
+  // Wexler's gold bar packs (premium currency), paid through Stripe Checkout (supabase/functions/pay):
+  // cents = the price in euro cents with VAT included (Stripe Tax takes the VAT out of it)
   barPacks: [
-    { bars: 10, price: '0,99 €' },
-    { bars: 55, price: '4,99 €' },
-    { bars: 120, price: '9,99 €' },
-    { bars: 300, price: '19,99 €' },
+    { bars: 50, cents: 99 },
+    { bars: 300, cents: 500 },
+    { bars: 750, cents: 1000 },
+    { bars: 1600, cents: 2000 },
   ],
 
   blackMarketDay: 5, // 0 = Sunday … 5 = Friday

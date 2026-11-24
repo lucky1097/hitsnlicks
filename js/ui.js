@@ -1,16 +1,17 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124111258';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124111258';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124111258';
-import { DAILY_TYPES } from './daily.js?v=20261124111258';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124111258';
-import { sound } from './sound.js?v=20261124111258';
-import { CAPTCHA } from './net.js?v=20261124111258';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124111258';
-import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124111258';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124113004';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124113004';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124113004';
+import { DAILY_TYPES } from './daily.js?v=20261124113004';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124113004';
+import { sound } from './sound.js?v=20261124113004';
+import { CAPTCHA } from './net.js?v=20261124113004';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124113004';
+import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124113004';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString(LOCALE);
+const euro = (cents) => (cents / 100).toLocaleString(LOCALE, { style: 'currency', currency: 'EUR', minimumFractionDigits: cents % 100 ? 2 : 0 }); // 0,99 € · 5 €
 // the top bar has little room: big sums shortened (1,2 M / 123 k); screens show them in full
 const short = (n) => (n >= 1e6 ? (Math.floor(n / 1e5) / 10).toLocaleString(LOCALE) + ' M' : n >= 1e5 ? Math.floor(n / 1000) + ' k' : fmt(n));
 const money = (n) => '$ ' + fmt(n);
@@ -808,6 +809,32 @@ export class UI {
     }
   }
 
+  // back from Stripe's payment page (remote.js payBack): the bars come with a sync once Stripe confirms the payment
+  payBack(b) {
+    if (!b) return;
+    if (b.cancel) { this.toast(tt('Platba bola zrušená, nič sa nezaplatilo.')); return; }
+    if (!this.paidCount) this.waitPaid(); // (the first sync after loading may have brought them already)
+  }
+
+  // ask the server a few times; a payment Stripe confirms later still comes with the next sync (every half minute)
+  async waitPaid() {
+    const start = this.paidCount || 0;
+    this.toast(tt('Platba prebehla. Čakám na potvrdenie od Stripe…'));
+    for (let i = 0; i < 10 && (this.paidCount || 0) === start; i++) {
+      await new Promise((r) => setTimeout(r, i ? 3000 : 1200));
+      if ((this.paidCount || 0) === start && !this.s.busy) await this.s.call('sync');
+    }
+    if ((this.paidCount || 0) === start) this.info(tt('Platba sa ešte spracúva'), tt('Tehličky sa pripíšu samy, hneď ako Stripe platbu potvrdí. Zvyčajne to trvá pár sekúnd, pri niektorých spôsoboch platby aj dlhšie. Ak tu nebudú do hodiny, napíš nám na hitsnlickssupport@gmail.com.'));
+  }
+
+  // the server credited bars paid through Stripe (remote.js onPaid)
+  paid(bars) {
+    this.paidCount = (this.paidCount || 0) + 1;
+    sound.play('bars');
+    this.toast(tt('+{bars} zlatých tehličiek. Vďaka za nákup!', { bars: fmt(bars) }));
+    if (this.name === 'wexler') this.render();
+  }
+
   // nobody saw you for a while: a star less
   async wantedLose() {
     const r = await this.s.wantedLose();
@@ -1051,6 +1078,18 @@ export class UI {
       async 'buy-bars'(a) {
         const r = await this.s.buyBars(Number(a));
         if (this.check(r)) { sound.play('bars'); this.toast(tt('+{bars} zlatých tehličiek (testovacia kúpa).', { bars: r.bars })); this.render(); }
+      },
+      // online: Stripe's payment page; the bars come back with a sync once Stripe confirms the payment
+      async 'pay-bars'(a) {
+        if (this.paying) return;
+        this.paying = true;
+        const r = await this.s.checkout(Number(a));
+        if (!this.check(r)) { this.paying = false; return; }
+        if (r.url) {
+          this.toast(tt('Otváram platbu cez Stripe…'));
+          location.href = r.url;
+          setTimeout(() => { this.paying = false; }, 8000); // (if the page did not leave)
+        } else { this.paying = false; this.waitPaid(); } // ?mock: recorded at once
       },
       // gangs
       // character creator
@@ -1632,12 +1671,21 @@ export class UI {
       ? '<p class="warn" style="padding:8px 10px;border:1px solid rgba(208,71,61,.6);color:#e6a49c">' + tt('Ripper mi práve ukradol tehličku! Chyť ho do <b data-until="{until}"></b> a je tvoja.', { until: rp.until }) + '</p>'
       : '<p class="note" style="text-align:left">' + tt('Ripper sa sem chodí kradnúť približne raz za hodinu. Ďalší pokus o <span data-until="{until}"></span>.', { until: rp.nextAt }) + '</p>';
     h += '<div class="sec sc">' + tt('Zlaté tehličky') + '</div>';
-    if (this.s.online) h += '<p class="note" style="text-align:left">' + tt('Zlaté tehličky sa zatiaľ nepredávajú. Získaš ich v misiách, od bossov, za denné úlohy a za medaily.') + '</p>';
+    // online the packs are sold through Stripe once the pay function says so (pay/status); offline it is a test purchase
+    const pay = this.s.online ? this.s.payInfo() : { ready: true };
+    if (!pay) {
+      h += '<p class="note" style="text-align:left">' + tt('Načítavam ponuku…') + '</p>';
+      this.s.payStatus().then(() => { if (this.name === 'wexler') this.render(); });
+    } else if (!pay.ready) h += '<p class="note" style="text-align:left">' + tt('Zlaté tehličky sa zatiaľ nepredávajú. Získaš ich v misiách, od bossov, za denné úlohy a za medaily.') + '</p>';
     else CONFIG.barPacks.forEach((pk, i) => {
-      h += '<div class="item rar-legendarny"><img class="px" src="assets/icons/i_bar.png" alt="" style="width:48px;height:48px;margin:8px"><div class="mid"><div class="t num">' + tt('{n} zlatých tehličiek', { n: pk.bars }) + '</div><div class="s">' + tt('Skracovanie misií, ďalšie pokusy na bossov a v aréne') + '</div></div>' +
-        '<div class="acts"><button class="btn small gold num" data-act="buy-bars" data-arg="' + i + '">' + pk.price + '</button></div></div>';
+      h += '<div class="item rar-legendarny"><img class="px" src="assets/icons/i_bar.png" alt="" style="width:48px;height:48px;margin:8px"><div class="mid"><div class="t num">' + tt('{n} zlatých tehličiek', { n: fmt(pk.bars) }) + '</div><div class="s">' + tt('Skracovanie misií, ďalšie pokusy na bossov a v aréne') + '</div></div>' +
+        '<div class="acts"><button class="btn small gold num" data-act="' + (this.s.online ? 'pay-bars' : 'buy-bars') + '" data-arg="' + i + '">' + euro(pk.cents) + '</button></div></div>';
     });
     if (!this.s.online) h += '<p class="note">' + tt('Testovacia kúpa (len offline): tehličky sa pripíšu hneď.') + '</p>';
+    else if (pay && pay.ready) {
+      if (pay.test) h += '<p class="note gold">' + tt('Testovací režim: platí sa len testovacou kartou Stripe, nič sa nestrhne.') + '</p>';
+      h += '<p class="note">' + tt('Ceny sú vrátane DPH. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href="{url}" target="_blank" rel="noopener">Podmienky</a>', { url: legal('podmienky') }) + '</p>';
+    }
     // the elixir: Black Market (epic goods) in every shop for elixirHours, only for this player
     const left = this.s.elixirLeft();
     h += '<div class="sec sc">' + tt('Elixír Čierneho trhu') + '</div>' +

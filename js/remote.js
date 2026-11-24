@@ -1,11 +1,11 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261124111258';
-import { NET } from './net.js?v=20261124111258';
-import { CONFIG } from './config.js?v=20261124111258';
-import { SHOPS } from './data.js?v=20261124111258';
-import { LANG, tts } from './i18n.js?v=20261124111258';
+import { SimServer } from './server.js?v=20261124113004';
+import { NET } from './net.js?v=20261124113004';
+import { CONFIG } from './config.js?v=20261124113004';
+import { SHOPS } from './data.js?v=20261124113004';
+import { LANG, tt, tts } from './i18n.js?v=20261124113004';
 
 // the server answers in Slovak: names, titles and story lines in an answer are put into the player's language here
 // (errors stay Slovak, the UI checks some of them and ui.toast translates what it shows)
@@ -48,11 +48,27 @@ export function authReturn(loc) {
 }
 
 // the address without the email link's tokens and error params (the rest, like ?mock, stays)
-function cleanAddress() {
+function cleanAddress(keys = ['error', 'error_code', 'error_description', 'code']) {
   const q = new URLSearchParams(location.search);
-  ['error', 'error_code', 'error_description', 'code'].forEach((k) => q.delete(k));
+  keys.forEach((k) => q.delete(k));
   const s = q.toString();
   history.replaceState(null, '', location.pathname + (s ? '?' + s : ''));
+}
+
+// back from Stripe's payment page: ?paid=<Checkout Session id> after paying, ?paid=cancel after going back
+export function payReturn(loc) {
+  const v = new URLSearchParams(String(loc.search || '')).get('paid');
+  if (!v) return null;
+  return v === 'cancel' ? { cancel: true } : { id: v.slice(0, 200) };
+}
+
+// what the pay function's error codes mean for the player
+function payError(code) {
+  if (code === 'off') return tt('Platby sú teraz vypnuté. Skús to neskôr.');
+  if (code === 'busy') return tt('Priveľa pokusov, skús to o chvíľu.');
+  if (code === 'nochar') return tt('Najprv si vytvor postavu.');
+  if (code === 'auth') return tt('Nie si prihlásený.');
+  return tt('Platbu sa nepodarilo pripraviť. Skús to znova o chvíľu.');
 }
 
 export class RemoteServer extends SimServer {
@@ -67,6 +83,10 @@ export class RemoteServer extends SimServer {
     this.onChange = () => {};
     this.onError = () => {}; // a server failure the player met (logged for the beta, see ui.logError)
     this.authBack = null; // { type, session } or { error } when the page was opened from an account email (see ui.authBack)
+    this.payBack = null; // { id } or { cancel } when the page was opened from Stripe's payment page (see ui.payBack)
+    this.onPaid = () => {}; // bars paid through Stripe were just credited (an answer carries paid: <bars>)
+    this.pay = null; // { ready, test, at }: can this player buy bars now (pay/status, kept 5 minutes)
+    this.payAsk = null;
   }
 
   // server failures worth logging: a crash in the rules or an answer that was not JSON
@@ -76,7 +96,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261124111258');
+    const { handle, memoryDb } = await import('./api.js?v=20261124113004');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),
@@ -88,7 +108,17 @@ export class RemoteServer extends SimServer {
       if ('state' in out) this.state = JSON.parse(JSON.stringify(out.state));
       this.lastSync = Date.now();
       this.onChange();
+      if (out.paid) this.onPaid(out.paid);
       return localize(out);
+    };
+    // payments: always on, in Stripe's test mode; a purchase is recorded at once, as if Stripe's webhook came
+    this.payStatus = async () => (this.pay = { ready: true, test: true, at: Date.now() });
+    this.checkout = async (i) => {
+      const pack = CONFIG.barPacks[Number(i)];
+      if (!this.session || !this.state) return { ok: false, error: payError('nochar') };
+      if (!pack) return { ok: false, error: payError('pack') };
+      db.addPurchase(this.session.user.id, pack.bars);
+      return { ok: true, mock: true };
     };
     this.mockDb = db;
   }
@@ -96,6 +126,8 @@ export class RemoteServer extends SimServer {
   async init() {
     if (/[?&]mock/.test(location.search)) return this.initMock();
     const back = authReturn(location); // read before supabase-js takes the tokens out of the address
+    this.payBack = payReturn(location);
+    if (this.payBack) cleanAddress(['paid']);
     await loadScript(SUPABASE_JS);
     const { createClient } = window.supabase;
     this.sb = createClient(NET.url, NET.anonKey);
@@ -164,11 +196,46 @@ export class RemoteServer extends SimServer {
       if (out.now) this.clockSkew = out.now - Date.now();
       this.lastSync = Date.now();
       this.onChange();
+      if (out.paid) this.onPaid(out.paid);
       return localize(out);
     } catch (e) {
       return { ok: false, error: 'Bez spojenia so serverom.' };
     } finally {
       this.busy = false;
+    }
+  }
+
+  // ---------------------------------------------------------------- gold bars through Stripe (Edge Function "pay")
+  payHeaders() { return { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.session.access_token, apikey: NET.anonKey }; }
+  payInfo() { return this.pay && Date.now() - this.pay.at < 300000 ? this.pay : null; }
+  // can this player buy now (payments switched on, and while Stripe is in test mode only for testers)
+  payStatus() {
+    if (this.payAsk) return this.payAsk;
+    this.payAsk = (async () => {
+      let info = { ready: false, test: false };
+      try {
+        if (this.session) {
+          const res = await fetch(NET.url + '/functions/v1/pay/status', { method: 'POST', headers: this.payHeaders(), body: '{}' });
+          const out = await res.json();
+          if (out && out.ok) info = { ready: !!out.ready, test: !!out.test };
+        }
+      } catch (e) { /* no answer: shown as not on sale, asked again in 5 minutes */ }
+      this.pay = { ...info, at: Date.now() };
+      this.payAsk = null;
+      return this.pay;
+    })();
+    return this.payAsk;
+  }
+  // a Stripe payment page for one pack: { ok, url } (the UI goes there) or { ok: false, error }
+  async checkout(i) {
+    if (!this.session) return { ok: false, error: payError('auth') };
+    try {
+      const res = await fetch(NET.url + '/functions/v1/pay/checkout', { method: 'POST', headers: this.payHeaders(), body: JSON.stringify({ pack: Number(i), lang: LANG }) });
+      const out = await res.json().catch(() => ({}));
+      if (out.ok && String(out.url).startsWith('https://checkout.stripe.com/')) return { ok: true, url: out.url }; // only ever Stripe's own page
+      return { ok: false, error: payError(out.code) };
+    } catch (e) {
+      return { ok: false, error: tt('Bez spojenia so serverom.') };
     }
   }
 

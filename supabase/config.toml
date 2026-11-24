@@ -3,3 +3,7 @@ project_id = "hitsnlicks"
 [functions.game]
 # the function checks the login token itself (and answers browser CORS preflights)
 verify_jwt = false
+
+[functions.pay]
+# checks the login token itself; /pay/webhook is called by Stripe and checked by its signature
+verify_jwt = false

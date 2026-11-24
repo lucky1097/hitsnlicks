@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261124111258';
-import { eventFx } from './events.js?v=20261124111258';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261124111258';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261124111258';
-import { GangMixin } from './gangs.js?v=20261124111258';
-import { DailyMixin } from './daily.js?v=20261124111258';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261124111258';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261124113004';
+import { eventFx } from './events.js?v=20261124113004';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261124113004';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261124113004';
+import { GangMixin } from './gangs.js?v=20261124113004';
+import { DailyMixin } from './daily.js?v=20261124113004';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261124113004';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -933,6 +933,7 @@ export class SimServer {
     return ok({ until: this.state.bmUntil });
   }
 
+  // offline test purchase only; online the bars are paid through Stripe and credited by applyPurchases
   buyBars(index) {
     if (this.live) return fail('Platby cez Stripe ešte nie sú zapojené.');
     const pack = CONFIG.barPacks[index];
@@ -940,6 +941,23 @@ export class SimServer {
     this.p.chains += pack.bars;
     this.save();
     return ok({ bars: pack.bars });
+  }
+
+  // bars paid through Stripe: list = [{ id, bars }] of payments the pay function recorded and api.js found not yet
+  // credited. state.paid remembers the last ids, so a payment is never credited twice even if the database could not
+  // mark it credited after the save. Returns the bars added.
+  applyPurchases(list) {
+    const paid = this.state.paid || (this.state.paid = []);
+    let bars = 0;
+    for (const x of list || []) {
+      const n = Math.floor(Number(x && x.bars));
+      if (!x || typeof x.id !== 'string' || paid.includes(x.id) || !(n > 0)) continue;
+      this.p.chains += n;
+      bars += n;
+      paid.push(x.id);
+    }
+    if (paid.length > 50) paid.splice(0, paid.length - 50);
+    return bars;
   }
 
   // { active, until, nextAt }: Ripper runs from nextAt for reaperRunMin, once per reaperEveryMin
