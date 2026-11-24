@@ -1,13 +1,13 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124225321';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124225321';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124225321';
-import { DAILY_TYPES } from './daily.js?v=20261124225321';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124225321';
-import { sound } from './sound.js?v=20261124225321';
-import { CAPTCHA } from './net.js?v=20261124225321';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124225321';
-import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124225321';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124232204';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124232204';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124232204';
+import { DAILY_TYPES } from './daily.js?v=20261124232204';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124232204';
+import { sound } from './sound.js?v=20261124232204';
+import { CAPTCHA } from './net.js?v=20261124232204';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124232204';
+import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124232204';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString(LOCALE);
@@ -22,11 +22,11 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 const pad = (n) => String(n).padStart(2, '0');
 const rar = (id) => RARITIES.find((r) => r.id === id) || RARITIES[0];
 const BACK = '<svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>';
-const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'photo_zlodej', dealer: 'photo_dlznik' };
+const BOT_ART = { svalovec: 'photo_svalovec', zlodej: 'photo_zlodej', dealer: 'photo_dealer' };
 // the street behind every fight, one per city
 const FIGHT_BG = { mesto1: 'photo_fightbg', mesto2: 'photo_fightbg2' };
 // where the face sits in each class artwork (CSS object-position)
-const BOT_FOCUS = { svalovec: '32% 7%' };
+const BOT_FOCUS = {};
 // fight animation: weapon cut-outs live in assets/fx (tools/cutout.ps1); guns drawn pointing left get
 // flipped so the muzzle faces the foe; fighters without a known weapon carry their class's usual one
 const FX_MUZZLE_LEFT = new Set(['w_deagle', 'w_gold1911', 'w_kalach', 'w_revolver', 'w_tommy_gold']);
@@ -37,7 +37,7 @@ const FX_TIP_DOWN_LEFT = new Set(['w_knife', 'w_hockey', 'w_bottle', 'w_oar', 'w
 const CLASS_WEAPON = { svalovec: 'bat', zlodej: 'knife', dealer: 'glock' };
 const fxArt = (n) => 'assets/fx/' + n + '.png';
 // class artwork shown when picking a class (more classes as their art arrives)
-const CLASS_ART = { svalovec: 'photo_svalovec' };
+const CLASS_ART = { svalovec: 'photo_svalovec', zlodej: 'photo_zlodej', dealer: 'photo_dealer' };
 
 // street pills: red = Šťastie, blue = class stat, green = life
 const PILL_ICON = {

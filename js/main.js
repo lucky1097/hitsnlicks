@@ -1,16 +1,16 @@
-import { tDom, tt } from './i18n.js?v=20261124225321'; // first: picks the language and translates the shared content
-import { SimServer } from './server.js?v=20261124225321';
-import { RemoteServer } from './remote.js?v=20261124225321';
-import { ONLINE } from './net.js?v=20261124225321';
-import { CONFIG } from './config.js?v=20261124225321';
-import { UI } from './ui.js?v=20261124225321';
-import { createWorld } from './world.js?v=20261124225321';
-import { sound } from './sound.js?v=20261124225321';
+import { tDom, tt } from './i18n.js?v=20261124232204'; // first: picks the language and translates the shared content
+import { SimServer } from './server.js?v=20261124232204';
+import { RemoteServer } from './remote.js?v=20261124232204';
+import { ONLINE } from './net.js?v=20261124232204';
+import { CONFIG } from './config.js?v=20261124232204';
+import { UI } from './ui.js?v=20261124232204';
+import { createWorld } from './world.js?v=20261124232204';
+import { sound } from './sound.js?v=20261124232204';
 
 tDom(document.getElementById('hud'));
 
 // warm the browser cache so screens open without blank images
-['photo_don', 'photo_don_wide', 'photo_diler', 'photo_diler_wide', 'photo_dlznik', 'photo_wexler', 'photo_svalovec',
+['photo_don', 'photo_don_wide', 'photo_diler', 'photo_diler_wide', 'photo_dealer', 'photo_wexler', 'photo_svalovec',
   'photo_zlodej', 'photo_fightbg', 'photo_fightbg2']
   .forEach((n) => { new Image().src = 'assets/art/' + n + '.jpg'; });
 
