@@ -9,7 +9,8 @@
 // Secrets (Lucky sets them in Supabase, they are never in the repo):
 //   STRIPE_SECRET_KEY      a secret or restricted key: sk_/rk_test_... while testing, sk_/rk_live_... for real money
 //   STRIPE_WEBHOOK_SECRET  whsec_... of the webhook endpoint https://<project>.supabase.co/functions/v1/pay/webhook
-//   PAY_TESTERS            player ids (comma-separated) who may buy while the key is a test key; nobody else can
+//   PAY_TESTERS            player ids (comma-separated). While it is set, only these players may buy, with a test key
+//                          or a live key (first real purchase before opening). Not set: live key = everyone, test key = nobody
 import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
 import { CONFIG } from './config.js';
 
@@ -58,7 +59,8 @@ function allowed(id: string) {
 }
 
 const ready = () => !!KEY && !!HOOK_SECRET;
-const mayBuy = (id: string) => ready() && (!TEST || TESTERS.includes(id));
+// testers set: only they buy (test or live key); none set: everyone with a live key, nobody with a test key
+const mayBuy = (id: string) => ready() && (TESTERS.length ? TESTERS.includes(id) : !TEST);
 
 async function player(req: Request) {
   const auth = req.headers.get('Authorization') || '';
