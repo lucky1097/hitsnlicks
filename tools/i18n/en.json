@@ -102,7 +102,6 @@
  "Béžová, hrdzavá, s preliačinou na dverách. Naštartuje na tretí pokus, ale potom nezastaví nič.": "Beige, rusty, with a dent in the door. Starts on the third try, but after that nothing can stop it.",
  "Celé mesto pod jeho oknom": "The Whole City Under His Window",
  "Celé čierne, len ručičky sú červené ako krv. Odpočítavajú čas, ktorý ti ostáva na splatenie dlhu.": "All black, only the hands are red as blood. They count down the time you have left to pay off your debt.",
- "Ceny sú vrátane DPH. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Prices include VAT. Payment is handled by Stripe; we never see your card details. The gold bars are credited right after payment, so there is no right of withdrawal for them. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Terms</a>",
  "Cestovať": "Travel",
  "Cesty po strechách": "Rooftop Routes",
  "Charizma": "Charisma",
@@ -1678,5 +1677,6 @@
  "životy {n}": "HP {n}",
  "„Polícia ťa má v hľadáčiku? Za správnu cenu sa papiere stratia.“": "“Police have you in their sights? For the right price, the paperwork gets lost.”",
  "−5 % čas misií": "−5% mission time",
- "−{p} čas misií": "−{p} mission time"
+ "−{p} čas misií": "−{p} mission time",
+ "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Prices are final. Payment is handled by Stripe; we never see your card details. The gold bars are credited right after payment, so there is no right of withdrawal for them. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Terms</a>"
 }

@@ -1,11 +1,11 @@
-import { tDom, tt } from './i18n.js?v=20261124113004'; // first: picks the language and translates the shared content
-import { SimServer } from './server.js?v=20261124113004';
-import { RemoteServer } from './remote.js?v=20261124113004';
-import { ONLINE } from './net.js?v=20261124113004';
-import { CONFIG } from './config.js?v=20261124113004';
-import { UI } from './ui.js?v=20261124113004';
-import { createWorld } from './world.js?v=20261124113004';
-import { sound } from './sound.js?v=20261124113004';
+import { tDom, tt } from './i18n.js?v=20261124152242'; // first: picks the language and translates the shared content
+import { SimServer } from './server.js?v=20261124152242';
+import { RemoteServer } from './remote.js?v=20261124152242';
+import { ONLINE } from './net.js?v=20261124152242';
+import { CONFIG } from './config.js?v=20261124152242';
+import { UI } from './ui.js?v=20261124152242';
+import { createWorld } from './world.js?v=20261124152242';
+import { sound } from './sound.js?v=20261124152242';
 
 tDom(document.getElementById('hud'));
 

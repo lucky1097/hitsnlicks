@@ -1315,7 +1315,7 @@ export default {
 "Skracovanie misií, ďalšie pokusy na bossov a v aréne": "Zkracování misí, další pokusy na bossy a v aréně",
 "Testovacia kúpa (len offline): tehličky sa pripíšu hneď.": "Testovací nákup (jen offline): cihličky se připíšou hned.",
 "Testovací režim: platí sa len testovacou kartou Stripe, nič sa nestrhne.": "Testovací režim: platí se jen testovací kartou Stripe, nic se nestrhne.",
-"Ceny sú vrátane DPH. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Ceny jsou včetně DPH. Platbu zpracovává Stripe, údaje o kartě nevidíme. Cihličky se připíšou hned po zaplacení, proto u nich nelze odstoupit od smlouvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmínky</a>",
+"Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Ceny jsou konečné. Platbu zpracovává Stripe, údaje o kartě nevidíme. Cihličky se připíšou hned po zaplacení, proto u nich nelze odstoupit od smlouvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmínky</a>",
 "Elixír Čierneho trhu": "Elixír Černého trhu",
 "Na {n} hodín ti otvorí Čierny trh vo všetkých obchodoch. Epické kusy ťa čakajú hocikedy, nielen v piatok večer.": "Na {n} hodin ti Černý trh otevře ve všech obchodech. Epické kusy na tebe čekají kdykoli, nejen v pátek večer.",
 "Účinkuje ešte <b data-until=\"{until}\"></b>. Ďalší elixír čas predĺži.": "Účinkuje ještě <b data-until=\"{until}\"></b>. Další elixír čas prodlouží.",

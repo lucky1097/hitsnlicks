@@ -102,7 +102,6 @@
  "Béžová, hrdzavá, s preliačinou na dverách. Naštartuje na tretí pokus, ale potom nezastaví nič.": "Beige, rostig, mit Beule in der Tür. Springt beim dritten Versuch an, danach hält sie nichts mehr auf.",
  "Celé mesto pod jeho oknom": "Die ganze Stadt unter seinem Fenster",
  "Celé čierne, len ručičky sú červené ako krv. Odpočítavajú čas, ktorý ti ostáva na splatenie dlhu.": "Ganz schwarz, nur die Zeiger sind blutrot. Sie zählen die Zeit herunter, die dir bleibt, um deine Schulden zu begleichen.",
- "Ceny sú vrátane DPH. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Preise inkl. MwSt. Die Zahlung wickelt Stripe ab, deine Kartendaten sehen wir nicht. Die Goldbarren werden sofort nach der Zahlung gutgeschrieben, deshalb gibt es dafür kein Widerrufsrecht. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Bedingungen</a>",
  "Cestovať": "Reisen",
  "Cesty po strechách": "Wege über die Dächer",
  "Charizma": "Charisma",
@@ -1678,5 +1677,6 @@
  "životy {n}": "Leben {n}",
  "„Polícia ťa má v hľadáčiku? Za správnu cenu sa papiere stratia.“": "„Die Polizei hat dich im Visier? Für den richtigen Preis verschwinden die Papiere.“",
  "−5 % čas misií": "−5 % Missionszeit",
- "−{p} čas misií": "−{p} Missionszeit"
+ "−{p} čas misií": "−{p} Missionszeit",
+ "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Endpreise. Die Zahlung wickelt Stripe ab, deine Kartendaten sehen wir nicht. Die Goldbarren werden sofort nach der Zahlung gutgeschrieben, deshalb gibt es dafür kein Widerrufsrecht. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Bedingungen</a>"
 }

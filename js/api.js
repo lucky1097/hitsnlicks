@@ -27,9 +27,9 @@
 //   deleteUser(id)   (the login itself: email and password)
 //   paidPurchases(id) -> [{ id, bars }]   (Stripe payments the pay function recorded, not yet credited)
 //   markCredited(ids)   (after the save that added their bars)
-import { SimServer } from './server.js?v=20261124113004';
-import { cleanName } from './config.js?v=20261124113004';
-import { GIVERS, SHOPS } from './data.js?v=20261124113004';
+import { SimServer } from './server.js?v=20261124152242';
+import { cleanName } from './config.js?v=20261124152242';
+import { GIVERS, SHOPS } from './data.js?v=20261124152242';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });

@@ -6575,7 +6575,7 @@
   "ctx": "ui.js:1686 scr_wexler"
  },
  {
-  "k": "Ceny sú vrátane DPH. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>",
+  "k": "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>",
   "kind": "ui",
   "ctx": "ui.js:1687 scr_wexler"
  },

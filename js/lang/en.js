@@ -1315,7 +1315,7 @@ export default {
 "Skracovanie misií, ďalšie pokusy na bossov a v aréne": "Shorter missions, extra boss and arena attempts",
 "Testovacia kúpa (len offline): tehličky sa pripíšu hneď.": "Test purchase (offline only): the bars are credited right away.",
 "Testovací režim: platí sa len testovacou kartou Stripe, nič sa nestrhne.": "Test mode: only Stripe test cards work, nothing is charged.",
-"Ceny sú vrátane DPH. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Prices include VAT. Payment is handled by Stripe; we never see your card details. The gold bars are credited right after payment, so there is no right of withdrawal for them. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Terms</a>",
+"Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Prices are final. Payment is handled by Stripe; we never see your card details. The gold bars are credited right after payment, so there is no right of withdrawal for them. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Terms</a>",
 "Elixír Čierneho trhu": "Black Market elixir",
 "Na {n} hodín ti otvorí Čierny trh vo všetkých obchodoch. Epické kusy ťa čakajú hocikedy, nielen v piatok večer.": "For {n} hours it opens the Black Market in every shop for you. Epic pieces are available any time, not only on Friday evening.",
 "Účinkuje ešte <b data-until=\"{until}\"></b>. Ďalší elixír čas predĺži.": "Still active for <b data-until=\"{until}\"></b>. Another elixir extends the time.",
