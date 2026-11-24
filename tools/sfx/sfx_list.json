@@ -1,53 +1,790 @@
 {
-  "style": "Cartoon-style sound effect for a gritty gangster video game: punchy, exaggerated, cool, not childish. No music, no voices.",
-  "stingStyle": "Cartoon-style short music sting for a gritty gangster video game: funky, swagger, punchy. No voices.",
-  "reuse": { "pistol": "B1_kresleny_pistol", "fist": "B2_kresleny_uder", "cash": "B3_kresleny_peniaze", "levelup": "B4_kresleny_uroven", "siren": "B5_kresleny_sirena" },
-  "sounds": [
-    ["swing", 0.6, "Fast whoosh of a baseball bat swung through the air."],
-    ["thud", 0.7, "Baseball bat hitting a body, heavy wooden thump."],
-    ["slash", 0.7, "Knife slash, sharp swish with a short blade ring."],
-    ["glass", 1.0, "Glass bottle smashed over someone's head, bright shatter."],
-    ["chain", 0.8, "Metal bike chain whipped and hitting, jangling clank."],
-    ["silenced", 0.6, "Silenced pistol shot, muffled thwip."],
-    ["revolver", 1.0, "Big revolver shot with a short metallic ring."],
-    ["heavy", 1.0, "Hand cannon pistol shot, very heavy deep boom."],
-    ["shotgun", 1.2, "Sawed-off shotgun blast, big boom."],
-    ["rifle", 0.8, "Single assault rifle shot, sharp crack."],
-    ["smg", 0.8, "Short burst of a Tommy gun, three quick shots."],
-    ["hit", 0.6, "Solid body hit in a street fight, punchy thump."],
-    ["crit", 1.0, "Devastating critical hit, huge comic smack with a bone crunch."],
-    ["whiff", 0.5, "Missed punch, quick whoosh through the air."],
-    ["clang", 0.8, "Blocked hit, metal clang like a punch stopped by a steel pipe."],
-    ["body", 0.8, "Body falling to the ground, heavy thump."],
-    ["boom", 2.5, "Car explosion, big fiery boom with falling debris."],
-    ["ignite", 1.2, "Molotov flame catching fire, whoosh of fire."],
-    ["carhit", 1.0, "Car bumping into someone, metal thud with a short tire screech."],
-    ["pill", 0.8, "Swallowing a pill, gulp followed by a quick magical shimmer."],
-    ["sparkle", 1.0, "Magical sparkle shimmer."],
-    ["whistle", 1.2, "Police whistle blown twice."],
-    ["tram", 1.5, "Old tram bell ringing twice, ding ding."],
-    ["horn", 1.0, "Car horn honked twice."],
-    ["click", 0.5, "Very short soft UI button click, a crisp snap."],
-    ["back", 0.5, "Very short soft UI back button click, lower pitched."],
-    ["error", 0.6, "UI error, two short low buzzes."],
-    ["up", 0.5, "UI upgrade, quick rising pop."],
-    ["go", 0.6, "UI confirm, two-note rising pluck."],
-    ["bars", 0.8, "Gold bars clinking together, heavy metallic clink."],
-    ["anvil", 1.0, "Heavy hammer striking an anvil twice."],
-    ["ready", 1.0, "Notification, two bright bell dings."],
-    ["reward", 1.0, "STING Reward jingle: quick funky brass stab with jingling coins."],
-    ["win", 2.0, "STING Victory: short funky brass fanfare with a bass hit."],
-    ["lose", 2.0, "STING Defeat: sad descending trombone wah-wah-wah."],
-    ["loot_bezny", 0.8, "Item picked up, two bright bell dings."],
-    ["loot_epicky", 1.2, "Epic item found, sparkling magical rising chime."],
-    ["loot_legendarny", 2.0, "STING Legendary item found: golden shimmer, big brass chord and a bell."],
-    ["cock", 0.5, "Pistol slide racked, cocking click."],
-    ["shing", 0.6, "Knife drawn from a sheath, metallic shing."],
-    ["cloth", 0.6, "Jacket put on, cloth rustle."],
-    ["steps", 0.6, "Two footsteps of sneakers on concrete."],
-    ["jingle", 0.6, "Gold chain necklace jingling."],
-    ["ting", 0.6, "Ring tapped on glass, single bright ting."],
-    ["tick", 0.8, "Wristwatch ticking, four ticks."],
-    ["engine", 1.5, "Car engine started with a key, then a revving vroom."]
-  ]
+ "note": "Realistic set, approved by Lucky 2026-11-24. Generated on Higgsfield: seed_audio (44.1 kHz wav) for effects, elevenlabs_music_v2_5 (4 s, instrumental) for the music stings. Each sound is one or more pieces: a take is generated from `prompt`, the part from..to seconds is placed at `at` seconds (3 ms fade in, 8 ms fade out, optional gainDb), the mix is optionally high-passed twice at highpassHz (removes the sub boom Seed Audio adds to punches), cut to `keep` seconds and faded out over the last `fade` seconds. That mix is zdroj_art/sfx_raw/<name>.mp3; tools/sfx/sfx_process.mjs turns it into assets/sfx/<name>.mp3.",
+ "sounds": {
+  "swing": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a wooden baseball bat swung hard and fast past the microphone, one short deep whoosh of air",
+     "from": 0.5,
+     "to": 1.25,
+     "at": 0
+    }
+   ],
+   "keep": 0.7,
+   "fade": 0.15
+  },
+  "fist": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one bare-knuckle punch landing on a man's face, a short sharp slap and thud of knuckles on skin and cheekbone, very short and dry like real close-miked foley, no whoosh, no bass boom, no reverb",
+     "from": 0.225,
+     "to": 0.55,
+     "at": 0
+    }
+   ],
+   "keep": 0.3,
+   "fade": 0.2,
+   "highpassHz": 80
+  },
+  "thud": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a wooden baseball bat hitting a man's body once, a heavy dull thump of wood into flesh and clothing",
+     "from": 0.53,
+     "to": 1.25,
+     "at": 0
+    }
+   ],
+   "keep": 0.65,
+   "fade": 0.2
+  },
+  "slash": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a knife slashing fast through a leather jacket, one sharp swish and a short fabric rip",
+     "from": 0.4,
+     "to": 0.92,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a knife slashing fast through a leather jacket, one sharp swish and a short fabric rip",
+     "from": 1.02,
+     "to": 1.45,
+     "at": 0.42
+    }
+   ],
+   "keep": 0.8,
+   "fade": 0.15
+  },
+  "glass": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a glass beer bottle smashed on a man's head, one loud glass shatter, then shards falling on a stone floor",
+     "from": 0.04,
+     "to": 1.3,
+     "at": 0
+    }
+   ],
+   "keep": 1.1,
+   "fade": 0.35
+  },
+  "chain": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a heavy steel chain slammed against a metal pipe, one loud impact with rattling chain links",
+     "from": 0.08,
+     "to": 1.1,
+     "at": 0
+    }
+   ],
+   "keep": 0.95,
+   "fade": 0.35
+  },
+  "pistol": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a single 9 mm handgun gunshot in a narrow stone street, one sharp loud crack with a short echo",
+     "from": 0.46,
+     "to": 1.5,
+     "at": 0
+    }
+   ],
+   "keep": 0.95,
+   "fade": 0.45
+  },
+  "silenced": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one shot from a pistol fitted with a suppressor, a sharp muffled spitting crack, immediately followed by the loud metallic clack of the slide cycling, close, dry, no echo",
+     "from": 0.285,
+     "to": 0.75,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a pistol slide racked back and released, one sharp metallic click-clack, close",
+     "from": 0.455,
+     "to": 0.6,
+     "at": 0.035,
+     "gainDb": -5
+    }
+   ],
+   "keep": 0.5,
+   "fade": 0.2
+  },
+  "revolver": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one .357 Magnum revolver gunshot outdoors, one loud powerful bang with a short echo",
+     "from": 0.04,
+     "to": 1.2,
+     "at": 0
+    }
+   ],
+   "keep": 1.05,
+   "fade": 0.5
+  },
+  "heavy": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one shot from a .50 caliber Desert Eagle hand cannon, one extremely loud deep blast with a heavy low boom",
+     "from": 1.02,
+     "to": 2.3,
+     "at": 0
+    }
+   ],
+   "keep": 1.15,
+   "fade": 0.55
+  },
+  "shotgun": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one blast from a sawed-off double-barrel shotgun, one huge loud boom with deep low end and a short echo",
+     "from": 0,
+     "to": 1.4,
+     "at": 0
+    }
+   ],
+   "keep": 1.25,
+   "fade": 0.55
+  },
+  "rifle": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one assault rifle gunshot outdoors, one sharp loud high crack with a short echo",
+     "from": 0.08,
+     "to": 1,
+     "at": 0
+    }
+   ],
+   "keep": 0.85,
+   "fade": 0.4
+  },
+  "smg": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a short burst of exactly three rapid shots from a Thompson submachine gun, fast rat-tat-tat",
+     "from": 0.055,
+     "to": 0.226,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a short burst of exactly three rapid shots from a Thompson submachine gun, fast rat-tat-tat",
+     "from": 1.127,
+     "to": 1.8,
+     "at": 0.171
+    }
+   ],
+   "keep": 0.8,
+   "fade": 0.3
+  },
+  "hit": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one hard punch landing in a man's stomach, a short dull heavy thud of a fist into body and clothing, very short and dry like real close-miked foley, no whoosh, no bass boom, no reverb",
+     "from": 0.385,
+     "to": 0.9,
+     "at": 0
+    }
+   ],
+   "keep": 0.42,
+   "fade": 0.3,
+   "highpassHz": 70
+  },
+  "crit": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one bare-knuckle punch landing on a man's face, a short sharp slap and thud of knuckles on skin and cheekbone, very short and dry like real close-miked foley, no whoosh, no bass boom, no reverb",
+     "from": 0.5,
+     "to": 0.9,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a thick stalk of celery snapped in half right next to the microphone, one sharp dry crunchy crack, very short",
+     "from": 0.555,
+     "to": 0.9,
+     "at": 0.012,
+     "gainDb": -3
+    }
+   ],
+   "keep": 0.42,
+   "fade": 0.25,
+   "highpassHz": 80
+  },
+  "whiff": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a fast punch that misses, one short swish of a jacket sleeve through the air",
+     "from": 0.32,
+     "to": 0.82,
+     "at": 0
+    }
+   ],
+   "keep": 0.45,
+   "fade": 0.12
+  },
+  "clang": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a steel pipe hitting a metal bar, one hard metallic clang with a short ringing tail",
+     "from": 0.16,
+     "to": 0.95,
+     "at": 0
+    }
+   ],
+   "keep": 0.75,
+   "fade": 0.35
+  },
+  "body": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a grown man falls and hits a concrete floor, one heavy dull body thump with a short slap of clothes, then silence, close and dry",
+     "from": 0.25,
+     "to": 1.2,
+     "at": 0
+    }
+   ],
+   "keep": 0.85,
+   "fade": 0.35
+  },
+  "boom": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a car exploding in a street, a huge deep explosion blast, then fire roaring and pieces of metal falling on the road",
+     "from": 0.08,
+     "to": 2.7,
+     "at": 0
+    }
+   ],
+   "keep": 2.5,
+   "fade": 0.9
+  },
+  "ignite": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a glass bottle with burning petrol thrown on the ground, the glass breaks, then fire ignites with a sudden whoosh and crackles",
+     "from": 0.08,
+     "to": 1.7,
+     "at": 0
+    }
+   ],
+   "keep": 1.5,
+   "fade": 0.45
+  },
+  "carhit": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a car hitting a pedestrian at low speed, one dull heavy thump on the car bonnet, then a short tire screech",
+     "from": 0.55,
+     "to": 1.2,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a car hitting a pedestrian at low speed, one dull heavy thump on the car bonnet, then a short tire screech",
+     "from": 2.45,
+     "to": 3.4,
+     "at": 0.45
+    }
+   ],
+   "keep": 1.3,
+   "fade": 0.35
+  },
+  "siren": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a European police car siren in a city street, a two-tone siren alternating between a high pitch and a low pitch about once per second",
+     "build": "two-tone: 0.55-1.25 s of the take, alternated with itself pitched up a fourth (x1.33484, same tempo), low-high-high-low with 40 ms crossfades",
+     "from": 0,
+     "to": 2.66,
+     "at": 0
+    }
+   ],
+   "keep": 2.6,
+   "fade": 0.25
+  },
+  "whistle": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a metal police whistle blown twice by a policeman, two sharp shrill blasts",
+     "from": 0.09,
+     "to": 0.56,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a metal police whistle blown twice by a policeman, two sharp shrill blasts",
+     "from": 2,
+     "to": 2.42,
+     "at": 0.62
+    }
+   ],
+   "keep": 1.1,
+   "fade": 0.06
+  },
+  "tram": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: an old city tram's mechanical bell ringing exactly twice, ding ding, bright metal bell",
+     "from": 1.19,
+     "to": 2.8,
+     "at": 0
+    }
+   ],
+   "keep": 1.5,
+   "fade": 0.5
+  },
+  "horn": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: an old 1940s car horn honked twice, two short loud honks",
+     "from": 0.08,
+     "to": 1.06,
+     "at": 0
+    }
+   ],
+   "keep": 0.98,
+   "fade": 0.1
+  },
+  "engine": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: an old V8 car engine started with the key, the starter cranks, the engine catches and revs once loudly",
+     "from": 2.15,
+     "to": 4.1,
+     "at": 0
+    }
+   ],
+   "keep": 1.8,
+   "fade": 0.45
+  },
+  "cash": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: banknotes counted quickly by hand, crisp paper bills flicked one after another, then a short clink of coins on a wooden table",
+     "from": 1.85,
+     "to": 2.32,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: banknotes counted quickly by hand, crisp paper bills flicked one after another, then a short clink of coins on a wooden table",
+     "from": 5.62,
+     "to": 6.3,
+     "at": 0.42
+    }
+   ],
+   "keep": 1,
+   "fade": 0.25
+  },
+  "bars": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a heavy solid gold bar set down hard on top of another gold bar on a wooden table, one dense dull metallic clunk with a short low metal ring, close, dry",
+     "from": 0.365,
+     "to": 1.4,
+     "at": 0
+    }
+   ],
+   "keep": 0.9,
+   "fade": 0.45
+  },
+  "anvil": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a blacksmith's hammer striking a steel anvil exactly twice, two loud bright metallic clangs",
+     "from": 0.08,
+     "to": 0.6,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a blacksmith's hammer striking a steel anvil exactly twice, two loud bright metallic clangs",
+     "from": 1.88,
+     "to": 2.7,
+     "at": 0.42
+    }
+   ],
+   "keep": 1.15,
+   "fade": 0.4
+  },
+  "ready": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a brass hotel reception service bell pressed twice, two bright dings",
+     "from": 0.08,
+     "to": 0.52,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a brass hotel reception service bell pressed twice, two bright dings",
+     "from": 1.01,
+     "to": 1.95,
+     "at": 0.38
+    }
+   ],
+   "keep": 1,
+   "fade": 0.45
+  },
+  "reward": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a vintage mechanical cash register, a key is pressed, its bell rings and the drawer slides open with coins jingling",
+     "from": 2.08,
+     "to": 3.4,
+     "at": 0
+    }
+   ],
+   "keep": 1.2,
+   "fade": 0.4
+  },
+  "win": {
+   "pieces": [
+    {
+     "model": "elevenlabs_music_v2_5",
+     "prompt": "Real acoustic instruments, live studio recording, no vocals. Short victory fanfare sting, 1930s jazz big band: trumpets play a quick bright rising four-note fanfare, ta-ta-ta-taaa, with a snare roll and a cymbal crash, ending on a held major chord.",
+     "duration": 4,
+     "from": 0.12,
+     "to": 2.6,
+     "at": 0
+    }
+   ],
+   "keep": 2.3,
+   "fade": 0.7
+  },
+  "lose": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Music only, no voice: a sad slow piano plays three falling notes in a minor key, then a low soft final chord, quiet noir film score",
+     "from": 0.85,
+     "to": 1.4,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Music only, no voice: a sad slow piano plays three falling notes in a minor key, then a low soft final chord, quiet noir film score",
+     "from": 1.75,
+     "to": 2.3,
+     "at": 0.5
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Music only, no voice: a sad slow piano plays three falling notes in a minor key, then a low soft final chord, quiet noir film score",
+     "from": 2.75,
+     "to": 3.95,
+     "at": 1
+    }
+   ],
+   "keep": 2.2,
+   "fade": 0.9
+  },
+  "levelup": {
+   "pieces": [
+    {
+     "model": "elevenlabs_music_v2_5",
+     "prompt": "Real acoustic instruments, live studio recording, no vocals. Short level-up sting, 1930s jazz band: clarinet and trumpet play a fast rising scale run upward, ending on a bright major chord with a cymbal swell.",
+     "duration": 4,
+     "from": 0.84,
+     "to": 2.12,
+     "at": 0
+    },
+    {
+     "model": "elevenlabs_music_v2_5",
+     "prompt": "Real acoustic instruments, live studio recording, no vocals. Short level-up sting, 1930s jazz band: clarinet and trumpet play a fast rising scale run upward, ending on a bright major chord with a cymbal swell.",
+     "duration": 4,
+     "from": 3.755,
+     "to": 4.9,
+     "at": 1.26
+    }
+   ],
+   "keep": 2.2,
+   "fade": 0.6
+  },
+  "loot_bezny": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a small metal object dropped into a leather bag, one short clink",
+     "from": 0.23,
+     "to": 0.95,
+     "at": 0
+    }
+   ],
+   "keep": 0.7,
+   "fade": 0.3
+  },
+  "loot_epicky": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a wooden jewelry box opened, a soft creak, then a bright tinkle of a crystal glass chime",
+     "from": 0.75,
+     "to": 2.2,
+     "at": 0
+    }
+   ],
+   "keep": 1.4,
+   "fade": 0.45
+  },
+  "loot_legendarny": {
+   "pieces": [
+    {
+     "model": "elevenlabs_music_v2_5",
+     "prompt": "Real acoustic instruments, live studio recording, no vocals. Short majestic reveal sting: a big warm brass chord with a deep tubular bell strike and a shimmering glockenspiel, like finding treasure.",
+     "duration": 4,
+     "from": 0.02,
+     "to": 2.2,
+     "at": 0
+    }
+   ],
+   "keep": 2,
+   "fade": 0.7
+  },
+  "sparkle": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a glass wind chime gently brushed by hand, a bright delicate tinkling",
+     "from": 0.19,
+     "to": 1.3,
+     "at": 0
+    }
+   ],
+   "keep": 1,
+   "fade": 0.4
+  },
+  "pill": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a plastic pill bottle shaken once with pills rattling inside",
+     "from": 0.19,
+     "to": 0.95,
+     "at": 0
+    }
+   ],
+   "keep": 0.75,
+   "fade": 0.2
+  },
+  "cock": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a pistol slide racked back and released, one sharp metallic click-clack, close",
+     "from": 0.3,
+     "to": 0.62,
+     "at": 0
+    }
+   ],
+   "keep": 0.3,
+   "fade": 0.04
+  },
+  "shing": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a steel knife pulled quickly out of a leather sheath, one short metallic scrape",
+     "from": 1.13,
+     "to": 1.85,
+     "at": 0
+    }
+   ],
+   "keep": 0.65,
+   "fade": 0.2
+  },
+  "cloth": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a man puts on a stiff leather jacket, a loud close crinkly rustle and creak of thick leather and fabric for about half a second, dry studio foley",
+     "from": 0.3,
+     "to": 1.2,
+     "at": 0
+    }
+   ],
+   "keep": 0.85,
+   "fade": 0.3
+  },
+  "steps": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: exactly two footsteps of leather shoes on a concrete pavement, close and dry",
+     "from": 0.63,
+     "to": 1,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: exactly two footsteps of leather shoes on a concrete pavement, close and dry",
+     "from": 1.57,
+     "to": 1.97,
+     "at": 0.34
+    }
+   ],
+   "keep": 0.72,
+   "fade": 0.12
+  },
+  "jingle": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a heavy gold link chain necklace lifted from a wooden table and shaken once in the hand, many small metal links clinking and rattling against each other for about half a second, close, dry",
+     "from": 0.66,
+     "to": 1.8,
+     "at": 0
+    }
+   ],
+   "keep": 1,
+   "fade": 0.35
+  },
+  "ting": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a gold ring tapped once against the rim of a crystal wine glass, one clear bright glass ting with a natural ringing decay, close",
+     "from": 0.34,
+     "to": 2,
+     "at": 0
+    }
+   ],
+   "keep": 1.2,
+   "fade": 0.7
+  },
+  "tick": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a mechanical wristwatch close to the microphone, four clear ticks",
+     "from": 0.09,
+     "to": 0.22,
+     "at": 0
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a mechanical wristwatch close to the microphone, four clear ticks",
+     "from": 1.09,
+     "to": 1.22,
+     "at": 0.2
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a mechanical wristwatch close to the microphone, four clear ticks",
+     "from": 2.09,
+     "to": 2.22,
+     "at": 0.4
+    },
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a mechanical wristwatch close to the microphone, four clear ticks",
+     "from": 3.09,
+     "to": 3.22,
+     "at": 0.6
+    }
+   ],
+   "keep": 0.78,
+   "fade": 0.05
+  },
+  "click": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one short crisp click of a small mechanical push button",
+     "from": 0.09,
+     "to": 0.24,
+     "at": 0
+    }
+   ],
+   "keep": 0.14,
+   "fade": 0.05
+  },
+  "back": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one soft low click of a light switch being turned off",
+     "from": 1.13,
+     "to": 1.34,
+     "at": 0
+    }
+   ],
+   "keep": 0.18,
+   "fade": 0.06
+  },
+  "error": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: two quick knocks of a knuckle on a solid wooden table, knock knock, short dry hollow wood sounds, close",
+     "from": 0.255,
+     "to": 0.65,
+     "at": 0
+    }
+   ],
+   "keep": 0.45,
+   "fade": 0.15
+  },
+  "up": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: one coin dropped onto a small pile of coins, a single bright clink",
+     "from": 0,
+     "to": 0.65,
+     "at": 0
+    }
+   ],
+   "keep": 0.55,
+   "fade": 0.25
+  },
+  "go": {
+   "pieces": [
+    {
+     "model": "seed_audio",
+     "prompt": "Sound effect only, no voice, no music: a vintage typewriter, one key strike followed right away by the small carriage bell ding",
+     "from": 0.15,
+     "to": 1.1,
+     "at": 0
+    }
+   ],
+   "keep": 0.85,
+   "fade": 0.35
+  }
+ }
 }

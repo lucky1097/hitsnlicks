@@ -7,13 +7,13 @@
 //   ttn(n, 'hodina|hodiny|hodín')               the plural form for n (Slovak forms: 1 | 2–4 | 5+)
 //   tts(msg)                                     a message from the server (exact text, or a template with {…})
 // (the names are unusual on purpose: ui.js uses t as a variable in many places)
-import * as DATA from './data.js?v=20261124153524';
-import * as CONF from './config.js?v=20261124153524';
-import * as EVENTS from './events.js?v=20261124153524';
-import * as DAILY from './daily.js?v=20261124153524';
-import * as MEDALS from './medals.js?v=20261124153524';
-import * as LOOKS from './looks.js?v=20261124153524';
-import { walkText } from './i18n-walk.js?v=20261124153524';
+import * as DATA from './data.js?v=20261124193336';
+import * as CONF from './config.js?v=20261124193336';
+import * as EVENTS from './events.js?v=20261124193336';
+import * as DAILY from './daily.js?v=20261124193336';
+import * as MEDALS from './medals.js?v=20261124193336';
+import * as LOOKS from './looks.js?v=20261124193336';
+import { walkText } from './i18n-walk.js?v=20261124193336';
 
 export const LANGS = [
   { id: 'sk', short: 'SK', name: 'Slovenčina', locale: 'sk-SK' },

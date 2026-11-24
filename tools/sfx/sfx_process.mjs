@@ -1,6 +1,7 @@
 // Turns the generated sounds (zdroj_art/sfx_raw/<name>.mp3, local only) into the game's files (assets/sfx/<name>.mp3):
 // trims silence at both ends, brings each to a loudness by kind (RMS target, peak limited), short fade-out, mono mp3.
-// Needs ffmpeg + ffprobe on PATH. Prompts for the generator: tools/sfx/sfx_list.json (Higgsfield mirelo_text_to_audio).
+// Needs ffmpeg + ffprobe on PATH. How each raw sound was generated and cut: tools/sfx/sfx_list.json (Higgsfield
+// seed_audio for effects, elevenlabs_music_v2_5 for the music stings).
 //   node tools/sfx/sfx_process.mjs          all sounds
 //   node tools/sfx/sfx_process.mjs a b c    only these
 import { execFileSync, spawnSync } from 'node:child_process';

@@ -90,6 +90,9 @@ async function checkout(user: { id: string; email?: string }, body: any) {
   put('line_items[0][price_data][product_data][name]', NAME[lang](pack.bars));
   put('line_items[0][price_data][product_data][tax_code]', 'txcd_10000000'); // electronically supplied services
   put('automatic_tax[enabled]', 'true');
+  // vollgas s.r.o. sells (not Stripe as merchant of record): Managed Payments is on by default on the account and
+  // refuses custom_text, which carries the withdrawal-waiver consent
+  put('managed_payments[enabled]', 'false');
   put('client_reference_id', user.id);
   for (const [k, v] of Object.entries({ app: APP, user_id: user.id, pack: i, bars: pack.bars })) {
     put('metadata[' + k + ']', v);
