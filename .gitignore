@@ -15,3 +15,7 @@ zdroj_art/
 zalohy/
 # temporary exports of a player's save for balance tests
 *.tmp.json
+# secrets and local environment files never go to the public repo
+.env
+.env.*
+*.pem

@@ -27,9 +27,11 @@
 //   deleteUser(id)   (the login itself: email and password)
 //   paidPurchases(id) -> [{ id, bars }]   (Stripe payments the pay function recorded, not yet credited)
 //   markCredited(ids)   (after the save that added their bars)
-import { SimServer } from './server.js?v=20261124232204';
-import { cleanName } from './config.js?v=20261124232204';
-import { GIVERS, SHOPS } from './data.js?v=20261124232204';
+//   reversedPurchases(id) -> [{ id, bars, credited }]   (refunded or charged-back payments not taken back yet)
+//   markReversed(ids)   (after the save that took their bars back)
+import { SimServer } from './server.js?v=20261125005013';
+import { cleanName } from './config.js?v=20261125005013';
+import { GIVERS, SHOPS } from './data.js?v=20261125005013';
 
 const memStore = { load: () => null, save() {}, clear() {} };
 const fail = (error) => ({ ok: false, error });
@@ -184,6 +186,8 @@ export async function handle(db, userId, action, args = []) {
     // right after the payment page) and added in this same save, so they cannot be lost or doubled
     // (a failed lookup must not break the sync: the payment waits for the next one)
     const pending = action === 'sync' && s.state && db.paidPurchases ? await db.paidPurchases(userId).catch((e) => { console.error('paidPurchases failed', e); return []; }) : [];
+    // payments refunded or charged back since: their bars are taken back in this same save (down to zero at most)
+    const reversed = action === 'sync' && s.state && db.reversedPurchases ? await db.reversedPurchases(userId).catch((e) => { console.error('reversedPurchases failed', e); return []; }) : [];
     if (row) s.state.pvp.points = row.points; // points live in their own column (other players change them)
     if (s.state && (action === 'arena' || action === 'sync' || action === 'fightArena')) {
       if (action === 'arena' || !s.state.pvp.opponents) s.arenaPool = await db.arenaPool(userId, s.state.pvp.points, 3);
@@ -232,6 +236,7 @@ export async function handle(db, userId, action, args = []) {
       ctx.memberChanges = ctx.memberChanges.filter((m) => m.id === userId && m.gang === null);
     }
     if (pending.length) { const bars = s.applyPurchases(pending); if (bars) result = { ...result, paid: bars }; }
+    if (reversed.length) { const bars = s.reversePurchases(reversed); if (bars) result = { ...result, taken: bars }; }
     refresh(s);
 
     // ---- save: the player, every gang that changed, the city if it changed, membership moves
@@ -248,6 +253,8 @@ export async function handle(db, userId, action, args = []) {
     if (!saved) continue; // someone else won the race: run again on fresh rows
     // state.paid already keeps them from being added twice; the mark only keeps the next lookups short
     if (pending.length) { try { await db.markCredited(pending.map((x) => x.id)); } catch (e) { console.error('markCredited failed', e); } }
+    // state.reversed keeps them from being taken twice; the mark keeps the next lookups short
+    if (reversed.length) { try { await db.markReversed(reversed.map((x) => x.id)); } catch (e) { console.error('markReversed failed', e); } }
 
     if (ctx.otherLogs.length) await db.addGangLogs(ctx.otherLogs);
     if (result && result.result && result.result.defenderId) await db.addPoints(result.result.defenderId, -result.result.defenderLoss);
@@ -354,8 +361,12 @@ export function memoryDb() {
     async deleteUser(id) { this.deletedUsers.push(id); },
     // Stripe payments: the pay function's purchases table (addPurchase stands in for its webhook in ?mock)
     purchases: [],
-    addPurchase(userId, bars) { const id = 'cs_mock_' + Math.random().toString(36).slice(2, 10); this.purchases.push({ id, userId, bars, credited: false }); return id; },
-    async paidPurchases(id) { return this.purchases.filter((x) => x.userId === id && !x.credited).map((x) => ({ id: x.id, bars: x.bars })); },
+    addPurchase(userId, bars) { const id = 'cs_mock_' + Math.random().toString(36).slice(2, 10); this.purchases.push({ id, userId, bars, credited: false, status: 'paid', reversed: false }); return id; },
+    // a refund or a chargeback, as the pay function's webhook records it
+    refundPurchase(id, status = 'refunded') { const x = this.purchases.find((p) => p.id === id); if (x) x.status = status; },
+    async paidPurchases(id) { return this.purchases.filter((x) => x.userId === id && x.status === 'paid' && !x.credited).map((x) => ({ id: x.id, bars: x.bars })); },
     async markCredited(ids) { for (const x of this.purchases) if (ids.includes(x.id)) x.credited = true; },
+    async reversedPurchases(id) { return this.purchases.filter((x) => x.userId === id && x.status !== 'paid' && !x.reversed).map((x) => ({ id: x.id, bars: x.bars, credited: x.credited })); },
+    async markReversed(ids) { for (const x of this.purchases) if (ids.includes(x.id)) x.reversed = true; },
   };
 }

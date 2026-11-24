@@ -1,11 +1,11 @@
 // Online client: the same SimServer, but only as a read-only mirror of the state the real server sent.
 // Every action goes to the Edge Function "game"; its answer replaces the mirror. Things the server rolls
 // at random (mission offers, shop stock, arena opponents, rival gang moves) are never rolled here.
-import { SimServer } from './server.js?v=20261124232204';
-import { NET } from './net.js?v=20261124232204';
-import { CONFIG } from './config.js?v=20261124232204';
-import { SHOPS } from './data.js?v=20261124232204';
-import { LANG, tt, tts } from './i18n.js?v=20261124232204';
+import { SimServer } from './server.js?v=20261125005013';
+import { NET } from './net.js?v=20261125005013';
+import { CONFIG } from './config.js?v=20261125005013';
+import { SHOPS } from './data.js?v=20261125005013';
+import { LANG, tt, tts } from './i18n.js?v=20261125005013';
 
 // the server answers in Slovak: names, titles and story lines in an answer are put into the player's language here
 // (errors stay Slovak, the UI checks some of them and ui.toast translates what it shows)
@@ -85,6 +85,7 @@ export class RemoteServer extends SimServer {
     this.authBack = null; // { type, session } or { error } when the page was opened from an account email (see ui.authBack)
     this.payBack = null; // { id } or { cancel } when the page was opened from Stripe's payment page (see ui.payBack)
     this.onPaid = () => {}; // bars paid through Stripe were just credited (an answer carries paid: <bars>)
+    this.onTaken = () => {}; // a refunded or charged-back payment took its bars back (an answer carries taken: <bars>)
     this.pay = null; // { ready, test, at }: can this player buy bars now (pay/status, kept 5 minutes)
     this.payAsk = null;
   }
@@ -96,7 +97,7 @@ export class RemoteServer extends SimServer {
 
   // ?mock in the address: no Supabase, the server API runs in this browser against an in-memory database
   async initMock() {
-    const { handle, memoryDb } = await import('./api.js?v=20261124232204');
+    const { handle, memoryDb } = await import('./api.js?v=20261125005013');
     const db = memoryDb();
     const fake = { user: { id: 'mock-user', email: 'test@mock' } };
     this.sb = { auth: { signOut: async () => {}, signInWithPassword: async () => ({ data: { session: fake } }), signUp: async () => ({ data: { session: fake } }), resetPasswordForEmail: async () => ({}),
@@ -109,6 +110,7 @@ export class RemoteServer extends SimServer {
       this.lastSync = Date.now();
       this.onChange();
       if (out.paid) this.onPaid(out.paid);
+      if (out.taken) this.onTaken(out.taken);
       return localize(out);
     };
     // payments: always on, in Stripe's test mode; a purchase is recorded at once, as if Stripe's webhook came
@@ -168,7 +170,10 @@ export class RemoteServer extends SimServer {
   async setPassword(password) {
     if (!this.session) return { ok: false, error: 'Nie si prihlásený.' };
     const { error } = await this.sb.auth.updateUser({ password });
-    return error ? { ok: false, error: authError(error) } : { ok: true };
+    if (error) return { ok: false, error: authError(error) };
+    // whoever knew the old password is logged out on every other device; this one stays logged in
+    try { await this.sb.auth.signOut({ scope: 'others' }); } catch (e) { /* the password is changed anyway */ }
+    return { ok: true };
   }
 
   // the account emails (new password) follow the language chosen here
@@ -197,6 +202,7 @@ export class RemoteServer extends SimServer {
       this.lastSync = Date.now();
       this.onChange();
       if (out.paid) this.onPaid(out.paid);
+      if (out.taken) this.onTaken(out.taken);
       return localize(out);
     } catch (e) {
       return { ok: false, error: 'Bez spojenia so serverom.' };

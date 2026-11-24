@@ -462,7 +462,7 @@
  {
   "k": "Skryť sa",
   "kind": "data",
-  "ctx": "CITIES.mesto1.pois.11.verb | CITIES.mesto2.pois.8.verb | ui.js:402 scr_hideout"
+  "ctx": "CITIES.mesto1.pois.11.verb | CITIES.mesto2.pois.8.verb | ui.js:415 scr_hideout"
  },
  {
   "k": "Taxi",
@@ -472,7 +472,7 @@
  {
   "k": "Cestovať",
   "kind": "data",
-  "ctx": "CITIES.mesto1.pois.12.verb | CITIES.mesto2.pois.0.verb | ui.js:1590 scr_travel | ui.js:1593 scr_travel"
+  "ctx": "CITIES.mesto1.pois.12.verb | CITIES.mesto2.pois.0.verb | ui.js:1611 scr_travel | ui.js:1614 scr_travel"
  },
  {
   "k": "Pozrieť",
@@ -537,7 +537,7 @@
  {
   "k": "Garáž",
   "kind": "data",
-  "ctx": "CITIES.mesto1.names.mechanik | TURF_KINDS.garaz.name | ui.js:1535 scr_upgrade"
+  "ctx": "CITIES.mesto1.names.mechanik | TURF_KINDS.garaz.name | ui.js:1556 scr_upgrade"
  },
  {
   "k": "Štvrť pri jazierkach, kde si začínal. Don, Díler a 25 bossov.",
@@ -772,7 +772,7 @@
  {
   "k": "Postava",
   "kind": "data",
-  "ctx": "GOALS.5.go.0 | ui.js:55 | ui.js:57 | ui.js:82"
+  "ctx": "GOALS.5.go.0 | ui.js:57 | ui.js:59 | ui.js:84"
  },
  {
   "k": "Poraz Pitbulla, prvého bossa. Pred súbojom uvidíš šancu na výhru.",
@@ -792,7 +792,7 @@
  {
   "k": "Zápasy",
   "kind": "data",
-  "ctx": "GOALS.8.go.0 | ui.js:1343 scr_hall"
+  "ctx": "GOALS.8.go.0 | ui.js:1364 scr_hall"
  },
  {
   "k": "Poraz druhého bossa, Starého Morica.",
@@ -3677,7 +3677,7 @@
  {
   "k": "Autobazár",
   "kind": "data",
-  "ctx": "SHOPS.autobazar.name | ui.js:1522 scr_upgrade"
+  "ctx": "SHOPS.autobazar.name | ui.js:1543 scr_upgrade"
  },
  {
   "k": "Bez papierov, bez otázok, bez záruky.",
@@ -3997,7 +3997,7 @@
  {
   "k": "Misie",
   "kind": "data",
-  "ctx": "MEDALS.0.name | ui.js:84 | ui.js:1434 scr_missions | ui.js:1438 scr_missions"
+  "ctx": "MEDALS.0.name | ui.js:86 | ui.js:1455 scr_missions | ui.js:1459 scr_missions"
  },
  {
   "k": "splnených misií",
@@ -4022,7 +4022,7 @@
  {
   "k": "Podzemné zápasy",
   "kind": "data",
-  "ctx": "MEDALS.3.name | ui.js:64 | ui.js:89 | ui.js:1598 scr_club"
+  "ctx": "MEDALS.3.name | ui.js:66 | ui.js:91 | ui.js:1619 scr_club"
  },
  {
   "k": "poschodie Podzemných zápasov",
@@ -4052,7 +4052,7 @@
  {
   "k": "Denné misie",
   "kind": "data",
-  "ctx": "MEDALS.6.name | ui.js:85 | ui.js:607 scr_daily | ui.js:1427 scr_missions"
+  "ctx": "MEDALS.6.name | ui.js:87 | ui.js:620 scr_daily | ui.js:1448 scr_missions"
  },
  {
   "k": "dní so splnenými dennými misiami",
@@ -4337,3092 +4337,3107 @@
  {
   "k": "Červená pilulka",
   "kind": "ui",
-  "ctx": "ui.js:49"
+  "ctx": "ui.js:51"
  },
  {
   "k": "Modrá pilulka",
   "kind": "ui",
-  "ctx": "ui.js:49"
+  "ctx": "ui.js:51"
  },
  {
   "k": "Zelené srdce",
   "kind": "ui",
-  "ctx": "ui.js:49"
+  "ctx": "ui.js:51"
  },
  {
   "k": "Životy",
   "kind": "ui",
-  "ctx": "ui.js:50"
+  "ctx": "ui.js:52"
  },
  {
   "k": "Choď za Donom do parku (zlatý kruh, biela „!“) a vezmi si misiu.",
   "kind": "ui",
-  "ctx": "ui.js:53"
+  "ctx": "ui.js:55"
  },
  {
   "k": "Misia je hotová. Vráť sa za Donom a vyzdvihni si odmenu.",
   "kind": "ui",
-  "ctx": "ui.js:54"
+  "ctx": "ui.js:56"
  },
  {
   "k": "Misia beží. Kým skončí, prejdi sa po meste.",
   "kind": "ui",
-  "ctx": "ui.js:54"
+  "ctx": "ui.js:56"
  },
  {
   "k": "Otvor Postavu a zvýš si niektorý stat.",
   "kind": "ui",
-  "ctx": "ui.js:55"
+  "ctx": "ui.js:57"
  },
  {
   "k": "Choď do obchodu Zbrane (zlatý kruh) a kúp si novú zbraň.",
   "kind": "ui",
-  "ctx": "ui.js:56"
+  "ctx": "ui.js:58"
  },
  {
   "k": "V Postave ťukni na zbraň a nasaď si tú novú.",
   "kind": "ui",
-  "ctx": "ui.js:57"
+  "ctx": "ui.js:59"
  },
  {
   "k": "Bojuj s inými hráčmi o body a miesto v rebríčku. Päť zápasov za hodinu máš zadarmo.",
   "kind": "ui",
-  "ctx": "ui.js:63"
+  "ctx": "ui.js:65"
  },
  {
   "k": "Ukáž cestu",
   "kind": "ui",
-  "ctx": "ui.js:63"
+  "ctx": "ui.js:65"
  },
  {
   "k": "Sto súperov v pivnici pod klubom, každý silnejší ako ten pred ním. Jeden zápas za hodinu, každé desiate poschodie platí zlaté tehličky.",
   "kind": "ui",
-  "ctx": "ui.js:64"
+  "ctx": "ui.js:66"
  },
  {
   "k": "Otvoriť",
   "kind": "ui",
-  "ctx": "ui.js:64 | ui.js:65"
+  "ctx": "ui.js:66 | ui.js:67"
  },
  {
   "k": "Gangy",
   "kind": "ui",
-  "ctx": "ui.js:65 | ui.js:1343 scr_hall"
+  "ctx": "ui.js:67 | ui.js:1364 scr_hall"
  },
  {
   "k": "Založ si vlastný gang alebo sa pridaj k inému. Spolu obsadíte objekty v meste a celý gang má z nich bonusy k misiám.",
   "kind": "ui",
-  "ctx": "ui.js:65"
+  "ctx": "ui.js:67"
  },
  {
   "k": "Čierny trh",
   "kind": "ui",
-  "ctx": "ui.js:66 | js/server.js:928 buyElixir"
+  "ctx": "ui.js:68 | js/server.js:928 buyElixir"
  },
  {
   "k": "Každý piatok od 18:00 majú obchody aj epické kúsky. U Wexlera si za tehličky kúpiš elixír, ktorý ti Čierny trh otvorí hocikedy na 24 hodín.",
   "kind": "ui",
-  "ctx": "ui.js:66"
+  "ctx": "ui.js:68"
  },
  {
   "k": "Staty, výbava a vylepšenia tvojej postavy.",
   "kind": "ui",
-  "ctx": "ui.js:82"
+  "ctx": "ui.js:84"
  },
  {
   "k": "Inventár",
   "kind": "ui",
-  "ctx": "ui.js:83 | ui.js:1405 scr_inventory"
+  "ctx": "ui.js:85 | ui.js:1426 scr_inventory"
  },
  {
   "k": "Všetky predmety, ktoré nosíš so sebou.",
   "kind": "ui",
-  "ctx": "ui.js:83"
+  "ctx": "ui.js:85"
  },
  {
   "k": "Aktívna misia a kde nájdeš zadávateľov.",
   "kind": "ui",
-  "ctx": "ui.js:84"
+  "ctx": "ui.js:86"
  },
  {
   "k": "Tri úlohy na mape každý deň a 15-dňový kalendár odmien.",
   "kind": "ui",
-  "ctx": "ui.js:85"
+  "ctx": "ui.js:87"
  },
  {
   "k": "Víkendové eventy",
   "kind": "ui",
-  "ctx": "ui.js:86 | ui.js:362 scr_events"
+  "ctx": "ui.js:88 | ui.js:375 scr_events"
  },
  {
   "k": "Každý víkend dva eventy naraz: čo platí teraz a čo príde.",
   "kind": "ui",
-  "ctx": "ui.js:86"
+  "ctx": "ui.js:88"
  },
  {
   "k": "Polícia a heat",
   "kind": "ui",
-  "ctx": "ui.js:87"
+  "ctx": "ui.js:89"
  },
  {
   "k": "Heat, hviezdy, kontrola, basa, právnička a skrýša na jednom mieste.",
   "kind": "ui",
-  "ctx": "ui.js:87"
+  "ctx": "ui.js:89"
  },
  {
   "k": "Súboje s inými hráčmi a rebríček.",
   "kind": "ui",
-  "ctx": "ui.js:88"
+  "ctx": "ui.js:90"
  },
  {
   "k": "Sto súperov v pivnici pod klubom, každý silnejší. Jeden zápas za hodinu.",
   "kind": "ui",
-  "ctx": "ui.js:89"
+  "ctx": "ui.js:91"
  },
  {
   "k": "Boss fights",
   "kind": "ui",
-  "ctx": "ui.js:90 | ui.js:1552 scr_boss | ui.js:1579 scr_boss"
+  "ctx": "ui.js:92 | ui.js:1573 scr_boss | ui.js:1600 scr_boss"
  },
  {
   "k": "Bossovia mesta, v ktorom si: Kladivo v Meste 1, Radničná veža v Meste 2.",
   "kind": "ui",
-  "ctx": "ui.js:90"
+  "ctx": "ui.js:92"
  },
  {
   "k": "Gang",
   "kind": "ui",
-  "ctx": "ui.js:91 | index.html #hud | js/gangs.js:171 createGang"
+  "ctx": "ui.js:93 | index.html #hud | js/gangs.js:171 createGang"
  },
  {
   "k": "Tvoj gang, pokladnica, členovia a boje o územie.",
   "kind": "ui",
-  "ctx": "ui.js:91"
+  "ctx": "ui.js:93"
  },
  {
   "k": "Sieň slávy",
   "kind": "ui",
-  "ctx": "ui.js:92 | ui.js:1365 scr_hall"
+  "ctx": "ui.js:94 | ui.js:1386 scr_hall"
  },
  {
   "k": "Všetci registrovaní hráči. Klikni na hráča a uvidíš jeho staty a výbavu.",
   "kind": "ui",
-  "ctx": "ui.js:92"
+  "ctx": "ui.js:94"
  },
  {
   "k": "Nastavenia",
   "kind": "ui",
-  "ctx": "ui.js:93 | ui.js:1260 scr_title | ui.js:1717 scr_settings | ui.js:1726 scr_settings"
+  "ctx": "ui.js:95 | ui.js:1281 scr_title | ui.js:1738 scr_settings | ui.js:1747 scr_settings"
  },
  {
   "k": "Zvuk, účet a nahlásenie chyby.",
   "kind": "ui",
-  "ctx": "ui.js:93"
+  "ctx": "ui.js:95"
  },
  {
   "k": "Hlavné menu",
   "kind": "ui",
-  "ctx": "ui.js:94"
+  "ctx": "ui.js:96"
  },
  {
   "k": "Späť na úvodnú obrazovku. Hra sa ukladá sama.",
   "kind": "ui",
-  "ctx": "ui.js:94"
+  "ctx": "ui.js:96"
  },
  {
   "k": "Späť",
   "kind": "ui",
-  "ctx": "ui.js:246 hdr | ui.js:1269 scr_title | ui.js:1280 scr_menu"
+  "ctx": "ui.js:259 hdr | ui.js:1290 scr_title | ui.js:1301 scr_menu"
  },
  {
   "k": "{n} % heat",
   "kind": "ui",
-  "ctx": "ui.js:266 tick"
+  "ctx": "ui.js:279 tick"
  },
  {
   "k": "Heat {n} %: denný limit na misie",
   "kind": "ui",
-  "ctx": "ui.js:268 tick"
+  "ctx": "ui.js:281 tick"
  },
  {
   "k": "Zatknutý: pauza od misií",
   "kind": "ui",
-  "ctx": "ui.js:272 tick"
+  "ctx": "ui.js:285 tick"
  },
  {
   "k": "Misia {name}: vyzdvihni odmenu",
   "kind": "ui",
-  "ctx": "ui.js:273 tick"
+  "ctx": "ui.js:286 tick"
  },
  {
   "k": "Misia {name}",
   "kind": "ui",
-  "ctx": "ui.js:273 tick"
+  "ctx": "ui.js:286 tick"
  },
  {
   "k": "Ripper ukradol tehličku · <b>{cas}</b>",
   "kind": "ui",
-  "ctx": "ui.js:288 tick"
+  "ctx": "ui.js:301 tick"
  },
  {
   "k": "Ripper ukradol Wexlerovi tehličku! Zasiahni ho, kým neujde.",
   "kind": "ui",
-  "ctx": "ui.js:289 tick"
+  "ctx": "ui.js:302 tick"
  },
  {
   "k": "Gang: {text}",
   "kind": "ui",
-  "ctx": "ui.js:293 tick"
+  "ctx": "ui.js:306 tick"
  },
  {
   "k": "Hľadanosť {n} z 5: polícia na ulici",
   "kind": "ui",
-  "ctx": "ui.js:308 tick"
+  "ctx": "ui.js:321 tick"
  },
  {
   "k": "hlavný",
   "kind": "ui",
-  "ctx": "ui.js:347 evCard"
+  "ctx": "ui.js:360 evCard"
  },
  {
   "k": "bonus",
   "kind": "ui",
-  "ctx": "ui.js:347 evCard"
+  "ctx": "ui.js:360 evCard"
  },
  {
   "k": "Každý víkend od piatku {hod}:00 do nedele polnoci bežia dva eventy naraz: jeden hlavný a jeden bonus. Poradie sa opakuje každých {n} týždňov.",
   "kind": "ui",
-  "ctx": "ui.js:352 scr_events"
+  "ctx": "ui.js:365 scr_events"
  },
  {
   "k": "Teraz · ešte {cas}",
   "kind": "ui",
-  "ctx": "ui.js:354 scr_events"
+  "ctx": "ui.js:367 scr_events"
  },
  {
   "k": "Najbližší víkend · začína o {cas}",
   "kind": "ui",
-  "ctx": "ui.js:356 scr_events"
+  "ctx": "ui.js:369 scr_events"
  },
  {
   "k": "Budúci víkend",
   "kind": "ui",
-  "ctx": "ui.js:358 scr_events"
+  "ctx": "ui.js:371 scr_events"
  },
  {
   "k": "Poradie",
   "kind": "ui",
-  "ctx": "ui.js:361 scr_events"
+  "ctx": "ui.js:374 scr_events"
  },
  {
   "k": "V tieni, polícia ťa nehľadá · <b>{cas}</b>",
   "kind": "ui",
-  "ctx": "ui.js:371 hideHud"
+  "ctx": "ui.js:384 hideHud"
  },
  {
   "k": "Teraz sa skrývaš v tieni. Polícia ťa {min} minút nebude naháňať.",
   "kind": "ui",
-  "ctx": "ui.js:380 hideFinish"
+  "ctx": "ui.js:393 hideFinish"
  },
  {
   "k": "Odišiel si zo skrýše príliš skoro. Polícia ťa stále hľadá.",
   "kind": "ui",
-  "ctx": "ui.js:381 hideFinish"
+  "ctx": "ui.js:394 hideFinish"
  },
  {
   "k": "Skrývaš sa v tieni",
   "kind": "ui",
-  "ctx": "ui.js:389 scr_hideout"
+  "ctx": "ui.js:402 scr_hideout"
  },
  {
   "k": "Vonku hliadkuje polícia. Vydrž tu {hide} minút a potom ťa {shadow} minút nebude nikto naháňať, ani keď budeš mať hviezdy.",
   "kind": "ui",
-  "ctx": "ui.js:391 scr_hideout"
+  "ctx": "ui.js:404 scr_hideout"
  },
  {
   "k": "Odísť skôr (bez ochrany)",
   "kind": "ui",
-  "ctx": "ui.js:392 scr_hideout"
+  "ctx": "ui.js:405 scr_hideout"
  },
  {
   "k": "Si v tieni",
   "kind": "ui",
-  "ctx": "ui.js:394 scr_hideout"
+  "ctx": "ui.js:407 scr_hideout"
  },
  {
   "k": "Polícia ťa teraz nehľadá. Keď čas vyprší a budeš mať hviezdy, začnú ťa znova naháňať.",
   "kind": "ui",
-  "ctx": "ui.js:396 scr_hideout"
+  "ctx": "ui.js:409 scr_hideout"
  },
  {
   "k": "Vyjsť von",
   "kind": "ui",
-  "ctx": "ui.js:397 scr_hideout"
+  "ctx": "ui.js:410 scr_hideout"
  },
  {
   "k": "Zadný vchod",
   "kind": "ui",
-  "ctx": "ui.js:399 scr_hideout"
+  "ctx": "ui.js:412 scr_hideout"
  },
  {
   "k": "Pivnica bez okien, matrac a zámok z vnútornej strany. Keď ťa hľadá polícia, schovaj sa tu na {hide} minút. Hľadanosť zmizne a {shadow} minút ťa polícia nebude naháňať.",
   "kind": "ui",
-  "ctx": "ui.js:400 scr_hideout"
+  "ctx": "ui.js:413 scr_hideout"
  },
  {
   "k": "Hľadanosť teraz: {stars}",
   "kind": "ui",
-  "ctx": "ui.js:401 scr_hideout"
+  "ctx": "ui.js:414 scr_hideout"
  },
  {
   "k": "žiadna",
   "kind": "ui",
-  "ctx": "ui.js:401 scr_hideout"
+  "ctx": "ui.js:414 scr_hideout"
  },
  {
   "k": "Polícia ťa teraz nehľadá, nie je pred kým sa skrývať.",
   "kind": "ui",
-  "ctx": "ui.js:403 scr_hideout"
+  "ctx": "ui.js:416 scr_hideout"
  },
  {
   "k": "Medaily",
   "kind": "ui",
-  "ctx": "ui.js:416 medalRow"
+  "ctx": "ui.js:429 medalRow"
  },
  {
   "k": "Nové medaily",
   "kind": "ui",
-  "ctx": "ui.js:433 medalCheck"
+  "ctx": "ui.js:446 medalCheck"
  },
  {
   "k": "Nová medaila",
   "kind": "ui",
-  "ctx": "ui.js:433 medalCheck"
+  "ctx": "ui.js:446 medalCheck"
  },
  {
   "k": "<span class=\"gold\">+{bars} tehl.</span>",
   "kind": "ui",
-  "ctx": "ui.js:434 medalCheck | ui.js:517 tutFinishModal"
+  "ctx": "ui.js:447 medalCheck | ui.js:530 tutFinishModal"
  },
  {
   "k": "Zlatý rám na profile: {total} / {count} medailí.",
   "kind": "ui",
-  "ctx": "ui.js:435 medalCheck"
+  "ctx": "ui.js:448 medalCheck"
  },
  {
   "k": "Pokračovať",
   "kind": "ui",
-  "ctx": "ui.js:436 medalCheck | ui.js:584 dailyRewardModal | ui.js:677 reaperCaught | ui.js:686 runnerHit"
+  "ctx": "ui.js:449 medalCheck | ui.js:597 dailyRewardModal | ui.js:690 reaperCaught | ui.js:699 runnerHit"
  },
  {
   "k": "Úroveň {n}",
   "kind": "ui",
-  "ctx": "ui.js:451 unlockCheck"
+  "ctx": "ui.js:464 unlockCheck"
  },
  {
   "k": "Odomknuté: {name}",
   "kind": "ui",
-  "ctx": "ui.js:451 unlockCheck"
+  "ctx": "ui.js:464 unlockCheck"
  },
  {
   "k": "Neskôr",
   "kind": "ui",
-  "ctx": "ui.js:452 unlockCheck | ui.js:807 authBack"
+  "ctx": "ui.js:465 unlockCheck | ui.js:820 authBack"
  },
  {
   "k": "Rozumiem",
   "kind": "ui",
-  "ctx": "ui.js:453 unlockCheck | ui.js:761 info | ui.js:1056 goal-claim"
+  "ctx": "ui.js:466 unlockCheck | ui.js:774 info | ui.js:1075 goal-claim"
  },
  {
   "k": "Návod {n}/{total}",
   "kind": "ui",
-  "ctx": "ui.js:473 tutHud"
+  "ctx": "ui.js:486 tutHud"
  },
  {
   "k": "{n} tehl.",
   "kind": "ui",
-  "ctx": "ui.js:502 goalHud | ui.js:603 scr_daily | ui.js:1570 scr_boss | ui.js:1609 scr_club"
+  "ctx": "ui.js:515 goalHud | ui.js:616 scr_daily | ui.js:1591 scr_boss | ui.js:1630 scr_club"
  },
  {
   "k": "Splnené! Odmena: {rew}",
   "kind": "ui",
-  "ctx": "ui.js:503 goalHud"
+  "ctx": "ui.js:516 goalHud"
  },
  {
   "k": "Cieľ {n}/{total}",
   "kind": "ui",
-  "ctx": "ui.js:505 goalHud"
+  "ctx": "ui.js:518 goalHud"
  },
  {
   "k": "Vyzdvihnúť",
   "kind": "ui",
-  "ctx": "ui.js:509 goalHud | ui.js:518 tutFinishModal"
+  "ctx": "ui.js:522 goalHud | ui.js:531 tutFinishModal"
  },
  {
   "k": "Návod hotový",
   "kind": "ui",
-  "ctx": "ui.js:516 tutFinishModal"
+  "ctx": "ui.js:529 tutFinishModal"
  },
  {
   "k": "Základy máš. Ďalej ťa čakajú denné misie (truhlica hore), Aréna od úrovne {arena}, Podzemné zápasy od úrovne {club} a gang od úrovne {gang}.",
   "kind": "ui",
-  "ctx": "ui.js:516 tutFinishModal"
+  "ctx": "ui.js:529 tutFinishModal"
  },
  {
   "k": "kuriér {cas}",
   "kind": "ui",
-  "ctx": "ui.js:538 dailyHud"
+  "ctx": "ui.js:551 dailyHud"
  },
  {
   "k": "útek {n}/{total} s",
   "kind": "ui",
-  "ctx": "ui.js:539 dailyHud"
+  "ctx": "ui.js:552 dailyHud"
  },
  {
   "k": "sleduješ {n}/{total} s",
   "kind": "ui",
-  "ctx": "ui.js:540 dailyHud"
+  "ctx": "ui.js:553 dailyHud"
  },
  {
   "k": "sprej {n}/{total} s",
   "kind": "ui",
-  "ctx": "ui.js:541 dailyHud"
+  "ctx": "ui.js:554 dailyHud"
  },
  {
   "k": "Denná misia",
   "kind": "ui",
-  "ctx": "ui.js:543 dailyHud"
+  "ctx": "ui.js:556 dailyHud"
  },
  {
   "k": "Sleduješ ho. Drž sa za ním {n} sekúnd.",
   "kind": "ui",
-  "ctx": "ui.js:552 dailyStep"
+  "ctx": "ui.js:565 dailyStep"
  },
  {
   "k": "Sprejuješ. Nehýb sa.",
   "kind": "ui",
-  "ctx": "ui.js:552 dailyStep"
+  "ctx": "ui.js:565 dailyStep"
  },
  {
   "k": "Útek: vydrž {n} sekúnd, kým ťa policajt nechytí.",
   "kind": "ui",
-  "ctx": "ui.js:552 dailyStep"
+  "ctx": "ui.js:565 dailyStep"
  },
  {
   "k": "Balík máš. Dones ho do {min} minút, sleduj šípku.",
   "kind": "ui",
-  "ctx": "ui.js:559 dailyStep"
+  "ctx": "ui.js:572 dailyStep"
  },
  {
   "k": "{name}: {have} / {need}",
   "kind": "ui",
-  "ctx": "ui.js:560 dailyStep"
+  "ctx": "ui.js:573 dailyStep"
  },
  {
   "k": "splnené",
   "kind": "ui",
-  "ctx": "ui.js:560 dailyStep | ui.js:568 dailyAfter"
+  "ctx": "ui.js:573 dailyStep | ui.js:581 dailyAfter"
  },
  {
   "k": "Nová úroveň",
   "kind": "ui",
-  "ctx": "ui.js:574 dailyRewardText"
+  "ctx": "ui.js:587 dailyRewardText"
  },
  {
   "k": "{n} zlatých tehličiek",
   "kind": "ui",
-  "ctx": "ui.js:575 dailyRewardText | ui.js:1681 scr_wexler"
+  "ctx": "ui.js:588 dailyRewardText | ui.js:1702 scr_wexler"
  },
  {
   "k": "Legendárny predmet + {n} tehličiek",
   "kind": "ui",
-  "ctx": "ui.js:576 dailyRewardText"
+  "ctx": "ui.js:589 dailyRewardText"
  },
  {
   "k": "Denné misie splnené",
   "kind": "ui",
-  "ctx": "ui.js:582 dailyRewardModal"
+  "ctx": "ui.js:595 dailyRewardModal"
  },
  {
   "k": "Deň {n} z 15",
   "kind": "ui",
-  "ctx": "ui.js:582 dailyRewardModal"
+  "ctx": "ui.js:595 dailyRewardModal"
  },
  {
   "k": "Nové úlohy o polnoci.",
   "kind": "ui",
-  "ctx": "ui.js:584 dailyRewardModal"
+  "ctx": "ui.js:597 dailyRewardModal"
  },
  {
   "k": "Ľahká",
   "kind": "ui",
-  "ctx": "ui.js:590 scr_daily"
+  "ctx": "ui.js:603 scr_daily"
  },
  {
   "k": "Akčná",
   "kind": "ui",
-  "ctx": "ui.js:590 scr_daily"
+  "ctx": "ui.js:603 scr_daily"
  },
  {
   "k": "Ťažká",
   "kind": "ui",
-  "ctx": "ui.js:590 scr_daily"
+  "ctx": "ui.js:603 scr_daily"
  },
  {
   "k": "Tri úlohy priamo na mape. Ciele ukazujú zlaté kruhy a šípka na kraji obrazovky. Keď splníš všetky tri, dostaneš odmenu dňa z kalendára.",
   "kind": "ui",
-  "ctx": "ui.js:591 scr_daily"
+  "ctx": "ui.js:604 scr_daily"
  },
  {
   "k": "Zostáva {cas}",
   "kind": "ui",
-  "ctx": "ui.js:593 scr_daily"
+  "ctx": "ui.js:606 scr_daily"
  },
  {
   "k": "Dnes máš hotovo. Nové úlohy o {cas}.",
   "kind": "ui",
-  "ctx": "ui.js:598 scr_daily"
+  "ctx": "ui.js:611 scr_daily"
  },
  {
   "k": "Úlohy sa menia o polnoci ({cas}). Vynechaný deň nevadí, kalendár počká.",
   "kind": "ui",
-  "ctx": "ui.js:598 scr_daily"
+  "ctx": "ui.js:611 scr_daily"
  },
  {
   "k": "Kalendár odmien",
   "kind": "ui",
-  "ctx": "ui.js:601 scr_daily"
+  "ctx": "ui.js:614 scr_daily"
  },
  {
   "k": "+1 úroveň",
   "kind": "ui",
-  "ctx": "ui.js:603 scr_daily"
+  "ctx": "ui.js:616 scr_daily"
  },
  {
   "k": "Legendárka",
   "kind": "ui",
-  "ctx": "ui.js:603 scr_daily"
+  "ctx": "ui.js:616 scr_daily"
  },
  {
   "k": "Deň {n}",
   "kind": "ui",
-  "ctx": "ui.js:605 scr_daily"
+  "ctx": "ui.js:618 scr_daily"
  },
  {
   "k": "deň <span class=\"gold\">{n}</span> / 15",
   "kind": "ui",
-  "ctx": "ui.js:607 scr_daily"
+  "ctx": "ui.js:620 scr_daily"
  },
  {
   "k": "{name}: +{n} {effect}, čas obnovený na hodinu.",
   "kind": "ui",
-  "ctx": "ui.js:624 pill"
+  "ctx": "ui.js:637 pill"
  },
  {
   "k": "{name}: +{n} {effect} na hodinu.",
   "kind": "ui",
-  "ctx": "ui.js:625 pill"
+  "ctx": "ui.js:638 pill"
  },
  {
   "k": "voľný",
   "kind": "ui",
-  "ctx": "ui.js:644 updateAction | world.js:548 updateTurf"
+  "ctx": "ui.js:657 updateAction | world.js:548 updateTurf"
  },
  {
   "k": "Výstrel",
   "kind": "ui",
-  "ctx": "ui.js:651 updateAction"
+  "ctx": "ui.js:664 updateAction"
  },
  {
   "k": "Úder",
   "kind": "ui",
-  "ctx": "ui.js:651 updateAction | index.html #hud"
+  "ctx": "ui.js:664 updateAction | index.html #hud"
  },
  {
   "k": "Chytil si ho",
   "kind": "ui",
-  "ctx": "ui.js:675 reaperCaught"
+  "ctx": "ui.js:688 reaperCaught"
  },
  {
   "k": "Ripper ležal na zemi a tehličku pustil.",
   "kind": "ui",
-  "ctx": "ui.js:675 reaperCaught"
+  "ctx": "ui.js:688 reaperCaught"
  },
  {
   "k": "+1 zlatá tehlička",
   "kind": "ui",
-  "ctx": "ui.js:675 reaperCaught"
+  "ctx": "ui.js:688 reaperCaught"
  },
  {
   "k": "Wexler: „Dobrá práca. Nechaj si ju, zaslúžil si si ju.“",
   "kind": "ui",
-  "ctx": "ui.js:676 reaperCaught"
+  "ctx": "ui.js:689 reaperCaught"
  },
  {
   "k": "Šťastný zásah",
   "kind": "ui",
-  "ctx": "ui.js:685 runnerHit"
+  "ctx": "ui.js:698 runnerHit"
  },
  {
   "k": "Zmizol v oblaku iskier a niečo po ňom ostalo na zemi.",
   "kind": "ui",
-  "ctx": "ui.js:685 runnerHit"
+  "ctx": "ui.js:698 runnerHit"
  },
  {
   "k": "Zmizol v oblaku iskier. Tentoraz nič nepustil.",
   "kind": "ui",
-  "ctx": "ui.js:688 runnerHit"
+  "ctx": "ui.js:701 runnerHit"
  },
  {
   "k": "Heat dnes",
   "kind": "ui",
-  "ctx": "ui.js:696 heatMeter"
+  "ctx": "ui.js:709 heatMeter"
  },
  {
   "k": "Odkaz už neplatí",
   "kind": "ui",
-  "ctx": "ui.js:801 authBack"
+  "ctx": "ui.js:814 authBack"
  },
  {
   "k": "Odkaz z e-mailu vypršal alebo už bol použitý. Ak si e-mail už potvrdil, stačí sa prihlásiť. Ak nie, zaregistruj sa znova a pošleme ti nový odkaz.",
   "kind": "ui",
-  "ctx": "ui.js:801 authBack"
+  "ctx": "ui.js:814 authBack"
  },
  {
   "k": "E-mail je potvrdený",
   "kind": "ui",
-  "ctx": "ui.js:803 authBack"
+  "ctx": "ui.js:816 authBack"
  },
  {
   "k": "Si prihlásený, môžeš hrať.",
   "kind": "ui",
-  "ctx": "ui.js:803 authBack"
+  "ctx": "ui.js:816 authBack"
  },
  {
   "k": "Vitaj v Hits & Licks! Si prihlásený. Teraz si vyber prezývku a triedu a začni.",
   "kind": "ui",
-  "ctx": "ui.js:803 authBack"
+  "ctx": "ui.js:816 authBack"
  },
  {
   "k": "Nové heslo",
   "kind": "ui",
-  "ctx": "ui.js:805 authBack"
+  "ctx": "ui.js:818 authBack"
  },
  {
   "k": "Si prihlásený cez odkaz z e-mailu. Zadaj nové heslo, ktorým sa budeš odteraz prihlasovať.",
   "kind": "ui",
-  "ctx": "ui.js:805 authBack"
+  "ctx": "ui.js:818 authBack"
  },
  {
   "k": "Nové heslo (aspoň 8 znakov)",
   "kind": "ui",
-  "ctx": "ui.js:806 authBack"
+  "ctx": "ui.js:819 authBack"
  },
  {
   "k": "Uložiť heslo",
   "kind": "ui",
-  "ctx": "ui.js:807 authBack"
+  "ctx": "ui.js:820 authBack"
  },
  {
   "k": "Platba bola zrušená, nič sa nezaplatilo.",
   "kind": "ui",
-  "ctx": "ui.js:815 payBack"
+  "ctx": "ui.js:828 payBack"
  },
  {
   "k": "Platba prebehla. Čakám na potvrdenie od Stripe…",
   "kind": "ui",
-  "ctx": "ui.js:822 waitPaid"
+  "ctx": "ui.js:835 waitPaid"
  },
  {
   "k": "Platba sa ešte spracúva",
   "kind": "ui",
-  "ctx": "ui.js:827 waitPaid"
+  "ctx": "ui.js:840 waitPaid"
  },
  {
   "k": "Tehličky sa pripíšu samy, hneď ako Stripe platbu potvrdí. Zvyčajne to trvá pár sekúnd, pri niektorých spôsoboch platby aj dlhšie. Ak tu nebudú do hodiny, napíš nám na hitsnlickssupport@gmail.com.",
   "kind": "ui",
-  "ctx": "ui.js:827 waitPaid"
+  "ctx": "ui.js:840 waitPaid"
  },
  {
   "k": "+{bars} zlatých tehličiek. Vďaka za nákup!",
   "kind": "ui",
-  "ctx": "ui.js:834 paid"
+  "ctx": "ui.js:847 paid"
+ },
+ {
+  "k": "Platba vrátená",
+  "kind": "ui",
+  "ctx": "ui.js:853 taken"
+ },
+ {
+  "k": "Platba za zlaté tehličky bola vrátená alebo zrušená v banke, preto sme ti odobrali {bars} tehličiek.",
+  "kind": "ui",
+  "ctx": "ui.js:853 taken"
  },
  {
   "k": "Polícia stratila stopu. Hľadanosť klesla.",
   "kind": "ui",
-  "ctx": "ui.js:842 wantedLose"
+  "ctx": "ui.js:861 wantedLose"
  },
  {
   "k": "Stratil si sa polícii. Nikto ťa nehľadá.",
   "kind": "ui",
-  "ctx": "ui.js:842 wantedLose"
+  "ctx": "ui.js:861 wantedLose"
  },
  {
   "k": "Policajt na zemi. Teraz ťa naháňa {n} policajtov.",
   "kind": "ui",
-  "ctx": "ui.js:849 copDown"
+  "ctx": "ui.js:868 copDown"
  },
  {
   "k": "Z policajta niečo vypadlo",
   "kind": "ui",
-  "ctx": "ui.js:851 copDown"
+  "ctx": "ui.js:870 copDown"
  },
  {
   "k": "Na zemi ostal epický kus.",
   "kind": "ui",
-  "ctx": "ui.js:851 copDown"
+  "ctx": "ui.js:870 copDown"
  },
  {
   "k": "{name}: {have} / 2 policajti",
   "kind": "ui",
-  "ctx": "ui.js:855 copDown"
+  "ctx": "ui.js:874 copDown"
  },
  {
   "k": "Teraz ujdi!",
   "kind": "ui",
-  "ctx": "ui.js:855 copDown"
+  "ctx": "ui.js:874 copDown"
  },
  {
   "k": "Zatknutý",
   "kind": "ui",
-  "ctx": "ui.js:866 police"
+  "ctx": "ui.js:885 police"
  },
  {
   "k": "Zložil si policajta. Tentoraz sa to nedá vybaviť pokutou.",
   "kind": "ui",
-  "ctx": "ui.js:866 police"
+  "ctx": "ui.js:885 police"
  },
  {
   "k": "Prísť o {n} % peňazí · {cena}",
   "kind": "ui",
-  "ctx": "ui.js:868 police"
+  "ctx": "ui.js:887 police"
  },
  {
   "k": "{cas} bez misií od Dona a Dílera",
   "kind": "ui",
-  "ctx": "ui.js:869 police"
+  "ctx": "ui.js:888 police"
  },
  {
   "k": "Denné misie môžeš robiť aj v base.",
   "kind": "ui",
-  "ctx": "ui.js:870 police"
+  "ctx": "ui.js:889 police"
  },
  {
   "k": "Kontrola",
   "kind": "ui",
-  "ctx": "ui.js:874 police | ui.js:1635 scr_policehelp"
+  "ctx": "ui.js:893 police | ui.js:1656 scr_policehelp"
  },
  {
   "k": "Policajt ťa chytil. Potom bude {n} minút pokoj.",
   "kind": "ui",
-  "ctx": "ui.js:874 police"
+  "ctx": "ui.js:893 police"
  },
  {
   "k": "Utiecť · Obratnosť {n}",
   "kind": "ui",
-  "ctx": "ui.js:876 police"
+  "ctx": "ui.js:895 police"
  },
  {
   "k": "Podplatiť · {cena}",
   "kind": "ui",
-  "ctx": "ui.js:877 police"
+  "ctx": "ui.js:896 police"
  },
  {
   "k": "Vzdať sa · {n} min bez misií",
   "kind": "ui",
-  "ctx": "ui.js:878 police"
+  "ctx": "ui.js:897 police"
  },
  {
   "k": "Nová úroveň {level}! +{n} voľné body.",
   "kind": "ui",
-  "ctx": "ui.js:886 levelUpText"
+  "ctx": "ui.js:905 levelUpText"
  },
  {
   "k": "Heat −{n}",
   "kind": "ui",
-  "ctx": "ui.js:894 bonusText"
+  "ctx": "ui.js:913 bonusText"
  },
  {
   "k": "čas misií −{n}",
   "kind": "ui",
-  "ctx": "ui.js:894 bonusText"
+  "ctx": "ui.js:913 bonusText"
  },
  {
   "k": "Zbraň +{n}",
   "kind": "ui",
-  "ctx": "ui.js:894 bonusText | ui.js:1374 scr_profile"
+  "ctx": "ui.js:913 bonusText | ui.js:1395 scr_profile"
  },
  {
   "k": "Brnenie +{n}",
   "kind": "ui",
-  "ctx": "ui.js:894 bonusText | ui.js:1374 scr_profile"
+  "ctx": "ui.js:913 bonusText | ui.js:1395 scr_profile"
  },
  {
   "k": "Naozaj začať odznova? Uložená hra sa zmaže.",
   "kind": "ui",
-  "ctx": "ui.js:936 start-game"
+  "ctx": "ui.js:955 start-game"
  },
  {
   "k": "Vitaj v Meste 1",
   "kind": "ui",
-  "ctx": "ui.js:944 start-game"
+  "ctx": "ui.js:963 start-game"
  },
  {
   "k": "Návod hore na obrazovke ťa prevedie prvými krokmi. Pohyb: klávesy WASD alebo šípky, akcia: E, útok: F, záložky: 1 až 5.",
   "kind": "ui",
-  "ctx": "ui.js:944 start-game"
+  "ctx": "ui.js:963 start-game"
  },
  {
   "k": "Návod hore na obrazovke ťa prevedie prvými krokmi. Pohyb: joystick vľavo dole alebo klávesy WASD, akcia: tlačidlo vpravo alebo E.",
   "kind": "ui",
-  "ctx": "ui.js:944 start-game"
+  "ctx": "ui.js:963 start-game"
  },
  {
   "k": "Auto sa odomyká na úrovni {level}.",
   "kind": "ui",
-  "ctx": "ui.js:950 slot"
+  "ctx": "ui.js:969 slot"
  },
  {
   "k": "Predané za {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:960 sell"
+  "ctx": "ui.js:979 sell"
  },
  {
   "k": "Vylepšené za {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:962 upgrade"
+  "ctx": "ui.js:981 upgrade"
  },
  {
   "k": "Misia beží. Čas vidíš hore pri hodinách.",
   "kind": "ui",
-  "ctx": "ui.js:966 accept"
+  "ctx": "ui.js:985 accept"
  },
  {
   "k": "Čierny trh je otvorený na {hours} hodín.",
   "kind": "ui",
-  "ctx": "ui.js:975 buy-elixir"
+  "ctx": "ui.js:994 buy-elixir"
  },
  {
   "k": "Nový tovar je v obchode.",
   "kind": "ui",
-  "ctx": "ui.js:976 shop-reroll"
+  "ctx": "ui.js:995 shop-reroll"
  },
  {
   "k": "Kúpené: {item}.",
   "kind": "ui",
-  "ctx": "ui.js:979 buy-item"
+  "ctx": "ui.js:998 buy-item"
  },
  {
   "k": "Heat znížený o {heat} %. Dnes ešte {left}×.",
   "kind": "ui",
-  "ctx": "ui.js:981 lawyer"
+  "ctx": "ui.js:1000 lawyer"
  },
  {
   "k": "Vitaj: {mesto}.",
   "kind": "ui",
-  "ctx": "ui.js:993 travel"
+  "ctx": "ui.js:1012 travel"
  },
  {
   "k": "Poschodie {floor} · {title}",
   "kind": "ui",
-  "ctx": "ui.js:998 club-fight"
+  "ctx": "ui.js:1017 club-fight"
  },
  {
   "k": "{trieda} · úroveň {level}",
   "kind": "ui",
-  "ctx": "ui.js:1004 arena-fight"
+  "ctx": "ui.js:1023 arena-fight"
  },
  {
   "k": "Ušiel si, ale polícia si ťa zapamätala: +1 hviezda.",
   "kind": "ui",
-  "ctx": "ui.js:1015 police"
+  "ctx": "ui.js:1034 police"
  },
  {
   "k": "Chytili ťa. Pokuta {fine} a {min} min bez misií.",
   "kind": "ui",
-  "ctx": "ui.js:1015 police"
+  "ctx": "ui.js:1034 police"
  },
  {
   "k": "Policajt zobral {cena} a odišiel.",
   "kind": "ui",
-  "ctx": "ui.js:1015 police"
+  "ctx": "ui.js:1034 police"
  },
  {
   "k": "Vzdal si sa. {min} min bez misií.",
   "kind": "ui",
-  "ctx": "ui.js:1015 police"
+  "ctx": "ui.js:1034 police"
  },
  {
   "k": "Zobrali ti {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:1026 police-killer"
+  "ctx": "ui.js:1045 police-killer"
  },
  {
   "k": "{cas} bez misií od Dona a Dílera.",
   "kind": "ui",
-  "ctx": "ui.js:1026 police-killer"
+  "ctx": "ui.js:1045 police-killer"
  },
  {
   "k": "+{bars} tehl.",
   "kind": "ui",
-  "ctx": "ui.js:1032 medal"
+  "ctx": "ui.js:1051 medal"
  },
  {
   "k": "Máš {have} / {next} ({unit}).",
   "kind": "ui",
-  "ctx": "ui.js:1034 medal"
+  "ctx": "ui.js:1053 medal"
  },
  {
   "k": "Všetky tri stupne máš ({unit}: {have}).",
   "kind": "ui",
-  "ctx": "ui.js:1034 medal"
+  "ctx": "ui.js:1053 medal"
  },
  {
   "k": "Zavrieť",
   "kind": "ui",
-  "ctx": "ui.js:1035 medal | ui.js:1291 scr_menu | ui.js:1896 gangMemberModal"
+  "ctx": "ui.js:1054 medal | ui.js:1312 scr_menu | ui.js:1917 gangMemberModal"
  },
  {
   "k": "Preskočiť návod?",
   "kind": "ui",
-  "ctx": "ui.js:1039 tut-skip"
+  "ctx": "ui.js:1058 tut-skip"
  },
  {
   "k": "Odmenu za návod potom nedostaneš.",
   "kind": "ui",
-  "ctx": "ui.js:1039 tut-skip"
+  "ctx": "ui.js:1058 tut-skip"
  },
  {
   "k": "Pokračovať v návode",
   "kind": "ui",
-  "ctx": "ui.js:1039 tut-skip"
+  "ctx": "ui.js:1058 tut-skip"
  },
  {
   "k": "Preskočiť",
   "kind": "ui",
-  "ctx": "ui.js:1039 tut-skip | ui.js:1710 scr_settings | ui.js:1968 scr_war | ui.js:2099 scr_fight"
+  "ctx": "ui.js:1058 tut-skip | ui.js:1731 scr_settings | ui.js:1989 scr_war | ui.js:2122 scr_fight"
  },
  {
   "k": "Šípka „!“ ťa dovedie: {name}.",
   "kind": "ui",
-  "ctx": "ui.js:1047 unlock-go"
+  "ctx": "ui.js:1066 unlock-go"
  },
  {
   "k": "Cieľ splnený: {cena} a {bars} tehličiek.",
   "kind": "ui",
-  "ctx": "ui.js:1053 goal-claim"
+  "ctx": "ui.js:1072 goal-claim"
  },
  {
   "k": "Cieľ splnený: {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:1053 goal-claim"
+  "ctx": "ui.js:1072 goal-claim"
  },
  {
   "k": "Cieľ splnený: {bars} tehličiek.",
   "kind": "ui",
-  "ctx": "ui.js:1053 goal-claim"
+  "ctx": "ui.js:1072 goal-claim"
  },
  {
   "k": "Cieľ splnený: .",
   "kind": "ui",
-  "ctx": "ui.js:1053 goal-claim"
+  "ctx": "ui.js:1072 goal-claim"
  },
  {
   "k": "Prvé ciele máš za sebou",
   "kind": "ui",
-  "ctx": "ui.js:1055 goal-claim"
+  "ctx": "ui.js:1074 goal-claim"
  },
  {
   "k": "Si na nohách. Odteraz si ciele určuješ sám: každý deň denné misie, bossovia mesta, Aréna a Podzemné zápasy, gang a jeho rajón. V piatok večer od úrovne {level} sa otvára Čierny trh.",
   "kind": "ui",
-  "ctx": "ui.js:1055 goal-claim"
+  "ctx": "ui.js:1074 goal-claim"
  },
  {
   "k": "Návod preskočený.",
   "kind": "ui",
-  "ctx": "ui.js:1059 tut-skip-yes"
+  "ctx": "ui.js:1078 tut-skip-yes"
  },
  {
   "k": "Odmena za návod: {cash} a {bars} tehličiek.",
   "kind": "ui",
-  "ctx": "ui.js:1065 tut-finish"
+  "ctx": "ui.js:1084 tut-finish"
  },
  {
   "k": "Návod a ciele sú skryté. Zapneš ich v Nastaveniach.",
   "kind": "ui",
-  "ctx": "ui.js:1075 tips-off"
+  "ctx": "ui.js:1094 tips-off"
  },
  {
   "k": "+{bars} zlatých tehličiek (testovacia kúpa).",
   "kind": "ui",
-  "ctx": "ui.js:1080 buy-bars"
+  "ctx": "ui.js:1099 buy-bars"
  },
  {
   "k": "Otváram platbu cez Stripe…",
   "kind": "ui",
-  "ctx": "ui.js:1089 pay-bars"
+  "ctx": "ui.js:1108 pay-bars"
  },
  {
   "k": "Vzhľad uložený.",
   "kind": "ui",
-  "ctx": "ui.js:1114 look-save"
+  "ctx": "ui.js:1133 look-save"
  },
  {
   "k": "Gang založený za {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:1118 gang-create"
+  "ctx": "ui.js:1137 gang-create"
  },
  {
   "k": "Vložené do pokladnice: {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:1120 deposit"
+  "ctx": "ui.js:1139 deposit"
  },
  {
   "k": "Žiadosť odoslaná. Počkaj, kým ju šéf schváli.",
   "kind": "ui",
-  "ctx": "ui.js:1121 gang-ask"
+  "ctx": "ui.js:1140 gang-ask"
  },
  {
   "k": "Si v gangu {name}.",
   "kind": "ui",
-  "ctx": "ui.js:1123 gang-accept"
+  "ctx": "ui.js:1142 gang-accept"
  },
  {
   "k": "Tento hráč je už v inom gangu.",
   "kind": "ui",
-  "ctx": "ui.js:1128 gang-approve"
+  "ctx": "ui.js:1147 gang-approve"
  },
  {
   "k": "{name} je nový člen gangu.",
   "kind": "ui",
-  "ctx": "ui.js:1128 gang-approve | js/gangs.js:272 approveJoin"
+  "ctx": "ui.js:1147 gang-approve | js/gangs.js:272 approveJoin"
  },
  {
   "k": "Pozvánka pre {name} odoslaná.",
   "kind": "ui",
-  "ctx": "ui.js:1136 gang-invite"
+  "ctx": "ui.js:1155 gang-invite"
  },
  {
   "k": "Vedenie gangu je odovzdané.",
   "kind": "ui",
-  "ctx": "ui.js:1147 gang-lead"
+  "ctx": "ui.js:1166 gang-lead"
  },
  {
   "k": "{name} už nie je v gangu.",
   "kind": "ui",
-  "ctx": "ui.js:1148 gang-kick"
+  "ctx": "ui.js:1167 gang-kick"
  },
  {
   "k": "Odísť z gangu?",
   "kind": "ui",
-  "ctx": "ui.js:1150 gang-leave"
+  "ctx": "ui.js:1169 gang-leave"
  },
  {
   "k": "Si posledný člen, gang sa tým rozpustí a jeho objekty ostanú voľné.",
   "kind": "ui",
-  "ctx": "ui.js:1150 gang-leave"
+  "ctx": "ui.js:1169 gang-leave"
  },
  {
   "k": "Vedenie prevezme pravá ruka alebo najstarší člen.",
   "kind": "ui",
-  "ctx": "ui.js:1150 gang-leave"
+  "ctx": "ui.js:1169 gang-leave"
  },
  {
   "k": "Do gangu sa môžeš vrátiť len na novú žiadosť.",
   "kind": "ui",
-  "ctx": "ui.js:1150 gang-leave"
+  "ctx": "ui.js:1169 gang-leave"
  },
  {
   "k": "Zostať",
   "kind": "ui",
-  "ctx": "ui.js:1151 gang-leave"
+  "ctx": "ui.js:1170 gang-leave"
  },
  {
   "k": "Odísť",
   "kind": "ui",
-  "ctx": "ui.js:1151 gang-leave | ui.js:1925 scr_turf"
+  "ctx": "ui.js:1170 gang-leave | ui.js:1946 scr_turf"
  },
  {
   "k": "Už nie si v gangu.",
   "kind": "ui",
-  "ctx": "ui.js:1153 gang-leave-yes"
+  "ctx": "ui.js:1172 gang-leave-yes"
  },
  {
   "k": "Rozpustiť gang?",
   "kind": "ui",
-  "ctx": "ui.js:1155 gang-disband"
+  "ctx": "ui.js:1174 gang-disband"
  },
  {
   "k": "Všetci členovia budú bez gangu, pokladnica prepadne a objekty gangu ostanú voľné. Nedá sa to vrátiť.",
   "kind": "ui",
-  "ctx": "ui.js:1155 gang-disband"
+  "ctx": "ui.js:1174 gang-disband"
  },
  {
   "k": "Nie",
   "kind": "ui",
-  "ctx": "ui.js:1156 gang-disband | ui.js:1808 scr_gang"
+  "ctx": "ui.js:1175 gang-disband | ui.js:1829 scr_gang"
  },
  {
   "k": "Rozpustiť",
   "kind": "ui",
-  "ctx": "ui.js:1156 gang-disband"
+  "ctx": "ui.js:1175 gang-disband"
  },
  {
   "k": "Gang je rozpustený.",
   "kind": "ui",
-  "ctx": "ui.js:1158 gang-disband-yes"
+  "ctx": "ui.js:1177 gang-disband-yes"
  },
  {
   "k": "Vylepšené.",
   "kind": "ui",
-  "ctx": "ui.js:1159 gang-up"
+  "ctx": "ui.js:1178 gang-up"
  },
  {
   "k": "Obrana doplnená za {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:1161 turf-refill"
+  "ctx": "ui.js:1180 turf-refill"
  },
  {
   "k": "{turf} je váš. {cash}, +{xp} XP.",
   "kind": "ui",
-  "ctx": "ui.js:1166 turf-attack"
+  "ctx": "ui.js:1185 turf-attack"
  },
  {
   "k": "Zadaj email.",
   "kind": "ui",
-  "ctx": "ui.js:1173 login"
+  "ctx": "ui.js:1192 login"
+ },
+ {
+  "k": "Heslo nemôže byť len z medzier.",
+  "kind": "ui",
+  "ctx": "ui.js:1193 login | ui.js:1211 pass-save"
  },
  {
   "k": "Potvrď, že máš aspoň 18 rokov a súhlasíš s podmienkami.",
   "kind": "ui",
-  "ctx": "ui.js:1174 login"
+  "ctx": "ui.js:1194 login"
  },
  {
   "k": "Overenie sa nenačítalo. Obnov stránku, prípadne vypni blokovanie reklám pre túto stránku.",
   "kind": "ui",
-  "ctx": "ui.js:1177 login"
+  "ctx": "ui.js:1197 login"
  },
  {
   "k": "Zaškrtni políčko „Overte, že ste človek“ nad tlačidlom.",
   "kind": "ui",
-  "ctx": "ui.js:1178 login"
+  "ctx": "ui.js:1198 login"
  },
  {
   "k": "Chvíľu počkaj, kým sa overí, že nie si robot.",
   "kind": "ui",
-  "ctx": "ui.js:1178 login"
+  "ctx": "ui.js:1198 login"
  },
  {
   "k": "Obnova hesla",
   "kind": "ui",
-  "ctx": "ui.js:1183 login"
+  "ctx": "ui.js:1203 login"
  },
  {
   "k": "Poslali sme ti email s odkazom na nové heslo.",
   "kind": "ui",
-  "ctx": "ui.js:1183 login"
+  "ctx": "ui.js:1203 login"
  },
  {
   "k": "Potvrď email",
   "kind": "ui",
-  "ctx": "ui.js:1186 login"
+  "ctx": "ui.js:1206 login"
  },
  {
   "k": "Na {email} sme poslali odkaz. Po potvrdení sa tu prihlás.",
   "kind": "ui",
-  "ctx": "ui.js:1186 login"
+  "ctx": "ui.js:1206 login"
  },
  {
   "k": "Heslo je zmenené.",
   "kind": "ui",
-  "ctx": "ui.js:1194 pass-save"
+  "ctx": "ui.js:1215 pass-save"
  },
  {
   "k": "Zmazať účet?",
   "kind": "ui",
-  "ctx": "ui.js:1199 account-delete"
+  "ctx": "ui.js:1220 account-delete"
  },
  {
   "k": "Zmaže sa tvoja postava so všetkými vecami, miesto v gangu, e-mail aj heslo. Nedá sa to vrátiť.",
   "kind": "ui",
-  "ctx": "ui.js:1199 account-delete"
+  "ctx": "ui.js:1220 account-delete"
  },
  {
   "k": "Nechať",
   "kind": "ui",
-  "ctx": "ui.js:1200 account-delete"
+  "ctx": "ui.js:1221 account-delete"
  },
  {
   "k": "Zmazať navždy",
   "kind": "ui",
-  "ctx": "ui.js:1200 account-delete"
+  "ctx": "ui.js:1221 account-delete"
  },
  {
   "k": "Účet je zmazaný",
   "kind": "ui",
-  "ctx": "ui.js:1209 account-delete-go"
+  "ctx": "ui.js:1230 account-delete-go"
  },
  {
   "k": "Tvoju postavu, e-mail aj heslo sme vymazali. Ďakujeme, že si hral.",
   "kind": "ui",
-  "ctx": "ui.js:1209 account-delete-go"
+  "ctx": "ui.js:1230 account-delete-go"
  },
  {
   "k": "Nahlásiť chybu",
   "kind": "ui",
-  "ctx": "ui.js:1212 bug-open | ui.js:1705 scr_settings"
+  "ctx": "ui.js:1233 bug-open | ui.js:1726 scr_settings"
  },
  {
   "k": "Čo sa stalo a čo si práve robil? Každá chyba nám pomôže.",
   "kind": "ui",
-  "ctx": "ui.js:1212 bug-open"
+  "ctx": "ui.js:1233 bug-open"
  },
  {
   "k": "Napríklad: v obchode Zbrane som kúpil nôž a peniaze sa odpočítali dvakrát.",
   "kind": "ui",
-  "ctx": "ui.js:1213 bug-open"
+  "ctx": "ui.js:1234 bug-open"
  },
  {
   "k": "Spolu s textom pošleme verziu hry, tvoju úroveň, obrazovku, typ zariadenia a posledné chyby hry.",
   "kind": "ui",
-  "ctx": "ui.js:1214 bug-open"
+  "ctx": "ui.js:1235 bug-open"
  },
  {
   "k": "Zrušiť",
   "kind": "ui",
-  "ctx": "ui.js:1215 bug-open | ui.js:1857 scr_gang"
+  "ctx": "ui.js:1236 bug-open | ui.js:1878 scr_gang"
  },
  {
   "k": "Odoslať",
   "kind": "ui",
-  "ctx": "ui.js:1215 bug-open"
+  "ctx": "ui.js:1236 bug-open"
  },
  {
   "k": "Ďakujeme, hlásenie sme dostali.",
   "kind": "ui",
-  "ctx": "ui.js:1223 bug-send"
+  "ctx": "ui.js:1244 bug-send"
  },
  {
   "k": "Naozaj zmazať postavu na serveri? Tento krok sa nedá vrátiť.",
   "kind": "ui",
-  "ctx": "ui.js:1226 reset"
+  "ctx": "ui.js:1247 reset"
  },
  {
   "k": "Naozaj zmazať uloženú hru? Tento krok sa nedá vrátiť.",
   "kind": "ui",
-  "ctx": "ui.js:1226 reset"
+  "ctx": "ui.js:1247 reset"
  },
  {
   "k": "Jazyk",
   "kind": "ui",
-  "ctx": "ui.js:1237 langPicker | ui.js:1704 scr_settings"
+  "ctx": "ui.js:1258 langPicker | ui.js:1725 scr_settings"
  },
  {
   "k": "Od pešiaka po bossa mesta",
   "kind": "ui",
-  "ctx": "ui.js:1244 scr_title"
+  "ctx": "ui.js:1265 scr_title"
  },
  {
   "k": "Víkendový event",
   "kind": "ui",
-  "ctx": "ui.js:1246 scr_title | ui.js:1429 scr_missions"
+  "ctx": "ui.js:1267 scr_title | ui.js:1450 scr_missions"
  },
  {
   "k": "Email",
   "kind": "ui",
-  "ctx": "ui.js:1249 scr_title"
+  "ctx": "ui.js:1270 scr_title"
  },
  {
   "k": "Heslo",
   "kind": "ui",
-  "ctx": "ui.js:1250 scr_title"
+  "ctx": "ui.js:1271 scr_title"
  },
  {
   "k": "aspoň 8 znakov",
   "kind": "ui",
-  "ctx": "ui.js:1250 scr_title"
+  "ctx": "ui.js:1271 scr_title"
  },
  {
   "k": "Mám aspoň 18 rokov a súhlasím s <a href=\"{terms}\" target=\"_blank\" rel=\"noopener\">podmienkami používania</a>. Ako chránime tvoje údaje: <a href=\"{privacy}\" target=\"_blank\" rel=\"noopener\">ochrana osobných údajov</a>.",
   "kind": "ui",
-  "ctx": "ui.js:1251 scr_title"
+  "ctx": "ui.js:1272 scr_title"
  },
  {
   "k": "Prihlásiť sa",
   "kind": "ui",
-  "ctx": "ui.js:1253 scr_title"
+  "ctx": "ui.js:1274 scr_title"
  },
  {
   "k": "Vytvoriť účet",
   "kind": "ui",
-  "ctx": "ui.js:1253 scr_title"
+  "ctx": "ui.js:1274 scr_title"
  },
  {
   "k": "Poslať odkaz na nové heslo",
   "kind": "ui",
-  "ctx": "ui.js:1253 scr_title"
+  "ctx": "ui.js:1274 scr_title"
  },
  {
   "k": "Mám účet, prihlásiť sa",
   "kind": "ui",
-  "ctx": "ui.js:1254 scr_title"
+  "ctx": "ui.js:1275 scr_title"
  },
  {
   "k": "Nový hráč? Vytvoriť účet",
   "kind": "ui",
-  "ctx": "ui.js:1254 scr_title"
+  "ctx": "ui.js:1275 scr_title"
  },
  {
   "k": "Zabudnuté heslo",
   "kind": "ui",
-  "ctx": "ui.js:1254 scr_title"
+  "ctx": "ui.js:1275 scr_title"
  },
  {
   "k": "Nová hra",
   "kind": "ui",
-  "ctx": "ui.js:1259 scr_title"
+  "ctx": "ui.js:1280 scr_title"
  },
  {
   "k": "úroveň {n}",
   "kind": "ui",
-  "ctx": "ui.js:1261 scr_title | ui.js:1391 scr_profile"
+  "ctx": "ui.js:1282 scr_title | ui.js:1412 scr_profile"
  },
  {
   "k": "Prezývka",
   "kind": "ui",
-  "ctx": "ui.js:1263 scr_title | js/server.js:79 newGame"
+  "ctx": "ui.js:1284 scr_title | js/server.js:79 newGame"
  },
  {
   "k": "aspoň 3 znaky",
   "kind": "ui",
-  "ctx": "ui.js:1263 scr_title"
+  "ctx": "ui.js:1284 scr_title"
  },
  {
   "k": "Ty",
   "kind": "ui",
-  "ctx": "ui.js:1263 scr_title | ui.js:1562 scr_boss | ui.js:1607 scr_club | world.js:170 create"
+  "ctx": "ui.js:1284 scr_title | ui.js:1583 scr_boss | ui.js:1628 scr_club | world.js:170 create"
  },
  {
   "k": "Začať",
   "kind": "ui",
-  "ctx": "ui.js:1268 scr_title"
+  "ctx": "ui.js:1289 scr_title"
  },
  {
   "k": "Hits &amp; Licks: traja chlapi z gangu v nočnej ulici",
   "kind": "ui",
-  "ctx": "ui.js:1273 scr_title"
+  "ctx": "ui.js:1294 scr_title"
  },
  {
   "k": "Len pre dospelých (18+)",
   "kind": "ui",
-  "ctx": "ui.js:1273 scr_title"
+  "ctx": "ui.js:1294 scr_title"
  },
  {
   "k": "Podmienky používania",
   "kind": "ui",
-  "ctx": "ui.js:1273 scr_title | ui.js:1716 scr_settings | ui.js:1725 scr_settings"
+  "ctx": "ui.js:1294 scr_title | ui.js:1737 scr_settings | ui.js:1746 scr_settings"
  },
  {
   "k": "Ochrana osobných údajov",
   "kind": "ui",
-  "ctx": "ui.js:1273 scr_title | ui.js:1716 scr_settings | ui.js:1725 scr_settings"
+  "ctx": "ui.js:1294 scr_title | ui.js:1737 scr_settings | ui.js:1746 scr_settings"
  },
  {
   "k": "Zavrieť menu",
   "kind": "ui",
-  "ctx": "ui.js:1280 scr_menu"
+  "ctx": "ui.js:1301 scr_menu"
  },
  {
   "k": "Menu",
   "kind": "ui",
-  "ctx": "ui.js:1283 scr_menu | index.html #hud"
+  "ctx": "ui.js:1304 scr_menu | index.html #hud"
  },
  {
   "k": "od verzie 2",
   "kind": "ui",
-  "ctx": "ui.js:1286 scr_menu"
+  "ctx": "ui.js:1307 scr_menu"
  },
  {
   "k": "od úrovne {n}",
   "kind": "ui",
-  "ctx": "ui.js:1286 scr_menu"
+  "ctx": "ui.js:1307 scr_menu"
  },
  {
   "k": "Ťukni: vybrať",
   "kind": "ui",
-  "ctx": "ui.js:1290 scr_menu"
+  "ctx": "ui.js:1311 scr_menu"
  },
  {
   "k": "Späť: zavrieť",
   "kind": "ui",
-  "ctx": "ui.js:1290 scr_menu"
+  "ctx": "ui.js:1311 scr_menu"
  },
  {
   "k": "od Lv {n}",
   "kind": "ui",
-  "ctx": "ui.js:1303 scr_character"
+  "ctx": "ui.js:1324 scr_character"
  },
  {
   "k": "úder ignoruje brnenie",
   "kind": "ui",
-  "ctx": "ui.js:1311 scr_character"
+  "ctx": "ui.js:1332 scr_character"
  },
  {
   "k": "úhyb 50 % proti Svalovcom",
   "kind": "ui",
-  "ctx": "ui.js:1311 scr_character"
+  "ctx": "ui.js:1332 scr_character"
  },
  {
   "k": "blok {zlodej} proti Zlodejom, {dealer} proti Dealerom",
   "kind": "ui",
-  "ctx": "ui.js:1311 scr_character"
+  "ctx": "ui.js:1332 scr_character"
  },
  {
   "k": "triedny, dvíha úder",
   "kind": "ui",
-  "ctx": "ui.js:1317 scr_character"
+  "ctx": "ui.js:1338 scr_character"
  },
  {
   "k": "Pridať bod do {stat}",
   "kind": "ui",
-  "ctx": "ui.js:1319 scr_character"
+  "ctx": "ui.js:1340 scr_character"
  },
  {
   "k": "Úroveň <span class=\"gold\">{n}</span>",
   "kind": "ui",
-  "ctx": "ui.js:1323 scr_character | ui.js:1388 scr_profile"
+  "ctx": "ui.js:1344 scr_character | ui.js:1409 scr_profile"
  },
  {
   "k": "Tvoja postava",
   "kind": "ui",
-  "ctx": "ui.js:1326 scr_character"
+  "ctx": "ui.js:1347 scr_character"
  },
  {
   "k": "Vzhľad",
   "kind": "ui",
-  "ctx": "ui.js:1326 scr_character | ui.js:1775 scr_look"
+  "ctx": "ui.js:1347 scr_character | ui.js:1796 scr_look"
  },
  {
   "k": "Pešiak",
   "kind": "ui",
-  "ctx": "ui.js:1326 scr_character"
+  "ctx": "ui.js:1347 scr_character"
  },
  {
   "k": "Skúsenosti",
   "kind": "ui",
-  "ctx": "ui.js:1329 scr_character | index.html #hud"
+  "ctx": "ui.js:1350 scr_character | index.html #hud"
  },
  {
   "k": "Životy {hp} · úder {lo}–{hi} · krit {krit} · brnenie {brn} (max {max})",
   "kind": "ui",
-  "ctx": "ui.js:1330 scr_character"
+  "ctx": "ui.js:1351 scr_character"
  },
  {
   "k": "Aktívne tabletky",
   "kind": "ui",
-  "ctx": "ui.js:1331 scr_character"
+  "ctx": "ui.js:1352 scr_character"
  },
  {
   "k": "Voľné body: {n}",
   "kind": "ui",
-  "ctx": "ui.js:1333 scr_character"
+  "ctx": "ui.js:1354 scr_character"
  },
  {
   "k": "Staty si dokupuješ za peniaze, cena s každým bodom rastie.",
   "kind": "ui",
-  "ctx": "ui.js:1333 scr_character"
+  "ctx": "ui.js:1354 scr_character"
  },
  {
   "k": "Hráči",
   "kind": "ui",
-  "ctx": "ui.js:1343 scr_hall"
+  "ctx": "ui.js:1364 scr_hall"
  },
  {
   "k": "{n} hráčov",
   "kind": "ui",
-  "ctx": "ui.js:1348 scr_hall | ui.js:1359 scr_hall"
+  "ctx": "ui.js:1369 scr_hall | ui.js:1380 scr_hall"
  },
  {
   "k": "ty",
   "kind": "ui",
-  "ctx": "ui.js:1350 scr_hall | ui.js:1361 scr_hall | ui.js:1848 scr_gang"
+  "ctx": "ui.js:1371 scr_hall | ui.js:1382 scr_hall | ui.js:1869 scr_gang"
  },
  {
   "k": "úr. {n}",
   "kind": "ui",
-  "ctx": "ui.js:1351 scr_hall | ui.js:1362 scr_hall | ui.js:1385 scr_profile | ui.js:1411 scr_inventory"
+  "ctx": "ui.js:1372 scr_hall | ui.js:1383 scr_hall | ui.js:1406 scr_profile | ui.js:1432 scr_inventory"
  },
  {
   "k": "Zatiaľ nikto nevyhral ani jeden zápas.",
   "kind": "ui",
-  "ctx": "ui.js:1351 scr_hall"
+  "ctx": "ui.js:1372 scr_hall"
  },
  {
   "k": "{n} gangov",
   "kind": "ui",
-  "ctx": "ui.js:1354 scr_hall"
+  "ctx": "ui.js:1375 scr_hall"
  },
  {
   "k": "tvoj",
   "kind": "ui",
-  "ctx": "ui.js:1355 scr_hall"
+  "ctx": "ui.js:1376 scr_hall"
  },
  {
   "k": "{n} čl.",
   "kind": "ui",
-  "ctx": "ui.js:1356 scr_hall"
+  "ctx": "ui.js:1377 scr_hall"
  },
  {
   "k": "{n} výh.",
   "kind": "ui",
-  "ctx": "ui.js:1356 scr_hall"
+  "ctx": "ui.js:1377 scr_hall"
  },
  {
   "k": "Zatiaľ tu nie je žiadny gang.",
   "kind": "ui",
-  "ctx": "ui.js:1357 scr_hall"
+  "ctx": "ui.js:1378 scr_hall"
  },
  {
   "k": "Zatiaľ tu nikto nie je.",
   "kind": "ui",
-  "ctx": "ui.js:1362 scr_hall"
+  "ctx": "ui.js:1383 scr_hall"
  },
  {
   "k": "Poradie podľa vyhratých bojov o územie (Gang Wars).",
   "kind": "ui",
-  "ctx": "ui.js:1366 scr_hall"
+  "ctx": "ui.js:1387 scr_hall"
  },
  {
   "k": "Poradie podľa najvyššieho poschodia v Podzemných zápasoch.",
   "kind": "ui",
-  "ctx": "ui.js:1367 scr_hall"
+  "ctx": "ui.js:1388 scr_hall"
  },
  {
   "k": "Offline hra: ostatných hráčov a gangy uvidíš po prihlásení.",
   "kind": "ui",
-  "ctx": "ui.js:1368 scr_hall"
+  "ctx": "ui.js:1389 scr_hall"
  },
  {
   "k": "Životy {hp} · zbraň {zbran} · brnenie {brn}",
   "kind": "ui",
-  "ctx": "ui.js:1394 scr_profile"
+  "ctx": "ui.js:1415 scr_profile"
  },
  {
   "k": "Výbava",
   "kind": "ui",
-  "ctx": "ui.js:1396 scr_profile"
+  "ctx": "ui.js:1417 scr_profile"
  },
  {
   "k": "Nemá nasadenú žiadnu výbavu.",
   "kind": "ui",
-  "ctx": "ui.js:1396 scr_profile"
+  "ctx": "ui.js:1417 scr_profile"
  },
  {
   "k": "nasadené",
   "kind": "ui",
-  "ctx": "ui.js:1410 scr_inventory"
+  "ctx": "ui.js:1431 scr_inventory"
  },
  {
   "k": "Zložiť",
   "kind": "ui",
-  "ctx": "ui.js:1412 scr_inventory"
+  "ctx": "ui.js:1433 scr_inventory"
  },
  {
   "k": "Nasadiť",
   "kind": "ui",
-  "ctx": "ui.js:1412 scr_inventory"
+  "ctx": "ui.js:1433 scr_inventory"
  },
  {
   "k": "Predať {cena}",
   "kind": "ui",
-  "ctx": "ui.js:1413 scr_inventory"
+  "ctx": "ui.js:1434 scr_inventory"
  },
  {
   "k": "Nemáš žiadne predmety pre tento slot. Kúp ich v obchodoch na ulici: Zbrane, Oblečenie, Šperky (sever štvrte). Niekedy padnú aj z misií a bossov.",
   "kind": "ui",
-  "ctx": "ui.js:1416 scr_inventory"
+  "ctx": "ui.js:1437 scr_inventory"
  },
  {
   "k": "Nemáš žiadne predmety. Kúp ich v obchodoch na ulici: Zbrane, Oblečenie, Šperky (sever štvrte). Niekedy padnú aj z misií a bossov.",
   "kind": "ui",
-  "ctx": "ui.js:1417 scr_inventory"
+  "ctx": "ui.js:1438 scr_inventory"
  },
  {
   "k": "Dnes hotovo · nové o polnoci",
   "kind": "ui",
-  "ctx": "ui.js:1428 scr_missions"
+  "ctx": "ui.js:1449 scr_missions"
  },
  {
   "k": "{n} / {total} splnené · úlohy na mape",
   "kind": "ui",
-  "ctx": "ui.js:1428 scr_missions"
+  "ctx": "ui.js:1449 scr_missions"
  },
  {
   "k": "deň {n} / 15",
   "kind": "ui",
-  "ctx": "ui.js:1428 scr_missions"
+  "ctx": "ui.js:1449 scr_missions"
  },
  {
   "k": "ešte {cas}",
   "kind": "ui",
-  "ctx": "ui.js:1429 scr_missions"
+  "ctx": "ui.js:1450 scr_missions"
  },
  {
   "k": "Misie zadávajú postavy v meste. Hľadaj bielu bublinu „!“ nad hlavou. Každá misia sa končí súbojom.",
   "kind": "ui",
-  "ctx": "ui.js:1430 scr_missions"
+  "ctx": "ui.js:1451 scr_missions"
  },
  {
   "k": "Si zatknutý. Misie až o {cas}.",
   "kind": "ui",
-  "ctx": "ui.js:1433 scr_missions"
+  "ctx": "ui.js:1454 scr_missions"
  },
  {
   "k": "Horúca · {n}× odmena",
   "kind": "ui",
-  "ctx": "ui.js:1443 scr_missions | ui.js:1468 scr_missions"
+  "ctx": "ui.js:1464 scr_missions | ui.js:1489 scr_missions"
  },
  {
   "k": "od: {giver} · na konci súboj: {foe}",
   "kind": "ui",
-  "ctx": "ui.js:1443 scr_missions"
+  "ctx": "ui.js:1464 scr_missions"
  },
  {
   "k": "na konci súboj: {foe}",
   "kind": "ui",
-  "ctx": "ui.js:1443 scr_missions"
+  "ctx": "ui.js:1464 scr_missions"
  },
  {
   "k": "Dokončiť misiu · súboj",
   "kind": "ui",
-  "ctx": "ui.js:1446 scr_missions"
+  "ctx": "ui.js:1467 scr_missions"
  },
  {
   "k": "Misia beží, hotovo o {cas}",
   "kind": "ui",
-  "ctx": "ui.js:1448 scr_missions"
+  "ctx": "ui.js:1469 scr_missions"
  },
  {
   "k": "Skrátiť za {n} zlatých tehličiek",
   "kind": "ui",
-  "ctx": "ui.js:1449 scr_missions"
+  "ctx": "ui.js:1470 scr_missions"
  },
  {
   "k": "Kým misia beží, môžeš sa túlať mestom, nakupovať a bojovať.",
   "kind": "ui",
-  "ctx": "ui.js:1450 scr_missions"
+  "ctx": "ui.js:1471 scr_missions"
  },
  {
   "k": "Zatiaľ pre teba nemám nič, na čo by si stačil. Vráť sa, keď budeš mať úroveň {n}.",
   "kind": "ui",
-  "ctx": "ui.js:1458 scr_missions"
+  "ctx": "ui.js:1479 scr_missions"
  },
  {
   "k": "Neskôr: {zoznam}",
   "kind": "ui",
-  "ctx": "ui.js:1459 scr_missions | ui.js:1486 scr_missions"
+  "ctx": "ui.js:1480 scr_missions | ui.js:1507 scr_missions"
  },
  {
   "k": "heat +{n} %",
   "kind": "ui",
-  "ctx": "ui.js:1468 scr_missions"
+  "ctx": "ui.js:1489 scr_missions"
  },
  {
   "k": "Na konci ťa čaká",
   "kind": "ui",
-  "ctx": "ui.js:1472 scr_missions"
+  "ctx": "ui.js:1493 scr_missions"
  },
  {
   "k": "Horúca misia: súper je zhruba rovnako silný ako ty, takže môžeš prehrať. Za výhru {n}× peniaze aj XP. Šanca na výhru: asi {sanca} %.",
   "kind": "ui",
-  "ctx": "ui.js:1475 scr_missions"
+  "ctx": "ui.js:1496 scr_missions"
  },
  {
   "k": "Si zatknutý, misie až o {cas}.",
   "kind": "ui",
-  "ctx": "ui.js:1480 scr_missions"
+  "ctx": "ui.js:1501 scr_missions"
  },
  {
   "k": "Na túto misiu máš dnes priveľký heat. Vyber kratšiu, zájdi za právničkou (dnes ešte {n}×) alebo počkaj do polnoci ({cas}).",
   "kind": "ui",
-  "ctx": "ui.js:1481 scr_missions"
+  "ctx": "ui.js:1502 scr_missions"
  },
  {
   "k": "Prijať horúcu misiu",
   "kind": "ui",
-  "ctx": "ui.js:1482 scr_missions"
+  "ctx": "ui.js:1503 scr_missions"
  },
  {
   "k": "Prijať misiu",
   "kind": "ui",
-  "ctx": "ui.js:1482 scr_missions"
+  "ctx": "ui.js:1503 scr_missions"
  },
  {
   "k": "Heat je tvoj denný limit na misie. Dvíha sa už pri prijatí misie a o polnoci spadne na nulu.",
   "kind": "ui",
-  "ctx": "ui.js:1483 scr_missions"
+  "ctx": "ui.js:1504 scr_missions"
  },
  {
   "k": "Rýchly štart do úrovne {n}: misie trvajú len chvíľu a dávajú viac XP.",
   "kind": "ui",
-  "ctx": "ui.js:1484 scr_missions"
+  "ctx": "ui.js:1505 scr_missions"
  },
  {
   "k": "{n} tehličiek",
   "kind": "ui",
-  "ctx": "ui.js:1497 scr_shop | ui.js:1618 scr_club | ui.js:1697 scr_wexler"
+  "ctx": "ui.js:1518 scr_shop | ui.js:1639 scr_club | ui.js:1718 scr_wexler"
  },
  {
   "k": "Teraz: {bonus}",
   "kind": "ui",
-  "ctx": "ui.js:1498 scr_shop"
+  "ctx": "ui.js:1519 scr_shop"
  },
  {
   "k": "Výpredaj: všetko o {n} % lacnejšie, nový tovar zadarmo.",
   "kind": "ui",
-  "ctx": "ui.js:1502 scr_shop"
+  "ctx": "ui.js:1523 scr_shop"
  },
  {
   "k": "Prémiové autá · stále v ponuke",
   "kind": "ui",
-  "ctx": "ui.js:1503 scr_shop"
+  "ctx": "ui.js:1524 scr_shop"
  },
  {
   "k": "Ojazdené autá",
   "kind": "ui",
-  "ctx": "ui.js:1503 scr_shop"
+  "ctx": "ui.js:1524 scr_shop"
  },
  {
   "k": "Čierny trh · elixír ešte <span data-until=\"{until}\"></span> · len epické kusy",
   "kind": "ui",
-  "ctx": "ui.js:1507 scr_shop"
+  "ctx": "ui.js:1528 scr_shop"
  },
  {
   "k": "Čierny trh · {kedy} · len epické kusy",
   "kind": "ui",
-  "ctx": "ui.js:1507 scr_shop"
+  "ctx": "ui.js:1528 scr_shop"
  },
  {
   "k": "celý víkend",
   "kind": "ui",
-  "ctx": "ui.js:1507 scr_shop"
+  "ctx": "ui.js:1528 scr_shop"
  },
  {
   "k": "len dnes večer",
   "kind": "ui",
-  "ctx": "ui.js:1507 scr_shop"
+  "ctx": "ui.js:1528 scr_shop"
  },
  {
   "k": "Čierny trh je vypredaný.",
   "kind": "ui",
-  "ctx": "ui.js:1508 scr_shop"
+  "ctx": "ui.js:1529 scr_shop"
  },
  {
   "k": "Všetko vypredané.",
   "kind": "ui",
-  "ctx": "ui.js:1512 scr_shop"
+  "ctx": "ui.js:1533 scr_shop"
  },
  {
   "k": "Čierny trh: v piatok od {h}:00, len epické kusy. Každý stojí peniaze a {n} zlatých tehličiek.",
   "kind": "ui",
-  "ctx": "ui.js:1513 scr_shop"
+  "ctx": "ui.js:1534 scr_shop"
  },
  {
   "k": "Odomyká sa na úrovni {n}.",
   "kind": "ui",
-  "ctx": "ui.js:1513 scr_shop"
+  "ctx": "ui.js:1534 scr_shop"
  },
  {
   "k": "Nový tovar hneď · {n} zlatá tehlička",
   "kind": "ui",
-  "ctx": "ui.js:1515 scr_shop"
+  "ctx": "ui.js:1536 scr_shop"
  },
  {
   "k": "Nový tovar hneď · zadarmo",
   "kind": "ui",
-  "ctx": "ui.js:1515 scr_shop"
+  "ctx": "ui.js:1536 scr_shop"
  },
  {
   "k": "Nový tovar o <span data-until=\"{until}\"></span> alebo po novej úrovni.",
   "kind": "ui",
-  "ctx": "ui.js:1516 scr_shop"
+  "ctx": "ui.js:1537 scr_shop"
  },
  {
   "k": "Auto znižuje heat z misií aj ich čas. Nasadiť ho môžeš od úrovne {n}.",
   "kind": "ui",
-  "ctx": "ui.js:1522 scr_upgrade"
+  "ctx": "ui.js:1543 scr_upgrade"
  },
  {
   "k": "Mechanik vylepší tvoje nasadené veci. Každé vylepšenie pridá 10 % bonusu, najviac +{n}. Garáž drží tvoj gang.",
   "kind": "ui",
-  "ctx": "ui.js:1523 scr_upgrade"
+  "ctx": "ui.js:1544 scr_upgrade"
  },
  {
   "k": "maximum",
   "kind": "ui",
-  "ctx": "ui.js:1532 scr_upgrade"
+  "ctx": "ui.js:1553 scr_upgrade"
  },
  {
   "k": "Nemáš nasadené žiadne predmety.",
   "kind": "ui",
-  "ctx": "ui.js:1534 scr_upgrade"
+  "ctx": "ui.js:1555 scr_upgrade"
  },
  {
   "k": "„Polícia ťa má v hľadáčiku? Za správnu cenu sa papiere stratia.“",
   "kind": "ui",
-  "ctx": "ui.js:1541 scr_lawyer"
+  "ctx": "ui.js:1562 scr_lawyer"
  },
  {
   "k": "Heat je tvoj denný limit na misie a sám od seba neklesá. O polnoci spadne na nulu (o <span data-until=\"{until}\"></span>). Od {n} % hrozí po misii razia.",
   "kind": "ui",
-  "ctx": "ui.js:1544 scr_lawyer"
+  "ctx": "ui.js:1565 scr_lawyer"
  },
  {
   "k": "Znížiť heat o {n} % · {cena}",
   "kind": "ui",
-  "ctx": "ui.js:1545 scr_lawyer"
+  "ctx": "ui.js:1566 scr_lawyer"
  },
  {
   "k": "Amnestia: za polovicu a bez denného limitu.",
   "kind": "ui",
-  "ctx": "ui.js:1546 scr_lawyer"
+  "ctx": "ui.js:1567 scr_lawyer"
  },
  {
   "k": "Dnes ešte {n} z {total}.",
   "kind": "ui",
-  "ctx": "ui.js:1546 scr_lawyer"
+  "ctx": "ui.js:1567 scr_lawyer"
  },
  {
   "k": "Dnes už nie. Ďalšie {total} o polnoci.",
   "kind": "ui",
-  "ctx": "ui.js:1546 scr_lawyer"
+  "ctx": "ui.js:1567 scr_lawyer"
  },
  {
   "k": "Všetci bossovia {place} sú porazení.",
   "kind": "ui",
-  "ctx": "ui.js:1552 scr_boss | js/server.js:1136 fightBoss"
+  "ctx": "ui.js:1573 scr_boss | js/server.js:1136 fightBoss"
  },
  {
   "k": "Zo stanice sa dá odísť do Mesta 2, ak máš úroveň {n}.",
   "kind": "ui",
-  "ctx": "ui.js:1552 scr_boss"
+  "ctx": "ui.js:1573 scr_boss"
  },
  {
   "k": "Ďalšie mesto príde neskôr.",
   "kind": "ui",
-  "ctx": "ui.js:1552 scr_boss"
+  "ctx": "ui.js:1573 scr_boss"
  },
  {
   "k": "Boss {n} / {total}",
   "kind": "ui",
-  "ctx": "ui.js:1560 scr_boss"
+  "ctx": "ui.js:1581 scr_boss"
  },
  {
   "k": "Životy {hp}<br>Úder {dmg}",
   "kind": "ui",
-  "ctx": "ui.js:1562 scr_boss | ui.js:1563 scr_boss | ui.js:1607 scr_club | ui.js:1608 scr_club"
+  "ctx": "ui.js:1583 scr_boss | ui.js:1584 scr_boss | ui.js:1628 scr_club | ui.js:1629 scr_club"
  },
  {
   "k": "Šanca na výhru: takmer žiadna",
   "kind": "ui",
-  "ctx": "ui.js:1566 scr_boss"
+  "ctx": "ui.js:1587 scr_boss"
  },
  {
   "k": "Šanca na výhru: takmer istá",
   "kind": "ui",
-  "ctx": "ui.js:1566 scr_boss"
+  "ctx": "ui.js:1587 scr_boss"
  },
  {
   "k": "Šanca na výhru: asi {n} %",
   "kind": "ui",
-  "ctx": "ui.js:1566 scr_boss"
+  "ctx": "ui.js:1587 scr_boss"
  },
  {
   "k": "Najprv zosilnej: misie, body v Posilňovni a lepšia výbava v obchodoch.",
   "kind": "ui",
-  "ctx": "ui.js:1567 scr_boss"
+  "ctx": "ui.js:1588 scr_boss"
  },
  {
   "k": "Odmena: <span class=\"gold\">{cash} · {xp} XP{bars}</span> · predmet: {drop}",
   "kind": "ui",
-  "ctx": "ui.js:1569 scr_boss"
+  "ctx": "ui.js:1590 scr_boss"
  },
  {
   "k": "<span style=\"color:#ff6aa8\">istý epický</span> (prvý boss)",
   "kind": "ui",
-  "ctx": "ui.js:1571 scr_boss"
+  "ctx": "ui.js:1592 scr_boss"
  },
  {
   "k": "{epic} % epický, {legend} % legendárny",
   "kind": "ui",
-  "ctx": "ui.js:1571 scr_boss"
+  "ctx": "ui.js:1592 scr_boss"
  },
  {
   "k": "Bojovať · Hon na bossov, bez čakania",
   "kind": "ui",
-  "ctx": "ui.js:1573 scr_boss"
+  "ctx": "ui.js:1594 scr_boss"
  },
  {
   "k": "Bojovať · pokus zadarmo",
   "kind": "ui",
-  "ctx": "ui.js:1574 scr_boss"
+  "ctx": "ui.js:1595 scr_boss"
  },
  {
   "k": "Bojovať za {n} zlatých tehličiek",
   "kind": "ui",
-  "ctx": "ui.js:1575 scr_boss"
+  "ctx": "ui.js:1596 scr_boss"
  },
  {
   "k": "Platené pokusy dnes: {left} / {max}.",
   "kind": "ui",
-  "ctx": "ui.js:1576 scr_boss"
+  "ctx": "ui.js:1597 scr_boss"
  },
  {
   "k": "Platené pokusy sú na dnes minuté.",
   "kind": "ui",
-  "ctx": "ui.js:1576 scr_boss"
+  "ctx": "ui.js:1597 scr_boss"
  },
  {
   "k": "Ďalší pokus zadarmo o <span data-until=\"{until}\"></span>",
   "kind": "ui",
-  "ctx": "ui.js:1576 scr_boss"
+  "ctx": "ui.js:1597 scr_boss"
  },
  {
   "k": "Línia bossov {place}",
   "kind": "ui",
-  "ctx": "ui.js:1577 scr_boss"
+  "ctx": "ui.js:1598 scr_boss"
  },
  {
   "k": "Do tímu si môžeš zobrať 1–2 členov gangu (príde s gangmi).",
   "kind": "ui",
-  "ctx": "ui.js:1578 scr_boss"
+  "ctx": "ui.js:1599 scr_boss"
  },
  {
   "k": "Taxík alebo električka ťa odvezie do iného mesta. Kým ťa naháňa polícia alebo sedíš v skrýši, nikam sa nejde.",
   "kind": "ui",
-  "ctx": "ui.js:1585 scr_travel"
+  "ctx": "ui.js:1606 scr_travel"
  },
  {
   "k": "Tu si",
   "kind": "ui",
-  "ctx": "ui.js:1588 scr_travel"
+  "ctx": "ui.js:1609 scr_travel"
  },
  {
   "k": "Zamknuté",
   "kind": "ui",
-  "ctx": "ui.js:1589 scr_travel | ui.js:1645 lockedScr"
+  "ctx": "ui.js:1610 scr_travel | ui.js:1666 lockedScr"
  },
  {
   "k": "Pivnica pod klubom, kde sa bije o peniaze a meno. Sto súperov, každý silnejší ako ten pred ním.",
   "kind": "ui",
-  "ctx": "ui.js:1598 scr_club"
+  "ctx": "ui.js:1619 scr_club"
  },
  {
   "k": "Porazil si všetkých {total} súperov. V pivnici pod klubom už nie je nikto, kto by sa ti postavil.",
   "kind": "ui",
-  "ctx": "ui.js:1601 scr_club"
+  "ctx": "ui.js:1622 scr_club"
  },
  {
   "k": "Poschodie {n} / {total}",
   "kind": "ui",
-  "ctx": "ui.js:1605 scr_club"
+  "ctx": "ui.js:1626 scr_club"
  },
  {
   "k": "legendárny predmet",
   "kind": "ui",
-  "ctx": "ui.js:1609 scr_club | ui.js:1616 scr_club"
+  "ctx": "ui.js:1630 scr_club | ui.js:1637 scr_club"
  },
  {
   "k": "epický predmet",
   "kind": "ui",
-  "ctx": "ui.js:1609 scr_club | ui.js:1617 scr_club"
+  "ctx": "ui.js:1630 scr_club | ui.js:1638 scr_club"
  },
  {
   "k": "Odmena za výhru: <span class=\"gold\">{cash} · {xp} XP{extra}</span>",
   "kind": "ui",
-  "ctx": "ui.js:1610 scr_club"
+  "ctx": "ui.js:1631 scr_club"
  },
  {
   "k": "Nastúpiť do ringu",
   "kind": "ui",
-  "ctx": "ui.js:1611 scr_club"
+  "ctx": "ui.js:1632 scr_club"
  },
  {
   "k": "Ďalší zápas o <span data-until=\"{until}\"></span>",
   "kind": "ui",
-  "ctx": "ui.js:1612 scr_club"
+  "ctx": "ui.js:1633 scr_club"
  },
  {
   "k": "epický predmet a {n} tehl.",
   "kind": "ui",
-  "ctx": "ui.js:1617 scr_club"
+  "ctx": "ui.js:1638 scr_club"
  },
  {
   "k": "Poschodia s odmenou navyše",
   "kind": "ui",
-  "ctx": "ui.js:1620 scr_club"
+  "ctx": "ui.js:1641 scr_club"
  },
  {
   "k": "Jeden zápas za {n} minút, vyhraný aj prehraný. Prehra ťa nevráti späť. Poradie nájdeš v Sieni slávy.",
   "kind": "ui",
-  "ctx": "ui.js:1621 scr_club"
+  "ctx": "ui.js:1642 scr_club"
  },
  {
   "k": "Polícia má dve oddelené strany: <b class=\"gold\">heat</b> sleduje len tvoje misie počas dňa, <b class=\"gold\">hviezdy</b> sú naháňačka na ulici za všetko ostatné. Jedno druhé neovplyvňuje.",
   "kind": "ui",
-  "ctx": "ui.js:1629 scr_policehelp"
+  "ctx": "ui.js:1650 scr_policehelp"
  },
  {
   "k": "Heat",
   "kind": "ui",
-  "ctx": "ui.js:1631 scr_policehelp"
+  "ctx": "ui.js:1652 scr_policehelp"
  },
  {
   "k": "Denný limit na misie. Zdvihne ho iba misia, nič na ulici. Keď je plný, misie od Dona a Dílera na dnes končia. O polnoci spadne na nulu. Auto ho znižuje.",
   "kind": "ui",
-  "ctx": "ui.js:1631 scr_policehelp"
+  "ctx": "ui.js:1652 scr_policehelp"
  },
  {
   "k": "Razia",
   "kind": "ui",
-  "ctx": "ui.js:1632 scr_policehelp"
+  "ctx": "ui.js:1653 scr_policehelp"
  },
  {
   "k": "Od {n} % heatu ťa po misii môže čakať razia: pokuta {fine} peňazí alebo {min} minút v base.",
   "kind": "ui",
-  "ctx": "ui.js:1632 scr_policehelp"
+  "ctx": "ui.js:1653 scr_policehelp"
  },
  {
   "k": "Zníži heat o {n} %, najviac {max}-krát za deň. Platí sa peniazmi.",
   "kind": "ui",
-  "ctx": "ui.js:1633 scr_policehelp"
+  "ctx": "ui.js:1654 scr_policehelp"
  },
  {
   "k": "Hviezdy",
   "kind": "ui",
-  "ctx": "ui.js:1634 scr_policehelp"
+  "ctx": "ui.js:1655 scr_policehelp"
  },
  {
   "k": "Hľadanosť na ulici. Pribúdajú za všetko mimo misií: streľbu, bitku, autá, výbuchy, policajtov, graffiti, útok gangu aj útek z kontroly. Od {n} hviezd ťa naháňajú policajti. Keď ťa nevidia, každých {sec} s stratíš hviezdu.",
   "kind": "ui",
-  "ctx": "ui.js:1634 scr_policehelp"
+  "ctx": "ui.js:1655 scr_policehelp"
  },
  {
   "k": "Keď ťa policajt chytí, vyberieš si: utiecť (šanca podľa Obratnosti), podplatiť (Charizma zlacňuje) alebo sa vzdať ({min} minút bez misií). Potom máš {peace} minút pokoj.",
   "kind": "ui",
-  "ctx": "ui.js:1635 scr_policehelp"
+  "ctx": "ui.js:1656 scr_policehelp"
  },
  {
   "k": "Zložený policajt",
   "kind": "ui",
-  "ctx": "ui.js:1636 scr_policehelp"
+  "ctx": "ui.js:1657 scr_policehelp"
  },
  {
   "k": "Každý zložený policajt zdvojnásobí, koľko ich po tebe ide. Môže z neho padnúť epický predmet ({chance}, najviac {max} za deň). Ak ťa potom chytia, prídeš o {share} peňazí alebo máš {hours} bez misií.",
   "kind": "ui",
-  "ctx": "ui.js:1636 scr_policehelp"
+  "ctx": "ui.js:1657 scr_policehelp"
  },
  {
   "k": "Basa",
   "kind": "ui",
-  "ctx": "ui.js:1637 scr_policehelp"
+  "ctx": "ui.js:1658 scr_policehelp"
  },
  {
   "k": "Kým si v base, nedostaneš misie od Dona a Dílera. Denné misie na mape robiť môžeš.",
   "kind": "ui",
-  "ctx": "ui.js:1637 scr_policehelp"
+  "ctx": "ui.js:1658 scr_policehelp"
  },
  {
   "k": "Skrýša a tieň",
   "kind": "ui",
-  "ctx": "ui.js:1638 scr_policehelp"
+  "ctx": "ui.js:1659 scr_policehelp"
  },
  {
   "k": "Keď ťa hľadajú, schovaj sa v skrýši na {min} minút. Hviezdy zmiznú a ďalších {shadow} minút si v tieni: polícia ťa nenaháňa.",
   "kind": "ui",
-  "ctx": "ui.js:1638 scr_policehelp"
+  "ctx": "ui.js:1659 scr_policehelp"
  },
  {
   "k": "Ako funguje polícia",
   "kind": "ui",
-  "ctx": "ui.js:1640 scr_policehelp"
+  "ctx": "ui.js:1661 scr_policehelp"
  },
  {
   "k": "Od úrovne {n}",
   "kind": "ui",
-  "ctx": "ui.js:1645 lockedScr"
+  "ctx": "ui.js:1666 lockedScr"
  },
  {
   "k": "Teraz máš úroveň {n}. Úrovne získaš za misie, denné misie a bossov.",
   "kind": "ui",
-  "ctx": "ui.js:1645 lockedScr"
+  "ctx": "ui.js:1666 lockedScr"
  },
  {
   "k": "V aréne sa biješ s inými hráčmi o body v rebríčku. Najprv sa trochu otrkaj na misiách.",
   "kind": "ui",
-  "ctx": "ui.js:1649 scr_arena"
+  "ctx": "ui.js:1670 scr_arena"
  },
  {
   "k": "Súboje prebehnú automaticky podľa statov a výbavy.",
   "kind": "ui",
-  "ctx": "ui.js:1651 scr_arena"
+  "ctx": "ui.js:1672 scr_arena"
  },
  {
   "k": "Zadarmo ešte <span class=\"gold\">{left} z {max}</span>, obnova o <span data-until=\"{until}\"></span>.",
   "kind": "ui",
-  "ctx": "ui.js:1652 scr_arena"
+  "ctx": "ui.js:1673 scr_arena"
  },
  {
   "k": "Zadarmo ešte <span class=\"gold\">{left} z {max}</span>.",
   "kind": "ui",
-  "ctx": "ui.js:1653 scr_arena"
+  "ctx": "ui.js:1674 scr_arena"
  },
  {
   "k": "Súperi s hviezdičkou sú skutoční hráči.",
   "kind": "ui",
-  "ctx": "ui.js:1653 scr_arena"
+  "ctx": "ui.js:1674 scr_arena"
  },
  {
   "k": "Súperi sú zatiaľ počítačoví.",
   "kind": "ui",
-  "ctx": "ui.js:1653 scr_arena"
+  "ctx": "ui.js:1674 scr_arena"
  },
  {
   "k": "{n} b.",
   "kind": "ui",
-  "ctx": "ui.js:1656 scr_arena | ui.js:1664 scr_arena | ui.js:2291 finishFight"
+  "ctx": "ui.js:1677 scr_arena | ui.js:1685 scr_arena | ui.js:2314 finishFight"
  },
  {
   "k": "Životy {hp} · úder {dmg}",
   "kind": "ui",
-  "ctx": "ui.js:1656 scr_arena"
+  "ctx": "ui.js:1677 scr_arena"
  },
  {
   "k": "Vyzvať",
   "kind": "ui",
-  "ctx": "ui.js:1657 scr_arena"
+  "ctx": "ui.js:1678 scr_arena"
  },
  {
   "k": "Vyzvať · {n}",
   "kind": "ui",
-  "ctx": "ui.js:1657 scr_arena"
+  "ctx": "ui.js:1678 scr_arena"
  },
  {
   "k": "Noví súperi",
   "kind": "ui",
-  "ctx": "ui.js:1659 scr_arena"
+  "ctx": "ui.js:1680 scr_arena"
  },
  {
   "k": "Rebríček · sezóna 1",
   "kind": "ui",
-  "ctx": "ui.js:1660 scr_arena"
+  "ctx": "ui.js:1681 scr_arena"
  },
  {
   "k": "Ty: {rank}. miesto · {points} b.",
   "kind": "ui",
-  "ctx": "ui.js:1662 scr_arena"
+  "ctx": "ui.js:1683 scr_arena"
  },
  {
   "k": "Výhry {wins} · prehry {losses}",
   "kind": "ui",
-  "ctx": "ui.js:1663 scr_arena"
+  "ctx": "ui.js:1684 scr_arena"
  },
  {
   "k": "Zlato nikdy nestráca hodnotu. Na rozdiel od ľudí.",
   "kind": "ui",
-  "ctx": "ui.js:1669 scr_wexler"
+  "ctx": "ui.js:1690 scr_wexler"
  },
  {
   "k": "Zlaté tehličky",
   "kind": "ui",
-  "ctx": "ui.js:1669 scr_wexler | ui.js:1673 scr_wexler | index.html #hud"
+  "ctx": "ui.js:1690 scr_wexler | ui.js:1694 scr_wexler | index.html #hud"
  },
  {
   "k": "Ripper mi práve ukradol tehličku! Chyť ho do <b data-until=\"{until}\"></b> a je tvoja.",
   "kind": "ui",
-  "ctx": "ui.js:1671 scr_wexler"
+  "ctx": "ui.js:1692 scr_wexler"
  },
  {
   "k": "Ripper sa sem chodí kradnúť približne raz za hodinu. Ďalší pokus o <span data-until=\"{until}\"></span>.",
   "kind": "ui",
-  "ctx": "ui.js:1672 scr_wexler"
+  "ctx": "ui.js:1693 scr_wexler"
  },
  {
   "k": "Načítavam ponuku…",
   "kind": "ui",
-  "ctx": "ui.js:1677 scr_wexler"
+  "ctx": "ui.js:1698 scr_wexler"
  },
  {
   "k": "Zlaté tehličky sa zatiaľ nepredávajú. Získaš ich v misiách, od bossov, za denné úlohy a za medaily.",
   "kind": "ui",
-  "ctx": "ui.js:1679 scr_wexler"
+  "ctx": "ui.js:1700 scr_wexler"
  },
  {
   "k": "Skracovanie misií, ďalšie pokusy na bossov a v aréne",
   "kind": "ui",
-  "ctx": "ui.js:1681 scr_wexler"
+  "ctx": "ui.js:1702 scr_wexler"
  },
  {
   "k": "Testovacia kúpa (len offline): tehličky sa pripíšu hneď.",
   "kind": "ui",
-  "ctx": "ui.js:1684 scr_wexler"
+  "ctx": "ui.js:1705 scr_wexler"
  },
  {
   "k": "Testovací režim: platí sa len testovacou kartou Stripe, nič sa nestrhne.",
   "kind": "ui",
-  "ctx": "ui.js:1686 scr_wexler"
+  "ctx": "ui.js:1707 scr_wexler"
  },
  {
   "k": "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>",
   "kind": "ui",
-  "ctx": "ui.js:1687 scr_wexler"
+  "ctx": "ui.js:1708 scr_wexler"
  },
  {
   "k": "Elixír Čierneho trhu",
   "kind": "ui",
-  "ctx": "ui.js:1691 scr_wexler | ui.js:1692 scr_wexler"
+  "ctx": "ui.js:1712 scr_wexler | ui.js:1713 scr_wexler"
  },
  {
   "k": "Na {n} hodín ti otvorí Čierny trh vo všetkých obchodoch. Epické kusy ťa čakajú hocikedy, nielen v piatok večer.",
   "kind": "ui",
-  "ctx": "ui.js:1693 scr_wexler"
+  "ctx": "ui.js:1714 scr_wexler"
  },
  {
   "k": "Účinkuje ešte <b data-until=\"{until}\"></b>. Ďalší elixír čas predĺži.",
   "kind": "ui",
-  "ctx": "ui.js:1694 scr_wexler"
+  "ctx": "ui.js:1715 scr_wexler"
  },
  {
   "k": "Čierny trh sa odomyká na úrovni {n}.",
   "kind": "ui",
-  "ctx": "ui.js:1695 scr_wexler"
+  "ctx": "ui.js:1716 scr_wexler"
  },
  {
   "k": "Čierny ako noc, zapečatený pešiakom. Kto sa napije, nájde dvere, ktoré ostatní nevidia.",
   "kind": "ui",
-  "ctx": "ui.js:1696 scr_wexler"
+  "ctx": "ui.js:1717 scr_wexler"
  },
  {
   "k": "<span class=\"gold\">{n}</span> tehličiek",
   "kind": "ui",
-  "ctx": "ui.js:1698 scr_wexler"
+  "ctx": "ui.js:1719 scr_wexler"
  },
  {
   "k": "Zapnutý",
   "kind": "ui",
-  "ctx": "ui.js:1703 scr_settings"
+  "ctx": "ui.js:1724 scr_settings"
  },
  {
   "k": "Vypnutý",
   "kind": "ui",
-  "ctx": "ui.js:1703 scr_settings"
+  "ctx": "ui.js:1724 scr_settings"
  },
  {
   "k": "Niečo nefunguje alebo vyzerá zle? Napíš nám.",
   "kind": "ui",
-  "ctx": "ui.js:1705 scr_settings"
+  "ctx": "ui.js:1726 scr_settings"
  },
  {
   "k": "Nahlásiť",
   "kind": "ui",
-  "ctx": "ui.js:1705 scr_settings"
+  "ctx": "ui.js:1726 scr_settings"
  },
  {
   "k": "Zvuk",
   "kind": "ui",
-  "ctx": "ui.js:1706 scr_settings"
+  "ctx": "ui.js:1727 scr_settings"
  },
  {
   "k": "Údery, výstrely, peniaze, korisť. Platí pre toto zariadenie.",
   "kind": "ui",
-  "ctx": "ui.js:1706 scr_settings"
+  "ctx": "ui.js:1727 scr_settings"
  },
  {
   "k": "Návod a ciele na mape",
   "kind": "ui",
-  "ctx": "ui.js:1709 scr_settings"
+  "ctx": "ui.js:1730 scr_settings"
  },
  {
   "k": "Riadok pod lištou a šípka k cieľu. Splnený cieľ sa ukáže vždy, aby si neprišiel o odmenu.",
   "kind": "ui",
-  "ctx": "ui.js:1709 scr_settings"
+  "ctx": "ui.js:1730 scr_settings"
  },
  {
   "k": "Zapnuté",
   "kind": "ui",
-  "ctx": "ui.js:1709 scr_settings"
+  "ctx": "ui.js:1730 scr_settings"
  },
  {
   "k": "Vypnuté",
   "kind": "ui",
-  "ctx": "ui.js:1709 scr_settings"
+  "ctx": "ui.js:1730 scr_settings"
  },
  {
   "k": "Návod pre nováčikov",
   "kind": "ui",
-  "ctx": "ui.js:1710 scr_settings"
+  "ctx": "ui.js:1731 scr_settings"
  },
  {
   "k": "Krok {n} z {total}. Preskočený návod nedá odmenu.",
   "kind": "ui",
-  "ctx": "ui.js:1710 scr_settings"
+  "ctx": "ui.js:1731 scr_settings"
  },
  {
   "k": "Účet",
   "kind": "ui",
-  "ctx": "ui.js:1713 scr_settings"
+  "ctx": "ui.js:1734 scr_settings"
  },
  {
   "k": "Odhlásiť",
   "kind": "ui",
-  "ctx": "ui.js:1713 scr_settings"
+  "ctx": "ui.js:1734 scr_settings"
  },
  {
   "k": "Uložená na serveri.",
   "kind": "ui",
-  "ctx": "ui.js:1714 scr_settings"
+  "ctx": "ui.js:1735 scr_settings"
  },
  {
   "k": "Zmazať",
   "kind": "ui",
-  "ctx": "ui.js:1714 scr_settings | ui.js:1723 scr_settings"
+  "ctx": "ui.js:1735 scr_settings | ui.js:1744 scr_settings"
  },
  {
   "k": "Zmazať účet",
   "kind": "ui",
-  "ctx": "ui.js:1715 scr_settings"
+  "ctx": "ui.js:1736 scr_settings"
  },
  {
   "k": "Zmaže postavu, e-mail aj heslo. Nedá sa to vrátiť.",
   "kind": "ui",
-  "ctx": "ui.js:1715 scr_settings"
+  "ctx": "ui.js:1736 scr_settings"
  },
  {
   "k": "Testovací režim",
   "kind": "ui",
-  "ctx": "ui.js:1720 scr_settings"
+  "ctx": "ui.js:1741 scr_settings"
  },
  {
   "k": "Čas beží 60× rýchlejšie: misie, heat, bossovia, obchody.",
   "kind": "ui",
-  "ctx": "ui.js:1720 scr_settings"
+  "ctx": "ui.js:1741 scr_settings"
  },
  {
   "k": "Čierny trh vždy otvorený",
   "kind": "ui",
-  "ctx": "ui.js:1722 scr_settings"
+  "ctx": "ui.js:1743 scr_settings"
  },
  {
   "k": "Na testovanie. Normálne len v piatok od {h}:00.",
   "kind": "ui",
-  "ctx": "ui.js:1722 scr_settings"
+  "ctx": "ui.js:1743 scr_settings"
  },
  {
   "k": "Uložená hra",
   "kind": "ui",
-  "ctx": "ui.js:1723 scr_settings"
+  "ctx": "ui.js:1744 scr_settings"
  },
  {
   "k": "Ukladá sa v tomto prehliadači.",
   "kind": "ui",
-  "ctx": "ui.js:1723 scr_settings"
+  "ctx": "ui.js:1744 scr_settings"
  },
  {
   "k": "Predchádzajúce",
   "kind": "ui",
-  "ctx": "ui.js:1769 scr_look"
+  "ctx": "ui.js:1790 scr_look"
  },
  {
   "k": "nič",
   "kind": "ui",
-  "ctx": "ui.js:1770 scr_look"
+  "ctx": "ui.js:1791 scr_look"
  },
  {
   "k": "Ďalšie",
   "kind": "ui",
-  "ctx": "ui.js:1771 scr_look"
+  "ctx": "ui.js:1792 scr_look"
  },
  {
   "k": "Náhodne",
   "kind": "ui",
-  "ctx": "ui.js:1773 scr_look"
+  "ctx": "ui.js:1794 scr_look"
  },
  {
   "k": "Uložiť",
   "kind": "ui",
-  "ctx": "ui.js:1773 scr_look"
+  "ctx": "ui.js:1794 scr_look"
  },
  {
   "k": "Ďalšie časti (pleť, ústa, brada, čiapky…) sa tu objavia, keď pribudnú ich vrstvy.",
   "kind": "ui",
-  "ctx": "ui.js:1774 scr_look"
+  "ctx": "ui.js:1795 scr_look"
  },
  {
   "k": "obrana {p}",
   "kind": "ui",
-  "ctx": "ui.js:1786 turfCard"
+  "ctx": "ui.js:1807 turfCard"
  },
  {
   "k": "Voľný, stačí ho obsadiť",
   "kind": "ui",
-  "ctx": "ui.js:1786 turfCard"
+  "ctx": "ui.js:1807 turfCard"
  },
  {
   "k": "životy {n}",
   "kind": "ui",
-  "ctx": "ui.js:1790 fighterRow"
+  "ctx": "ui.js:1811 fighterRow"
  },
  {
   "k": "úder {n}",
   "kind": "ui",
-  "ctx": "ui.js:1790 fighterRow"
+  "ctx": "ui.js:1811 fighterRow"
  },
  {
   "k": "Gang je tvoj cech: s ostatnými hráčmi držíte objekty v meste a bojujete o územie. Do gangu sa dá vstúpiť alebo ho založiť, keď ťa už v meste poznajú.",
   "kind": "ui",
-  "ctx": "ui.js:1796 scr_gang"
+  "ctx": "ui.js:1817 scr_gang"
  },
  {
   "k": "Územie: {mesto}",
   "kind": "ui",
-  "ctx": "ui.js:1799 scr_gang"
+  "ctx": "ui.js:1820 scr_gang"
  },
  {
   "k": "Držíte aj inde",
   "kind": "ui",
-  "ctx": "ui.js:1800 scr_gang"
+  "ctx": "ui.js:1821 scr_gang"
  },
  {
   "k": "Gang je tvoj cech. Spolu s ostatnými hráčmi držíte objekty v meste a kým ich držíte, celý gang má ich bonus. Ostatné gangy aj počítačoví rivali vám ich budú chcieť zobrať.",
   "kind": "ui",
-  "ctx": "ui.js:1805 scr_gang"
+  "ctx": "ui.js:1826 scr_gang"
  },
  {
   "k": "Pozvánky",
   "kind": "ui",
-  "ctx": "ui.js:1807 scr_gang"
+  "ctx": "ui.js:1828 scr_gang"
  },
  {
   "k": "ťa pozýva do gangu",
   "kind": "ui",
-  "ctx": "ui.js:1807 scr_gang"
+  "ctx": "ui.js:1828 scr_gang"
  },
  {
   "k": "Gangy v meste",
   "kind": "ui",
-  "ctx": "ui.js:1810 scr_gang"
+  "ctx": "ui.js:1831 scr_gang"
  },
  {
   "k": "Načítavam…",
   "kind": "ui",
-  "ctx": "ui.js:1812 scr_gang"
+  "ctx": "ui.js:1833 scr_gang"
  },
  {
   "k": "Zatiaľ tu nie je žiadny gang. Založ prvý.",
   "kind": "ui",
-  "ctx": "ui.js:1813 scr_gang"
+  "ctx": "ui.js:1834 scr_gang"
  },
  {
   "k": "{n} / {slots} členov",
   "kind": "ui",
-  "ctx": "ui.js:1816 scr_gang | ui.js:1830 scr_gang"
+  "ctx": "ui.js:1837 scr_gang | ui.js:1851 scr_gang"
  },
  {
   "k": "{n} výhier",
   "kind": "ui",
-  "ctx": "ui.js:1816 scr_gang | ui.js:1830 scr_gang"
+  "ctx": "ui.js:1837 scr_gang | ui.js:1851 scr_gang"
  },
  {
   "k": "šéf {meno}",
   "kind": "ui",
-  "ctx": "ui.js:1816 scr_gang"
+  "ctx": "ui.js:1837 scr_gang"
  },
  {
   "k": "Zrušiť žiadosť",
   "kind": "ui",
-  "ctx": "ui.js:1817 scr_gang"
+  "ctx": "ui.js:1838 scr_gang"
  },
  {
   "k": "Plný",
   "kind": "ui",
-  "ctx": "ui.js:1817 scr_gang"
+  "ctx": "ui.js:1838 scr_gang"
  },
  {
   "k": "Požiadať",
   "kind": "ui",
-  "ctx": "ui.js:1817 scr_gang"
+  "ctx": "ui.js:1838 scr_gang"
  },
  {
   "k": "Offline hra: ostatné gangy uvidíš po prihlásení.",
   "kind": "ui",
-  "ctx": "ui.js:1819 scr_gang"
+  "ctx": "ui.js:1840 scr_gang"
  },
  {
   "k": "Založiť vlastný gang",
   "kind": "ui",
-  "ctx": "ui.js:1820 scr_gang"
+  "ctx": "ui.js:1841 scr_gang"
  },
  {
   "k": "Meno gangu",
   "kind": "ui",
-  "ctx": "ui.js:1821 scr_gang | js/gangs.js:172 createGang"
+  "ctx": "ui.js:1842 scr_gang | js/gangs.js:172 createGang"
  },
  {
   "k": "napr. Nočné Mory",
   "kind": "ui",
-  "ctx": "ui.js:1821 scr_gang"
+  "ctx": "ui.js:1842 scr_gang"
  },
  {
   "k": "Skratka (2–4 znaky, uvidíš ju na mape)",
   "kind": "ui",
-  "ctx": "ui.js:1822 scr_gang"
+  "ctx": "ui.js:1843 scr_gang"
  },
  {
   "k": "Farba graffiti",
   "kind": "ui",
-  "ctx": "ui.js:1823 scr_gang"
+  "ctx": "ui.js:1844 scr_gang"
  },
  {
   "k": "Založiť gang · {cena}",
   "kind": "ui",
-  "ctx": "ui.js:1824 scr_gang"
+  "ctx": "ui.js:1845 scr_gang"
  },
  {
   "k": "+{p} peňazí",
   "kind": "ui",
-  "ctx": "ui.js:1829 scr_gang"
+  "ctx": "ui.js:1850 scr_gang"
  },
  {
   "k": "+{p} XP",
   "kind": "ui",
-  "ctx": "ui.js:1829 scr_gang"
+  "ctx": "ui.js:1850 scr_gang"
  },
  {
   "k": "−{p} čas misií",
   "kind": "ui",
-  "ctx": "ui.js:1829 scr_gang"
+  "ctx": "ui.js:1850 scr_gang"
  },
  {
   "k": "+{p} epický drop",
   "kind": "ui",
-  "ctx": "ui.js:1829 scr_gang"
+  "ctx": "ui.js:1850 scr_gang"
  },
  {
   "k": "{n} objektov",
   "kind": "ui",
-  "ctx": "ui.js:1830 scr_gang"
+  "ctx": "ui.js:1851 scr_gang"
  },
  {
   "k": "ty: {rank}",
   "kind": "ui",
-  "ctx": "ui.js:1830 scr_gang"
+  "ctx": "ui.js:1851 scr_gang"
  },
  {
   "k": "Zatiaľ žiadny bonus. Obsaďte nejaký objekt.",
   "kind": "ui",
-  "ctx": "ui.js:1831 scr_gang"
+  "ctx": "ui.js:1852 scr_gang"
  },
  {
   "k": "Pokladnica",
   "kind": "ui",
-  "ctx": "ui.js:1834 scr_gang"
+  "ctx": "ui.js:1855 scr_gang"
  },
  {
   "k": "Vkladať môže každý člen. Z pokladnice sa platia vylepšenia a obrana objektov.",
   "kind": "ui",
-  "ctx": "ui.js:1836 scr_gang"
+  "ctx": "ui.js:1857 scr_gang"
  },
  {
   "k": "Členovia {n} / {slots}",
   "kind": "ui",
-  "ctx": "ui.js:1843 scr_gang"
+  "ctx": "ui.js:1864 scr_gang"
  },
  {
   "k": "Upraviť",
   "kind": "ui",
-  "ctx": "ui.js:1847 scr_gang"
+  "ctx": "ui.js:1868 scr_gang"
  },
  {
   "k": "bráni {objekt}",
   "kind": "ui",
-  "ctx": "ui.js:1848 scr_gang"
+  "ctx": "ui.js:1869 scr_gang"
  },
  {
   "k": "Žiadosti o vstup",
   "kind": "ui",
-  "ctx": "ui.js:1852 scr_gang"
+  "ctx": "ui.js:1873 scr_gang"
  },
  {
   "k": "Prijať",
   "kind": "ui",
-  "ctx": "ui.js:1854 scr_gang"
+  "ctx": "ui.js:1875 scr_gang"
  },
  {
   "k": "Odmietnuť",
   "kind": "ui",
-  "ctx": "ui.js:1854 scr_gang"
+  "ctx": "ui.js:1875 scr_gang"
  },
  {
   "k": "Žiadne žiadosti. Hráči bez gangu ťa nájdu v zozname gangov.",
   "kind": "ui",
-  "ctx": "ui.js:1855 scr_gang"
+  "ctx": "ui.js:1876 scr_gang"
  },
  {
   "k": "Pozvať hráča (prezývka)",
   "kind": "ui",
-  "ctx": "ui.js:1856 scr_gang"
+  "ctx": "ui.js:1877 scr_gang"
  },
  {
   "k": "Pozvať",
   "kind": "ui",
-  "ctx": "ui.js:1856 scr_gang"
+  "ctx": "ui.js:1877 scr_gang"
  },
  {
   "k": "pozvaný",
   "kind": "ui",
-  "ctx": "ui.js:1857 scr_gang"
+  "ctx": "ui.js:1878 scr_gang"
  },
  {
   "k": "Vylepšenia gangu",
   "kind": "ui",
-  "ctx": "ui.js:1860 scr_gang"
+  "ctx": "ui.js:1881 scr_gang"
  },
  {
   "k": "zatiaľ nič",
   "kind": "ui",
-  "ctx": "ui.js:1863 scr_gang"
+  "ctx": "ui.js:1884 scr_gang"
  },
  {
   "k": "max",
   "kind": "ui",
-  "ctx": "ui.js:1864 scr_gang"
+  "ctx": "ui.js:1885 scr_gang"
  },
  {
   "k": "Vylepšenia kupuje šéf alebo pravá ruka.",
   "kind": "ui",
-  "ctx": "ui.js:1866 scr_gang | js/gangs.js:417 buyGangUpgrade"
+  "ctx": "ui.js:1887 scr_gang | js/gangs.js:417 buyGangUpgrade"
  },
  {
   "k": "Denník",
   "kind": "ui",
-  "ctx": "ui.js:1869 scr_gang"
+  "ctx": "ui.js:1890 scr_gang"
  },
  {
   "k": "Zatiaľ ticho.",
   "kind": "ui",
-  "ctx": "ui.js:1869 scr_gang"
+  "ctx": "ui.js:1890 scr_gang"
  },
  {
   "k": "Odísť z gangu",
   "kind": "ui",
-  "ctx": "ui.js:1870 scr_gang"
+  "ctx": "ui.js:1891 scr_gang"
  },
  {
   "k": "Rozpustiť gang",
   "kind": "ui",
-  "ctx": "ui.js:1870 scr_gang"
+  "ctx": "ui.js:1891 scr_gang"
  },
  {
   "k": "len jedna",
   "kind": "ui",
-  "ctx": "ui.js:1892 gangMemberModal"
+  "ctx": "ui.js:1913 gangMemberModal"
  },
  {
   "k": "Odovzdať mu vedenie",
   "kind": "ui",
-  "ctx": "ui.js:1894 gangMemberModal"
+  "ctx": "ui.js:1915 gangMemberModal"
  },
  {
   "k": "Vyhodiť z gangu",
   "kind": "ui",
-  "ctx": "ui.js:1895 gangMemberModal"
+  "ctx": "ui.js:1916 gangMemberModal"
  },
  {
   "k": "Nováčik môže vkladať do pokladnice a brániť. Vojak aj útočí a dopĺňa obranu. Pravá ruka navyše prijíma členov a kupuje vylepšenia.",
   "kind": "ui",
-  "ctx": "ui.js:1897 gangMemberModal"
+  "ctx": "ui.js:1918 gangMemberModal"
  },
  {
   "k": "teraz",
   "kind": "ui",
-  "ctx": "ui.js:1901 ago"
+  "ctx": "ui.js:1922 ago"
  },
  {
   "k": "{n} min",
   "kind": "ui",
-  "ctx": "ui.js:1901 ago"
+  "ctx": "ui.js:1922 ago"
  },
  {
   "k": "{n} h",
   "kind": "ui",
-  "ctx": "ui.js:1901 ago"
+  "ctx": "ui.js:1922 ago"
  },
  {
   "k": "drží {majitel}",
   "kind": "ui",
-  "ctx": "ui.js:1907 scr_turf"
+  "ctx": "ui.js:1928 scr_turf"
  },
  {
   "k": "nikto",
   "kind": "ui",
-  "ctx": "ui.js:1907 scr_turf"
+  "ctx": "ui.js:1928 scr_turf"
  },
  {
   "k": "Bonus pre celý gang: <span class=\"gold\">{bonus}</span>",
   "kind": "ui",
-  "ctx": "ui.js:1908 scr_turf"
+  "ctx": "ui.js:1929 scr_turf"
  },
  {
   "k": "Sila obrany",
   "kind": "ui",
-  "ctx": "ui.js:1909 scr_turf"
+  "ctx": "ui.js:1930 scr_turf"
  },
  {
   "k": "Doplniť obranu na {p} · {cena} z pokladnice",
   "kind": "ui",
-  "ctx": "ui.js:1913 scr_turf"
+  "ctx": "ui.js:1934 scr_turf"
  },
  {
   "k": "Obrana je plná. Bez doplnenia slabne o {p} za hodinu.",
   "kind": "ui",
-  "ctx": "ui.js:1914 scr_turf"
+  "ctx": "ui.js:1935 scr_turf"
  },
  {
   "k": "Pod ochranou ešte {cas}.",
   "kind": "ui",
-  "ctx": "ui.js:1915 scr_turf"
+  "ctx": "ui.js:1936 scr_turf"
  },
  {
   "k": "Obrancovia {n} / {slots}",
   "kind": "ui",
-  "ctx": "ui.js:1919 scr_turf"
+  "ctx": "ui.js:1940 scr_turf"
  },
  {
   "k": "Objekt nikto nebráni. Prvý útok ho zoberie.",
   "kind": "ui",
-  "ctx": "ui.js:1920 scr_turf"
+  "ctx": "ui.js:1941 scr_turf"
  },
  {
   "k": "Stiahnuť",
   "kind": "ui",
-  "ctx": "ui.js:1925 scr_turf"
+  "ctx": "ui.js:1946 scr_turf"
  },
  {
   "k": "Presunúť sa sem (teraz bránim {objekt})",
   "kind": "ui",
-  "ctx": "ui.js:1929 scr_turf"
+  "ctx": "ui.js:1950 scr_turf"
  },
  {
   "k": "Brániť tento objekt",
   "kind": "ui",
-  "ctx": "ui.js:1929 scr_turf"
+  "ctx": "ui.js:1950 scr_turf"
  },
  {
   "k": "Na objekte je plno obrancov.",
   "kind": "ui",
-  "ctx": "ui.js:1930 scr_turf | js/gangs.js:492 toggleDefender"
+  "ctx": "ui.js:1951 scr_turf | js/gangs.js:492 toggleDefender"
  },
  {
   "k": "Každý člen bráni jeden objekt a bojuje v ňom so svojou výbavou, aj keď nie je online. Počítačoví rivali skúšajú objekty prebrať zhruba raz za hodinu, iné gangy kedykoľvek.",
   "kind": "ui",
-  "ctx": "ui.js:1932 scr_turf"
+  "ctx": "ui.js:1953 scr_turf"
  },
  {
   "k": "Obrancovia",
   "kind": "ui",
-  "ctx": "ui.js:1937 scr_turf | ui.js:2078 finishWar"
+  "ctx": "ui.js:1958 scr_turf | ui.js:2101 finishWar"
  },
  {
   "k": "Obrancovia gangu {gang}",
   "kind": "ui",
-  "ctx": "ui.js:1940 scr_turf"
+  "ctx": "ui.js:1961 scr_turf"
  },
  {
   "k": "Nikto ho nebráni. Stačí prísť a zobrať ho.",
   "kind": "ui",
-  "ctx": "ui.js:1940 scr_turf"
+  "ctx": "ui.js:1961 scr_turf"
  },
  {
   "k": "Objekt nikto nedrží. Stačí prísť s gangom a obsadiť ho.",
   "kind": "ui",
-  "ctx": "ui.js:1942 scr_turf"
+  "ctx": "ui.js:1963 scr_turf"
  },
  {
   "k": "Na boj o územie potrebuješ gang.",
   "kind": "ui",
-  "ctx": "ui.js:1945 scr_turf | js/gangs.js:510 attackTurf"
+  "ctx": "ui.js:1966 scr_turf | js/gangs.js:510 attackTurf"
  },
  {
   "k": "Založiť gang",
   "kind": "ui",
-  "ctx": "ui.js:1945 scr_turf"
+  "ctx": "ui.js:1966 scr_turf"
  },
  {
   "k": "Tvoj tím",
   "kind": "ui",
-  "ctx": "ui.js:1947 scr_turf"
+  "ctx": "ui.js:1968 scr_turf"
  },
  {
   "k": "Ďalší útok o {cas}.",
   "kind": "ui",
-  "ctx": "ui.js:1948 scr_turf"
+  "ctx": "ui.js:1969 scr_turf"
  },
  {
   "k": "Objekt bol práve obsadený. Pod ochranou ešte {cas}.",
   "kind": "ui",
-  "ctx": "ui.js:1949 scr_turf"
+  "ctx": "ui.js:1970 scr_turf"
  },
  {
   "k": "Objekt je v inom meste ({mesto}). Zaútočiť sa dá len na mieste.",
   "kind": "ui",
-  "ctx": "ui.js:1950 scr_turf"
+  "ctx": "ui.js:1971 scr_turf"
  },
  {
   "k": "Ako nováčik ešte útočiť nemôžeš. Hodnosť vojaka ti dá šéf.",
   "kind": "ui",
-  "ctx": "ui.js:1951 scr_turf"
+  "ctx": "ui.js:1972 scr_turf"
  },
  {
   "k": "Zaútočiť",
   "kind": "ui",
-  "ctx": "ui.js:1952 scr_turf"
+  "ctx": "ui.js:1973 scr_turf"
  },
  {
   "k": "Obsadiť",
   "kind": "ui",
-  "ctx": "ui.js:1952 scr_turf"
+  "ctx": "ui.js:1973 scr_turf"
  },
  {
   "k": "Po útoku ťa bude hľadať polícia: +1 hviezda. S tebou idú najsilnejší ďalší členovia gangu (aj keď nie sú online).",
   "kind": "ui",
-  "ctx": "ui.js:1952 scr_turf"
+  "ctx": "ui.js:1973 scr_turf"
  },
  {
   "k": "Duel {n}",
   "kind": "ui",
-  "ctx": "ui.js:1962 scr_war | ui.js:2008 nextDuel | ui.js:2049 warStep"
+  "ctx": "ui.js:1983 scr_war | ui.js:2031 nextDuel | ui.js:2072 warStep"
  },
  {
   "k": "Tvoj gang",
   "kind": "ui",
-  "ctx": "ui.js:1966 scr_war"
+  "ctx": "ui.js:1987 scr_war"
  },
  {
   "k": "Obrana",
   "kind": "ui",
-  "ctx": "ui.js:1966 scr_war"
+  "ctx": "ui.js:1987 scr_war"
  },
  {
   "k": "<span class=\"gold\">Vyhral si</span> nad {name}",
   "kind": "ui",
-  "ctx": "ui.js:2047 warStep"
+  "ctx": "ui.js:2070 warStep"
  },
  {
   "k": "<span class=\"gold\">{a}</span> vyhral nad {name}",
   "kind": "ui",
-  "ctx": "ui.js:2047 warStep"
+  "ctx": "ui.js:2070 warStep"
  },
  {
   "k": "<span class=\"red\">{name}</span> ťa porazil",
   "kind": "ui",
-  "ctx": "ui.js:2048 warStep"
+  "ctx": "ui.js:2071 warStep"
  },
  {
   "k": "<span class=\"red\">{name}</span> vyhral nad {a}",
   "kind": "ui",
-  "ctx": "ui.js:2048 warStep"
+  "ctx": "ui.js:2071 warStep"
  },
  {
   "k": "Územie je vaše",
   "kind": "ui",
-  "ctx": "ui.js:2077 finishWar"
+  "ctx": "ui.js:2100 finishWar"
  },
  {
   "k": "Útok zlyhal",
   "kind": "ui",
-  "ctx": "ui.js:2077 finishWar"
+  "ctx": "ui.js:2100 finishWar"
  },
  {
   "k": "{name} teraz drží tvoj gang. Bojovníci ostali na mieste ako obrancovia.",
   "kind": "ui",
-  "ctx": "ui.js:2078 finishWar"
+  "ctx": "ui.js:2101 finishWar"
  },
  {
   "k": "{obrancovia} {name} udržali. Ďalší pokus o {min} min.",
   "kind": "ui",
-  "ctx": "ui.js:2078 finishWar"
+  "ctx": "ui.js:2101 finishWar"
  },
  {
   "k": "{b} tvoj úder zablokoval.",
   "kind": "ui",
-  "ctx": "ui.js:2204 fightLine"
+  "ctx": "ui.js:2227 fightLine"
  },
  {
   "k": "Zablokoval si úder.",
   "kind": "ui",
-  "ctx": "ui.js:2204 fightLine"
+  "ctx": "ui.js:2227 fightLine"
  },
  {
   "k": "{b} sa uhol.",
   "kind": "ui",
-  "ctx": "ui.js:2205 fightLine"
+  "ctx": "ui.js:2228 fightLine"
  },
  {
   "k": "Kritický zásah za <span class=\"gold\">{dmg}</span>!",
   "kind": "ui",
-  "ctx": "ui.js:2205 fightLine"
+  "ctx": "ui.js:2228 fightLine"
  },
  {
   "k": "Zasiahol si za <b>{dmg}</b>.",
   "kind": "ui",
-  "ctx": "ui.js:2205 fightLine"
+  "ctx": "ui.js:2228 fightLine"
  },
  {
   "k": "Uhol si sa.",
   "kind": "ui",
-  "ctx": "ui.js:2206 fightLine"
+  "ctx": "ui.js:2229 fightLine"
  },
  {
   "k": "{b}: kritický úder za <span class=\"red\">{dmg}</span>!",
   "kind": "ui",
-  "ctx": "ui.js:2206 fightLine"
+  "ctx": "ui.js:2229 fightLine"
  },
  {
   "k": "{b} ťa zasiahol za <span class=\"red\">{dmg}</span>.",
   "kind": "ui",
-  "ctx": "ui.js:2206 fightLine"
+  "ctx": "ui.js:2229 fightLine"
  },
  {
   "k": "Kolo {n}",
   "kind": "ui",
-  "ctx": "ui.js:2219 fightStep"
+  "ctx": "ui.js:2242 fightStep"
  },
  {
   "k": "blok",
   "kind": "ui",
-  "ctx": "ui.js:2244 hitMark"
+  "ctx": "ui.js:2267 hitMark"
  },
  {
   "k": "úhyb",
   "kind": "ui",
-  "ctx": "ui.js:2244 hitMark"
+  "ctx": "ui.js:2267 hitMark"
  },
  {
   "k": "Misia splnená",
   "kind": "ui",
-  "ctx": "ui.js:2268 finishFight"
+  "ctx": "ui.js:2291 finishFight"
  },
  {
   "k": "Misia zlyhala",
   "kind": "ui",
-  "ctx": "ui.js:2268 finishFight"
+  "ctx": "ui.js:2291 finishFight"
  },
  {
   "k": "{b} leží na zemi. {name} je hotová.",
   "kind": "ui",
-  "ctx": "ui.js:2269 finishFight"
+  "ctx": "ui.js:2292 finishFight"
  },
  {
   "k": "{b} ťa dnes premohol. Tentoraz bez odmeny.",
   "kind": "ui",
-  "ctx": "ui.js:2269 finishFight"
+  "ctx": "ui.js:2292 finishFight"
  },
  {
   "k": "Horúca misia: {x}× odmena!",
   "kind": "ui",
-  "ctx": "ui.js:2270 finishFight"
+  "ctx": "ui.js:2293 finishFight"
  },
  {
   "k": "Horúca misia nevyšla. Zosilnej a skús ďalšiu.",
   "kind": "ui",
-  "ctx": "ui.js:2270 finishFight"
+  "ctx": "ui.js:2293 finishFight"
  },
  {
   "k": "+{n} tehl.",
   "kind": "ui",
-  "ctx": "ui.js:2271 finishFight | ui.js:2284 finishFight | ui.js:2288 finishFight"
+  "ctx": "ui.js:2294 finishFight | ui.js:2307 finishFight | ui.js:2311 finishFight"
  },
  {
   "k": "heat +{n}",
   "kind": "ui",
-  "ctx": "ui.js:2271 finishFight"
+  "ctx": "ui.js:2294 finishFight"
  },
  {
   "k": "Sklad tvojho gangu: epický kúsok navyše!",
   "kind": "ui",
-  "ctx": "ui.js:2273 finishFight"
+  "ctx": "ui.js:2296 finishFight"
  },
  {
   "k": "Legendárny víkend: legendárny kúsok z misie!",
   "kind": "ui",
-  "ctx": "ui.js:2274 finishFight"
+  "ctx": "ui.js:2297 finishFight"
  },
  {
   "k": "Razia! Polícia ti zobrala {cena}.",
   "kind": "ui",
-  "ctx": "ui.js:2275 finishFight"
+  "ctx": "ui.js:2298 finishFight"
  },
  {
   "k": "Razia! Zatkli ťa, {n} min bez misií.",
   "kind": "ui",
-  "ctx": "ui.js:2275 finishFight"
+  "ctx": "ui.js:2298 finishFight"
  },
  {
   "k": "Víťazstvo",
   "kind": "ui",
-  "ctx": "ui.js:2281 finishFight"
+  "ctx": "ui.js:2304 finishFight"
  },
  {
   "k": "Prehra",
   "kind": "ui",
-  "ctx": "ui.js:2281 finishFight"
+  "ctx": "ui.js:2304 finishFight"
  },
  {
   "k": "{b} je porazený. Ďalší boss: {next}.",
   "kind": "ui",
-  "ctx": "ui.js:2283 finishFight"
+  "ctx": "ui.js:2306 finishFight"
  },
  {
   "k": "{b} je porazený.",
   "kind": "ui",
-  "ctx": "ui.js:2283 finishFight"
+  "ctx": "ui.js:2306 finishFight"
  },
  {
   "k": "{b} bol silnejší. Vylepši staty a výbavu a skús to znova.",
   "kind": "ui",
-  "ctx": "ui.js:2283 finishFight"
+  "ctx": "ui.js:2306 finishFight"
  },
  {
   "k": "Prvý boss: istý epický kúsok!",
   "kind": "ui",
-  "ctx": "ui.js:2285 finishFight"
+  "ctx": "ui.js:2308 finishFight"
  },
  {
   "k": "Poschodie {n} je tvoje. Ďalší súper o hodinu.",
   "kind": "ui",
-  "ctx": "ui.js:2287 finishFight"
+  "ctx": "ui.js:2310 finishFight"
  },
  {
   "k": "Poschodie {n} je tvoje. Porazil si všetkých.",
   "kind": "ui",
-  "ctx": "ui.js:2287 finishFight"
+  "ctx": "ui.js:2310 finishFight"
  },
  {
   "k": "{b} ťa poslal na zem. Ďalší pokus o hodinu.",
   "kind": "ui",
-  "ctx": "ui.js:2287 finishFight"
+  "ctx": "ui.js:2310 finishFight"
  },
  {
   "k": "Rebríček ťa posunul vyššie.",
   "kind": "ui",
-  "ctx": "ui.js:2290 finishFight"
+  "ctx": "ui.js:2313 finishFight"
  },
  {
   "k": "Body si stratil, peniaze nie.",
   "kind": "ui",
-  "ctx": "ui.js:2290 finishFight"
+  "ctx": "ui.js:2313 finishFight"
  },
  {
   "k": "Taška",
@@ -7482,7 +7497,7 @@
  {
   "k": "Bez spojenia so serverom.",
   "kind": "ui",
-  "ctx": "remote.js:238 checkout | js/remote.js:169 call"
+  "ctx": "remote.js:244 checkout | js/remote.js:169 call"
  },
  {
   "k": "Návod",

@@ -1,13 +1,13 @@
 // HTML interface: HUD, menus, screens, modals. Talks only to the (simulated) server.
-import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261124232204';
-import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261124232204';
-import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261124232204';
-import { DAILY_TYPES } from './daily.js?v=20261124232204';
-import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261124232204';
-import { sound } from './sound.js?v=20261124232204';
-import { CAPTCHA } from './net.js?v=20261124232204';
-import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261124232204';
-import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261124232204';
+import { STATS, STAT_NAMES, CLASSES, RARITIES, CONFIG, F } from './config.js?v=20261125005013';
+import { SLOTS, ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, GANG_COLORS, GANG_RANKS, GANG_UPGRADES, CITIES } from './data.js?v=20261125005013';
+import { EVENTS, EVENT_ROTATION, activeEvents, nextEvents } from './events.js?v=20261125005013';
+import { DAILY_TYPES } from './daily.js?v=20261125005013';
+import { LOOK_BASE, LOOK_PARTS } from './looks.js?v=20261125005013';
+import { sound } from './sound.js?v=20261125005013';
+import { CAPTCHA } from './net.js?v=20261125005013';
+import { MEDALS, MEDAL_TIERS, MEDAL_COUNT, medalSvg, frameHtml, medalTotal } from './medals.js?v=20261125005013';
+import { tt, ttn, tts, LANG, LANGS, LOCALE, legal, setLang } from './i18n.js?v=20261125005013';
 
 const $ = (sel, el = document) => el.querySelector(sel);
 const fmt = (n) => Math.round(n).toLocaleString(LOCALE);
@@ -122,6 +122,7 @@ export class UI {
 
   // ---------------------------------------------------------------- wiring
   bind() {
+    this.inFlight = new Set();
     $('#app').addEventListener('click', (e) => {
       // computer: a click on the dimmed map around a window (#app::after) closes the window
       if (e.target === e.currentTarget) {
@@ -130,9 +131,19 @@ export class UI {
       }
       const t = e.target.closest('[data-act]');
       if (!t || t.disabled) return;
+      // one tap at a time: while this button's action (a server call) is still running, more taps on it do nothing,
+      // so a double tap on a slow connection never buys or pays twice (released after 20 s in any case)
+      const key = t.dataset.act + '|' + (t.dataset.arg || '');
+      if (this.inFlight.has(key)) return;
       sound.play(t.dataset.act === 'back' || t.dataset.act === 'modal-close' ? 'back' : 'click');
       const fn = this.acts[t.dataset.act];
-      if (fn) fn.call(this, t.dataset.arg, t);
+      const r = fn ? fn.call(this, t.dataset.arg, t) : null;
+      if (r && typeof r.then === 'function') {
+        this.inFlight.add(key);
+        const done = () => this.inFlight.delete(key);
+        r.then(done, done);
+        setTimeout(done, 20000);
+      }
     });
     $('#app').addEventListener('pointerover', (e) => {
       const t = e.target.closest('[data-desc]');
@@ -837,6 +848,12 @@ export class UI {
     if (this.name === 'wexler') this.render();
   }
 
+  // a payment for bars was refunded or charged back through the bank: its bars were taken back (remote.js onTaken)
+  taken(bars) {
+    this.info(tt('Platba vrátená'), tt('Platba za zlaté tehličky bola vrátená alebo zrušená v banke, preto sme ti odobrali {bars} tehličiek.', { bars: fmt(bars) }));
+    if (this.name === 'wexler') this.render();
+  }
+
   // nobody saw you for a while: a star less
   async wantedLose() {
     const r = await this.s.wantedLose();
@@ -1173,6 +1190,7 @@ export class UI {
         const email = $('#auth-email').value.trim(), pass = $('#auth-pass') ? $('#auth-pass').value : '';
         this.sel.authEmail = email;
         if (!email) { this.toast(tt('Zadaj email.'), true); return; }
+        if (mode === 'up' && pass && !pass.trim()) { this.toast(tt('Heslo nemôže byť len z medzier.'), true); return; }
         if (mode === 'up' && !($('#auth-agree') && $('#auth-agree').checked)) { this.toast(tt('Potvrď, že máš aspoň 18 rokov a súhlasíš s podmienkami.'), true); return; }
         const needCaptcha = this.s.needsCaptcha && this.s.needsCaptcha();
         if (needCaptcha && !this.captcha.token) {
@@ -1190,6 +1208,7 @@ export class UI {
       },
       async 'pass-save'() {
         const t = $('#new-pass');
+        if (t && t.value && !t.value.trim()) { this.toast(tt('Heslo nemôže byť len z medzier.'), true); return; }
         const r = await this.s.setPassword(t ? t.value : '');
         if (!this.check(r)) return;
         this.closeModal();

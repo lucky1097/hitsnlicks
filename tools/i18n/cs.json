@@ -102,6 +102,7 @@
  "Béžová, hrdzavá, s preliačinou na dverách. Naštartuje na tretí pokus, ale potom nezastaví nič.": "Béžová, rezavá, s promáčklinou na dveřích. Nastartuje na třetí pokus, ale potom ji nezastaví nic.",
  "Celé mesto pod jeho oknom": "Celé město pod jeho oknem",
  "Celé čierne, len ručičky sú červené ako krv. Odpočítavajú čas, ktorý ti ostáva na splatenie dlhu.": "Celé černé, jen ručičky jsou červené jako krev. Odpočítávají čas, který ti zbývá na splacení dluhu.",
+ "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Ceny jsou konečné. Platbu zpracovává Stripe, údaje o kartě nevidíme. Cihličky se připíšou hned po zaplacení, proto u nich nelze odstoupit od smlouvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmínky</a>",
  "Cestovať": "Cestovat",
  "Cesty po strechách": "Cesty po střechách",
  "Charizma": "Charisma",
@@ -289,6 +290,7 @@
  "Heslo": "Heslo",
  "Heslo je zmenené.": "Heslo je změněno.",
  "Heslo musí mať aspoň 8 znakov.": "Heslo musí mít aspoň 8 znaků.",
+ "Heslo nemôže byť len z medzier.": "Heslo nemůže být jen z mezer.",
  "Hits &amp; Licks: traja chlapi z gangu v nočnej ulici": "Hits &amp; Licks: tři chlapi z gangu v noční ulici",
  "Hladká a obyčajná. Nosí ju každý, kto chce vyzerať ženatý pred políciou.": "Hladká a obyčejná. Nosí ji každý, kdo chce před policií vypadat ženatý.",
  "Hlavne skrátené pílkou v garáži. Mieriť netreba, stačí stáť blízko.": "Hlavně zkrácené pilkou v garáži. Mířit není třeba, stačí stát blízko.",
@@ -1678,5 +1680,6 @@
  "„Polícia ťa má v hľadáčiku? Za správnu cenu sa papiere stratia.“": "„Policie tě má na mušce? Za správnou cenu se papíry ztratí.“",
  "−5 % čas misií": "−5 % čas misí",
  "−{p} čas misií": "−{p} čas misí",
- "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Ceny jsou konečné. Platbu zpracovává Stripe, údaje o kartě nevidíme. Cihličky se připíšou hned po zaplacení, proto u nich nelze odstoupit od smlouvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmínky</a>"
+ "Platba vrátená": "Platba vrácena",
+ "Platba za zlaté tehličky bola vrátená alebo zrušená v banke, preto sme ti odobrali {bars} tehličiek.": "Platba za zlaté cihličky byla vrácena nebo zrušena v bance, proto jsme ti odebrali {bars} cihliček."
 }

@@ -1,11 +1,11 @@
-import { tDom, tt } from './i18n.js?v=20261124232204'; // first: picks the language and translates the shared content
-import { SimServer } from './server.js?v=20261124232204';
-import { RemoteServer } from './remote.js?v=20261124232204';
-import { ONLINE } from './net.js?v=20261124232204';
-import { CONFIG } from './config.js?v=20261124232204';
-import { UI } from './ui.js?v=20261124232204';
-import { createWorld } from './world.js?v=20261124232204';
-import { sound } from './sound.js?v=20261124232204';
+import { tDom, tt } from './i18n.js?v=20261125005013'; // first: picks the language and translates the shared content
+import { SimServer } from './server.js?v=20261125005013';
+import { RemoteServer } from './remote.js?v=20261125005013';
+import { ONLINE } from './net.js?v=20261125005013';
+import { CONFIG } from './config.js?v=20261125005013';
+import { UI } from './ui.js?v=20261125005013';
+import { createWorld } from './world.js?v=20261125005013';
+import { sound } from './sound.js?v=20261125005013';
 
 tDom(document.getElementById('hud'));
 
@@ -85,6 +85,7 @@ ui.zoom = (dir) => {
 if (ONLINE) {
   server.onChange = () => ui.tick();
   server.onPaid = (bars) => ui.paid(bars);
+  server.onTaken = (bars) => ui.taken(bars);
   server.init().then(() => { ui.open('title'); ui.authBack(server.authBack); ui.payBack(server.payBack); }, () => ui.info(tt('Bez spojenia'), tt('Server sa nepodarilo načítať. Skús obnoviť stránku.')));
 }
 ui.open('title');

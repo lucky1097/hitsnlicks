@@ -1,12 +1,12 @@
 // Simulated game server. Every rule about money, rewards and fights lives here, so this module
 // can later move to a real backend (Supabase / Nakama) while the client keeps the same calls.
-import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261124232204';
-import { eventFx } from './events.js?v=20261124232204';
-import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261124232204';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261124232204';
-import { GangMixin } from './gangs.js?v=20261124232204';
-import { DailyMixin } from './daily.js?v=20261124232204';
-import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261124232204';
+import { CONFIG, F, STATS, STAT_NAMES, CLASSES, RARITIES, clamp, localParts, cleanName } from './config.js?v=20261125005013';
+import { eventFx } from './events.js?v=20261125005013';
+import { ITEM_BASES, SHOPS, MISSIONS, GIVERS, BOSSES, BOSSES2, BOT_NAMES, SLOTS, CITIES, GOALS } from './data.js?v=20261125005013';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261125005013';
+import { GangMixin } from './gangs.js?v=20261125005013';
+import { DailyMixin } from './daily.js?v=20261125005013';
+import { MEDALS, MEDAL_TIERS, medalProgress, medalTiers, medalTotal } from './medals.js?v=20261125005013';
 
 const KEY = 'hitsnlicks.save.v1';
 const MIN = 60000;
@@ -958,6 +958,27 @@ export class SimServer {
     }
     if (paid.length > 50) paid.splice(0, paid.length - 50);
     return bars;
+  }
+
+  // payments refunded by Lucky or charged back through the bank after their bars were credited: list = [{ id, bars,
+  // credited }]. The bars go back, but never below zero (Lucky 2026-11-25); state.reversed keeps the last ids so a
+  // payment is never taken twice. A payment this save never got (refunded before the credit) takes nothing.
+  // Returns the bars taken.
+  reversePurchases(list) {
+    const paid = this.state.paid || [];
+    const done = this.state.reversed || (this.state.reversed = []);
+    let taken = 0;
+    for (const x of list || []) {
+      const n = Math.floor(Number(x && x.bars));
+      if (!x || typeof x.id !== 'string' || done.includes(x.id) || !(n > 0)) continue;
+      done.push(x.id);
+      if (!x.credited && !paid.includes(x.id)) continue;
+      const t = Math.min(n, Math.max(0, this.p.chains));
+      this.p.chains -= t;
+      taken += t;
+    }
+    if (done.length > 50) done.splice(0, done.length - 50);
+    return taken;
   }
 
   // { active, until, nextAt }: Ripper runs from nextAt for reaperRunMin, once per reaperEveryMin

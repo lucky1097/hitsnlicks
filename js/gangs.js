@@ -5,9 +5,9 @@
 //   ctx.people = { playerId: { name, level, cls, fighter, gangId } } for members, requests and defenders
 // and saves whatever changed in one go. Offline (no server) the gang and the city live in the save itself
 // and the player is the only member. Mixed into SimServer, so `this` is the server.
-import { CONFIG, F, STATS, CLASSES, cleanName } from './config.js?v=20261124232204';
-import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261124232204';
-import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261124232204';
+import { CONFIG, F, STATS, CLASSES, cleanName } from './config.js?v=20261125005013';
+import { ALL_TURF, TURF_KINDS, RIVAL_GANGS, GANG_COLORS, GANG_UPGRADES, BOT_NAMES } from './data.js?v=20261125005013';
+import { makeFighter, simulate, mulberry32 } from './combat.js?v=20261125005013';
 
 const MIN = 60000;
 const ok = (data = {}) => ({ ok: true, ...data });
@@ -400,8 +400,9 @@ export const GangMixin = {
   deposit(amount) {
     const g = this.gang();
     if (!g) return fail('Nemáš gang.');
-    amount = Math.min(Math.round(amount), this.p.cash);
-    if (amount <= 0) return fail('Nemáš peniaze na vklad.');
+    // only a real number: text or an object would turn the cash and the treasury into NaN (saved as null)
+    amount = Math.min(Math.round(Number(amount)) || 0, this.p.cash);
+    if (!(amount > 0)) return fail('Nemáš peniaze na vklad.');
     this.p.cash -= amount;
     g.treasury += amount;
     if (amount >= F.cashPerMin(this.p.level) * 30) this.gangLog(this.p.name + ' vložil do pokladnice ' + amount + ' $.');

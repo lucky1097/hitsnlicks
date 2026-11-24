@@ -102,6 +102,7 @@
  "Béžová, hrdzavá, s preliačinou na dverách. Naštartuje na tretí pokus, ale potom nezastaví nič.": "Beige, rostig, mit Beule in der Tür. Springt beim dritten Versuch an, danach hält sie nichts mehr auf.",
  "Celé mesto pod jeho oknom": "Die ganze Stadt unter seinem Fenster",
  "Celé čierne, len ručičky sú červené ako krv. Odpočítavajú čas, ktorý ti ostáva na splatenie dlhu.": "Ganz schwarz, nur die Zeiger sind blutrot. Sie zählen die Zeit herunter, die dir bleibt, um deine Schulden zu begleichen.",
+ "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Endpreise. Die Zahlung wickelt Stripe ab, deine Kartendaten sehen wir nicht. Die Goldbarren werden sofort nach der Zahlung gutgeschrieben, deshalb gibt es dafür kein Widerrufsrecht. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Bedingungen</a>",
  "Cestovať": "Reisen",
  "Cesty po strechách": "Wege über die Dächer",
  "Charizma": "Charisma",
@@ -289,6 +290,7 @@
  "Heslo": "Passwort",
  "Heslo je zmenené.": "Passwort geändert.",
  "Heslo musí mať aspoň 8 znakov.": "Das Passwort muss mind. 8 Zeichen haben.",
+ "Heslo nemôže byť len z medzier.": "Das Passwort darf nicht nur aus Leerzeichen bestehen.",
  "Hits &amp; Licks: traja chlapi z gangu v nočnej ulici": "Hits &amp; Licks: drei Jungs aus dem Gang auf nächtlicher Straße",
  "Hladká a obyčajná. Nosí ju každý, kto chce vyzerať ženatý pred políciou.": "Glatt und schlicht. Trägt ihn jeder, der vor der Polizei verheiratet wirken will.",
  "Hlavne skrátené pílkou v garáži. Mieriť netreba, stačí stáť blízko.": "Läufe in der Garage mit der Säge gekürzt. Zielen musst du nicht, nah dran stehen reicht.",
@@ -1678,5 +1680,6 @@
  "„Polícia ťa má v hľadáčiku? Za správnu cenu sa papiere stratia.“": "„Die Polizei hat dich im Visier? Für den richtigen Preis verschwinden die Papiere.“",
  "−5 % čas misií": "−5 % Missionszeit",
  "−{p} čas misií": "−{p} Missionszeit",
- "Ceny sú konečné. Platbu spracúva Stripe, údaje o karte nevidíme. Tehličky sa pripíšu hneď po zaplatení, preto pri nich nemožno odstúpiť od zmluvy. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Podmienky</a>": "Endpreise. Die Zahlung wickelt Stripe ab, deine Kartendaten sehen wir nicht. Die Goldbarren werden sofort nach der Zahlung gutgeschrieben, deshalb gibt es dafür kein Widerrufsrecht. <a href=\"{url}\" target=\"_blank\" rel=\"noopener\">Bedingungen</a>"
+ "Platba vrátená": "Zahlung erstattet",
+ "Platba za zlaté tehličky bola vrátená alebo zrušená v banke, preto sme ti odobrali {bars} tehličiek.": "Die Zahlung für die Goldbarren wurde erstattet oder bei der Bank storniert, deshalb haben wir dir {bars} Goldbarren abgezogen."
 }

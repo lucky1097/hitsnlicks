@@ -92,6 +92,12 @@ const db = {
     return rows.map((r) => ({ id: r.id, bars: r.bars }));
   },
   async markCredited(ids: string[]) { must(await admin.from('purchases').update({ credited_at: new Date().toISOString() }).in('id', ids)); },
+  // refunded or charged back (status set by the pay webhook) and not taken back yet
+  async reversedPurchases(id: string) {
+    const rows = must(await admin.from('purchases').select('id, bars, credited_at').eq('user_id', id).in('status', ['refunded', 'disputed']).is('reversed_at', null).limit(20)) as any[];
+    return rows.map((r) => ({ id: r.id, bars: r.bars, credited: !!r.credited_at }));
+  },
+  async markReversed(ids: string[]) { must(await admin.from('purchases').update({ reversed_at: new Date().toISOString() }).in('id', ids)); },
 };
 
 Deno.serve(async (req) => {
